@@ -170,7 +170,7 @@ The easiest way to set up the development environment is to use the provided set
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/QuantumAlpha.git
+git clone https://github.com/abrar2030/QuantumAlpha.git
 cd QuantumAlpha
 
 # Run the setup script
