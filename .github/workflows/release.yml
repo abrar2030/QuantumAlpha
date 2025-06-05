@@ -150,7 +150,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Build and push backend Docker image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./backend
         push: true
@@ -161,7 +161,7 @@ jobs:
         cache-to: type=gha,mode=max
     
     - name: Build and push web frontend Docker image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./web-frontend
         push: true
