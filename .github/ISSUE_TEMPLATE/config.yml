@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: QuantumAlpha Community Discussions
+    url: https://github.com/abrar2030/QuantumAlpha/discussions
+    about: Please ask and answer questions here.
+  - name: QuantumAlpha Security Policy
+    url: https://github.com/abrar2030/QuantumAlpha/security/policy
+    about: Please report security vulnerabilities here.
+
