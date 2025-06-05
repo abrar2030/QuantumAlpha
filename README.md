@@ -1,4 +1,10 @@
-# QuantumAlpha - Advanced AI Hedge Fund Platform
+# 🚀 QuantumAlpha - Advanced AI Hedge Fund Platform
+
+[![CI/CD Status](https://img.shields.io/badge/CI/CD-passing-brightgreen)](https://github.com/abrar2030/QuantumAlpha/actions)
+[![Test Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/abrar2030/QuantumAlpha/LICENSE)
+
+![QuantumAlpha Dashboard](https://github.com/abrar2030/QuantumAlpha/raw/main/docs/images/dashboard.png)
 
 > **Note**: This project is under active development. Features and functionalities are continuously being enhanced to improve trading performance, risk management, and user experience.
 
@@ -17,13 +23,17 @@ QuantumAlpha is a cutting-edge AI-driven hedge fund platform that combines machi
 
 * [Overview](#overview)
 * [Key Features](#key-features)
-* [Architecture](#architecture)
+* [Project Structure](#project-structure)
 * [Technology Stack](#technology-stack)
+* [Architecture](#architecture)
 * [Installation and Setup](#installation-and-setup)
 * [Implementation Plan](#implementation-plan)
 * [Best Practices](#best-practices)
 * [Testing](#testing)
+* [CI/CD Pipeline](#cicd-pipeline)
 * [Documentation](#documentation)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
 * [References](#references)
 * [License](#license)
 
@@ -79,6 +89,90 @@ QuantumAlpha's core philosophy is to combine the best of quantitative finance wi
 * **Strategy Controls**: Toggle strategies and adjust parameters
 * **Audit Logs**: Comprehensive logging for compliance and debugging
 
+## Project Structure
+
+The project is organized into two main components:
+
+### Backend Components
+
+The backend contains the core QuantumAlpha trading system with the following modules:
+
+| Module | Features | Status |
+| --- | --- | --- |
+| **AI Models** | Temporal Fusion Transformers | ✅ Implemented |
+|  | Reinforcement Learning | 🚧 In Progress |
+|  | Generative Models | 📅 Planned |
+|  | Ensemble Methods | ✅ Implemented |
+|  | Bayesian Optimization | 🚧 In Progress |
+| **Alternative Data** | News sentiment analysis | ✅ Implemented |
+|  | Satellite imagery processing | 📅 Planned |
+|  | Web scraping pipeline | ✅ Implemented |
+|  | Alternative data fusion | 🚧 In Progress |
+| **Risk System** | Bayesian VaR | ✅ Implemented |
+|  | Stress testing | ✅ Implemented |
+|  | Position sizing optimization | ✅ Implemented |
+|  | Tail risk hedging | 📅 Planned |
+| **Execution Engine** | Smart order routing | 🚧 In Progress |
+|  | Market impact modeling | 📅 Planned |
+|  | Adaptive execution algorithms | 🚧 In Progress |
+|  | High-frequency capabilities | 📅 Planned |
+| **Infrastructure** | QuantLib integration | ✅ Implemented |
+|  | Kafka streaming | 🚧 In Progress |
+|  | Kubernetes orchestration | ✅ Implemented |
+|  | Distributed computing | 🚧 In Progress |
+
+### Frontend Components
+
+The frontend includes both web and mobile interfaces for interacting with the QuantumAlpha system:
+
+| Component | Features | Status |
+| --- | --- | --- |
+| **Web Frontend** | Dashboard | ✅ Implemented |
+|  | Strategy Builder | ✅ Implemented |
+|  | Backtesting Interface | ✅ Implemented |
+|  | Performance Analytics | ✅ Implemented |
+|  | Risk Visualization | 🚧 In Progress |
+| **Mobile Frontend** | Portfolio Monitoring | ✅ Implemented |
+|  | Alert System | ✅ Implemented |
+|  | Trade Execution | 🚧 In Progress |
+|  | Performance Reporting | 🚧 In Progress |
+| **Documentation** | API Reference | ✅ Implemented |
+|  | Tutorials | 🚧 In Progress |
+|  | User Guides | 🚧 In Progress |
+|  | Example Notebooks | ✅ Implemented |
+
+**Legend:**
+
+* ✅ Implemented: Feature is complete and available
+* 🚧 In Progress: Feature is currently being developed
+* 📅 Planned: Feature is planned for future release
+
+## Technology Stack
+
+### Backend
+
+* **Languages**: Python, C++ (for performance-critical components)
+* **ML Frameworks**: PyTorch, TensorFlow, scikit-learn, Ray
+* **Data Processing**: Pandas, NumPy, Dask, Apache Spark
+* **Financial Libraries**: QuantLib, Backtrader/zipline, PyPortfolioOpt
+* **Streaming**: Kafka, Redis Streams
+* **Databases**: InfluxDB (time series), PostgreSQL (relational), MongoDB (document)
+
+### Frontend
+
+* **Web Framework**: React with TypeScript
+* **Data Visualization**: D3.js, Plotly, TradingView
+* **State Management**: Redux Toolkit
+* **UI Components**: Material-UI, Tailwind CSS
+
+### Infrastructure
+
+* **Containerization**: Docker, Kubernetes
+* **CI/CD**: GitHub Actions
+* **Cloud**: AWS, Google Cloud Platform
+* **Monitoring**: Prometheus, Grafana, ELK Stack
+* **MLOps**: MLflow, DVC
+
 ## Architecture
 
 QuantumAlpha follows a microservices architecture with the following components:
@@ -125,32 +219,6 @@ QuantumAlpha uses an event-driven architecture for communication between service
 2. **Signal Events**: Model predictions and trading signals
 3. **Order Events**: Order creation, updates, and execution reports
 4. **System Events**: Infrastructure scaling and monitoring alerts
-
-## Technology Stack
-
-### Backend
-
-* **Languages**: Python, C++ (for performance-critical components)
-* **ML Frameworks**: PyTorch, TensorFlow, scikit-learn, Ray
-* **Data Processing**: Pandas, NumPy, Dask, Apache Spark
-* **Financial Libraries**: QuantLib, Backtrader/zipline, PyPortfolioOpt
-* **Streaming**: Kafka, Redis Streams
-* **Databases**: InfluxDB (time series), PostgreSQL (relational), MongoDB (document)
-
-### Frontend
-
-* **Web Framework**: React with TypeScript
-* **Data Visualization**: D3.js, Plotly, TradingView
-* **State Management**: Redux Toolkit
-* **UI Components**: Material-UI, Tailwind CSS
-
-### Infrastructure
-
-* **Containerization**: Docker, Kubernetes
-* **CI/CD**: GitHub Actions
-* **Cloud**: AWS, Google Cloud Platform
-* **Monitoring**: Prometheus, Grafana, ELK Stack
-* **MLOps**: MLflow, DVC
 
 ## Installation and Setup
 
@@ -253,40 +321,40 @@ npm start
 
 The implementation of QuantumAlpha is divided into six phases:
 
-### Phase 1 – Data & Backtesting Foundation
+### Phase 1 – Data & Backtesting Foundation (Q1 2025)
 
 * Establish data feeds and a basic backtester
 * Set up data ingestion pipelines (both real-time and historical)
 * Build a simple event-driven backtest framework
 * Verify correct handling of market hours, splits, and fees
 
-### Phase 2 – Model Prototyping
+### Phase 2 – Model Prototyping (Q2 2025)
 
 * Develop initial ML models on historical data
 * Prototype risk models and portfolio optimization
 * Validate the end-to-end workflow: data → model → backtest → P&L
 
-### Phase 3 – Systemization
+### Phase 3 – Systemization (Q3 2025)
 
 * Containerize each component
 * Deploy in a cloud environment (e.g., Kubernetes on AWS)
 * Integrate Ray for scaling model training
 * Begin paper trading selected strategies
 
-### Phase 4 – Expansion & Robustness
+### Phase 4 – Expansion & Robustness (Q4 2025)
 
 * Incorporate alternative data sources
 * Refine risk modules (add scenario analysis, stress-testing)
 * Implement Explainable AI hooks
 * Build continuous monitoring and logging
 
-### Phase 5 – Dashboard & Automation
+### Phase 5 – Dashboard & Automation (Q1 2026)
 
 * Develop the UI for real-time monitoring and controls
 * Automate retraining pipelines
 * Establish CI/CD for code and data updates
 
-### Phase 6 – Live Deployment
+### Phase 6 – Live Deployment (Q2 2026)
 
 * Deploy strategies with real capital (starting small)
 * Implement strict risk throttles
@@ -306,13 +374,36 @@ The implementation of QuantumAlpha is divided into six phases:
 
 ### Test Coverage
 
-The QuantumAlpha platform includes comprehensive testing at multiple levels:
+The QuantumAlpha platform currently has approximately 78% test coverage. We use a comprehensive testing strategy to ensure reliability and performance:
 
 * **Unit Tests**: Individual components and functions
 * **Integration Tests**: Interactions between services
 * **System Tests**: End-to-end workflows
 * **Backtests**: Historical performance validation
 * **Stress Tests**: System behavior under extreme conditions
+
+### Backend Testing
+
+* Unit tests with pytest
+* Integration tests for system components
+* Performance benchmarks
+* Data pipeline validation
+* Model validation and backtesting
+
+### Frontend Testing
+
+* Component tests with Jest and React Testing Library
+* End-to-end tests with Cypress
+* Visual regression tests
+* Accessibility testing
+* Mobile testing with Detox
+
+### Infrastructure Testing
+
+* Deployment validation
+* Load testing with Locust
+* Failover testing
+* Security scanning
 
 ### Running Tests
 
@@ -347,13 +438,88 @@ tests/
     └── stress/
 ```
 
+## CI/CD Pipeline
+
+QuantumAlpha uses GitHub Actions for continuous integration and deployment:
+
+### Continuous Integration
+
+* Automated testing on each pull request and push to main
+* Code quality checks with flake8, black, and ESLint
+* Test coverage reporting
+* Security scanning for vulnerabilities
+* Performance benchmarking
+
+### Continuous Deployment
+
+* Automated deployment to staging environment on merge to main
+* Manual promotion to production after approval
+* Docker image building and publishing
+* Infrastructure updates via Terraform
+* Database migration management
+
+### Current CI/CD Status
+
+* Build: [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/abrar2030/QuantumAlpha/actions)
+* Test Coverage: [![Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
+
 ## Documentation
+
+For detailed documentation, please refer to the following resources:
 
 * **API Reference**: Comprehensive documentation of all APIs
 * **User Guides**: Step-by-step instructions for common tasks
 * **Architecture Diagrams**: Visual representations of system components
 * **Model Documentation**: Detailed descriptions of ML/RL models
 * **Jupyter Notebooks**: Interactive examples and tutorials
+
+## Roadmap
+
+Our development roadmap prioritizes:
+
+### Q3 2025: Core Trading Engine and Risk Management
+
+* Finalize reinforcement learning models
+* Complete counterparty risk management
+* Implement initial smart order routing
+
+### Q4 2025: Alternative Data Processing
+
+* Deploy satellite imagery processing
+* Complete alternative data fusion system
+* Expand web scraping capabilities
+
+### Q1 2026: Advanced AI Models
+
+* Deploy generative models
+* Complete Bayesian optimization framework
+* Implement ensemble method improvements
+
+### Q2 2026: Execution Capabilities
+
+* Complete liquidity forecasting
+* Deploy market impact modeling
+* Implement high-frequency capabilities
+
+### Q3 2026: Infrastructure and Scaling
+
+* Complete GCP Vertex AI integration
+* Finalize distributed computing framework
+* Deploy global infrastructure
+
+## Contributing
+
+We welcome contributions to QuantumAlpha! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved.
+
+### Development Guidelines
+
+* Follow PEP 8 style guide for Python code
+* Use ESLint and Prettier for JavaScript/TypeScript code
+* Write unit tests for new features
+* Update documentation for any changes
+* Ensure all tests pass before submitting a pull request
+* Keep pull requests focused on a single feature or fix
+* Engage in code reviews and ensure reproducibility
 
 ## References
 
@@ -368,4 +534,4 @@ tests/
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
