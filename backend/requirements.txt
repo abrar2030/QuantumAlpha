@@ -38,7 +38,7 @@ alpha-vantage==2.3.1
 newsapi-python==0.2.7
 
 # Utilities
-python-dotenv==1.0.0
+python-dotenv==1.1.0
 pydantic==1.10.7
 requests==2.28.2
 pyyaml==6.0
