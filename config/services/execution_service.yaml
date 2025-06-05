@@ -1,0 +1,282 @@
+# QuantumAlpha Execution Service Configuration
+
+# Service Configuration
+service:
+  name: execution-service
+  version: 1.0.0
+  description: "Order execution service for QuantumAlpha"
+  host: 0.0.0.0
+  port: 8080
+  workers: 4
+  timeout: 30
+
+# API Configuration
+api:
+  prefix: /api/v1
+  rate_limit: 100
+  cors_origins:
+    - http://localhost:3000
+    - https://staging.quantumalpha.ai
+    - https://app.quantumalpha.ai
+
+# Broker Integration
+brokers:
+  - name: alpaca
+    enabled: true
+    description: "Alpaca Markets integration"
+    api_version: v2
+    paper_trading: ${ENABLE_PAPER_TRADING}
+    endpoints:
+      paper: https://paper-api.alpaca.markets
+      live: https://api.alpaca.markets
+    rate_limits:
+      requests_per_minute: 200
+      account_requests_per_minute: 60
+    order_types:
+      - market
+      - limit
+      - stop
+      - stop_limit
+    time_in_force:
+      - day
+      - gtc
+      - ioc
+      - fok
+    features:
+      fractional_shares: true
+      extended_hours: true
+      short_selling: true
+  
+  - name: interactive_brokers
+    enabled: false
+    description: "Interactive Brokers integration"
+    api_version: client_portal
+    paper_trading: true
+    endpoints:
+      paper: https://localhost:5000
+      live: https://localhost:5000
+    rate_limits:
+      requests_per_minute: 50
+    order_types:
+      - market
+      - limit
+      - stop
+      - stop_limit
+      - trail
+    time_in_force:
+      - day
+      - gtc
+      - ioc
+      - fok
+    features:
+      fractional_shares: false
+      extended_hours: true
+      short_selling: true
+
+# Order Execution
+order_execution:
+  default_broker: alpaca
+  default_order_type: limit
+  default_time_in_force: day
+  
+  strategies:
+    - name: market_order
+      enabled: true
+      description: "Simple market order execution"
+      params: {}
+    
+    - name: limit_order
+      enabled: true
+      description: "Limit order execution"
+      params:
+        price_improvement: 0.001  # 0.1% price improvement
+        max_wait_time: 60  # seconds
+        aggressive_after_wait: true
+    
+    - name: twap
+      enabled: true
+      description: "Time-Weighted Average Price execution"
+      params:
+        num_slices: 5
+        interval: 60  # seconds
+        price_limit_buffer: 0.005  # 0.5% buffer
+    
+    - name: vwap
+      enabled: true
+      description: "Volume-Weighted Average Price execution"
+      params:
+        start_time: "09:30"
+        end_time: "16:00"
+        volume_profile: "historical"
+        num_slices: 10
+    
+    - name: iceberg
+      enabled: true
+      description: "Iceberg order execution"
+      params:
+        display_size: 100
+        price_limit: "best_bid_ask"
+        price_improvement: 0.0005  # 0.05% price improvement
+    
+    - name: smart_router
+      enabled: true
+      description: "Smart order routing based on market conditions"
+      params:
+        liquidity_threshold: 0.5
+        volatility_threshold: 0.02
+        spread_threshold: 0.001
+  
+  default_strategy: limit_order
+
+# Order Management
+order_management:
+  order_validation:
+    enabled: true
+    checks:
+      - sufficient_buying_power
+      - valid_symbol
+      - market_hours
+      - risk_limits
+      - duplicate_orders
+  
+  order_tracking:
+    update_frequency: 1  # seconds
+    status_change_notifications: true
+    execution_details_logging: true
+  
+  order_amendments:
+    enabled: true
+    allowed_fields:
+      - quantity
+      - limit_price
+      - stop_price
+      - time_in_force
+  
+  order_cancellation:
+    confirmation_required: false
+    log_reason: true
+
+# Trading Parameters
+trading_parameters:
+  market_hours:
+    regular:
+      start: "09:30"
+      end: "16:00"
+    extended:
+      pre_market_start: "04:00"
+      pre_market_end: "09:30"
+      after_hours_start: "16:00"
+      after_hours_end: "20:00"
+    timezone: "America/New_York"
+  
+  trading_days:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+  
+  holidays:
+    - "2023-01-02"  # New Year's Day (observed)
+    - "2023-01-16"  # Martin Luther King Jr. Day
+    - "2023-02-20"  # Presidents' Day
+    - "2023-04-07"  # Good Friday
+    - "2023-05-29"  # Memorial Day
+    - "2023-06-19"  # Juneteenth
+    - "2023-07-04"  # Independence Day
+    - "2023-09-04"  # Labor Day
+    - "2023-11-23"  # Thanksgiving Day
+    - "2023-12-25"  # Christmas Day
+  
+  circuit_breakers:
+    level_1:
+      decline: 0.07  # 7% decline
+      action: pause_15min
+    level_2:
+      decline: 0.13  # 13% decline
+      action: pause_15min
+    level_3:
+      decline: 0.20  # 20% decline
+      action: halt_trading
+
+# Transaction Cost Analysis
+transaction_cost_analysis:
+  enabled: true
+  metrics:
+    - implementation_shortfall
+    - market_impact
+    - timing_cost
+    - opportunity_cost
+    - slippage
+    - effective_spread
+  
+  benchmarks:
+    - arrival_price
+    - vwap
+    - twap
+    - close_price
+  
+  reporting:
+    frequency: daily
+    format: csv
+    store_days: 90
+
+# Event Processing
+event_processing:
+  kafka:
+    topics:
+      - name: order_events
+        partitions: 3
+        retention_ms: 604800000  # 7 days
+      - name: execution_events
+        partitions: 3
+        retention_ms: 604800000  # 7 days
+      - name: position_updates
+        partitions: 3
+        retention_ms: 604800000  # 7 days
+    
+    consumer_groups:
+      - name: execution-service
+        topics:
+          - order_events
+      - name: risk-service
+        topics:
+          - execution_events
+          - position_updates
+    
+    producers:
+      - name: execution-service
+        topics:
+          - execution_events
+          - position_updates
+
+# Monitoring
+monitoring:
+  metrics:
+    enabled: true
+    endpoint: /metrics
+  health:
+    enabled: true
+    endpoint: /health
+  logging:
+    level: INFO
+    format: json
+    output: stdout
+  
+  trade_monitoring:
+    enabled: true
+    metrics:
+      - fill_rate
+      - rejection_rate
+      - latency
+      - slippage
+    alerts:
+      enabled: true
+      channels:
+        - email
+        - slack
+      thresholds:
+        high_rejection_rate: 0.1  # 10% rejection rate
+        high_slippage: 0.005  # 0.5% slippage
+        high_latency: 1000  # 1000ms latency
+
