@@ -1,6 +1,6 @@
 # 🚀 QuantumAlpha - Advanced AI Hedge Fund Platform
 
-[![CI/CD Status](https://img.shields.io/badge/CI/CD-passing-brightgreen)](https://github.com/abrar2030/QuantumAlpha/actions)
+[![CI/CD Status](https://img.shields.io/github/actions/workflow/status/abrar2030/QuantumAlpha/ci-cd.yml?branch=main&label=CI/CD&logo=github)](https://github.com/abrar2030/QuantumAlpha/actions)
 [![Test Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
 [![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/abrar2030/QuantumAlpha/LICENSE)
 
@@ -457,11 +457,6 @@ QuantumAlpha uses GitHub Actions for continuous integration and deployment:
 * Docker image building and publishing
 * Infrastructure updates via Terraform
 * Database migration management
-
-### Current CI/CD Status
-
-* Build: [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/abrar2030/QuantumAlpha/actions)
-* Test Coverage: [![Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
 
 ## Documentation
 
