@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  
+namespace: quantumalpha-staging
+
+patchesStrategicMerge:
+  - configmap.yaml
+
+replicas:
+  - name: data-service
+    count: 2
+  - name: ai-engine
+    count: 2
+  - name: risk-service
+    count: 2
+  - name: execution-service
+    count: 2
+  - name: web-frontend
+    count: 2

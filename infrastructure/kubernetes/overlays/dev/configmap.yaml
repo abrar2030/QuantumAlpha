@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kustomize-dev
+  namespace: quantumalpha-dev
+data:
+  ECR_REGISTRY: "your-aws-account-id.dkr.ecr.your-region.amazonaws.com"
+  IMAGE_TAG: "dev"

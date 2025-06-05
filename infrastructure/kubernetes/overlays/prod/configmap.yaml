@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kustomize-prod
+  namespace: quantumalpha-prod
+data:
+  ECR_REGISTRY: "your-aws-account-id.dkr.ecr.your-region.amazonaws.com"
+  IMAGE_TAG: "prod"

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus:9090
+        access: proxy
+        isDefault: true
+      - name: InfluxDB
+        type: influxdb
+        url: http://influxdb:8086
+        access: proxy
+        database: market_data
+        user: admin
+        secureJsonData:
+          password: adminpassword
+        jsonData:
+          organization: quantumalpha
+          defaultBucket: market_data
+          version: Flux

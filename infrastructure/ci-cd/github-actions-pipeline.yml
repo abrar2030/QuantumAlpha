@@ -1,0 +1,144 @@
+name: QuantumAlpha CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY_PREFIX: quantumalpha
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ --cov=./ --cov-report=xml
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: coverage.xml
+
+  build-and-push:
+    name: Build and Push Docker Images
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    strategy:
+      matrix:
+        service: [data-service, ai-engine, risk-service, execution-service, web-frontend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          SERVICE: ${{ matrix.service }}
+        run: |
+          # Build directory path based on service
+          if [[ "$SERVICE" == "web-frontend" ]]; then
+            BUILD_DIR="./web-frontend"
+          else
+            BUILD_DIR="./backend/$SERVICE"
+          fi
+          
+          # Build and push Docker image
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:$IMAGE_TAG $BUILD_DIR
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:$IMAGE_TAG
+          
+          # Tag as latest if on main branch
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:latest
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:latest
+          fi
+          
+          # Tag as dev if on develop branch
+          if [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:dev
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:dev
+          fi
+          
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/$SERVICE:$IMAGE_TAG"
+
+  deploy:
+    name: Deploy to Kubernetes
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name quantumalpha-cluster --region ${{ env.AWS_REGION }}
+
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Deploy to development
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          cd infrastructure/kubernetes/overlays/dev
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/data-service:dev
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/ai-engine:dev
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/risk-service:dev
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/execution-service:dev
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/web-frontend:dev
+          kustomize build . | kubectl apply -f -
+
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cd infrastructure/kubernetes/overlays/prod
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/data-service:latest
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/ai-engine:latest
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/risk-service:latest
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/execution-service:latest
+          kustomize edit set image ${ECR_REGISTRY}/quantumalpha/web-frontend:latest
+          kustomize build . | kubectl apply -f -
