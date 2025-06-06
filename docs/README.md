@@ -4,46 +4,33 @@ This directory contains comprehensive documentation for the QuantumAlpha platfor
 
 ## Contents
 
-- API Reference
-- User Guides
-- Architecture Diagrams
-- Model Documentation
-- Jupyter Notebooks
+- [Overview](./overview/): General overview of the QuantumAlpha platform and documentation structure
+- [Architecture](./architecture/): Documentation structure and organization
+- [System Components](./system-components/): Visual representations of system architecture and component diagrams
 
-## API Reference
+## Getting Started
 
-The API reference documentation provides detailed information about all endpoints, request parameters, and response formats for the QuantumAlpha services.
+To navigate the documentation, start with the [Overview](./overview/) section, which provides a comprehensive introduction to the QuantumAlpha platform and its documentation structure.
 
-## User Guides
+## Building the Documentation
 
-Step-by-step instructions for common tasks such as:
-- Setting up the development environment
-- Creating and backtesting trading strategies
-- Deploying strategies to production
-- Monitoring performance and risk metrics
+The documentation can be built into a searchable website using [MkDocs](https://www.mkdocs.org/):
 
-## Architecture Diagrams
+```bash
+# Install MkDocs
+pip install mkdocs
 
-Visual representations of the system components and their interactions, including:
-- High-level system architecture
-- Data flow diagrams
-- Service communication patterns
-- Deployment architecture
+# Build the documentation
+cd docs
+mkdocs build
 
-## Model Documentation
+# Serve the documentation locally
+mkdocs serve
+```
 
-Detailed descriptions of the machine learning and reinforcement learning models used in QuantumAlpha, including:
-- Model architecture
-- Training methodology
-- Hyperparameter selection
-- Performance metrics
-- Limitations and considerations
+Then open your browser to `http://localhost:8000` to view the documentation.
 
-## Jupyter Notebooks
+## Contributing
 
-Interactive examples and tutorials demonstrating:
-- Data preprocessing techniques
-- Feature engineering approaches
-- Model training workflows
-- Backtesting methodologies
-- Performance analysis
+To contribute to the documentation, please follow the guidelines in the [Overview](./overview/) section.
+
