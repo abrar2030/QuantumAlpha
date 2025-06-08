@@ -1,6 +1,6 @@
 # 🚀 QuantumAlpha - Advanced AI Hedge Fund Platform
 
-![CI/CD](https://github.com/abrar2030/quantumalpha/actions/workflows/cicd.yml/badge.svg)
+![CI/CD Pipeline](https://github.com/abrar2030/quantumalpha/actions/workflows/cicd.yml/badge.svg)
 [![Test Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
 [![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/abrar2030/QuantumAlpha/LICENSE)
 
