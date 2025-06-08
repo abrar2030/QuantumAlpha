@@ -4,7 +4,7 @@
 [![Test Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
 [![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/abrar2030/QuantumAlpha/LICENSE)
 
-![QuantumAlpha Dashboard](https://github.com/abrar2030/QuantumAlpha/raw/main/docs/images/dashboard.png)
+![QuantumAlpha Dashboard](docs/images/dashboard.bmp)
 
 > **Note**: This project is under active development. Features and functionalities are continuously being enhanced to improve trading performance, risk management, and user experience.
 
