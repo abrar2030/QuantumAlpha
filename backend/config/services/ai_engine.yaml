@@ -1,0 +1,339 @@
+# QuantumAlpha AI Engine Configuration
+
+# Service Configuration
+service:
+  name: ai-engine
+  version: 1.0.0
+  description: "AI and machine learning service for QuantumAlpha"
+  host: 0.0.0.0
+  port: 8080
+  workers: 4
+  timeout: 60
+
+# API Configuration
+api:
+  prefix: /api/v1
+  rate_limit: 50
+  cors_origins:
+    - http://localhost:3000
+    - https://staging.quantumalpha.ai
+    - https://app.quantumalpha.ai
+
+# Model Registry
+model_registry:
+  path: ${MODEL_REGISTRY_PATH}
+  versioning: true
+  metadata:
+    - name
+    - version
+    - algorithm
+    - features
+    - performance_metrics
+    - training_date
+    - author
+  storage:
+    type: file_system  # Options: file_system, s3, mlflow
+    s3_bucket: quantumalpha-models
+    s3_prefix: models/
+
+# Feature Store
+feature_store:
+  path: ${FEATURE_STORE_PATH}
+  format: parquet
+  partitioning:
+    - symbol
+    - year
+    - month
+  versioning: true
+
+# Experiment Tracking
+experiment_tracking:
+  enabled: true
+  backend: mlflow
+  uri: ${EXPERIMENT_TRACKING_URI}
+  auto_log: true
+  tags:
+    - model_type
+    - feature_set
+    - target
+    - time_horizon
+
+# Models Configuration
+models:
+  price_prediction:
+    - name: lstm_daily
+      enabled: true
+      algorithm: lstm
+      version: 1.0.0
+      description: "LSTM model for daily price prediction"
+      features:
+        - price_close_normalized
+        - volume_normalized
+        - rsi_14
+        - macd
+        - bollinger_percent_b
+        - moving_avg_5_normalized
+        - moving_avg_20_normalized
+      hyperparameters:
+        lstm_units: 128
+        dropout_rate: 0.2
+        learning_rate: 0.001
+        batch_size: 64
+        epochs: 100
+        early_stopping_patience: 10
+      training:
+        train_test_split: 0.8
+        validation_split: 0.1
+        time_horizon: 5  # days
+        lookback_window: 30  # days
+        target: price_close_normalized
+      inference:
+        batch_size: 32
+        confidence_threshold: 0.6
+    
+    - name: xgboost_daily
+      enabled: true
+      algorithm: xgboost
+      version: 1.0.0
+      description: "XGBoost model for daily price prediction"
+      features:
+        - price_close_normalized
+        - volume_normalized
+        - rsi_14
+        - macd
+        - bollinger_percent_b
+        - moving_avg_5_normalized
+        - moving_avg_20_normalized
+        - sector_one_hot
+        - market_cap_normalized
+      hyperparameters:
+        max_depth: 6
+        learning_rate: 0.1
+        n_estimators: 200
+        subsample: 0.8
+        colsample_bytree: 0.8
+        objective: reg:squarederror
+      training:
+        train_test_split: 0.8
+        validation_split: 0.1
+        time_horizon: 5  # days
+        target: price_close_normalized
+      inference:
+        batch_size: 1000
+  
+  sentiment_analysis:
+    - name: bert_sentiment
+      enabled: true
+      algorithm: bert
+      version: 1.0.0
+      description: "BERT model for financial news sentiment analysis"
+      features:
+        - news_text
+        - news_title
+      hyperparameters:
+        pretrained_model: "finbert"
+        learning_rate: 2e-5
+        batch_size: 16
+        epochs: 4
+        max_length: 512
+      training:
+        train_test_split: 0.8
+        validation_split: 0.1
+        target: sentiment_label
+      inference:
+        batch_size: 16
+        confidence_threshold: 0.7
+  
+  portfolio_optimization:
+    - name: mean_variance
+      enabled: true
+      algorithm: mean_variance
+      version: 1.0.0
+      description: "Mean-variance optimization for portfolio allocation"
+      features:
+        - historical_returns
+        - covariance_matrix
+      hyperparameters:
+        risk_free_rate: 0.02
+        window_size: 252  # trading days
+      training:
+        rebalance_frequency: 30  # days
+      inference:
+        constraints:
+          max_position_size: 0.2
+          min_position_size: 0.01
+          max_sector_exposure: 0.3
+    
+    - name: hierarchical_risk_parity
+      enabled: true
+      algorithm: hierarchical_risk_parity
+      version: 1.0.0
+      description: "Hierarchical Risk Parity for portfolio allocation"
+      features:
+        - historical_returns
+        - covariance_matrix
+      hyperparameters:
+        window_size: 252  # trading days
+      training:
+        rebalance_frequency: 30  # days
+      inference:
+        constraints:
+          max_position_size: 0.2
+          min_position_size: 0.01
+          max_sector_exposure: 0.3
+
+# Reinforcement Learning
+reinforcement_learning:
+  enabled: ${ENABLE_REINFORCEMENT_LEARNING}
+  environments:
+    - name: trading_env
+      type: gym
+      version: 1.0.0
+      description: "Trading environment for RL agents"
+      observation_space:
+        - price_history
+        - technical_indicators
+        - portfolio_state
+        - market_features
+      action_space:
+        type: discrete
+        actions:
+          - buy
+          - sell
+          - hold
+      reward_function:
+        type: sharpe_ratio
+        window: 20
+      episode_length: 252  # trading days
+  
+  agents:
+    - name: dqn_trader
+      enabled: true
+      algorithm: dqn
+      version: 1.0.0
+      description: "DQN agent for trading decisions"
+      hyperparameters:
+        learning_rate: 0.0001
+        gamma: 0.99
+        epsilon_start: 1.0
+        epsilon_end: 0.01
+        epsilon_decay: 0.995
+        memory_size: 10000
+        batch_size: 64
+        target_update: 10
+      training:
+        episodes: 1000
+        evaluation_frequency: 10
+      inference:
+        exploration_rate: 0.01
+    
+    - name: ppo_trader
+      enabled: true
+      algorithm: ppo
+      version: 1.0.0
+      description: "PPO agent for trading decisions"
+      hyperparameters:
+        learning_rate: 0.0003
+        gamma: 0.99
+        gae_lambda: 0.95
+        clip_ratio: 0.2
+        value_coef: 0.5
+        entropy_coef: 0.01
+        epochs: 10
+        batch_size: 64
+      training:
+        episodes: 1000
+        evaluation_frequency: 10
+      inference:
+        deterministic: true
+
+# Ensemble Methods
+ensemble:
+  enabled: true
+  methods:
+    - name: voting_ensemble
+      enabled: true
+      version: 1.0.0
+      description: "Voting ensemble for price prediction"
+      base_models:
+        - lstm_daily
+        - xgboost_daily
+      weights:
+        lstm_daily: 0.6
+        xgboost_daily: 0.4
+      aggregation: weighted_average
+    
+    - name: stacking_ensemble
+      enabled: false
+      version: 1.0.0
+      description: "Stacking ensemble for price prediction"
+      base_models:
+        - lstm_daily
+        - xgboost_daily
+      meta_model:
+        algorithm: ridge
+        hyperparameters:
+          alpha: 1.0
+      training:
+        cv_folds: 5
+
+# Explainable AI
+explainable_ai:
+  enabled: true
+  methods:
+    - name: shap
+      enabled: true
+      models:
+        - xgboost_daily
+      params:
+        max_samples: 100
+    - name: lime
+      enabled: true
+      models:
+        - lstm_daily
+      params:
+        num_features: 10
+    - name: feature_importance
+      enabled: true
+      models:
+        - xgboost_daily
+      params:
+        top_k: 10
+
+# Monitoring
+monitoring:
+  metrics:
+    enabled: true
+    endpoint: /metrics
+  health:
+    enabled: true
+    endpoint: /health
+  logging:
+    level: INFO
+    format: json
+    output: stdout
+  model_monitoring:
+    enabled: true
+    metrics:
+      - accuracy
+      - precision
+      - recall
+      - f1_score
+      - mean_squared_error
+      - mean_absolute_error
+      - sharpe_ratio
+      - sortino_ratio
+    drift_detection:
+      enabled: true
+      method: ks_test
+      threshold: 0.05
+      window_size: 1000
+    alerts:
+      enabled: true
+      channels:
+        - email
+        - slack
+      thresholds:
+        accuracy_drop: 0.1
+        drift_detected: true
+

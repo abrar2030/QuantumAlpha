@@ -21,7 +21,7 @@ class UserCreate(BaseModel):
     """Schema for user creation"""
     
     username: str = Field(..., min_length=3, max_length=50)
-    email: str = Field(..., regex=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+    email: str = Field(..., pattern=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     password: str = Field(..., min_length=8)
     first_name: Optional[str] = Field(None, max_length=50)
     last_name: Optional[str] = Field(None, max_length=50)
@@ -38,7 +38,7 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     """Schema for user update"""
     
-    email: Optional[str] = Field(None, regex=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+    email: Optional[str] = Field(None, pattern=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     password: Optional[str] = Field(None, min_length=8)
     first_name: Optional[str] = Field(None, max_length=50)
     last_name: Optional[str] = Field(None, max_length=50)
@@ -75,13 +75,13 @@ class OrderCreate(BaseModel):
     """Schema for order creation"""
     
     symbol: str = Field(..., min_length=1, max_length=10)
-    side: str = Field(..., regex=r'^(buy|sell)$')
+    side: str = Field(..., pattern=r'^(buy|sell)$')
     quantity: float = Field(..., gt=0)
-    order_type: str = Field(..., regex=r'^(market|limit|stop|stop_limit)$')
+    order_type: str = Field(..., pattern=r'^(market|limit|stop|stop_limit)$')
     price: Optional[float] = None
     stop_price: Optional[float] = None
-    time_in_force: str = Field('day', regex=r'^(day|gtc|ioc)$')
-    broker: str = Field(..., regex=r'^(alpaca|interactive_brokers)$')
+    time_in_force: str = Field("day", pattern=r'^(day|gtc|ioc)$')
+    broker: str = Field(..., pattern=r'^(alpaca|interactive_brokers)$')
     
     @validator('price')
     def validate_price(cls, v, values):
@@ -104,7 +104,7 @@ class StrategyCreate(BaseModel):
     
     name: str = Field(..., min_length=1, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
-    type: str = Field(..., regex=r'^(ml|rule_based|hybrid)$')
+    type: str = Field(..., pattern=r'^(ml|rule_based|hybrid)$')
     config: Dict[str, Any] = Field(...)
 
 
@@ -113,8 +113,8 @@ class StrategyUpdate(BaseModel):
     
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
-    type: Optional[str] = Field(None, regex=r'^(ml|rule_based|hybrid)$')
-    status: Optional[str] = Field(None, regex=r'^(active|inactive|backtest)$')
+    type: Optional[str] = Field(None, pattern=r'^(ml|rule_based|hybrid)$')
+    status: Optional[str] = Field(None, pattern=r'^(active|inactive|backtest)$')
     config: Optional[Dict[str, Any]] = None
 
 
@@ -123,7 +123,7 @@ class ModelCreate(BaseModel):
     """Schema for model creation"""
     
     name: str = Field(..., min_length=1, max_length=100)
-    type: str = Field(..., regex=r'^(lstm|transformer|reinforcement)$')
+    type: str = Field(..., pattern=r'^(lstm|transformer|reinforcement)$')
     config: Dict[str, Any] = Field(...)
 
 
@@ -131,8 +131,8 @@ class ModelUpdate(BaseModel):
     """Schema for model update"""
     
     name: Optional[str] = Field(None, min_length=1, max_length=100)
-    type: Optional[str] = Field(None, regex=r'^(lstm|transformer|reinforcement)$')
-    status: Optional[str] = Field(None, regex=r'^(training|active|inactive)$')
+    type: Optional[str] = Field(None, pattern=r'^(lstm|transformer|reinforcement)$')
+    status: Optional[str] = Field(None, pattern=r'^(training|active|inactive)$')
     config: Optional[Dict[str, Any]] = None
     performance: Optional[Dict[str, Any]] = None
     registry_path: Optional[str] = None
@@ -143,7 +143,7 @@ class SignalCreate(BaseModel):
     """Schema for signal creation"""
     
     symbol: str = Field(..., min_length=1, max_length=10)
-    direction: str = Field(..., regex=r'^(buy|sell)$')
+    direction: str = Field(..., pattern=r'^(buy|sell)$')
     strength: float = Field(..., ge=0, le=1)
     confidence: float = Field(..., ge=0, le=1)
     target_price: Optional[float] = None
@@ -165,8 +165,8 @@ class MarketDataRequest(BaseModel):
     """Schema for market data request"""
     
     symbol: str = Field(..., min_length=1, max_length=10)
-    timeframe: str = Field(..., regex=r'^(1m|5m|15m|30m|1h|4h|1d|1wk|1mo)$')
-    period: Optional[str] = Field(None, regex=r'^(1d|1wk|1mo|3mo|6mo|1y|5y|max)$')
+    timeframe: str = Field(..., pattern=r'^(1m|5m|15m|30m|1h|4h|1d|1wk|1mo)$')
+    period: Optional[str] = Field(None, pattern=r'^(1d|1wk|1mo|3mo|6mo|1y|5y|max)$')
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
     
@@ -219,7 +219,7 @@ class PositionSizeRequest(BaseModel):
     symbol: str = Field(..., min_length=1, max_length=10)
     signal_strength: float = Field(..., ge=0, le=1)
     portfolio_value: float = Field(..., gt=0)
-    risk_tolerance: str = Field(..., regex=r'^(low|medium|high)$')
+    risk_tolerance: str = Field(..., pattern=r'^(low|medium|high)$')
     volatility: Optional[float] = Field(None, ge=0)
 
 

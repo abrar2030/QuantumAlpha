@@ -21,6 +21,6 @@ export const store = configureStore({
 
 setupListeners(store.dispatch);
 
-// Export types - removed TypeScript syntax for JS compatibility
-export default store;
-
+// Export types
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;

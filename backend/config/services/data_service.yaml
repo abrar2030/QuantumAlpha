@@ -1,0 +1,295 @@
+# QuantumAlpha Data Service Configuration
+
+# Service Configuration
+service:
+  name: data-service
+  version: 1.0.0
+  description: "Data ingestion and processing service for QuantumAlpha"
+  host: 0.0.0.0
+  port: 8080
+  workers: 4
+  timeout: 30
+
+# API Configuration
+api:
+  prefix: /api/v1
+  rate_limit: 100
+  cors_origins:
+    - http://localhost:3000
+    - https://staging.quantumalpha.ai
+    - https://app.quantumalpha.ai
+
+# Data Sources
+data_sources:
+  market_data:
+    - name: alpha_vantage
+      type: rest_api
+      priority: 1
+      enabled: true
+      rate_limit: 5
+      rate_limit_period: 60
+      endpoints:
+        - name: intraday
+          path: /query
+          params:
+            function: TIME_SERIES_INTRADAY
+            interval: 1min
+        - name: daily
+          path: /query
+          params:
+            function: TIME_SERIES_DAILY_ADJUSTED
+        - name: fundamentals
+          path: /query
+          params:
+            function: OVERVIEW
+    
+    - name: polygon
+      type: rest_api
+      priority: 2
+      enabled: true
+      rate_limit: 5
+      rate_limit_period: 60
+      endpoints:
+        - name: aggregates
+          path: /v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from}/{to}
+        - name: trades
+          path: /v3/trades/{ticker}
+        - name: quotes
+          path: /v3/quotes/{ticker}
+    
+    - name: iex_cloud
+      type: rest_api
+      priority: 3
+      enabled: false
+      rate_limit: 100
+      rate_limit_period: 60
+      endpoints:
+        - name: quote
+          path: /stock/{symbol}/quote
+        - name: historical
+          path: /stock/{symbol}/chart/{range}
+  
+  alternative_data:
+    - name: news_api
+      type: rest_api
+      priority: 1
+      enabled: true
+      rate_limit: 100
+      rate_limit_period: 3600
+      endpoints:
+        - name: everything
+          path: /v2/everything
+        - name: top_headlines
+          path: /v2/top-headlines
+    
+    - name: twitter
+      type: streaming_api
+      priority: 2
+      enabled: false
+      rate_limit: 450
+      rate_limit_period: 900
+      endpoints:
+        - name: filtered_stream
+          path: /2/tweets/search/stream
+    
+    - name: sec_edgar
+      type: file_download
+      priority: 3
+      enabled: true
+      rate_limit: 10
+      rate_limit_period: 1
+      endpoints:
+        - name: filings
+          path: /Archives/edgar/daily-index
+
+# Data Processing
+data_processing:
+  market_data:
+    - name: price_normalization
+      enabled: true
+      params:
+        method: min_max
+        window: 20
+    - name: missing_data
+      enabled: true
+      params:
+        method: forward_fill
+        max_gap: 5
+    - name: outlier_detection
+      enabled: true
+      params:
+        method: z_score
+        threshold: 3.0
+  
+  alternative_data:
+    - name: sentiment_analysis
+      enabled: true
+      params:
+        model: vader
+        batch_size: 100
+    - name: entity_extraction
+      enabled: true
+      params:
+        model: spacy
+        entities: ["ORG", "PERSON", "GPE", "MONEY"]
+    - name: topic_modeling
+      enabled: false
+      params:
+        model: lda
+        num_topics: 10
+
+# Feature Engineering
+feature_engineering:
+  technical_indicators:
+    - name: moving_averages
+      enabled: true
+      params:
+        windows: [5, 10, 20, 50, 200]
+    - name: rsi
+      enabled: true
+      params:
+        window: 14
+    - name: macd
+      enabled: true
+      params:
+        fast_period: 12
+        slow_period: 26
+        signal_period: 9
+    - name: bollinger_bands
+      enabled: true
+      params:
+        window: 20
+        num_std: 2
+  
+  derived_features:
+    - name: price_momentum
+      enabled: true
+      params:
+        windows: [1, 5, 10, 20]
+    - name: volatility
+      enabled: true
+      params:
+        window: 20
+    - name: volume_profile
+      enabled: true
+      params:
+        window: 20
+    - name: correlation_matrix
+      enabled: true
+      params:
+        window: 30
+        min_symbols: 10
+
+# Storage Configuration
+storage:
+  time_series:
+    type: influxdb
+    bucket: market_data
+    retention_policy: 
+      name: default
+      duration: 90d
+    continuous_queries:
+      - name: downsample_1m_to_5m
+        query: >
+          SELECT mean(price) AS price, max(high) AS high, min(low) AS low, sum(volume) AS volume
+          INTO market_data_5m
+          FROM market_data
+          GROUP BY time(5m), symbol
+      - name: downsample_1m_to_1h
+        query: >
+          SELECT mean(price) AS price, max(high) AS high, min(low) AS low, sum(volume) AS volume
+          INTO market_data_1h
+          FROM market_data
+          GROUP BY time(1h), symbol
+  
+  relational:
+    type: postgresql
+    tables:
+      - name: symbols
+        columns:
+          - name: symbol
+            type: VARCHAR(20)
+            primary_key: true
+          - name: name
+            type: VARCHAR(100)
+          - name: exchange
+            type: VARCHAR(20)
+          - name: sector
+            type: VARCHAR(50)
+          - name: industry
+            type: VARCHAR(100)
+      - name: fundamentals
+        columns:
+          - name: symbol
+            type: VARCHAR(20)
+            foreign_key: symbols.symbol
+          - name: date
+            type: DATE
+          - name: market_cap
+            type: NUMERIC
+          - name: pe_ratio
+            type: NUMERIC
+          - name: dividend_yield
+            type: NUMERIC
+      - name: news
+        columns:
+          - name: id
+            type: SERIAL
+            primary_key: true
+          - name: title
+            type: TEXT
+          - name: source
+            type: VARCHAR(100)
+          - name: url
+            type: TEXT
+          - name: published_at
+            type: TIMESTAMP
+          - name: sentiment_score
+            type: NUMERIC
+
+# Caching Configuration
+caching:
+  enabled: true
+  backend: redis
+  default_ttl: 3600
+  patterns:
+    - key: "market_data:{symbol}:daily"
+      ttl: 86400
+    - key: "market_data:{symbol}:intraday"
+      ttl: 3600
+    - key: "alternative_data:news:{symbol}"
+      ttl: 7200
+
+# Scheduler Configuration
+scheduler:
+  enabled: true
+  jobs:
+    - name: update_daily_data
+      schedule: "0 18 * * 1-5"  # 6 PM on weekdays
+      function: update_daily_market_data
+      params:
+        symbols: "from_database"
+    - name: update_fundamentals
+      schedule: "0 20 * * 1-5"  # 8 PM on weekdays
+      function: update_fundamentals
+      params:
+        symbols: "from_database"
+    - name: clean_old_data
+      schedule: "0 1 * * 0"  # 1 AM on Sundays
+      function: clean_old_data
+      params:
+        older_than_days: 90
+
+# Monitoring
+monitoring:
+  metrics:
+    enabled: true
+    endpoint: /metrics
+  health:
+    enabled: true
+    endpoint: /health
+  logging:
+    level: INFO
+    format: json
+    output: stdout
+

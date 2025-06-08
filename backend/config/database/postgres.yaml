@@ -1,0 +1,185 @@
+# QuantumAlpha PostgreSQL Configuration
+
+# Connection Settings
+connection:
+  host: ${DB_HOST}
+  port: ${DB_PORT}
+  username: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+  database: ${DB_NAME}
+  sslmode: prefer
+
+# Connection Pool
+pool:
+  min_size: 5
+  max_size: 20
+  max_idle_time: 300  # seconds
+  max_lifetime: 3600  # seconds
+  acquire_timeout: 30  # seconds
+
+# Query Settings
+query:
+  statement_timeout: 30000  # milliseconds
+  lock_timeout: 5000  # milliseconds
+  idle_in_transaction_session_timeout: 60000  # milliseconds
+  default_transaction_isolation: read_committed
+  default_transaction_read_only: false
+
+# Schema Management
+schema:
+  search_path: public
+  version_table: schema_version
+  migrations_path: /opt/quantumalpha/migrations
+
+# Tables
+tables:
+  # User Management
+  - name: users
+    description: "User accounts"
+    indexes:
+      - columns: [email]
+        unique: true
+    partitioning: none
+  
+  - name: roles
+    description: "User roles"
+    indexes: []
+    partitioning: none
+  
+  - name: user_roles
+    description: "User to role mapping"
+    indexes:
+      - columns: [user_id, role_id]
+        unique: true
+    partitioning: none
+  
+  # Portfolio Management
+  - name: portfolios
+    description: "User portfolios"
+    indexes:
+      - columns: [user_id]
+    partitioning: none
+  
+  - name: positions
+    description: "Portfolio positions"
+    indexes:
+      - columns: [portfolio_id]
+      - columns: [symbol]
+    partitioning:
+      type: range
+      column: date
+      interval: monthly
+  
+  - name: transactions
+    description: "Trading transactions"
+    indexes:
+      - columns: [portfolio_id]
+      - columns: [symbol]
+      - columns: [transaction_date]
+    partitioning:
+      type: range
+      column: transaction_date
+      interval: monthly
+  
+  # Market Data
+  - name: symbols
+    description: "Tradable symbols"
+    indexes:
+      - columns: [symbol]
+        unique: true
+      - columns: [exchange]
+    partitioning: none
+  
+  - name: fundamentals
+    description: "Company fundamentals"
+    indexes:
+      - columns: [symbol]
+      - columns: [date]
+    partitioning:
+      type: range
+      column: date
+      interval: quarterly
+  
+  # Strategy Management
+  - name: strategies
+    description: "Trading strategies"
+    indexes:
+      - columns: [user_id]
+      - columns: [name]
+    partitioning: none
+  
+  - name: strategy_backtest_results
+    description: "Strategy backtest results"
+    indexes:
+      - columns: [strategy_id]
+      - columns: [start_date]
+    partitioning:
+      type: range
+      column: start_date
+      interval: monthly
+  
+  - name: strategy_live_results
+    description: "Strategy live trading results"
+    indexes:
+      - columns: [strategy_id]
+      - columns: [date]
+    partitioning:
+      type: range
+      column: date
+      interval: monthly
+
+# Backup Configuration
+backup:
+  enabled: true
+  method: pg_dump
+  compression: true
+  format: custom
+  schedule: "0 2 * * *"  # 2 AM daily
+  retention:
+    days: 30
+    keep_daily: 7
+    keep_weekly: 4
+    keep_monthly: 12
+  storage:
+    type: s3
+    bucket: quantumalpha-backups
+    prefix: postgres/
+    region: us-east-1
+
+# Monitoring
+monitoring:
+  enabled: true
+  slow_query_threshold: 1000  # milliseconds
+  log_min_duration_statement: 1000  # milliseconds
+  log_statement: none  # none, ddl, mod, all
+  log_connections: true
+  log_disconnections: true
+  log_lock_waits: true
+  log_temp_files: 0  # log all temp files
+  track_activities: true
+  track_counts: true
+  track_io_timing: true
+  track_functions: all  # none, pl, all
+  stats_temp_directory: /tmp/pg_stat_tmp
+
+# Performance Tuning
+performance:
+  shared_buffers: 1GB
+  work_mem: 64MB
+  maintenance_work_mem: 256MB
+  effective_cache_size: 3GB
+  random_page_cost: 1.1
+  effective_io_concurrency: 200
+  max_worker_processes: 8
+  max_parallel_workers_per_gather: 4
+  max_parallel_workers: 8
+  max_parallel_maintenance_workers: 4
+  wal_buffers: 16MB
+  checkpoint_timeout: 15min
+  checkpoint_completion_target: 0.9
+  autovacuum: true
+  autovacuum_max_workers: 3
+  autovacuum_naptime: 1min
+  autovacuum_vacuum_threshold: 50
+  autovacuum_analyze_threshold: 50
+
