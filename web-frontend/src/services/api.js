@@ -1,10 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+// Get the backend URL from environment or use default
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001/api';
+
 // Define our single API slice
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: '/api',
+    baseUrl: API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
       // Get the token from auth state
       const token = getState().auth.token;
@@ -119,3 +122,4 @@ export const {
   useGetMarketDataQuery,
   useGetRiskMetricsQuery,
 } = api;
+

@@ -17,16 +17,16 @@ const App = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
-      <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       
-      {/* Protected routes */}
+      {/* Main application routes - no authentication required */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/strategies" element={isAuthenticated ? <Strategies /> : <Navigate to="/login" />} />
-        <Route path="/strategies/:id" element={isAuthenticated ? <StrategyDetails /> : <Navigate to="/login" />} />
-        <Route path="/analytics" element={isAuthenticated ? <Analytics /> : <Navigate to="/login" />} />
-        <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/strategies" element={<Strategies />} />
+        <Route path="/strategies/:id" element={<StrategyDetails />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
       
       {/* 404 route */}
@@ -36,3 +36,4 @@ const App = () => {
 };
 
 export default App;
+
