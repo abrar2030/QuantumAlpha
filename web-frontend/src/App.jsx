@@ -7,6 +7,9 @@ import Strategies from './pages/Strategies';
 import StrategyDetails from './pages/StrategyDetails';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
+import Watchlist from './pages/Watchlist';
+import NewsFeed from './pages/NewsFeed';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
@@ -26,6 +29,9 @@ const App = () => {
         <Route path="/strategies" element={isAuthenticated ? <Strategies /> : <Navigate to="/login" />} />
         <Route path="/strategies/:id" element={isAuthenticated ? <StrategyDetails /> : <Navigate to="/login" />} />
         <Route path="/analytics" element={isAuthenticated ? <Analytics /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+        <Route path="/watchlist" element={isAuthenticated ? <Watchlist /> : <Navigate to="/login" />} />
+        <Route path="/news" element={isAuthenticated ? <NewsFeed /> : <Navigate to="/login" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
       </Route>
       

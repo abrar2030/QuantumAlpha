@@ -4,6 +4,7 @@ import authReducer from './slices/authSlice';
 import portfolioReducer from './slices/portfolioSlice';
 import strategyReducer from './slices/strategySlice';
 import uiReducer from './slices/uiSlice';
+import themeReducer from './slices/themeSlice';
 import { api } from '../services/api';
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     portfolio: portfolioReducer,
     strategy: strategyReducer,
     ui: uiReducer,
+    theme: themeReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
