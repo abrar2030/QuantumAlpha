@@ -19,6 +19,9 @@ import { useAlert } from '../../context/AlertContext';
 import { portfolioService } from '../../services/portfolioService';
 import { strategyService } from '../../services/strategyService';
 import { alertService } from '../../services/alertService';
+import { authenticateWithBiometrics } from '../../auth/BiometricAuth';
+import { retrieveDataSecurely } from '../../auth/SecureStorage';
+import { registerForPushNotifications, sendPushNotification } from '../../services/PushNotificationService';
 
 import PerformanceCard from '../../components/dashboard/PerformanceCard';
 import StrategyCard from '../../components/dashboard/StrategyCard';
@@ -47,14 +50,34 @@ const DashboardScreen = () => {
   const screenWidth = Dimensions.get('window').width;
   
   useEffect(() => {
-    loadDashboardData();
-    
+    const initApp = async () => {
+      // Biometric authentication on app launch/dashboard load
+      const authenticated = await authenticateWithBiometrics();
+      if (!authenticated) {
+        // Handle authentication failure (e.g., navigate to login, show error)
+        console.log("Biometric authentication failed or cancelled.");
+      }
+
+      // Simulate retrieving a securely stored token
+      const userToken = await retrieveDataSecurely("userToken");
+      console.log("Retrieved user token:", userToken);
+
+      // Register for push notifications
+      const deviceToken = await registerForPushNotifications();
+      console.log("Device token for push notifications:", deviceToken);
+
+      loadDashboardData();
+    };
+    initApp();
+
     // Set up alert listener for real-time updates
     const alertListener = alertService.subscribeToAlerts((newAlert) => {
       addAlert(newAlert);
       setRecentAlerts((prev) => [newAlert, ...prev].slice(0, 5));
+      // Send a push notification when a new alert is received
+      sendPushNotification(deviceToken, "New Alert!", newAlert.message);
     });
-    
+
     return () => {
       alertListener.unsubscribe();
     };

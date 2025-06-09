@@ -1,28 +1,23 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
-import authReducer from './slices/authSlice';
-import portfolioReducer from './slices/portfolioSlice';
-import strategyReducer from './slices/strategySlice';
-import uiReducer from './slices/uiSlice';
-import themeReducer from './slices/themeSlice';
-import { api } from '../services/api';
+// This file would contain the Redux Toolkit store setup.
+// Example: configureStore from @reduxjs/toolkit
 
-export const store = configureStore({
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from '../store/slices/authSlice';
+import portfolioReducer from '../store/slices/portfolioSlice';
+import strategyReducer from '../store/slices/strategySlice';
+import themeReducer from '../store/slices/themeSlice';
+import uiReducer from '../store/slices/uiSlice';
+
+const store = configureStore({
   reducer: {
     auth: authReducer,
     portfolio: portfolioReducer,
     strategy: strategyReducer,
-    ui: uiReducer,
     theme: themeReducer,
-    [api.reducerPath]: api.reducer,
+    ui: uiReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
-  devTools: import.meta.env.DEV,
 });
 
-setupListeners(store.dispatch);
+export default store;
 
-// Export types
-// export type RootState = ReturnType<typeof store.getState>;
-// export type AppDispatch = typeof store.dispatch;
+
