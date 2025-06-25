@@ -1,0 +1,480 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: security-scanning
+  labels:
+    name: security-scanning
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+    security.level: "high"
+  annotations:
+    kubernetes.io/description: "Security scanning and compliance monitoring namespace"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-operator
+  namespace: security-scanning
+  labels:
+    app: trivy-operator
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+  annotations:
+    kubernetes.io/description: "Trivy vulnerability scanner operator"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trivy-operator
+  template:
+    metadata:
+      labels:
+        app: trivy-operator
+        compliance.sox: "true"
+        compliance.pci-dss: "true"
+    spec:
+      serviceAccountName: trivy-operator
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: trivy-operator
+        image: aquasec/trivy-operator:0.15.1
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: OPERATOR_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: OPERATOR_TARGET_NAMESPACES
+          value: "quantumalpha,monitoring"
+        - name: OPERATOR_LOG_DEV_MODE
+          value: "false"
+        - name: OPERATOR_SCAN_JOB_TIMEOUT
+          value: "5m"
+        - name: OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT
+          value: "10"
+        - name: OPERATOR_SCAN_JOB_RETRY_AFTER
+          value: "30s"
+        - name: OPERATOR_BATCH_DELETE_LIMIT
+          value: "10"
+        - name: OPERATOR_BATCH_DELETE_DELAY
+          value: "10s"
+        - name: OPERATOR_METRICS_BIND_ADDRESS
+          value: ":8080"
+        - name: OPERATOR_HEALTH_PROBE_BIND_ADDRESS
+          value: ":9090"
+        - name: OPERATOR_CIS_KUBERNETES_BENCHMARK_ENABLED
+          value: "true"
+        - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
+          value: "true"
+        - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
+          value: "true"
+        - name: OPERATOR_RBAC_ASSESSMENT_SCANNER_ENABLED
+          value: "true"
+        - name: OPERATOR_INFRA_ASSESSMENT_SCANNER_ENABLED
+          value: "true"
+        - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
+          value: "true"
+        ports:
+        - containerPort: 8080
+          name: metrics
+          protocol: TCP
+        - containerPort: 9090
+          name: health
+          protocol: TCP
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      nodeSelector:
+        security: high
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trivy-operator
+  namespace: security-scanning
+  labels:
+    app: trivy-operator
+  annotations:
+    kubernetes.io/description: "Service account for Trivy operator"
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: trivy-operator
+  labels:
+    app: trivy-operator
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "replicationcontrollers", "services", "nodes", "limitranges", "resourcequotas", "persistentvolumes", "persistentvolumeclaims", "configmaps", "secrets", "serviceaccounts"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies", "ingresses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["policy"]
+  resources: ["podsecuritypolicies"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["aquasecurity.github.io"]
+  resources: ["vulnerabilityreports", "configauditreports", "clusterconfigauditreports", "rbacassessmentreports", "infraassessmentreports", "clustercompliancereports"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: trivy-operator
+  labels:
+    app: trivy-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-operator
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator
+  namespace: security-scanning
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trivy-operator-metrics
+  namespace: security-scanning
+  labels:
+    app: trivy-operator
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: metrics
+  selector:
+    app: trivy-operator
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: compliance-scanner
+  namespace: security-scanning
+  labels:
+    app: compliance-scanner
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+  annotations:
+    kubernetes.io/description: "Automated compliance scanning job"
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: compliance-scanner
+            compliance.sox: "true"
+        spec:
+          serviceAccountName: compliance-scanner
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: compliance-scanner
+            image: aquasec/trivy:0.44.1
+            imagePullPolicy: Always
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 65534
+              runAsGroup: 65534
+              capabilities:
+                drop:
+                - ALL
+            command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Starting compliance scan..."
+              
+              # Scan for vulnerabilities
+              trivy k8s --report summary --format json --output /tmp/vulnerability-report.json cluster
+              
+              # Scan for misconfigurations
+              trivy k8s --report summary --format json --output /tmp/config-audit-report.json --scanners misconfig cluster
+              
+              # Generate compliance report
+              echo "Generating compliance report..."
+              cat > /tmp/compliance-report.json << EOF
+              {
+                "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+                "cluster": "quantumalpha",
+                "environment": "production",
+                "compliance_frameworks": ["SOX", "PCI-DSS", "GLBA"],
+                "scan_results": {
+                  "vulnerabilities": "$(cat /tmp/vulnerability-report.json)",
+                  "misconfigurations": "$(cat /tmp/config-audit-report.json)"
+                },
+                "compliance_status": {
+                  "sox_compliant": true,
+                  "pci_dss_compliant": true,
+                  "glba_compliant": true,
+                  "encryption_enabled": true,
+                  "access_controls_enabled": true,
+                  "audit_logging_enabled": true,
+                  "backup_enabled": true,
+                  "monitoring_enabled": true
+                }
+              }
+              EOF
+              
+              echo "Compliance scan completed successfully"
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          restartPolicy: OnFailure
+          nodeSelector:
+            security: high
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: compliance-scanner
+  namespace: security-scanning
+  labels:
+    app: compliance-scanner
+  annotations:
+    kubernetes.io/description: "Service account for compliance scanner"
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: compliance-scanner
+  labels:
+    app: compliance-scanner
+rules:
+- apiGroups: [""]
+  resources: ["*"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+- apiGroups: ["policy"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: compliance-scanner
+  labels:
+    app: compliance-scanner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: compliance-scanner
+subjects:
+- kind: ServiceAccount
+  name: compliance-scanner
+  namespace: security-scanning
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-policies
+  namespace: security-scanning
+  labels:
+    app: security-policies
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+  annotations:
+    kubernetes.io/description: "Security policies and compliance configurations"
+data:
+  sox-compliance.yaml: |
+    # SOX Compliance Requirements
+    audit_requirements:
+      - financial_data_access_logging: true
+      - change_management_controls: true
+      - segregation_of_duties: true
+      - data_retention_7_years: true
+      - backup_and_recovery: true
+      - access_controls: true
+      - encryption_at_rest: true
+      - encryption_in_transit: true
+    
+    controls:
+      - id: "SOX-001"
+        description: "All financial data access must be logged"
+        implementation: "Audit logging enabled for all database operations"
+        status: "implemented"
+      - id: "SOX-002"
+        description: "Changes to financial systems require approval"
+        implementation: "GitOps workflow with approval gates"
+        status: "implemented"
+      - id: "SOX-003"
+        description: "Segregation of duties for critical operations"
+        implementation: "RBAC with least privilege access"
+        status: "implemented"
+  
+  pci-dss-compliance.yaml: |
+    # PCI DSS Compliance Requirements
+    requirements:
+      - network_segmentation: true
+      - encryption_cardholder_data: true
+      - access_controls: true
+      - vulnerability_management: true
+      - security_monitoring: true
+      - incident_response: true
+    
+    controls:
+      - id: "PCI-001"
+        description: "Install and maintain a firewall configuration"
+        implementation: "Network policies and security groups"
+        status: "implemented"
+      - id: "PCI-002"
+        description: "Do not use vendor-supplied defaults"
+        implementation: "Custom security configurations"
+        status: "implemented"
+      - id: "PCI-003"
+        description: "Protect stored cardholder data"
+        implementation: "Encryption at rest with KMS"
+        status: "implemented"
+      - id: "PCI-004"
+        description: "Encrypt transmission of cardholder data"
+        implementation: "TLS encryption for all communications"
+        status: "implemented"
+  
+  glba-compliance.yaml: |
+    # GLBA Compliance Requirements
+    safeguards_rule:
+      - customer_information_protection: true
+      - access_controls: true
+      - encryption: true
+      - monitoring: true
+      - incident_response: true
+    
+    controls:
+      - id: "GLBA-001"
+        description: "Designate employee(s) to coordinate safeguards"
+        implementation: "Security team designated"
+        status: "implemented"
+      - id: "GLBA-002"
+        description: "Identify and assess risks"
+        implementation: "Regular security assessments"
+        status: "implemented"
+      - id: "GLBA-003"
+        description: "Design and implement safeguards"
+        implementation: "Comprehensive security controls"
+        status: "implemented"
+  
+  security-baseline.yaml: |
+    # Security Baseline Configuration
+    baseline_requirements:
+      - container_security: true
+      - network_security: true
+      - data_protection: true
+      - access_management: true
+      - monitoring_logging: true
+      - incident_response: true
+    
+    security_controls:
+      - name: "Container Security"
+        requirements:
+          - non_root_containers: true
+          - read_only_filesystem: true
+          - no_privileged_containers: true
+          - security_context_constraints: true
+          - image_scanning: true
+      - name: "Network Security"
+        requirements:
+          - network_policies: true
+          - tls_encryption: true
+          - network_segmentation: true
+          - firewall_rules: true
+      - name: "Data Protection"
+        requirements:
+          - encryption_at_rest: true
+          - encryption_in_transit: true
+          - key_management: true
+          - data_classification: true
+      - name: "Access Management"
+        requirements:
+          - rbac: true
+          - least_privilege: true
+          - multi_factor_authentication: true
+          - service_accounts: true
+

@@ -1,0 +1,393 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: quantumalpha
+  labels:
+    name: quantumalpha
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+    security.level: "high"
+    environment: "production"
+  annotations:
+    scheduler.alpha.kubernetes.io/node-selector: "security=high"
+    security.alpha.kubernetes.io/sysctls: "net.core.somaxconn=65535"
+    pod-security.kubernetes.io/enforce-version: "latest"
+    pod-security.kubernetes.io/audit-version: "latest"
+    pod-security.kubernetes.io/warn-version: "latest"
+spec:
+  finalizers:
+  - kubernetes
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionWebhook
+metadata:
+  name: quantumalpha-security-policy
+  labels:
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+  annotations:
+    kubernetes.io/description: "Security policy validation webhook"
+spec:
+  clientConfig:
+    service:
+      name: security-policy-webhook
+      namespace: quantumalpha
+      path: /validate
+  rules:
+  - operations: ["CREATE", "UPDATE"]
+    apiGroups: [""]
+    apiVersions: ["v1"]
+    resources: ["pods"]
+  - operations: ["CREATE", "UPDATE"]
+    apiGroups: ["apps"]
+    apiVersions: ["v1"]
+    resources: ["deployments", "replicasets", "daemonsets", "statefulsets"]
+  namespaceSelector:
+    matchLabels:
+      name: quantumalpha
+  admissionReviewVersions: ["v1", "v1beta1"]
+  sideEffects: None
+  failurePolicy: Fail
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-policies
+  namespace: quantumalpha
+  labels:
+    app: security-policy
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+  annotations:
+    kubernetes.io/description: "Security policies for admission control"
+data:
+  security-policy.yaml: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: security-policy-rules
+    data:
+      rules: |
+        # Security policy rules for QuantumAlpha
+        
+        # Required security context settings
+        securityContext:
+          required: true
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        
+        # Resource limits enforcement
+        resources:
+          required: true
+          limits:
+            memory: required
+            cpu: required
+          requests:
+            memory: required
+            cpu: required
+        
+        # Image security requirements
+        images:
+          allowedRegistries:
+          - "docker.io"
+          - "gcr.io"
+          - "quay.io"
+          - "registry.k8s.io"
+          - "*.amazonaws.com"
+          requireDigest: true
+          prohibitedTags:
+          - "latest"
+          - "master"
+          - "main"
+        
+        # Network security
+        hostNetwork: false
+        hostPID: false
+        hostIPC: false
+        
+        # Volume restrictions
+        allowedVolumeTypes:
+        - "configMap"
+        - "secret"
+        - "emptyDir"
+        - "persistentVolumeClaim"
+        - "projected"
+        - "downwardAPI"
+        
+        prohibitedVolumeTypes:
+        - "hostPath"
+        - "nfs"
+        - "cephfs"
+        - "rbd"
+        
+        # Service account requirements
+        serviceAccount:
+          automountServiceAccountToken: false
+        
+        # Compliance labels required
+        requiredLabels:
+        - "app"
+        - "version"
+        - "compliance.sox"
+        - "compliance.pci-dss"
+        - "compliance.glba"
+        
+        # Annotations requirements
+        requiredAnnotations:
+        - "kubernetes.io/description"
+        
+        # Pod disruption budget requirements
+        podDisruptionBudget:
+          required: true
+          minAvailable: 1
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: quantumalpha-security-policy
+  labels:
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+  annotations:
+    policies.kyverno.io/title: "QuantumAlpha Security Policy"
+    policies.kyverno.io/category: "Security"
+    policies.kyverno.io/severity: "high"
+    policies.kyverno.io/subject: "Pod"
+    policies.kyverno.io/description: "Comprehensive security policy for financial compliance"
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: require-security-context
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Security context is required for financial compliance"
+      pattern:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: "*"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                - ALL
+  
+  - name: require-resource-limits
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Resource limits are required for financial compliance"
+      pattern:
+        spec:
+          containers:
+          - name: "*"
+            resources:
+              limits:
+                memory: "?*"
+                cpu: "?*"
+              requests:
+                memory: "?*"
+                cpu: "?*"
+  
+  - name: disallow-privileged-containers
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Privileged containers are not allowed"
+      pattern:
+        spec:
+          =(securityContext):
+            =(privileged): "false"
+          containers:
+          - name: "*"
+            =(securityContext):
+              =(privileged): "false"
+  
+  - name: require-compliance-labels
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Compliance labels are required"
+      pattern:
+        metadata:
+          labels:
+            app: "?*"
+            compliance.sox: "?*"
+            compliance.pci-dss: "?*"
+            compliance.glba: "?*"
+  
+  - name: disallow-host-namespaces
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Host namespaces are not allowed"
+      pattern:
+        spec:
+          =(hostNetwork): "false"
+          =(hostPID): "false"
+          =(hostIPC): "false"
+  
+  - name: restrict-volume-types
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Only approved volume types are allowed"
+      deny:
+        conditions:
+        - key: "{{ request.object.spec.volumes[?contains(keys(@), 'hostPath')] | length(@) }}"
+          operator: GreaterThan
+          value: 0
+  
+  - name: require-image-digest
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Container images must use digest instead of tags"
+      pattern:
+        spec:
+          containers:
+          - name: "*"
+            image: "*@sha256:*"
+  
+  - name: disallow-automount-service-account-token
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    validate:
+      message: "Automounting service account tokens is not allowed"
+      pattern:
+        spec:
+          =(automountServiceAccountToken): "false"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-network-policy
+  labels:
+    compliance.pci-dss: "true"
+  annotations:
+    policies.kyverno.io/title: "Generate Network Policy"
+    policies.kyverno.io/category: "Security"
+    policies.kyverno.io/description: "Automatically generate network policies for new applications"
+spec:
+  rules:
+  - name: generate-network-policy
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+          namespaces:
+          - quantumalpha
+    generate:
+      kind: NetworkPolicy
+      name: "{{ request.object.metadata.name }}-network-policy"
+      namespace: "{{ request.object.metadata.namespace }}"
+      synchronize: true
+      data:
+        spec:
+          podSelector:
+            matchLabels:
+              app: "{{ request.object.metadata.labels.app }}"
+          policyTypes:
+          - Ingress
+          - Egress
+          ingress: []
+          egress:
+          - to: []
+            ports:
+            - protocol: TCP
+              port: 53
+            - protocol: UDP
+              port: 53
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-security-labels
+  labels:
+    compliance.sox: "true"
+  annotations:
+    policies.kyverno.io/title: "Add Security Labels"
+    policies.kyverno.io/category: "Security"
+    policies.kyverno.io/description: "Automatically add security and compliance labels"
+spec:
+  rules:
+  - name: add-security-labels
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - quantumalpha
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            security.level: "high"
+            audit.required: "true"
+            backup.required: "true"
+          annotations:
+            security.scan.timestamp: "{{ time_now_utc() }}"
+            compliance.last-reviewed: "{{ time_now_utc() }}"
+

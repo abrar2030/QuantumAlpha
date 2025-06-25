@@ -3,21 +3,51 @@ kind: Deployment
 metadata:
   name: influxdb
   namespace: quantumalpha
+  labels:
+    app: influxdb
+    tier: database
+    compliance.sox: "true"
+  annotations:
+    kubernetes.io/description: "InfluxDB time series database with security hardening"
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: influxdb
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: influxdb
+        tier: database
+        compliance.sox: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8086"
+        prometheus.io/path: "/metrics"
     spec:
+      serviceAccountName: influxdb-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: influxdb
-        image: influxdb:2.0
+        image: influxdb:2.7-alpine
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+            - ALL
         env:
         - name: DOCKER_INFLUXDB_INIT_MODE
           value: "setup"
@@ -32,60 +62,276 @@ spec:
               name: influxdb-credentials
               key: password
         - name: DOCKER_INFLUXDB_INIT_ORG
-          value: "quantumalpha"
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-credentials
+              key: org
         - name: DOCKER_INFLUXDB_INIT_BUCKET
-          value: "market_data"
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-credentials
+              key: bucket
+        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-credentials
+              key: token
+        - name: INFLUXD_TLS_CERT
+          value: "/etc/ssl/certs/tls.crt"
+        - name: INFLUXD_TLS_KEY
+          value: "/etc/ssl/private/tls.key"
         ports:
         - containerPort: 8086
+          name: influxdb
+          protocol: TCP
+        volumeMounts:
+        - name: influxdb-storage
+          mountPath: /var/lib/influxdb2
+        - name: influxdb-config
+          mountPath: /etc/influxdb2
+          readOnly: true
+        - name: tls-certs
+          mountPath: /etc/ssl/certs
+          readOnly: true
+        - name: tls-private
+          mountPath: /etc/ssl/private
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
         resources:
           requests:
             memory: "512Mi"
             cpu: "250m"
           limits:
-            memory: "1Gi"
-            cpu: "500m"
-        volumeMounts:
-        - name: influxdb-data
-          mountPath: /var/lib/influxdb2
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8086
-          initialDelaySeconds: 30
-          periodSeconds: 10
+            memory: "2Gi"
+            cpu: "1000m"
         livenessProbe:
           httpGet:
             path: /health
             port: 8086
-          initialDelaySeconds: 60
-          periodSeconds: 15
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8086
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
       volumes:
-      - name: influxdb-data
+      - name: influxdb-storage
         persistentVolumeClaim:
           claimName: influxdb-pvc
+      - name: influxdb-config
+        configMap:
+          name: influxdb-config
+      - name: tls-certs
+        secret:
+          secretName: tls-certificates
+          items:
+          - key: tls.crt
+            path: tls.crt
+      - name: tls-private
+        secret:
+          secretName: tls-certificates
+          items:
+          - key: tls.key
+            path: tls.key
+      - name: tmp
+        emptyDir: {}
+      nodeSelector:
+        security: high
+      tolerations:
+      - key: "security"
+        operator: "Equal"
+        value: "high"
+        effect: "NoSchedule"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - influxdb
+              topologyKey: kubernetes.io/hostname
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: influxdb
   namespace: quantumalpha
-spec:
-  selector:
+  labels:
     app: influxdb
+    tier: database
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8086"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
   ports:
   - port: 8086
     targetPort: 8086
-  type: ClusterIP
+    protocol: TCP
+    name: influxdb
+  selector:
+    app: influxdb
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: influxdb-pvc
   namespace: quantumalpha
+  labels:
+    app: influxdb
+    tier: database
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: standard
+      storage: 100Gi
+  storageClassName: gp3-encrypted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: influxdb-sa
+  namespace: quantumalpha
+  labels:
+    app: influxdb
+  annotations:
+    kubernetes.io/description: "Service account for InfluxDB"
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: influxdb-role
+  namespace: quantumalpha
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: influxdb-rolebinding
+  namespace: quantumalpha
+subjects:
+- kind: ServiceAccount
+  name: influxdb-sa
+  namespace: quantumalpha
+roleRef:
+  kind: Role
+  name: influxdb-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: influxdb-config
+  namespace: quantumalpha
+  labels:
+    app: influxdb
+data:
+  config.yml: |
+    # InfluxDB configuration for QuantumAlpha
+    # Security-hardened configuration for financial services
+    
+    # HTTP settings
+    http-bind-address: ":8086"
+    http-https-enabled: true
+    http-https-certificate: "/etc/ssl/certs/tls.crt"
+    http-https-private-key: "/etc/ssl/private/tls.key"
+    http-max-row-limit: 10000
+    http-max-connection-limit: 1000
+    http-shared-secret: ""
+    http-realm: "InfluxDB"
+    http-unix-socket-enabled: false
+    http-bind-socket: "/var/run/influxdb.sock"
+    http-max-body-size: 25000000
+    http-max-concurrent-write-limit: 0
+    http-max-enqueued-write-limit: 0
+    http-enqueued-write-timeout: 30000000000
+    
+    # Logging
+    log-enabled: true
+    log-level: "info"
+    log-format: "auto"
+    log-queries-after: "0s"
+    log-write-tracing: false
+    suppress-logo: false
+    
+    # Data settings
+    engine: "tsm1"
+    index-version: "inmem"
+    max-concurrent-compactions: 0
+    max-index-log-file-size: "1m"
+    series-id-set-cache-size: 100
+    
+    # WAL settings
+    wal-dir: "/var/lib/influxdb2/wal"
+    wal-logging-enabled: true
+    wal-ready-series-size: 30720
+    wal-compaction-threshold: 0.5
+    wal-max-series-size: 1048576
+    wal-flush-cold-interval: "5s"
+    wal-partition-flush-delay: "2s"
+    
+    # Data retention
+    retention-enabled: true
+    retention-check-interval: "30m"
+    
+    # Shard precreation
+    shard-precreation-enabled: true
+    shard-precreation-check-interval: "10m"
+    shard-precreation-advance-period: "30m"
+    
+    # Monitor settings
+    monitor-store-enabled: true
+    monitor-store-database: "_internal"
+    monitor-store-interval: "10s"
+    
+    # Subscriber settings
+    subscriber-enabled: true
+    subscriber-http-timeout: "30s"
+    subscriber-insecure-skip-verify: false
+    subscriber-ca-certs: ""
+    subscriber-write-concurrency: 40
+    subscriber-write-buffer-size: 1000
+    
+    # Graphite settings
+    graphite-enabled: false
+    
+    # CollectD settings
+    collectd-enabled: false
+    
+    # OpenTSDB settings
+    opentsdb-enabled: false
+    
+    # UDP settings
+    udp-enabled: false
+    
+    # Continuous queries
+    continuous_queries-enabled: true
+    continuous_queries-log-enabled: true
+    continuous_queries-query-stats-enabled: false
+    continuous_queries-run-interval: "1s"
+

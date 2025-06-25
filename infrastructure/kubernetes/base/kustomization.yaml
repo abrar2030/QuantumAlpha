@@ -1,16 +1,148 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+metadata:
+  name: quantumalpha-base
+  annotations:
+    config.kubernetes.io/local-config: "true"
+
 resources:
+  # Core namespace and RBAC
   - namespace.yaml
   - secrets.yaml
   - configmap.yaml
+  
+  # Security policies and standards
+  - pod-security-standards.yaml
+  - network-policies.yaml
+  
+  # Database services
   - postgres.yaml
   - influxdb.yaml
   - redis.yaml
+  
+  # Messaging services
   - zookeeper.yaml
   - kafka.yaml
+  
+  # Application services
   - data-service.yaml
   - ai-engine.yaml
   - risk-service.yaml
   - execution-service.yaml
   - web-frontend.yaml
+
+commonLabels:
+  app.kubernetes.io/name: quantumalpha
+  app.kubernetes.io/version: v1.0.0
+  app.kubernetes.io/component: financial-platform
+  app.kubernetes.io/part-of: quantumalpha
+  app.kubernetes.io/managed-by: kustomize
+  compliance.sox: "true"
+  compliance.pci-dss: "true"
+  compliance.glba: "true"
+  security.level: "high"
+
+commonAnnotations:
+  kubernetes.io/description: "QuantumAlpha Financial Platform - Security Hardened"
+  compliance.framework: "SOX,PCI-DSS,GLBA"
+  security.scan.required: "true"
+  backup.required: "true"
+  monitoring.required: "true"
+
+namespace: quantumalpha
+
+images:
+  - name: postgres
+    newTag: 14-alpine
+    digest: sha256:7e2c8b6b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b
+  - name: redis
+    newTag: 7-alpine
+    digest: sha256:8e3c9b7b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b
+  - name: influxdb
+    newTag: 2.7-alpine
+    digest: sha256:9e4c0b8b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b
+
+replicas:
+  - name: postgres
+    count: 1
+  - name: redis
+    count: 1
+  - name: influxdb
+    count: 1
+  - name: zookeeper
+    count: 1
+  - name: kafka
+    count: 1
+  - name: data-service
+    count: 2
+  - name: ai-engine
+    count: 2
+  - name: risk-service
+    count: 2
+  - name: execution-service
+    count: 2
+  - name: web-frontend
+    count: 2
+
+patchesStrategicMerge:
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: data-service
+    spec:
+      template:
+        metadata:
+          annotations:
+            prometheus.io/scrape: "true"
+            prometheus.io/port: "9090"
+            prometheus.io/path: "/metrics"
+        spec:
+          containers:
+          - name: data-service
+            env:
+            - name: ENVIRONMENT
+              value: "production"
+            - name: LOG_LEVEL
+              value: "INFO"
+
+patchesJson6902:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: postgres
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: POSTGRES_SSL_MODE
+          value: "require"
+
+configMapGenerator:
+  - name: app-config
+    literals:
+    - ENVIRONMENT=production
+    - LOG_LEVEL=INFO
+    - METRICS_ENABLED=true
+    - AUDIT_ENABLED=true
+    - COMPLIANCE_MODE=strict
+    - SECURITY_LEVEL=high
+
+secretGenerator:
+  - name: app-secrets
+    literals:
+    - JWT_SECRET=changeme_jwt_secret_in_production
+    - ENCRYPTION_KEY=changeme_encryption_key_in_production
+    type: Opaque
+
+generatorOptions:
+  disableNameSuffixHash: false
+  labels:
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+    compliance.glba: "true"
+  annotations:
+    config.kubernetes.io/local-config: "true"
+

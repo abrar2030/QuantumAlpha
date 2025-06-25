@@ -3,83 +3,406 @@ kind: Deployment
 metadata:
   name: postgres
   namespace: quantumalpha
+  labels:
+    app: postgres
+    tier: database
+    compliance.sox: "true"
+    compliance.pci-dss: "true"
+  annotations:
+    kubernetes.io/description: "PostgreSQL database with security hardening"
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: postgres
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: postgres
+        tier: database
+        compliance.sox: "true"
+        compliance.pci-dss: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
     spec:
+      serviceAccountName: postgres-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: postgres
-        image: postgres:14
+        image: postgres:14-alpine
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 999
+          runAsGroup: 999
+          capabilities:
+            drop:
+            - ALL
         env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: database
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: db-credentials
+              name: postgres-credentials
               key: username
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-credentials
+              name: postgres-credentials
               key: password
-        - name: POSTGRES_DB
-          value: quantumalpha
+        - name: POSTGRES_INITDB_ARGS
+          value: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         ports:
         - containerPort: 5432
+          name: postgres
+          protocol: TCP
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-config
+          mountPath: /etc/postgresql/postgresql.conf
+          subPath: postgresql.conf
+          readOnly: true
+        - name: postgres-init
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+        - name: var-run
+          mountPath: /var/run/postgresql
         resources:
           requests:
             memory: "512Mi"
             cpu: "250m"
           limits:
-            memory: "1Gi"
-            cpu: "500m"
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
-        readinessProbe:
-          exec:
-            command: ["pg_isready", "-U", "postgres"]
-          initialDelaySeconds: 5
-          periodSeconds: 10
+            memory: "2Gi"
+            cpu: "1000m"
         livenessProbe:
           exec:
-            command: ["pg_isready", "-U", "postgres"]
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
           initialDelaySeconds: 30
-          periodSeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+      - name: postgres-exporter
+        image: prometheuscommunity/postgres-exporter:v0.12.0
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: DATA_SOURCE_NAME
+          value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:5432/$(POSTGRES_DB)?sslmode=require"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: database
+        ports:
+        - containerPort: 9187
+          name: metrics
+          protocol: TCP
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9187
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9187
+          initialDelaySeconds: 5
+          periodSeconds: 10
       volumes:
-      - name: postgres-data
+      - name: postgres-storage
         persistentVolumeClaim:
           claimName: postgres-pvc
+      - name: postgres-config
+        configMap:
+          name: postgres-config
+      - name: postgres-init
+        configMap:
+          name: postgres-init
+      - name: tmp
+        emptyDir: {}
+      - name: var-run
+        emptyDir: {}
+      nodeSelector:
+        security: high
+      tolerations:
+      - key: "security"
+        operator: "Equal"
+        value: "high"
+        effect: "NoSchedule"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - postgres
+              topologyKey: kubernetes.io/hostname
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres
   namespace: quantumalpha
-spec:
-  selector:
+  labels:
     app: postgres
+    tier: database
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  type: ClusterIP
   ports:
   - port: 5432
     targetPort: 5432
-  type: ClusterIP
+    protocol: TCP
+    name: postgres
+  selector:
+    app: postgres
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
   namespace: quantumalpha
+  labels:
+    app: postgres
+    tier: database
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: standard
+      storage: 100Gi
+  storageClassName: gp3-encrypted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-sa
+  namespace: quantumalpha
+  labels:
+    app: postgres
+  annotations:
+    kubernetes.io/description: "Service account for PostgreSQL"
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-role
+  namespace: quantumalpha
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: postgres-rolebinding
+  namespace: quantumalpha
+subjects:
+- kind: ServiceAccount
+  name: postgres-sa
+  namespace: quantumalpha
+roleRef:
+  kind: Role
+  name: postgres-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: quantumalpha
+  labels:
+    app: postgres
+data:
+  postgresql.conf: |
+    # PostgreSQL configuration for QuantumAlpha
+    # Security-hardened configuration for financial services
+    
+    # Connection settings
+    listen_addresses = '*'
+    port = 5432
+    max_connections = 100
+    superuser_reserved_connections = 3
+    
+    # SSL settings
+    ssl = on
+    ssl_cert_file = 'server.crt'
+    ssl_key_file = 'server.key'
+    ssl_ca_file = 'ca.crt'
+    ssl_crl_file = 'server.crl'
+    ssl_prefer_server_ciphers = on
+    ssl_ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256'
+    
+    # Authentication
+    password_encryption = scram-sha-256
+    
+    # Memory settings
+    shared_buffers = 256MB
+    effective_cache_size = 1GB
+    work_mem = 4MB
+    maintenance_work_mem = 64MB
+    
+    # WAL settings
+    wal_level = replica
+    max_wal_size = 1GB
+    min_wal_size = 80MB
+    checkpoint_completion_target = 0.9
+    
+    # Logging settings for compliance
+    log_destination = 'stderr'
+    logging_collector = on
+    log_directory = 'log'
+    log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
+    log_rotation_age = 1d
+    log_rotation_size = 100MB
+    log_min_duration_statement = 1000
+    log_checkpoints = on
+    log_connections = on
+    log_disconnections = on
+    log_lock_waits = on
+    log_statement = 'all'
+    log_temp_files = 0
+    log_autovacuum_min_duration = 0
+    
+    # Security settings
+    row_security = on
+    
+    # Performance settings
+    random_page_cost = 1.1
+    effective_io_concurrency = 200
+    
+    # Autovacuum settings
+    autovacuum = on
+    autovacuum_max_workers = 3
+    autovacuum_naptime = 1min
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: quantumalpha
+  labels:
+    app: postgres
+data:
+  01-init.sql: |
+    -- PostgreSQL initialization script for QuantumAlpha
+    -- Security-hardened configuration for financial services
+    
+    -- Create audit schema for compliance
+    CREATE SCHEMA IF NOT EXISTS audit;
+    
+    -- Enable row level security
+    ALTER DATABASE quantumalpha SET row_security = on;
+    
+    -- Create audit table for SOX compliance
+    CREATE TABLE IF NOT EXISTS audit.user_actions (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        action VARCHAR(255) NOT NULL,
+        table_name VARCHAR(255),
+        record_id VARCHAR(255),
+        old_values JSONB,
+        new_values JSONB,
+        timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        ip_address INET,
+        user_agent TEXT
+    );
+    
+    -- Create indexes for audit queries
+    CREATE INDEX IF NOT EXISTS idx_audit_user_actions_timestamp ON audit.user_actions(timestamp);
+    CREATE INDEX IF NOT EXISTS idx_audit_user_actions_user_id ON audit.user_actions(user_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_user_actions_action ON audit.user_actions(action);
+    
+    -- Create function for audit logging
+    CREATE OR REPLACE FUNCTION audit.log_user_action()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        IF TG_OP = 'DELETE' THEN
+            INSERT INTO audit.user_actions (user_id, action, table_name, record_id, old_values)
+            VALUES (current_user, TG_OP, TG_TABLE_NAME, OLD.id::text, row_to_json(OLD));
+            RETURN OLD;
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO audit.user_actions (user_id, action, table_name, record_id, old_values, new_values)
+            VALUES (current_user, TG_OP, TG_TABLE_NAME, NEW.id::text, row_to_json(OLD), row_to_json(NEW));
+            RETURN NEW;
+        ELSIF TG_OP = 'INSERT' THEN
+            INSERT INTO audit.user_actions (user_id, action, table_name, record_id, new_values)
+            VALUES (current_user, TG_OP, TG_TABLE_NAME, NEW.id::text, row_to_json(NEW));
+            RETURN NEW;
+        END IF;
+        RETURN NULL;
+    END;
+    $$ LANGUAGE plpgsql;
+

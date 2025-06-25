@@ -1,11 +1,211 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
+metadata:
+  name: zookeeper
+  namespace: quantumalpha
+  labels:
+    app: zookeeper
+    tier: messaging
+    compliance.sox: "true"
+  annotations:
+    kubernetes.io/description: "Zookeeper coordination service with security hardening"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        tier: messaging
+        compliance.sox: "true"
+    spec:
+      serviceAccountName: zookeeper-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: zookeeper
+        image: confluentinc/cp-zookeeper:7.4.0
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: ZOOKEEPER_CLIENT_PORT
+          value: "2181"
+        - name: ZOOKEEPER_TICK_TIME
+          value: "2000"
+        - name: ZOOKEEPER_INIT_LIMIT
+          value: "5"
+        - name: ZOOKEEPER_SYNC_LIMIT
+          value: "2"
+        - name: ZOOKEEPER_MAX_CLIENT_CNXNS
+          value: "60"
+        - name: ZOOKEEPER_AUTOPURGE_SNAP_RETAIN_COUNT
+          value: "3"
+        - name: ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL
+          value: "24"
+        - name: ZOOKEEPER_4LW_COMMANDS_WHITELIST
+          value: "mntr,conf,ruok"
+        - name: ZOOKEEPER_LOG4J_ROOT_LOGLEVEL
+          value: "INFO"
+        - name: ZOOKEEPER_TOOLS_LOG4J_LOGLEVEL
+          value: "ERROR"
+        - name: KAFKA_OPTS
+          value: "-Djava.security.auth.login.config=/etc/kafka/secrets/zookeeper_jaas.conf"
+        - name: ZOOKEEPER_AUTH_PROVIDER_1
+          value: "org.apache.zookeeper.server.auth.SASLAuthenticationProvider"
+        - name: ZOOKEEPER_REQUIRE_CLIENT_AUTH_SCHEME
+          value: "sasl"
+        - name: ZOOKEEPER_JAAS_LOGIN_RENEW
+          value: "3600000"
+        ports:
+        - containerPort: 2181
+          name: client
+          protocol: TCP
+        - containerPort: 2888
+          name: server
+          protocol: TCP
+        - containerPort: 3888
+          name: leader-election
+          protocol: TCP
+        volumeMounts:
+        - name: zookeeper-storage
+          mountPath: /var/lib/zookeeper
+        - name: zookeeper-logs
+          mountPath: /var/log/zookeeper
+        - name: zookeeper-secrets
+          mountPath: /etc/kafka/secrets
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "echo ruok | nc localhost 2181 | grep imok"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "echo ruok | nc localhost 2181 | grep imok"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: zookeeper-storage
+        persistentVolumeClaim:
+          claimName: zookeeper-pvc
+      - name: zookeeper-logs
+        emptyDir: {}
+      - name: zookeeper-secrets
+        secret:
+          secretName: kafka-credentials
+      - name: tmp
+        emptyDir: {}
+      nodeSelector:
+        security: high
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: quantumalpha
+  labels:
+    app: zookeeper
+    tier: messaging
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 2181
+    targetPort: 2181
+    protocol: TCP
+    name: client
+  - port: 2888
+    targetPort: 2888
+    protocol: TCP
+    name: server
+  - port: 3888
+    targetPort: 3888
+    protocol: TCP
+    name: leader-election
+  selector:
+    app: zookeeper
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-pvc
+  namespace: quantumalpha
+  labels:
+    app: zookeeper
+    tier: messaging
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp3-encrypted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zookeeper-sa
+  namespace: quantumalpha
+  labels:
+    app: zookeeper
+  annotations:
+    kubernetes.io/description: "Service account for Zookeeper"
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: kafka
   namespace: quantumalpha
+  labels:
+    app: kafka
+    tier: messaging
+    compliance.sox: "true"
+  annotations:
+    kubernetes.io/description: "Kafka messaging service with security hardening"
 spec:
-  serviceName: "kafka"
-  replicas: 3
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: kafka
@@ -13,38 +213,116 @@ spec:
     metadata:
       labels:
         app: kafka
+        tier: messaging
+        compliance.sox: "true"
     spec:
+      serviceAccountName: kafka-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: kafka
-        image: confluentinc/cp-kafka:7.0.0
-        ports:
-        - containerPort: 9092
-          name: client
-        - containerPort: 29092
-          name: internal
+        image: confluentinc/cp-kafka:7.4.0
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+            - ALL
         env:
         - name: KAFKA_BROKER_ID
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
+          value: "1"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: "zookeeper:2181"
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "PLAINTEXT://$(POD_NAME).kafka.$(POD_NAMESPACE).svc.cluster.local:29092,PLAINTEXT_HOST://$(POD_NAME).kafka.$(POD_NAMESPACE).svc.cluster.local:9092"
-        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-          value: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
-        - name: KAFKA_INTER_BROKER_LISTENER_NAME
-          value: "PLAINTEXT"
+          value: "SASL_SSL://kafka:9092"
+        - name: KAFKA_LISTENERS
+          value: "SASL_SSL://0.0.0.0:9092"
+        - name: KAFKA_SECURITY_INTER_BROKER_PROTOCOL
+          value: "SASL_SSL"
+        - name: KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL
+          value: "PLAIN"
+        - name: KAFKA_SASL_ENABLED_MECHANISMS
+          value: "PLAIN"
+        - name: KAFKA_SSL_KEYSTORE_FILENAME
+          value: "kafka.server.keystore.jks"
+        - name: KAFKA_SSL_KEYSTORE_CREDENTIALS
+          value: "keystore_creds"
+        - name: KAFKA_SSL_KEY_CREDENTIALS
+          value: "key_creds"
+        - name: KAFKA_SSL_TRUSTSTORE_FILENAME
+          value: "kafka.server.truststore.jks"
+        - name: KAFKA_SSL_TRUSTSTORE_CREDENTIALS
+          value: "truststore_creds"
+        - name: KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+          value: ""
+        - name: KAFKA_SSL_CLIENT_AUTH
+          value: "required"
         - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "1"
+        - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+          value: "0"
+        - name: KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL
+          value: "http://schema-registry:8081"
+        - name: KAFKA_LOG_RETENTION_HOURS
+          value: "168"
+        - name: KAFKA_LOG_RETENTION_BYTES
+          value: "1073741824"
+        - name: KAFKA_LOG_SEGMENT_BYTES
+          value: "1073741824"
+        - name: KAFKA_NUM_PARTITIONS
           value: "3"
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
+        - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_MIN_INSYNC_REPLICAS
+          value: "1"
+        - name: KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE
+          value: "false"
+        - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+          value: "false"
+        - name: KAFKA_DELETE_TOPIC_ENABLE
+          value: "true"
+        - name: KAFKA_COMPRESSION_TYPE
+          value: "snappy"
+        - name: KAFKA_LOG4J_ROOT_LOGLEVEL
+          value: "INFO"
+        - name: KAFKA_TOOLS_LOG4J_LOGLEVEL
+          value: "ERROR"
+        - name: KAFKA_OPTS
+          value: "-Djava.security.auth.login.config=/etc/kafka/secrets/kafka_jaas.conf"
+        - name: KAFKA_JMX_PORT
+          value: "9999"
+        - name: KAFKA_JMX_HOSTNAME
+          value: "localhost"
+        ports:
+        - containerPort: 9092
+          name: kafka
+          protocol: TCP
+        - containerPort: 9999
+          name: jmx
+          protocol: TCP
+        volumeMounts:
+        - name: kafka-storage
+          mountPath: /var/lib/kafka
+        - name: kafka-logs
+          mountPath: /var/log/kafka
+        - name: kafka-secrets
+          mountPath: /etc/kafka/secrets
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
         resources:
           requests:
             memory: "1Gi"
@@ -52,43 +330,92 @@ spec:
           limits:
             memory: "2Gi"
             cpu: "1000m"
-        volumeMounts:
-        - name: kafka-data
-          mountPath: /var/lib/kafka/data
-        readinessProbe:
-          tcpSocket:
-            port: 9092
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "kafka-broker-api-versions --bootstrap-server localhost:9092"
           initialDelaySeconds: 30
           periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 9092
-          initialDelaySeconds: 60
-          periodSeconds: 15
-  volumeClaimTemplates:
-  - metadata:
-      name: kafka-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: 10Gi
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "kafka-broker-api-versions --bootstrap-server localhost:9092"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: kafka-storage
+        persistentVolumeClaim:
+          claimName: kafka-pvc
+      - name: kafka-logs
+        emptyDir: {}
+      - name: kafka-secrets
+        secret:
+          secretName: kafka-credentials
+      - name: tmp
+        emptyDir: {}
+      nodeSelector:
+        security: high
+      depends_on:
+      - zookeeper
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: kafka
   namespace: quantumalpha
-spec:
-  selector:
+  labels:
     app: kafka
+    tier: messaging
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  type: ClusterIP
   ports:
   - port: 9092
-    name: client
     targetPort: 9092
-  - port: 29092
-    name: internal
-    targetPort: 29092
-  clusterIP: None
-  type: ClusterIP
+    protocol: TCP
+    name: kafka
+  - port: 9999
+    targetPort: 9999
+    protocol: TCP
+    name: jmx
+  selector:
+    app: kafka
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc
+  namespace: quantumalpha
+  labels:
+    app: kafka
+    tier: messaging
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: gp3-encrypted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kafka-sa
+  namespace: quantumalpha
+  labels:
+    app: kafka
+  annotations:
+    kubernetes.io/description: "Service account for Kafka"
+automountServiceAccountToken: false
+
