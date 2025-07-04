@@ -660,3 +660,53 @@ class MarketDataService:
         
         return data_source
 
+
+
+    def get_asset_class_data(
+        self,
+        asset_class: str,
+        timeframe: str = '1d',
+        period: Optional[str] = None,
+        start_date: Optional[Union[str, datetime]] = None,
+        end_date: Optional[Union[str, datetime]] = None,
+        source: str = 'alpha_vantage'
+    ) -> Dict[str, Any]:
+        """Get market data for a specific asset class (e.g., 'fixed_income', 'commodities', 'crypto').
+        This method would typically aggregate data from multiple symbols within that asset class.
+        For simplicity, this example will fetch data for a representative symbol.
+
+        Args:
+            asset_class: The asset class to retrieve data for.
+            timeframe: Data timeframe (e.g., '1m', '1d').
+            period: Historical period (e.g., '1y').
+            start_date: Start date for custom range.
+            end_date: End date for custom range.
+            source: Data source to use.
+
+        Returns:
+            Market data for the asset class.
+
+        Raises:
+            ValidationError: If asset class is not supported.
+            ServiceError: If there is an error getting data.
+        """
+        logger.info(f"Getting market data for asset class: {asset_class}")
+
+        # Map asset classes to representative symbols for data fetching
+        # In a real-world scenario, this would involve a more sophisticated mapping
+        # or fetching data for multiple instruments within the asset class and aggregating.
+        asset_class_symbols = {
+            'fixed_income': 'AGG',  # iShares Core U.S. Aggregate Bond ETF
+            'commodities': 'GSG',   # iShares S&P GSCI Commodity Indexed Trust
+            'crypto': 'BTC-USD'     # Bitcoin USD
+        }
+
+        if asset_class not in asset_class_symbols:
+            raise ValidationError(f"Unsupported asset class: {asset_class}")
+
+        symbol = asset_class_symbols[asset_class]
+
+        # Reuse the existing get_market_data method to fetch data for the representative symbol
+        return self.get_market_data(symbol, timeframe, period, start_date, end_date, source)
+
+

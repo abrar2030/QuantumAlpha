@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import requests
 from sqlalchemy.orm import Session
+from data_service.market_data import MarketDataService
 
 # Add parent directory to path to import common modules
 import sys
@@ -24,7 +25,7 @@ from common import (
 from common.models import Portfolio, Position
 
 # Configure logging
-logger = setup_logger('risk_calculator', logging.INFO)
+logger = setup_logger("risk_calculator", logging.INFO)
 
 class RiskCalculator:
     """Risk calculator"""
@@ -40,7 +41,9 @@ class RiskCalculator:
         self.db_manager = db_manager
         
         # Initialize data service URL
-        self.data_service_url = f"http://{config_manager.get('services.data_service.host')}:{config_manager.get('services.data_service.port')}"
+        data_host = config_manager.get("services.data_service.host", "localhost")
+        data_port = config_manager.get("services.data_service.port", "8001")
+        self.data_service_url = f"http://{data_host}:{data_port}"
         
         logger.info("Risk calculator initialized")
     
@@ -76,13 +79,13 @@ class RiskCalculator:
                 raise ValidationError("Risk metrics are required")
             
             # Calculate portfolio value
-            portfolio_value = sum(position['quantity'] * position['entry_price'] for position in portfolio)
+            portfolio_value = sum(position["quantity"] * position["entry_price"] for position in portfolio)
             
             # Get historical returns for each position
             position_returns = {}
             
             for position in portfolio:
-                symbol = position['symbol']
+                symbol = position["symbol"]
                 
                 # Get historical data from data service
                 historical_data = self._get_historical_data(symbol, lookback_period)
@@ -100,31 +103,35 @@ class RiskCalculator:
             metrics = {}
             
             for metric in risk_metrics:
-                if metric == 'var':
-                    metrics['var'] = self._calculate_var(portfolio_returns, confidence_level)
-                    metrics['var_percent'] = metrics['var'] / portfolio_value
+                if metric == "var":
+                    metrics["var"] = self._calculate_var(portfolio_returns, confidence_level)
+                    metrics["var_percent"] = metrics["var"] / portfolio_value
                 
-                elif metric == 'cvar':
-                    metrics['cvar'] = self._calculate_cvar(portfolio_returns, confidence_level)
-                    metrics['cvar_percent'] = metrics['cvar'] / portfolio_value
+                elif metric == "cvar":
+                    metrics["cvar"] = self._calculate_cvar(portfolio_returns, confidence_level)
+                    metrics["cvar_percent"] = metrics["cvar"] / portfolio_value
                 
-                elif metric == 'sharpe':
-                    metrics['sharpe'] = self._calculate_sharpe_ratio(portfolio_returns)
+                elif metric == "sharpe":
+                    metrics["sharpe"] = self._calculate_sharpe_ratio(portfolio_returns)
                 
-                elif metric == 'sortino':
-                    metrics['sortino'] = self._calculate_sortino_ratio(portfolio_returns)
+                elif metric == "sortino":
+                    metrics["sortino"] = self._calculate_sortino_ratio(portfolio_returns)
                 
-                elif metric == 'max_drawdown':
-                    metrics['max_drawdown'] = self._calculate_max_drawdown(portfolio_returns)
+                elif metric == "max_drawdown":
+                    metrics["max_drawdown"] = self._calculate_max_drawdown(portfolio_returns)
+                
+                elif metric == "es":
+                    metrics["es"] = self._calculate_expected_shortfall(portfolio_returns, confidence_level)
+                    metrics["es_percent"] = metrics["es"] / portfolio_value
                 
                 else:
                     logger.warning(f"Unsupported risk metric: {metric}")
             
             # Create response
             response = {
-                'portfolio_value': portfolio_value,
-                'risk_metrics': metrics,
-                'calculated_at': datetime.utcnow().isoformat()
+                "portfolio_value": portfolio_value,
+                "risk_metrics": metrics,
+                "calculated_at": datetime.utcnow().isoformat()
             }
             
             return response
@@ -166,9 +173,9 @@ class RiskCalculator:
             # Convert positions to list of dictionaries
             position_dicts = [
                 {
-                    'symbol': position.symbol,
-                    'quantity': position.quantity,
-                    'entry_price': position.entry_price
+                    "symbol": position.symbol,
+                    "quantity": position.quantity,
+                    "entry_price": position.entry_price
                 }
                 for position in positions
             ]
@@ -176,7 +183,7 @@ class RiskCalculator:
             # Calculate risk metrics
             risk_metrics = self.calculate_risk_metrics(
                 portfolio=position_dicts,
-                risk_metrics=['var', 'cvar', 'sharpe', 'sortino', 'max_drawdown'],
+                risk_metrics=["var", "cvar", "sharpe", "sortino", "max_drawdown"],
                 confidence_level=0.95,
                 lookback_period=252
             )
@@ -228,9 +235,9 @@ class RiskCalculator:
                 # Convert positions to list of dictionaries
                 position_dicts = [
                     {
-                        'symbol': position.symbol,
-                        'quantity': position.quantity,
-                        'entry_price': position.entry_price
+                        "symbol": position.symbol,
+                        "quantity": position.quantity,
+                        "entry_price": position.entry_price
                     }
                     for position in positions
                 ]
@@ -238,40 +245,43 @@ class RiskCalculator:
                 # Calculate risk metrics
                 risk_metrics = self.calculate_risk_metrics(
                     portfolio=position_dicts,
-                    risk_metrics=['var', 'cvar', 'sharpe', 'sortino', 'max_drawdown'],
+                    risk_metrics=["var", "cvar", "sharpe", "sortino", "max_drawdown"],
                     confidence_level=0.95,
                     lookback_period=252
                 )
                 
                 # Check for alerts
-                if risk_metrics['risk_metrics'].get('var_percent', 0) > 0.05:
+                if risk_metrics["risk_metrics"].get("var_percent", 0) > 0.05:
+                    var_percent = risk_metrics["risk_metrics"]["var_percent"]
                     alerts.append({
-                        'portfolio_id': portfolio.id,
-                        'portfolio_name': portfolio.name,
-                        'type': 'var',
-                        'severity': 'high',
-                        'message': f"VaR exceeds 5% of portfolio value: {risk_metrics['risk_metrics']['var_percent']:.2%}",
-                        'timestamp': datetime.utcnow().isoformat()
+                        "portfolio_id": portfolio.id,
+                        "portfolio_name": portfolio.name,
+                        "type": "var",
+                        "severity": "high",
+                        "message": f"VaR exceeds 5% of portfolio value: {var_percent:.2%}",
+                        "timestamp": datetime.utcnow().isoformat()
                     })
                 
-                if risk_metrics['risk_metrics'].get('max_drawdown', 0) > 0.1:
+                if risk_metrics["risk_metrics"].get("max_drawdown", 0) > 0.1:
+                    max_drawdown = risk_metrics["risk_metrics"]["max_drawdown"]
                     alerts.append({
-                        'portfolio_id': portfolio.id,
-                        'portfolio_name': portfolio.name,
-                        'type': 'drawdown',
-                        'severity': 'medium',
-                        'message': f"Maximum drawdown exceeds 10%: {risk_metrics['risk_metrics']['max_drawdown']:.2%}",
-                        'timestamp': datetime.utcnow().isoformat()
+                        "portfolio_id": portfolio.id,
+                        "portfolio_name": portfolio.name,
+                        "type": "drawdown",
+                        "severity": "medium",
+                        "message": f"Maximum drawdown exceeds 10%: {max_drawdown:.2%}",
+                        "timestamp": datetime.utcnow().isoformat()
                     })
                 
-                if risk_metrics['risk_metrics'].get('sharpe', 0) < 0.5:
+                if risk_metrics["risk_metrics"].get("sharpe", 0) < 0.5:
+                    sharpe_ratio = risk_metrics["risk_metrics"]["sharpe"]
                     alerts.append({
-                        'portfolio_id': portfolio.id,
-                        'portfolio_name': portfolio.name,
-                        'type': 'sharpe',
-                        'severity': 'low',
-                        'message': f"Sharpe ratio is below 0.5: {risk_metrics['risk_metrics']['sharpe']:.2f}",
-                        'timestamp': datetime.utcnow().isoformat()
+                        "portfolio_id": portfolio.id,
+                        "portfolio_name": portfolio.name,
+                        "type": "sharpe",
+                        "severity": "low",
+                        "message": f"Sharpe ratio is below 0.5: {sharpe_ratio:.2f}",
+                        "timestamp": datetime.utcnow().isoformat()
                     })
             
             return alerts
@@ -284,7 +294,7 @@ class RiskCalculator:
             session.close()
     
     def _get_historical_data(self, symbol: str, lookback_period: int) -> List[Dict[str, Any]]:
-        """Get historical data for a symbol
+        """Get historical data for a symbol using MarketDataService.
         
         Args:
             symbol: Symbol
@@ -297,50 +307,17 @@ class RiskCalculator:
             ServiceError: If there is an error getting data
         """
         try:
-            # Calculate start date
-            start_date = (datetime.utcnow() - timedelta(days=lookback_period)).strftime('%Y-%m-%d')
-            
-            # Get data from data service
-            response = requests.get(
-                f"{self.data_service_url}/api/market-data/{symbol}",
-                params={
-                    'timeframe': '1d',
-                    'start_date': start_date
-                }
+            market_data_service = MarketDataService(self.config_manager, self.db_manager)
+            data = market_data_service.get_market_data(
+                symbol=symbol,
+                timeframe='1d',
+                period=f'{lookback_period}d'
             )
-            
-            if response.status_code != 200:
-                raise ServiceError(f"Error getting historical data: {response.text}")
-            
-            # Parse response
-            data = response.json()
-            
-            return data['data']
+            return data["data"]
         
         except Exception as e:
             logger.error(f"Error getting historical data: {e}")
-            
-            # Return dummy data for testing
-            logger.warning("Using dummy data for testing")
-            
-            # Generate dummy data
-            n_samples = lookback_period
-            data = []
-            
-            for i in range(n_samples):
-                date = (datetime.utcnow() - timedelta(days=n_samples - i)).strftime('%Y-%m-%dT00:00:00')
-                close = 100 + np.random.normal(0, 1) * 10
-                
-                data.append({
-                    'timestamp': date,
-                    'open': close - 1,
-                    'high': close + 1,
-                    'low': close - 2,
-                    'close': close,
-                    'volume': 1000000 + np.random.normal(0, 1) * 100000
-                })
-            
-            return data
+            raise ServiceError(f"Error getting historical data: {str(e)}")
     
     def _calculate_returns(self, data: List[Dict[str, Any]]) -> np.ndarray:
         """Calculate returns from historical data
@@ -352,7 +329,7 @@ class RiskCalculator:
             Returns
         """
         # Extract close prices
-        prices = np.array([d['close'] for d in data])
+        prices = np.array([d["close"] for d in data])
         
         # Calculate returns
         returns = np.diff(prices) / prices[:-1]
@@ -374,14 +351,14 @@ class RiskCalculator:
             Portfolio returns
         """
         # Calculate portfolio value
-        portfolio_value = sum(position['quantity'] * position['entry_price'] for position in portfolio)
+        portfolio_value = sum(position["quantity"] * position["entry_price"] for position in portfolio)
         
         # Calculate position weights
         weights = {}
         
         for position in portfolio:
-            symbol = position['symbol']
-            weight = position['quantity'] * position['entry_price'] / portfolio_value
+            symbol = position["symbol"]
+            weight = position["quantity"] * position["entry_price"] / portfolio_value
             weights[symbol] = weight
         
         # Calculate portfolio returns
@@ -501,4 +478,77 @@ class RiskCalculator:
         max_drawdown = np.max(drawdown)
         
         return float(max_drawdown)
+
+
+
+    def _calculate_expected_shortfall(self, returns: np.ndarray, confidence_level: float) -> float:
+        """Calculate Expected Shortfall (ES)
+        
+        Args:
+            returns: Historical returns
+            confidence_level: Confidence level
+            
+        Returns:
+            Expected Shortfall
+        """
+        # Sort returns
+        sorted_returns = np.sort(returns)
+        
+        # Calculate index for VaR
+        var_index = int(len(sorted_returns) * (1 - confidence_level))
+        
+        # Get returns beyond VaR
+        tail_returns = sorted_returns[:var_index]
+        
+        # Calculate ES (average of returns in the tail)
+        es = -np.mean(tail_returns)
+        
+        return float(es)
+
+    def implement_tail_risk_hedging(self, portfolio: List[Dict[str, Any]], risk_tolerance: float = 0.01) -> Dict[str, Any]:
+        """Implement a basic tail risk hedging strategy.
+        This is a simplified example and would require more sophisticated models
+        and real-time market data in a production environment.
+
+        Args:
+            portfolio: Current portfolio positions.
+            risk_tolerance: Maximum acceptable VaR percentage.
+
+        Returns:
+            A dictionary indicating hedging actions taken.
+        """
+        logger.info("Implementing tail risk hedging.")
+
+        # Calculate current VaR
+        current_risk_metrics = self.calculate_risk_metrics(
+            portfolio=portfolio,
+            risk_metrics=["var"],
+            confidence_level=0.95
+        )
+        current_var_percent = current_risk_metrics["risk_metrics"].get("var_percent", 0)
+
+        hedging_actions = {
+            "status": "no_action_needed",
+            "current_var_percent": current_var_percent,
+            "risk_tolerance": risk_tolerance,
+            "recommendations": []
+        }
+
+        if current_var_percent > risk_tolerance:
+            logger.warning(f"Current VaR ({current_var_percent:.2%}) exceeds risk tolerance ({risk_tolerance:.2%}). Recommending hedging actions.")
+            hedging_actions["status"] = "hedging_recommended"
+            
+            # Simplified hedging recommendation: reduce equity exposure or buy protective puts
+            # In a real system, this would involve complex optimization and instrument selection
+            hedging_actions["recommendations"].append(
+                "Consider reducing exposure to high-beta equities or purchasing out-of-the-money put options on relevant indices/ETFs."
+            )
+            hedging_actions["recommendations"].append(
+                "Evaluate adding inverse ETFs or safe-haven assets (e.g., gold, long-term government bonds) to the portfolio."
+            )
+        else:
+            logger.info(f"Current VaR ({current_var_percent:.2%}) is within risk tolerance ({risk_tolerance:.2%}). No hedging action needed.")
+
+        return hedging_actions
+
 
