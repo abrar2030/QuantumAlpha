@@ -1,8 +1,3 @@
-"""
-Enhanced Authentication Module for QuantumAlpha
-Implements JWT-based authentication with MFA support and security best practices
-"""
-
 import os
 import jwt
 import bcrypt
@@ -68,7 +63,6 @@ class SecurityConfig:
     BACKUP_CODES_COUNT = 10
 
 class AuthManager:
-    """Enhanced authentication manager with security features"""
     
     def __init__(self, app=None):
         self.app = app

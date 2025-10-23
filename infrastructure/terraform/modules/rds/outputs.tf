@@ -1,5 +1,3 @@
-# Outputs for enhanced RDS module
-
 # Database Instance
 output "db_instance_id" {
   description = "RDS instance ID"
@@ -205,7 +203,6 @@ output "cloudwatch_alarms" {
   }
 }
 
-# Enhanced Monitoring
 output "enhanced_monitoring_iam_role_arn" {
   description = "Enhanced monitoring IAM role ARN"
   value       = var.monitoring_interval > 0 ? aws_iam_role.rds_enhanced_monitoring[0].arn : null

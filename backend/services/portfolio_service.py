@@ -1,8 +1,3 @@
-"""
-Enhanced Portfolio Management Service for QuantumAlpha
-Implements comprehensive portfolio tracking, risk management, and performance analytics
-"""
-
 import asyncio
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
@@ -212,7 +207,6 @@ class MarketDataService:
             return []
 
 class PortfolioService:
-    """Enhanced portfolio management service"""
     
     def __init__(self):
         self.market_data = MarketDataService()

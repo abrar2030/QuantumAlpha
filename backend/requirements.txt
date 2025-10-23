@@ -1,6 +1,3 @@
-# Enhanced QuantumAlpha Backend Requirements
-# Financial-grade trading platform with enterprise security and compliance
-
 # Core Flask and web framework dependencies
 Flask==2.3.3
 Flask-CORS==4.0.0

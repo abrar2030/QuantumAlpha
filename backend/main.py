@@ -1,8 +1,3 @@
-"""
-Enhanced QuantumAlpha Backend Application
-Comprehensive financial trading platform with enterprise-grade security and compliance
-"""
-
 import os
 import sys
 import asyncio
@@ -16,7 +11,6 @@ from flask_jwt_extended import JWTManager, get_jwt_identity, verify_jwt_in_reque
 import structlog
 import traceback
 
-# Import enhanced modules
 from common.database import initialize_database, cleanup_database, db_manager
 from common.auth import auth_manager, require_auth, require_role, require_permission
 from common.validation import (
@@ -53,7 +47,6 @@ structlog.configure(
 logger = structlog.get_logger(__name__)
 
 class QuantumAlphaApp:
-    """Enhanced QuantumAlpha application class"""
     
     def __init__(self):
         self.app = None

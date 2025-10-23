@@ -1,8 +1,3 @@
-"""
-Enhanced Trading Engine for QuantumAlpha
-Implements comprehensive order management, execution, and risk controls
-"""
-
 import asyncio
 import uuid
 from datetime import datetime, timezone, timedelta

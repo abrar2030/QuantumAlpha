@@ -1,8 +1,3 @@
-"""
-Enhanced Database Models for QuantumAlpha
-Implements comprehensive data models with security, audit, and compliance features
-"""
-
 import os
 import json
 import uuid
@@ -96,7 +91,6 @@ class BaseModel(Base):
         return result
 
 class User(BaseModel):
-    """Enhanced user model with security features"""
     __tablename__ = 'users'
     
     # Basic information
@@ -245,7 +239,6 @@ class AuditLog(BaseModel):
     )
 
 class Portfolio(BaseModel):
-    """Enhanced portfolio model with risk management"""
     __tablename__ = 'portfolios'
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
@@ -321,7 +314,6 @@ class Position(BaseModel):
     )
 
 class Order(BaseModel):
-    """Enhanced order model with compliance tracking"""
     __tablename__ = 'orders'
     
     # Order identification

@@ -1,8 +1,3 @@
-"""
-Enhanced Database Configuration and Management for QuantumAlpha
-Implements robust database connections, migrations, and performance optimization
-"""
-
 import os
 import time
 import threading
@@ -59,7 +54,6 @@ class DatabaseConfig:
         return f"postgresql://{username}:{password}@{host}:{port}/{database}"
 
 class DatabaseManager:
-    """Enhanced database manager with connection pooling and monitoring"""
     
     def __init__(self, config: DatabaseConfig):
         self.config = config

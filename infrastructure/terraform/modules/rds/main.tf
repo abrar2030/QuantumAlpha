@@ -1,4 +1,3 @@
-# Enhanced RDS module for QuantumAlpha with financial-grade security
 # Implements security best practices for SOX, PCI DSS, and GLBA compliance
 
 terraform {
@@ -314,7 +313,6 @@ resource "aws_db_instance" "read_replica" {
   })
 }
 
-# IAM Role for Enhanced Monitoring
 resource "aws_iam_role" "rds_enhanced_monitoring" {
   count = var.monitoring_interval > 0 ? 1 : 0
 
