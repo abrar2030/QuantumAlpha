@@ -5,7 +5,7 @@ services:
   # Infrastructure Services
   # ----------------------------------------------------------------
   postgres:
-    image: timescale/timescaledb:latest-pg14
+    image: timescale/timescaledb:latest-pg14 # Using TimescaleDB for time-series data
     container_name: quantumalpha-postgres
     environment:
       POSTGRES_USER: ${DB_USER:-quantumalpha_user}
@@ -13,7 +13,7 @@ services:
       POSTGRES_DB: ${DB_NAME:-quantumalpha_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      # Assuming an init-db script exists to set up schema/initial data
+      # Assuming an init-db script exists in the scripts directory, uncomment to use
       # - ./scripts/init-db:/docker-entrypoint-initdb.d
     ports:
       - "${DB_PORT:-5432}:5432"
@@ -25,12 +25,22 @@ services:
     networks:
       - quantumalpha-network
     restart: unless-stopped
+    # Resource limits from the infrastructure file for robustness
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   redis:
     image: redis:7-alpine
     container_name: quantumalpha-redis
+    # Exposing only to localhost for security, as in infrastructure file
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -41,6 +51,15 @@ services:
     networks:
       - quantumalpha-network
     restart: unless-stopped
+    # Resource limits from the infrastructure file
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -48,9 +67,20 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    # Ports exposed only to localhost for security, as in infrastructure file
+    ports:
+      - "127.0.0.1:2181:2181"
     networks:
       - quantumalpha-network
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   kafka:
     image: confluentinc/cp-kafka:7.3.0
@@ -58,8 +88,9 @@ services:
     depends_on:
       zookeeper:
         condition: service_started
+    # Ports exposed only to localhost for security, as in infrastructure file
     ports:
-      - "${KAFKA_PORT:-9092}:9092"
+      - "127.0.0.1:${KAFKA_PORT:-9092}:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -71,14 +102,23 @@ services:
     networks:
       - quantumalpha-network
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   # ----------------------------------------------------------------
   # Backend Microservices (Using the shared Dockerfile with build args)
+  # NOTE: The root Dockerfile is used here, assuming it's a multi-stage build or a generic Python service builder.
   # ----------------------------------------------------------------
   data-service:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile # Points to QuantumAlpha/backend/Dockerfile
       args:
         SERVICE_NAME: data_service
     container_name: quantumalpha-data-service
@@ -101,6 +141,14 @@ services:
       - quantumalpha-network
     restart: unless-stopped
     command: ["python", "-m", "data_service.app"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   ai-engine:
     build:
@@ -126,6 +174,14 @@ services:
       - quantumalpha-network
     restart: unless-stopped
     command: ["python", "-m", "ai_engine.app"]
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
 
   risk-service:
     build:
@@ -150,6 +206,14 @@ services:
       - quantumalpha-network
     restart: unless-stopped
     command: ["python", "-m", "risk_service.app"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   execution-service:
     build:
@@ -175,52 +239,14 @@ services:
       - quantumalpha-network
     restart: unless-stopped
     command: ["python", "-m", "execution_service.app"]
-
-  analytics-service:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      args:
-        SERVICE_NAME: analytics_service
-    container_name: quantumalpha-analytics-service
-    depends_on:
-      data-service:
-        condition: service_started
-    environment:
-      DB_HOST: postgres
-      REDIS_HOST: redis
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      DATA_SERVICE_HOST: data-service
-      SERVICE_PORT: 8005
-    ports:
-      - "8005:8005"
-    networks:
-      - quantumalpha-network
-    restart: unless-stopped
-    command: ["python", "-m", "analytics_service.app"]
-
-  compliance-service:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      args:
-        SERVICE_NAME: compliance_service
-    container_name: quantumalpha-compliance-service
-    depends_on:
-      data-service:
-        condition: service_started
-    environment:
-      DB_HOST: postgres
-      REDIS_HOST: redis
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      DATA_SERVICE_HOST: data-service
-      SERVICE_PORT: 8006
-    ports:
-      - "8006:8006"
-    networks:
-      - quantumalpha-network
-    restart: unless-stopped
-    command: ["python", "-m", "compliance_service.app"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   api-gateway:
     build:
@@ -232,10 +258,6 @@ services:
     depends_on:
       execution-service:
         condition: service_started
-      analytics-service:
-        condition: service_started
-      compliance-service:
-        condition: service_started
     environment:
       SERVICE_PORT: 8080
       # All other service hosts are implicitly available via the network
@@ -245,6 +267,14 @@ services:
       - quantumalpha-network
     restart: unless-stopped
     command: ["python", "-m", "api_gateway.app"]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # ----------------------------------------------------------------
   # Frontend Applications
@@ -265,9 +295,15 @@ services:
     networks:
       - quantumalpha-network
     restart: unless-stopped
-    # Assuming a simple Dockerfile that runs `npm run dev` or serves the build
-    # For production, a multi-stage build with a final nginx/serve stage would be better
     command: ["npm", "run", "dev", "--", "--host"]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # ----------------------------------------------------------------
   # Monitoring Stack
