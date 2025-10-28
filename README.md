@@ -246,14 +246,6 @@ We welcome contributions to QuantumAlpha! Please see our [Contributing Guideline
 
 ---
 
-## License & References
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-A selection of key references that informed the design and implementation of QuantumAlpha:
-*   AI-Driven Quantitative Strategies for Hedge Funds
-*   Deep Reinforcement Learning in Quantitative Algorithmic Trading
-*   AWS Algorithmic Trading Reference Architecture
-*   PyPortfolioOpt
-*   Event-Driven Backtesting with Python
-*   Ray for Machine Learning & AI Computing
