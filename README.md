@@ -240,12 +240,6 @@ For detailed information on the platform, refer to the following resources:
 
 ---
 
-## Contributing
-
-We welcome contributions to QuantumAlpha! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved, including development guidelines (e.g., PEP 8, ESLint), testing requirements, and the pull request process.
-
----
-
 ## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
