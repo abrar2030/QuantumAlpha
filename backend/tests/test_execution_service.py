@@ -2,23 +2,24 @@
 Unit tests for the Execution Service.
 """
 
+import json
 import os
 import sys
 import unittest
-from unittest.mock import patch, MagicMock
-import json
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 import uuid
+from datetime import datetime, timedelta
+from unittest.mock import MagicMock, patch
+
+import numpy as np
+import pandas as pd
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from execution_service.order_manager import OrderManager
+from common import NotFoundError, ServiceError, ValidationError
 from execution_service.broker_integration import BrokerIntegration
 from execution_service.execution_strategy import ExecutionStrategy
-from common import ServiceError, ValidationError, NotFoundError
+from execution_service.order_manager import OrderManager
 
 
 class TestOrderManager(unittest.TestCase):

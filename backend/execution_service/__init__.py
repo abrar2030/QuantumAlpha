@@ -7,8 +7,8 @@ This service is responsible for:
 4. Trade reconciliation
 """
 
-from .order_manager import OrderManager
 from .broker_integration import BrokerIntegration
 from .execution_strategy import ExecutionStrategy
+from .order_manager import OrderManager
 
 __all__ = ["OrderManager", "BrokerIntegration", "ExecutionStrategy"]

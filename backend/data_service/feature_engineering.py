@@ -3,28 +3,22 @@ Feature engineering service for QuantumAlpha Data Service.
 Handles feature engineering and technical indicators.
 """
 
-import os
 import logging
-from typing import Dict, Any, List, Optional, Union
+import os
+# Add parent directory to path to import common modules
+import sys
 from datetime import datetime, timedelta
-import pandas as pd
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
+import pandas as pd
 from influxdb_client import Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-# Add parent directory to path to import common modules
-import sys
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (
-    setup_logger,
-    ServiceError,
-    ValidationError,
-    NotFoundError,
-    SimpleCache,
-)
-
+from common import (NotFoundError, ServiceError, SimpleCache, ValidationError,
+                    setup_logger)
 # Import market data service
 from data_service.market_data import MarketDataService
 

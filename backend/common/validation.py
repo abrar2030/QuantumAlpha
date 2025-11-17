@@ -3,18 +3,20 @@ Comprehensive Input Validation Framework for QuantumAlpha
 Implements robust validation, sanitization, and security controls for all inputs
 """
 
-import re
-import json
 import html
-import bleach
+import json
+import re
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
-from typing import Any, Dict, List, Optional, Union, Callable
 from functools import wraps
-from flask import request, jsonify
-from marshmallow import Schema, fields, validate, ValidationError, pre_load, post_load
-from marshmallow.decorators import validates, validates_schema
+from typing import Any, Callable, Dict, List, Optional, Union
+
+import bleach
 import structlog
+from flask import jsonify, request
+from marshmallow import (Schema, ValidationError, fields, post_load, pre_load,
+                         validate)
+from marshmallow.decorators import validates, validates_schema
 
 logger = structlog.get_logger(__name__)
 

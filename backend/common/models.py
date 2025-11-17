@@ -1,29 +1,19 @@
-import os
+import enum
 import json
+import os
 import uuid
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Float,
-    Boolean,
-    DateTime,
-    Text,
-    JSON,
-    ForeignKey,
-    Index,
-    UniqueConstraint,
-    CheckConstraint,
-    Enum as SQLEnum,
-)
+from typing import Any, Dict, List, Optional
+
+import structlog
+from cryptography.fernet import Fernet
+from sqlalchemy import JSON, Boolean, CheckConstraint, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import (Float, ForeignKey, Index, Integer, String, Text,
+                        UniqueConstraint)
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
-from sqlalchemy.dialects.postgresql import UUID, JSONB
-from cryptography.fernet import Fernet
-import enum
-import structlog
 
 logger = structlog.get_logger(__name__)
 

@@ -2,20 +2,21 @@
 Unit tests for the Data Service.
 """
 
+import json
 import os
 import sys
 import unittest
-from unittest.mock import patch, MagicMock
-import json
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
+from unittest.mock import MagicMock, patch
+
+import numpy as np
+import pandas as pd
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from common import NotFoundError, ServiceError, ValidationError
 from data_service.data_processor import DataProcessor
-from common import ServiceError, ValidationError, NotFoundError
 
 
 class TestDataProcessor(unittest.TestCase):

@@ -3,28 +3,28 @@ Factor analysis module for QuantumAlpha Analytics Service.
 Provides comprehensive factor analysis and risk decomposition tools.
 """
 
-import os
-import logging
-from typing import Dict, Any, List, Optional, Tuple, Union
-from datetime import datetime, timedelta
-import numpy as np
-import pandas as pd
-from dataclasses import dataclass
-from enum import Enum
 import json
-from sklearn.decomposition import PCA, FactorAnalysis
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
-from sklearn.metrics import r2_score
-import scipy.stats as stats
-from scipy.optimize import minimize
-
+import logging
+import os
 # Add parent directory to path to import common modules
 import sys
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+from scipy.optimize import minimize
+from sklearn.decomposition import PCA, FactorAnalysis
+from sklearn.linear_model import Lasso, LinearRegression, Ridge
+from sklearn.metrics import r2_score
+from sklearn.preprocessing import StandardScaler
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("factor_analysis", logging.INFO)

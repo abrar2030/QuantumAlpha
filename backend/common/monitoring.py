@@ -3,26 +3,23 @@ Comprehensive Monitoring and Health Check System for QuantumAlpha
 Implements real-time monitoring, alerting, and system health tracking
 """
 
-import os
-import time
-import psutil
-import threading
-from datetime import datetime, timezone, timedelta
-from typing import Dict, List, Optional, Any, Callable
-from dataclasses import dataclass, asdict
-from enum import Enum
-from flask import Flask, jsonify, request
-from prometheus_client import (
-    Counter,
-    Histogram,
-    Gauge,
-    generate_latest,
-    CONTENT_TYPE_LATEST,
-)
-from .database import db_manager, get_redis_client
-from .models import AuditLog, User, Portfolio, Order
-import structlog
 import json
+import os
+import threading
+import time
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta, timezone
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
+
+import psutil
+import structlog
+from flask import Flask, jsonify, request
+from prometheus_client import (CONTENT_TYPE_LATEST, Counter, Gauge, Histogram,
+                               generate_latest)
+
+from .database import db_manager, get_redis_client
+from .models import AuditLog, Order, Portfolio, User
 
 logger = structlog.get_logger(__name__)
 

@@ -3,27 +3,27 @@ Real-time data updater for QuantumAlpha Risk Service.
 Handles continuous data ingestion and model updates.
 """
 
-import os
-import logging
 import asyncio
-import threading
-import time
-from typing import Dict, Any, List, Optional, Callable
-from datetime import datetime, timedelta
 import json
-import websocket
-import requests
-from queue import Queue, Empty
-from concurrent.futures import ThreadPoolExecutor
-
+import logging
+import os
 # Add parent directory to path to import common modules
 import sys
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta
+from queue import Empty, Queue
+from typing import Any, Callable, Dict, List, Optional
+
+import requests
+import websocket
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError
-from risk_service.online_learning import OnlineLearningEngine
+from common import ServiceError, ValidationError, setup_logger
 from data_service.market_data import MarketDataService
+from risk_service.online_learning import OnlineLearningEngine
 
 # Configure logging
 logger = setup_logger("real_time_updater", logging.INFO)

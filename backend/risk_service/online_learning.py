@@ -3,25 +3,25 @@ Online learning module for QuantumAlpha Risk Service.
 Handles real-time model updates and adaptive risk modeling.
 """
 
-import os
-import logging
-from typing import Dict, Any, List, Optional, Union, Tuple
-from datetime import datetime, timedelta
-import numpy as np
-import pandas as pd
-from sklearn.linear_model import SGDRegressor, PassiveAggressiveRegressor
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-import pickle
 import json
-
+import logging
+import os
+import pickle
 # Add parent directory to path to import common modules
 import sys
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import IsolationForest
+from sklearn.linear_model import PassiveAggressiveRegressor, SGDRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.preprocessing import StandardScaler
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("online_learning", logging.INFO)

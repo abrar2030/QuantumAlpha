@@ -7,33 +7,25 @@ This service is responsible for:
 4. Trade reconciliation
 """
 
-import os
 import logging
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import os
 import sys
 import traceback
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 # Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (
-    get_config_manager,
-    get_db_manager,
-    setup_logger,
-    ServiceError,
-    ValidationError,
-    NotFoundError,
-    AuthenticationError,
-    AuthorizationError,
-    validate_schema,
-)
-from common.validation import OrderRequest, CancelOrderRequest
-
-# Import service modules
-from execution_service.order_manager import OrderManager
+from common import (AuthenticationError, AuthorizationError, NotFoundError,
+                    ServiceError, ValidationError, get_config_manager,
+                    get_db_manager, setup_logger, validate_schema)
+from common.validation import CancelOrderRequest, OrderRequest
 from execution_service.broker_integration import BrokerIntegration
 from execution_service.execution_strategy import ExecutionStrategy
+# Import service modules
+from execution_service.order_manager import OrderManager
 
 # Configure logging
 logger = setup_logger("execution_service", logging.INFO)

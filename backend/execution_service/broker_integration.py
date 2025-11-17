@@ -3,19 +3,19 @@ Broker integration for QuantumAlpha Execution Service.
 Handles integration with various brokers.
 """
 
-import os
 import logging
-import uuid
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime
-import alpaca_trade_api as tradeapi
-
+import os
 # Add parent directory to path to import common modules
 import sys
+import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
+import alpaca_trade_api as tradeapi
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("broker_integration", logging.INFO)

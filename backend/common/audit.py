@@ -3,19 +3,21 @@ Comprehensive Audit Logging System for QuantumAlpha
 Implements immutable audit trails for financial compliance and security monitoring
 """
 
-import os
-import json
 import hashlib
+import json
+import os
 import threading
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional, List
 from functools import wraps
-from flask import request, g
-from flask_jwt_extended import get_jwt_identity, get_jwt
-from sqlalchemy.orm import sessionmaker
-from .database import get_db_session
-from .models import AuditLog, AuditAction, User
+from typing import Any, Dict, List, Optional
+
 import structlog
+from flask import g, request
+from flask_jwt_extended import get_jwt, get_jwt_identity
+from sqlalchemy.orm import sessionmaker
+
+from .database import get_db_session
+from .models import AuditAction, AuditLog, User
 
 logger = structlog.get_logger(__name__)
 

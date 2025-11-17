@@ -3,30 +3,30 @@ Model manager for QuantumAlpha AI Engine.
 Handles model training, evaluation, and management.
 """
 
-import os
-import logging
-import uuid
 import json
+import logging
+import os
 import pickle
-from typing import Dict, Any, List, Optional, Union
+# Add parent directory to path to import common modules
+import sys
+import uuid
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
 import pandas as pd
 import requests
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import tensorflow as tf
-from tensorflow.keras.models import Sequential, load_model, Model
-from tensorflow.keras.layers import Dense, LSTM, Dropout, Input
-from tensorflow.keras.optimizers import Adam
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-
-# Add parent directory to path to import common modules
-import sys
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
+from tensorflow.keras.models import Model, Sequential, load_model
+from tensorflow.keras.optimizers import Adam
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("model_manager", logging.INFO)

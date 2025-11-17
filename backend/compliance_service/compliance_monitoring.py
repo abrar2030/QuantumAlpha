@@ -3,23 +3,22 @@ Compliance monitoring module for QuantumAlpha Compliance Service.
 Handles real-time compliance monitoring and violation detection.
 """
 
-import os
-import logging
-from typing import Dict, Any, List, Optional, Union, Callable
-from datetime import datetime, timedelta
-from dataclasses import dataclass
-from enum import Enum
 import json
-import threading
-import time
-from queue import Queue, Empty
-
+import logging
+import os
 # Add parent directory to path to import common modules
 import sys
+import threading
+import time
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from enum import Enum
+from queue import Empty, Queue
+from typing import Any, Callable, Dict, List, Optional, Union
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("compliance_monitoring", logging.INFO)

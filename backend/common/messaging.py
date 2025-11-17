@@ -3,12 +3,13 @@ Messaging utilities for QuantumAlpha services.
 Provides Kafka producer and consumer integration.
 """
 
-import os
-import logging
 import json
+import logging
+import os
 import threading
-from typing import Dict, Any, Optional, Callable, List
-from confluent_kafka import Producer, Consumer, KafkaError, KafkaException
+from typing import Any, Callable, Dict, List, Optional
+
+from confluent_kafka import Consumer, KafkaError, KafkaException, Producer
 
 # Configure logging
 logging.basicConfig(

@@ -3,20 +3,20 @@ Position sizing for QuantumAlpha Risk Service.
 Handles position sizing optimization.
 """
 
-import os
 import logging
-from typing import Dict, Any, List, Optional, Union
+import os
+# Add parent directory to path to import common modules
+import sys
 from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
 import pandas as pd
 import requests
 
-# Add parent directory to path to import common modules
-import sys
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("position_sizing", logging.INFO)

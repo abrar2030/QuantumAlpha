@@ -3,27 +3,21 @@ Order manager for QuantumAlpha Execution Service.
 Handles order management and execution.
 """
 
-import os
 import logging
-import uuid
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime
-from sqlalchemy.orm import Session
-
+import os
 # Add parent directory to path to import common modules
 import sys
+import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+
+from sqlalchemy.orm import Session
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (
-    setup_logger,
-    ServiceError,
-    ValidationError,
-    NotFoundError,
-    AuthenticationError,
-    AuthorizationError,
-)
-from common.models import Order, Execution
+from common import (AuthenticationError, AuthorizationError, NotFoundError,
+                    ServiceError, ValidationError, setup_logger)
+from common.models import Execution, Order
 
 # Configure logging
 logger = setup_logger("order_manager", logging.INFO)

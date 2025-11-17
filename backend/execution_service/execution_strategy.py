@@ -3,17 +3,16 @@ Execution strategy for QuantumAlpha Execution Service.
 Handles execution strategies for orders.
 """
 
-import os
 import logging
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime
-
+import os
 # Add parent directory to path to import common modules
 import sys
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import setup_logger, ServiceError, ValidationError, NotFoundError
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("execution_strategy", logging.INFO)

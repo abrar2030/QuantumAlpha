@@ -2,22 +2,23 @@
 Unit tests for the Risk Service.
 """
 
+import json
 import os
 import sys
 import unittest
-from unittest.mock import patch, MagicMock
-import json
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
+from unittest.mock import MagicMock, patch
+
+import numpy as np
+import pandas as pd
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from risk_service.risk_calculator import RiskCalculator
+from common import NotFoundError, ServiceError, ValidationError
 from risk_service.position_sizing import PositionSizing
+from risk_service.risk_calculator import RiskCalculator
 from risk_service.stress_testing import StressTesting
-from common import ServiceError, ValidationError, NotFoundError
 
 
 class TestRiskCalculator(unittest.TestCase):

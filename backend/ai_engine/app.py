@@ -7,32 +7,24 @@ This service is responsible for:
 4. Model registry management
 """
 
-import os
 import logging
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import os
 import sys
 import traceback
 
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+
 # Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from common import (
-    get_config_manager,
-    get_db_manager,
-    setup_logger,
-    ServiceError,
-    ValidationError,
-    NotFoundError,
-    AuthenticationError,
-    AuthorizationError,
-    validate_schema,
-)
 
 # Import service modules
 from ai_engine.model_manager import ModelManager
 from ai_engine.prediction_service import PredictionService
 from ai_engine.reinforcement_learning import ReinforcementLearningService
+from common import (AuthenticationError, AuthorizationError, NotFoundError,
+                    ServiceError, ValidationError, get_config_manager,
+                    get_db_manager, setup_logger, validate_schema)
 
 # Configure logging
 logger = setup_logger("ai_engine", logging.INFO)

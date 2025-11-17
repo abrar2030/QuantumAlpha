@@ -3,15 +3,16 @@ Simplified Data Service for QuantumAlpha - Deployment Version
 This is a minimal version focusing on essential functionality without numpy/pandas
 """
 
-import os
+import json
 import logging
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import os
+import random
 import sys
 import traceback
-import json
 from datetime import datetime, timedelta
-import random
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

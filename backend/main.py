@@ -1,36 +1,33 @@
-import os
-import sys
 import asyncio
+import logging
+import os
 import signal
+import sys
+import traceback
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Dict, Any, Optional
-from flask import Flask, request, jsonify, g
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager, get_jwt_identity, verify_jwt_in_request
-import logging
-import traceback
+from typing import Any, Dict, Optional
 
-from common.database import initialize_database, cleanup_database, db_manager
-from common.logging_config import setup_logging
-from config import Config
-from common.auth import auth_manager, require_auth, require_role, require_permission
-from common.validation import (
-    validate_json,
-    UserRegistrationSchema,
-    UserLoginSchema,
-    OrderSchema,
-    PortfolioSchema,
-    ValidationError,
-)
 from common.audit import audit_logger, log_security_event
-from common.monitoring import (
-    monitoring_service,
-    create_monitoring_blueprint,
-    create_request_monitoring_middleware,
-)
+from common.auth import (auth_manager, require_auth, require_permission,
+                         require_role)
+from common.database import cleanup_database, db_manager, initialize_database
+from common.logging_config import setup_logging
+from common.monitoring import (create_monitoring_blueprint,
+                               create_request_monitoring_middleware,
+                               monitoring_service)
+from common.validation import (OrderSchema, PortfolioSchema, UserLoginSchema,
+                               UserRegistrationSchema, ValidationError,
+                               validate_json)
+from flask import Flask, g, jsonify, request
+from flask_cors import CORS
+from flask_jwt_extended import (JWTManager, get_jwt_identity,
+                                verify_jwt_in_request)
 from services.portfolio_service import portfolio_service
-from services.trading_engine import trading_engine, OrderRequest, OrderSide, OrderType
+from services.trading_engine import (OrderRequest, OrderSide, OrderType,
+                                     trading_engine)
+
+from config import Config
 
 # Configure standard logging
 setup_logging(level=logging.INFO)

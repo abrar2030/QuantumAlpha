@@ -7,8 +7,8 @@ This service is responsible for:
 4. Data storage and retrieval
 """
 
-from .market_data import MarketDataService
 from .alternative_data import AlternativeDataService
 from .feature_engineering import FeatureEngineeringService
+from .market_data import MarketDataService
 
 __all__ = ["MarketDataService", "AlternativeDataService", "FeatureEngineeringService"]

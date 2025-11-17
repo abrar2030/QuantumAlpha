@@ -1,29 +1,22 @@
 import asyncio
-import uuid
-from datetime import datetime, timezone, timedelta
-from decimal import Decimal
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass
-from enum import Enum
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, func
-from .database import get_db_session, get_redis_client
-from .models import (
-    Order,
-    OrderExecution,
-    Portfolio,
-    Position,
-    User,
-    OrderStatus,
-    OrderType,
-    OrderSide,
-    AuditAction,
-)
-from .audit import audit_logger
-from .validation import FinancialValidator
-from .portfolio_service import portfolio_service, MarketDataService
-import structlog
 import json
+import uuid
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+from decimal import Decimal
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
+
+import structlog
+from sqlalchemy import and_, func, or_
+from sqlalchemy.orm import Session
+
+from .audit import audit_logger
+from .database import get_db_session, get_redis_client
+from .models import (AuditAction, Order, OrderExecution, OrderSide,
+                     OrderStatus, OrderType, Portfolio, Position, User)
+from .portfolio_service import MarketDataService, portfolio_service
+from .validation import FinancialValidator
 
 logger = structlog.get_logger(__name__)
 

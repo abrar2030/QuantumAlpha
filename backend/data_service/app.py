@@ -7,33 +7,25 @@ This service is responsible for:
 4. Data storage and retrieval
 """
 
-import os
 import logging
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import os
 import sys
 import traceback
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 # Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (
-    get_config_manager,
-    get_db_manager,
-    setup_logger,
-    ServiceError,
-    ValidationError,
-    NotFoundError,
-    AuthenticationError,
-    AuthorizationError,
-    validate_schema,
-)
+from common import (AuthenticationError, AuthorizationError, NotFoundError,
+                    ServiceError, ValidationError, get_config_manager,
+                    get_db_manager, setup_logger, validate_schema)
 from common.validation import MarketDataRequest
-
-# Import service modules
-from data_service.market_data import MarketDataService
 from data_service.alternative_data import AlternativeDataService
 from data_service.feature_engineering import FeatureEngineeringService
+# Import service modules
+from data_service.market_data import MarketDataService
 
 # Configure logging
 logger = setup_logger("data_service", logging.INFO)

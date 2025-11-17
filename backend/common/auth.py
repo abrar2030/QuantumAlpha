@@ -1,28 +1,25 @@
 import os
-import jwt
-import bcrypt
 import secrets
-import pyotp
 from datetime import datetime, timedelta, timezone
 from functools import wraps
-from typing import Optional, Dict, Any, List
-from flask import request, jsonify, current_app
-from flask_jwt_extended import (
-    JWTManager,
-    create_access_token,
-    create_refresh_token,
-    jwt_required,
-    get_jwt_identity,
-    get_jwt,
-    verify_jwt_in_request,
-)
+from typing import Any, Dict, List, Optional
+
+import bcrypt
+import jwt
+import pyotp
 import redis
-from sqlalchemy.orm import Session
-from .models import User, UserSession, AuditLog
-from .database import get_db_session
-from .audit import log_security_event
-from .validation import validate_password_strength
 import structlog
+from flask import current_app, jsonify, request
+from flask_jwt_extended import (JWTManager, create_access_token,
+                                create_refresh_token, get_jwt,
+                                get_jwt_identity, jwt_required,
+                                verify_jwt_in_request)
+from sqlalchemy.orm import Session
+
+from .audit import log_security_event
+from .database import get_db_session
+from .models import AuditLog, User, UserSession
+from .validation import validate_password_strength
 
 logger = structlog.get_logger(__name__)
 
