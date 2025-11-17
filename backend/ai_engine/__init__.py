@@ -6,13 +6,9 @@ This service is responsible for:
 3. Reinforcement learning environment
 4. Model registry management
 """
+
 from .model_manager import ModelManager
 from .prediction_service import PredictionService
 from .reinforcement_learning import ReinforcementLearningService
 
-__all__ = [
-    'ModelManager',
-    'PredictionService',
-    'ReinforcementLearningService'
-]
-
+__all__ = ["ModelManager", "PredictionService", "ReinforcementLearningService"]

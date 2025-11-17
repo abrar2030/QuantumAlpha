@@ -6,6 +6,7 @@ This service is responsible for:
 3. Reinforcement learning environment
 4. Model registry management
 """
+
 import os
 import logging
 from flask import Flask, request, jsonify
@@ -25,7 +26,7 @@ from common import (
     NotFoundError,
     AuthenticationError,
     AuthorizationError,
-    validate_schema
+    validate_schema,
 )
 
 # Import service modules
@@ -34,7 +35,7 @@ from ai_engine.prediction_service import PredictionService
 from ai_engine.reinforcement_learning import ReinforcementLearningService
 
 # Configure logging
-logger = setup_logger('ai_engine', logging.INFO)
+logger = setup_logger("ai_engine", logging.INFO)
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -42,7 +43,9 @@ CORS(app)
 
 # Load configuration
 config_manager = get_config_manager(
-    env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', '.env')
+    env_file=os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config", ".env"
+    )
 )
 
 # Initialize database manager
@@ -53,43 +56,46 @@ model_manager = ModelManager(config_manager, db_manager)
 prediction_service = PredictionService(config_manager, db_manager, model_manager)
 rl_service = ReinforcementLearningService(config_manager, db_manager)
 
+
 # Error handler
 @app.errorhandler(Exception)
 def handle_error(error):
     """Handle errors"""
     if isinstance(error, ServiceError):
         return jsonify(error.to_dict()), error.status_code
-    
+
     logger.error(f"Unhandled error: {error}")
     logger.error(traceback.format_exc())
-    
-    return jsonify({
-        'error': 'Internal server error',
-        'status_code': 500,
-        'details': str(error)
-    }), 500
+
+    return (
+        jsonify(
+            {
+                "error": "Internal server error",
+                "status_code": 500,
+                "details": str(error),
+            }
+        ),
+        500,
+    )
+
 
 # Health check endpoint
-@app.route('/health', methods=['GET'])
+@app.route("/health", methods=["GET"])
 def health_check():
     """Health check endpoint"""
-    return jsonify({
-        'status': 'ok',
-        'service': 'ai_engine'
-    })
+    return jsonify({"status": "ok", "service": "ai_engine"})
+
 
 # Model management endpoints
-@app.route('/api/models', methods=['GET'])
+@app.route("/api/models", methods=["GET"])
 def get_models():
     """Get all models"""
     try:
         # Get models
         models = model_manager.get_models()
-        
-        return jsonify({
-            'models': models
-        })
-    
+
+        return jsonify({"models": models})
+
     except Exception as e:
         logger.error(f"Error getting models: {e}")
         if isinstance(e, ServiceError):
@@ -97,15 +103,16 @@ def get_models():
         else:
             raise ServiceError(str(e))
 
-@app.route('/api/models/<model_id>', methods=['GET'])
+
+@app.route("/api/models/<model_id>", methods=["GET"])
 def get_model(model_id):
     """Get a specific model"""
     try:
         # Get model
         model = model_manager.get_model(model_id)
-        
+
         return jsonify(model)
-    
+
     except Exception as e:
         logger.error(f"Error getting model: {e}")
         if isinstance(e, ServiceError):
@@ -113,18 +120,19 @@ def get_model(model_id):
         else:
             raise ServiceError(str(e))
 
-@app.route('/api/train-model', methods=['POST'])
+
+@app.route("/api/train-model", methods=["POST"])
 def train_model():
     """Train a new model or retrain an existing one"""
     try:
         # Get request data
         data = request.json
-        
+
         # Train model
         model = model_manager.train_model(data)
-        
+
         return jsonify(model)
-    
+
     except Exception as e:
         logger.error(f"Error training model: {e}")
         if isinstance(e, ServiceError):
@@ -132,36 +140,32 @@ def train_model():
         else:
             raise ServiceError(str(e))
 
+
 # Prediction endpoints
-@app.route('/api/generate-signals', methods=['POST'])
+@app.route("/api/generate-signals", methods=["POST"])
 def generate_signals():
     """Generate trading signals using a model"""
     try:
         # Get request data
         data = request.json
-        
+
         # Validate required fields
-        if 'symbol' not in data:
+        if "symbol" not in data:
             raise ValidationError("Symbol is required")
-        
-        if 'data' not in data:
+
+        if "data" not in data:
             raise ValidationError("Data is required")
-        
+
         # Get model ID (optional)
-        model_id = data.get('model_id')
-        
+        model_id = data.get("model_id")
+
         # Generate signals
         signals = prediction_service.generate_signals(
-            symbol=data['symbol'],
-            data=data['data'],
-            model_id=model_id
+            symbol=data["symbol"], data=data["data"], model_id=model_id
         )
-        
-        return jsonify({
-            'symbol': data['symbol'],
-            'signals': signals
-        })
-    
+
+        return jsonify({"symbol": data["symbol"], "signals": signals})
+
     except Exception as e:
         logger.error(f"Error generating signals: {e}")
         if isinstance(e, ServiceError):
@@ -169,31 +173,28 @@ def generate_signals():
         else:
             raise ServiceError(str(e))
 
-@app.route('/api/predict', methods=['POST'])
+
+@app.route("/api/predict", methods=["POST"])
 def predict():
     """Generate predictions using a model"""
     try:
         # Get request data
         data = request.json
-        
+
         # Validate required fields
-        if 'model_id' not in data:
+        if "model_id" not in data:
             raise ValidationError("Model ID is required")
-        
-        if 'data' not in data:
+
+        if "data" not in data:
             raise ValidationError("Data is required")
-        
+
         # Generate predictions
         predictions = prediction_service.predict(
-            model_id=data['model_id'],
-            data=data['data']
+            model_id=data["model_id"], data=data["data"]
         )
-        
-        return jsonify({
-            'model_id': data['model_id'],
-            'predictions': predictions
-        })
-    
+
+        return jsonify({"model_id": data["model_id"], "predictions": predictions})
+
     except Exception as e:
         logger.error(f"Error generating predictions: {e}")
         if isinstance(e, ServiceError):
@@ -201,19 +202,20 @@ def predict():
         else:
             raise ServiceError(str(e))
 
+
 # Reinforcement learning endpoints
-@app.route('/api/rl/train', methods=['POST'])
+@app.route("/api/rl/train", methods=["POST"])
 def train_rl_agent():
     """Train a reinforcement learning agent"""
     try:
         # Get request data
         data = request.json
-        
+
         # Train agent
         agent = rl_service.train_agent(data)
-        
+
         return jsonify(agent)
-    
+
     except Exception as e:
         logger.error(f"Error training RL agent: {e}")
         if isinstance(e, ServiceError):
@@ -221,31 +223,26 @@ def train_rl_agent():
         else:
             raise ServiceError(str(e))
 
-@app.route('/api/rl/act', methods=['POST'])
+
+@app.route("/api/rl/act", methods=["POST"])
 def get_rl_action():
     """Get action from a reinforcement learning agent"""
     try:
         # Get request data
         data = request.json
-        
+
         # Validate required fields
-        if 'agent_id' not in data:
+        if "agent_id" not in data:
             raise ValidationError("Agent ID is required")
-        
-        if 'state' not in data:
+
+        if "state" not in data:
             raise ValidationError("State is required")
-        
+
         # Get action
-        action = rl_service.get_action(
-            agent_id=data['agent_id'],
-            state=data['state']
-        )
-        
-        return jsonify({
-            'agent_id': data['agent_id'],
-            'action': action
-        })
-    
+        action = rl_service.get_action(agent_id=data["agent_id"], state=data["state"])
+
+        return jsonify({"agent_id": data["agent_id"], "action": action})
+
     except Exception as e:
         logger.error(f"Error getting RL action: {e}")
         if isinstance(e, ServiceError):
@@ -253,6 +250,6 @@ def get_rl_action():
         else:
             raise ServiceError(str(e))
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, debug=True)

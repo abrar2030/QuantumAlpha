@@ -6,13 +6,9 @@ This service is responsible for:
 3. Position sizing optimization
 4. Risk monitoring and alerts
 """
+
 from .risk_calculator import RiskCalculator
 from .stress_testing import StressTesting
 from .position_sizing import PositionSizing
 
-__all__ = [
-    'RiskCalculator',
-    'StressTesting',
-    'PositionSizing'
-]
-
+__all__ = ["RiskCalculator", "StressTesting", "PositionSizing"]
