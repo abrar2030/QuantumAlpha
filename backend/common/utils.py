@@ -4,13 +4,12 @@ Provides common helper functions used across services.
 """
 
 import hashlib
-import json
 import logging
 import os
 import secrets
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Tuple
 
 # Configure logging
 logging.basicConfig(

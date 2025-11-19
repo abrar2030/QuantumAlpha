@@ -2,18 +2,12 @@
 System tests for user authentication and authorization workflow.
 """
 
-import json
 import os
 import sys
-import time
 import unittest
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 
-import jwt
-import numpy as np
-import pandas as pd
-import pytest
 import requests
 
 # Add project root to path

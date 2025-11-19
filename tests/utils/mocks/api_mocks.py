@@ -6,8 +6,7 @@ This module provides utilities to mock API responses for testing purposes.
 
 import json
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple, Union
-from unittest.mock import MagicMock
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -700,7 +699,7 @@ class MockAPIClient:
         Returns:
             Mock response
         """
-        url = f"{self.base_url}/{endpoint}"
+        f"{self.base_url}/{endpoint}"
 
         # Market data endpoint
         if endpoint.startswith("market-data"):
@@ -811,7 +810,7 @@ class MockAPIClient:
         Returns:
             Mock response
         """
-        url = f"{self.base_url}/{endpoint}"
+        f"{self.base_url}/{endpoint}"
 
         # Authentication endpoint
         if endpoint == "auth/login":
@@ -932,7 +931,7 @@ class MockAPIClient:
         Returns:
             Mock response
         """
-        url = f"{self.base_url}/{endpoint}"
+        f"{self.base_url}/{endpoint}"
 
         # Order update endpoint
         if endpoint.startswith("orders"):
@@ -1001,7 +1000,7 @@ class MockAPIClient:
         Returns:
             Mock response
         """
-        url = f"{self.base_url}/{endpoint}"
+        f"{self.base_url}/{endpoint}"
 
         # Order deletion endpoint
         if endpoint.startswith("orders"):

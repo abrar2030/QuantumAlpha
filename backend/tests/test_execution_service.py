@@ -2,16 +2,11 @@
 Unit tests for the Execution Service.
 """
 
-import json
 import os
 import sys
 import unittest
-import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from unittest.mock import MagicMock, patch
-
-import numpy as np
-import pandas as pd
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

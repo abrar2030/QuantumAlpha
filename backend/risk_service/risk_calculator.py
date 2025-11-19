@@ -5,17 +5,13 @@ Handles portfolio risk calculation and risk monitoring.
 
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Union
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 import numpy as np
-import pandas as pd
-import requests
 from data_service.market_data import MarketDataService
-from sqlalchemy.orm import Session
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

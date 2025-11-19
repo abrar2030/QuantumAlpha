@@ -3,23 +3,21 @@ Performance attribution module for QuantumAlpha Analytics Service.
 Provides detailed performance attribution and decomposition analysis.
 """
 
-import json
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import NotFoundError, ServiceError, ValidationError, setup_logger
+from common import ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("performance_attribution", logging.INFO)
@@ -641,8 +639,8 @@ class PerformanceAttributionEngine:
         """
         try:
             # Calculate cumulative returns
-            port_cumret = (1 + portfolio_returns).cumprod()
-            bench_cumret = (1 + benchmark_returns).cumprod()
+            (1 + portfolio_returns).cumprod()
+            (1 + benchmark_returns).cumprod()
 
             # Calculate geometric attribution using log returns
             log_port_ret = np.log(1 + portfolio_returns)

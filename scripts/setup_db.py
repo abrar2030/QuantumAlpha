@@ -9,13 +9,11 @@ It supports different environments (dev, staging, prod) and handles both Postgre
 import argparse
 import os
 import sys
-import time
 
 import influxdb_client
 import psycopg2
 import yaml
 from dotenv import load_dotenv
-from influxdb_client.client.write_api import SYNCHRONOUS
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 # Add project root to path

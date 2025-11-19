@@ -1,15 +1,15 @@
 import enum
-import json
 import os
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import List
 
 import structlog
 from cryptography.fernet import Fernet
 from sqlalchemy import JSON, Boolean, CheckConstraint, Column, DateTime
 from sqlalchemy import Enum as SQLEnum
-from sqlalchemy import Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy import (Float, ForeignKey, Index, Integer, String, Text,
+                        UniqueConstraint)
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates

@@ -5,7 +5,6 @@ Provides Kafka producer and consumer integration.
 
 import json
 import logging
-import os
 import threading
 from typing import Any, Callable, Dict, List, Optional
 

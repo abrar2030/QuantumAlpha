@@ -4,17 +4,15 @@ Implements robust validation, sanitization, and security controls for all inputs
 """
 
 import html
-import json
 import re
-from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Union
 
 import bleach
 import structlog
 from flask import jsonify, request
-from marshmallow import Schema, ValidationError, fields, post_load, pre_load, validate
+from marshmallow import Schema, ValidationError, fields, pre_load, validate
 from marshmallow.decorators import validates, validates_schema
 
 logger = structlog.get_logger(__name__)
@@ -168,7 +166,7 @@ class FinancialValidator:
 
             return price
 
-        except (InvalidOperation, ValueError) as e:
+        except (InvalidOperation, ValueError):
             raise ValidationError(f"Invalid price format: {value}")
 
     @staticmethod
@@ -192,7 +190,7 @@ class FinancialValidator:
 
             return quantity
 
-        except (InvalidOperation, ValueError) as e:
+        except (InvalidOperation, ValueError):
             raise ValidationError(f"Invalid quantity format: {value}")
 
     @staticmethod

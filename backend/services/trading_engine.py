@@ -1,29 +1,16 @@
-import asyncio
-import json
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from decimal import Decimal
-from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Optional
 
 import structlog
-from sqlalchemy import and_, func, or_
-from sqlalchemy.orm import Session
+from sqlalchemy import and_
 
 from .audit import audit_logger
 from .database import get_db_session, get_redis_client
-from .models import (
-    AuditAction,
-    Order,
-    OrderExecution,
-    OrderSide,
-    OrderStatus,
-    OrderType,
-    Portfolio,
-    Position,
-    User,
-)
+from .models import (AuditAction, Order, OrderExecution, OrderSide,
+                     OrderStatus, OrderType, Portfolio, Position)
 from .portfolio_service import MarketDataService, portfolio_service
 from .validation import FinancialValidator
 
@@ -33,19 +20,13 @@ logger = structlog.get_logger(__name__)
 class OrderValidationError(Exception):
     """Order validation exception"""
 
-    pass
-
 
 class RiskViolationError(Exception):
     """Risk limit violation exception"""
 
-    pass
-
 
 class InsufficientFundsError(Exception):
     """Insufficient funds exception"""
-
-    pass
 
 
 @dataclass
@@ -120,7 +101,7 @@ class RiskManager:
         """Check portfolio-level risk limits"""
         if portfolio.max_leverage and portfolio.max_leverage > 0:
             # Calculate current leverage
-            current_leverage = self._calculate_leverage(portfolio)
+            self._calculate_leverage(portfolio)
 
             # Estimate leverage after order
             order_value = await self._estimate_order_value(order_request)
@@ -155,9 +136,9 @@ class RiskManager:
 
                 # Calculate new position size
                 if order_request.side == OrderSide.BUY:
-                    new_quantity = current_quantity + order_request.quantity
+                    current_quantity + order_request.quantity
                 else:
-                    new_quantity = current_quantity - order_request.quantity
+                    current_quantity - order_request.quantity
 
                 # Check against limit
                 order_value = await self._estimate_order_value(order_request)

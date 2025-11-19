@@ -5,7 +5,7 @@ Shared pytest fixtures for QuantumAlpha tests.
 import os
 import sys
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pandas as pd
@@ -16,17 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import project modules
 try:
-    from backend.common.config import ConfigManager
-    from backend.common.database import DatabaseManager
-    from backend.common.models import (
-        Execution,
-        Model,
-        Order,
-        Portfolio,
-        Signal,
-        Strategy,
-        User,
-    )
+    pass
 except ImportError:
     pass  # Handle imports gracefully when modules are not available
 

@@ -8,9 +8,8 @@ import redis
 import structlog
 from influxdb_client import InfluxDBClient
 from pymongo import MongoClient
-from sqlalchemy import create_engine, event, pool
+from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
-from sqlalchemy.exc import DisconnectionError, SQLAlchemyError
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.pool import QueuePool
 
@@ -363,7 +362,7 @@ class DatabaseMigrationManager:
     def create_tables(self):
         """Create all database tables"""
         try:
-            from .models import Base, create_tables, init_database
+            from .models import create_tables, init_database
 
             # Create tables
             create_tables(self.db_manager.engine)

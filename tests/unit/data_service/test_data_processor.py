@@ -2,16 +2,13 @@
 Unit tests for the Data Service's Data Processor.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pandas as pd
-import pytest
 
 # Add project root to path
 sys.path.append(

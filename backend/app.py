@@ -3,11 +3,9 @@ Simplified Data Service for QuantumAlpha - Deployment Version
 This is a minimal version focusing on essential functionality without numpy/pandas
 """
 
-import json
 import logging
 import os
 import random
-import sys
 import traceback
 from datetime import datetime, timedelta
 

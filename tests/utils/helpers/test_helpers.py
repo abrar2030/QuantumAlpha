@@ -5,7 +5,7 @@ Helper functions for QuantumAlpha tests.
 import json
 import os
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -109,7 +109,8 @@ def calculate_metrics(actual: np.ndarray, predicted: np.ndarray) -> Dict[str, fl
     Returns:
         Dictionary of metrics
     """
-    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+    from sklearn.metrics import (mean_absolute_error, mean_squared_error,
+                                 r2_score)
 
     mse = mean_squared_error(actual, predicted)
     rmse = np.sqrt(mse)

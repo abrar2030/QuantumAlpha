@@ -1,19 +1,15 @@
-import asyncio
-import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
-import pandas as pd
 import structlog
-from sqlalchemy import and_, func, or_
-from sqlalchemy.orm import Session
+from sqlalchemy import and_
 
 from .audit import audit_logger
 from .database import get_db_session, get_redis_client
-from .models import AuditAction, Order, OrderStatus, Portfolio, Position, User
+from .models import AuditAction, Portfolio, Position
 from .validation import FinancialValidator
 
 logger = structlog.get_logger(__name__)

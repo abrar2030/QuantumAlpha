@@ -6,26 +6,19 @@ Handles reinforcement learning models for trading.
 import json
 import logging
 import os
-import pickle
-
 # Add parent directory to path to import common modules
 import sys
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 
 import gym
 import numpy as np
 import pandas as pd
 import requests
-import tensorflow as tf
 from gym import spaces
 from stable_baselines3 import A2C, DQN, PPO, SAC
 from stable_baselines3.common.vec_env import DummyVecEnv
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential, load_model
-from tensorflow.keras.optimizers import Adam
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

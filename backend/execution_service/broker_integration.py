@@ -5,12 +5,10 @@ Handles integration with various brokers.
 
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
-import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 
 import alpaca_trade_api as tradeapi
 

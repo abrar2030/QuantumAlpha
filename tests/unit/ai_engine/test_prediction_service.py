@@ -2,16 +2,10 @@
 Unit tests for the AI Engine's Prediction Service.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
-
-import numpy as np
-import pandas as pd
-import pytest
 
 # Add project root to path
 sys.path.append(
@@ -21,7 +15,8 @@ sys.path.append(
 # Import module to test
 try:
     from backend.ai_engine.prediction_service import PredictionService
-    from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
+    from backend.common.exceptions import (NotFoundError, ServiceError,
+                                           ValidationError)
 except ImportError:
     # Mock the classes for testing when imports fail
     class PredictionService:

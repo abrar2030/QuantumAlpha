@@ -2,17 +2,11 @@
 Unit tests for the Execution Service's Order Manager.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from datetime import datetime
 from unittest.mock import MagicMock, patch
-
-import numpy as np
-import pandas as pd
-import pytest
 
 # Add project root to path
 sys.path.append(
@@ -21,7 +15,8 @@ sys.path.append(
 
 # Import module to test
 try:
-    from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
+    from backend.common.exceptions import (NotFoundError, ServiceError,
+                                           ValidationError)
     from backend.common.models import Execution, Order
     from backend.execution_service.order_manager import OrderManager
 except ImportError:

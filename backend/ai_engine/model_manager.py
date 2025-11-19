@@ -7,19 +7,17 @@ import json
 import logging
 import os
 import pickle
-
 # Add parent directory to path to import common modules
 import sys
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
 import requests
 import tensorflow as tf
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow.keras.models import Model, Sequential, load_model
@@ -1044,7 +1042,7 @@ class ModelManager:
                 raise NotFoundError(f"Scaler file not found: {scaler_path}")
 
             with open(scaler_path, "rb") as f:
-                scaler = pickle.load(f)
+                pickle.load(f)
 
             # Load parameters
             params_path = os.path.join(self.model_dir, f"{model_id}_params.json")

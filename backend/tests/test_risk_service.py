@@ -2,12 +2,10 @@
 Unit tests for the Risk Service.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pandas as pd
@@ -15,7 +13,7 @@ import pandas as pd
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import NotFoundError, ServiceError, ValidationError
+from common import ValidationError
 from risk_service.position_sizing import PositionSizing
 from risk_service.risk_calculator import RiskCalculator
 from risk_service.stress_testing import StressTesting

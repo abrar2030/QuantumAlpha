@@ -3,16 +3,13 @@ Prediction service for QuantumAlpha AI Engine.
 Handles predictions and signal generation.
 """
 
-import json
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Union
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 import requests
 

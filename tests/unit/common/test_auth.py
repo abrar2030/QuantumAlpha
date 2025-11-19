@@ -2,7 +2,6 @@
 Unit tests for the Common module's authentication utilities.
 """
 
-import json
 import os
 import sys
 import unittest
@@ -10,9 +9,6 @@ from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 
 import jwt
-import numpy as np
-import pandas as pd
-import pytest
 
 # Add project root to path
 sys.path.append(
@@ -21,15 +17,9 @@ sys.path.append(
 
 # Import module to test
 try:
-    from backend.common.auth import (
-        AuthManager,
-        generate_token,
-        hash_password,
-        require_auth,
-        require_role,
-        verify_password,
-        verify_token,
-    )
+    from backend.common.auth import (AuthManager, generate_token,
+                                     hash_password, require_auth, require_role,
+                                     verify_password, verify_token)
     from backend.common.exceptions import AuthError, ValidationError
 except ImportError:
     # Mock the classes and functions for testing when imports fail

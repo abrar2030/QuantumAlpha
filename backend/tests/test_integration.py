@@ -2,22 +2,16 @@
 Integration tests for QuantumAlpha backend services.
 """
 
-import json
 import os
 import sys
-import time
 import unittest
-from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 
-import numpy as np
-import pandas as pd
 import requests
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import NotFoundError, ServiceError, ValidationError
 from common.config import ConfigManager
 from common.database import DatabaseManager
 

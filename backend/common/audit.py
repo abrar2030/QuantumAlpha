@@ -5,7 +5,6 @@ Implements immutable audit trails for financial compliance and security monitori
 
 import hashlib
 import json
-import os
 import threading
 from datetime import datetime, timezone
 from functools import wraps
@@ -14,7 +13,6 @@ from typing import Any, Dict, List, Optional
 import structlog
 from flask import g, request
 from flask_jwt_extended import get_jwt, get_jwt_identity
-from sqlalchemy.orm import sessionmaker
 
 from .database import get_db_session
 from .models import AuditAction, AuditLog, User

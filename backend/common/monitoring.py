@@ -4,27 +4,21 @@ Implements real-time monitoring, alerting, and system health tracking
 """
 
 import json
-import os
 import threading
 import time
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Optional
 
 import psutil
 import structlog
-from flask import Flask, jsonify, request
-from prometheus_client import (
-    CONTENT_TYPE_LATEST,
-    Counter,
-    Gauge,
-    Histogram,
-    generate_latest,
-)
+from flask import jsonify, request
+from prometheus_client import (CONTENT_TYPE_LATEST, Counter, Gauge, Histogram,
+                               generate_latest)
 
 from .database import db_manager, get_redis_client
-from .models import AuditLog, Order, Portfolio, User
+from .models import Order, Portfolio, User
 
 logger = structlog.get_logger(__name__)
 

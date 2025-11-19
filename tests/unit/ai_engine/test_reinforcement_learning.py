@@ -2,16 +2,13 @@
 Unit tests for the AI Engine's Reinforcement Learning module.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
-import pytest
 
 # Add project root to path
 sys.path.append(
@@ -20,12 +17,11 @@ sys.path.append(
 
 # Import module to test
 try:
-    from backend.ai_engine.reinforcement_learning import (
-        RLAgent,
-        RLEnvironment,
-        RLTrainer,
-    )
-    from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
+    from backend.ai_engine.reinforcement_learning import (RLAgent,
+                                                          RLEnvironment,
+                                                          RLTrainer)
+    from backend.common.exceptions import (NotFoundError, ServiceError,
+                                           ValidationError)
 except ImportError:
     # Mock the classes for testing when imports fail
     class RLAgent:
@@ -163,7 +159,7 @@ class TestRLEnvironment(unittest.TestCase):
 
         # Get balance and position after buy
         balance_after_buy = self.env.balance
-        position_after_buy = self.env.position
+        self.env.position
 
         # Take sell action
         state, reward, done, info = self.env.step(2)  # 2 = sell

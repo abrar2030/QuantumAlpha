@@ -2,17 +2,12 @@
 Unit tests for the Risk Service's Risk Calculator.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
-from typing import Any, Dict, List
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
-import pandas as pd
-import pytest
 
 # Add project root to path
 sys.path.append(

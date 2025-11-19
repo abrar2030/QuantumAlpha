@@ -2,22 +2,17 @@
 Unit tests for the AI Engine.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
-
-import numpy as np
-import pandas as pd
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ai_engine.model_manager import ModelManager
 from ai_engine.prediction_service import PredictionService
-from common import NotFoundError, ServiceError, ValidationError
+from common import NotFoundError, ValidationError
 
 
 class TestModelManager(unittest.TestCase):

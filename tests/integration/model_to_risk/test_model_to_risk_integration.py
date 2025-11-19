@@ -2,16 +2,12 @@
 Integration tests for AI engine to risk service integration.
 """
 
-import json
 import os
 import sys
 import unittest
-from datetime import datetime, timedelta
+from datetime import datetime
 from unittest.mock import MagicMock, patch
 
-import numpy as np
-import pandas as pd
-import pytest
 import requests
 
 # Add project root to path

@@ -5,26 +5,17 @@ from functools import wraps
 from typing import Any, Dict, List, Optional
 
 import bcrypt
-import jwt
 import pyotp
 import redis
 import structlog
-from flask import current_app, jsonify, request
-from flask_jwt_extended import (
-    JWTManager,
-    create_access_token,
-    create_refresh_token,
-    get_jwt,
-    get_jwt_identity,
-    jwt_required,
-    verify_jwt_in_request,
-)
-from sqlalchemy.orm import Session
+from flask import jsonify, request
+from flask_jwt_extended import (JWTManager, create_access_token,
+                                create_refresh_token, get_jwt,
+                                get_jwt_identity, jwt_required)
 
 from .audit import log_security_event
 from .database import get_db_session
-from .models import AuditLog, User, UserSession
-from .validation import validate_password_strength
+from .models import User, UserSession
 
 logger = structlog.get_logger(__name__)
 
@@ -40,13 +31,9 @@ redis_client = redis.Redis(
 class AuthenticationError(Exception):
     """Custom authentication exception"""
 
-    pass
-
 
 class AuthorizationError(Exception):
     """Custom authorization exception"""
-
-    pass
 
 
 class SecurityConfig:
@@ -284,7 +271,6 @@ class AuthManager:
         """Blacklist all tokens for a session"""
         # This would require storing token JTIs with session IDs
         # For now, we'll implement a simpler approach
-        pass
 
     def logout(self, token_jti: str, user_id: int):
         """Logout user and blacklist token"""

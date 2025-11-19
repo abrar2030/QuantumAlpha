@@ -6,17 +6,13 @@ Handles comprehensive regulatory reporting and compliance monitoring.
 import json
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
-
-import numpy as np
-import pandas as pd
+from typing import Any, Dict, List, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -697,7 +693,7 @@ class RegulatoryReportingEngine:
             LCR report
         """
         liquidity_data = report_data.get("liquidity_data", {})
-        portfolio_data = report_data.get("portfolio_data", {})
+        report_data.get("portfolio_data", {})
 
         # High-Quality Liquid Assets (HQLA)
         hqla_level_1 = liquidity_data.get(
@@ -1233,7 +1229,7 @@ class RegulatoryReportingEngine:
     def _get_basel_risk_weight(self, position: Dict[str, Any]) -> float:
         """Get Basel III risk weight for a position"""
         asset_type = position.get("asset_type", "equity")
-        rating = position.get("credit_rating", "unrated")
+        position.get("credit_rating", "unrated")
 
         # Simplified risk weights
         risk_weights = {

@@ -3,29 +3,26 @@ Factor analysis module for QuantumAlpha Analytics Service.
 Provides comprehensive factor analysis and risk decomposition tools.
 """
 
-import json
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
-from scipy.optimize import minimize
-from sklearn.decomposition import PCA, FactorAnalysis
-from sklearn.linear_model import Lasso, LinearRegression, Ridge
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import NotFoundError, ServiceError, ValidationError, setup_logger
+from common import ServiceError, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("factor_analysis", logging.INFO)
@@ -404,7 +401,7 @@ class FactorAnalysisEngine:
                 X = fact_ret.iloc[window_start:window_end]
 
                 # Add constant for alpha
-                X_with_const = np.column_stack([np.ones(len(X)), X.values])
+                np.column_stack([np.ones(len(X)), X.values])
 
                 try:
                     # Regression
@@ -686,10 +683,10 @@ class FactorAnalysisEngine:
 
             # Calculate explained variance
             explained_variance_ratio = pca.explained_variance_ratio_
-            cumulative_variance = np.cumsum(explained_variance_ratio)
+            np.cumsum(explained_variance_ratio)
 
             # Factor loadings
-            factor_loadings = pca.components_
+            pca.components_
 
             # Create factor exposures for principal components
             factor_exposures = []

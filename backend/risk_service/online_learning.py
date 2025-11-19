@@ -7,22 +7,21 @@ import json
 import logging
 import os
 import pickle
-
 # Add parent directory to path to import common modules
 import sys
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple, Union
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest
-from sklearn.linear_model import PassiveAggressiveRegressor, SGDRegressor
+from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.preprocessing import StandardScaler
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import NotFoundError, ServiceError, ValidationError, setup_logger
+from common import ServiceError, setup_logger
 
 # Configure logging
 logger = setup_logger("online_learning", logging.INFO)

@@ -3,11 +3,9 @@ Simplified Data Service for QuantumAlpha
 This is a minimal version focusing on essential functionality
 """
 
-import json
 import logging
 import os
 import random
-import sys
 import traceback
 from datetime import datetime, timedelta
 

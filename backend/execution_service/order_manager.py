@@ -5,25 +5,15 @@ Handles order management and execution.
 
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
-
-from sqlalchemy.orm import Session
+from typing import Any, Dict, List, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (
-    AuthenticationError,
-    AuthorizationError,
-    NotFoundError,
-    ServiceError,
-    ValidationError,
-    setup_logger,
-)
+from common import NotFoundError, ServiceError, ValidationError, setup_logger
 from common.models import Execution, Order
 
 # Configure logging
@@ -355,7 +345,7 @@ class OrderManager:
                 )
 
             # Get execution strategy
-            strategy = self.execution_strategy.get_strategy(execution_strategy_id)
+            self.execution_strategy.get_strategy(execution_strategy_id)
 
             # Execute strategy
             result = self.execution_strategy.execute_strategy(

@@ -4,14 +4,11 @@ Database fixtures for testing.
 This module provides utilities to create and manage test database fixtures.
 """
 
-import json
 import os
 import sqlite3
 import tempfile
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 import pytest
 

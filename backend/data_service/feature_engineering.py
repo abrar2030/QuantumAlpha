@@ -5,27 +5,16 @@ Handles feature engineering and technical indicators.
 
 import logging
 import os
-
 # Add parent directory to path to import common modules
 import sys
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
-from influxdb_client import Point
-from influxdb_client.client.write_api import SYNCHRONOUS
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (
-    NotFoundError,
-    ServiceError,
-    SimpleCache,
-    ValidationError,
-    setup_logger,
-)
-
+from common import NotFoundError, SimpleCache, ValidationError, setup_logger
 # Import market data service
 from data_service.market_data import MarketDataService
 
@@ -238,7 +227,7 @@ class FeatureEngineeringService:
         signal_line = macd_line.ewm(span=signal_period, adjust=False).mean()
 
         # Calculate histogram
-        histogram = macd_line - signal_line
+        macd_line - signal_line
 
         # Return MACD line
         return macd_line.tolist()
