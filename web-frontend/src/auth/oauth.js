@@ -19,5 +19,3 @@ export const handleOAuthCallback = async (code) => {
 
 // Important: Sensitive tokens (like refresh tokens) should NOT be stored in localStorage.
 // Consider HttpOnly cookies for refresh tokens and in-memory storage for short-lived access tokens.
-
-

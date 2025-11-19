@@ -4,12 +4,12 @@ import DeviceInfo from 'react-native-device-info';
 import api from './api';
 import { secureStorage } from '../utils';
 import { STORAGE_KEYS, ERROR_CODES } from '../constants';
-import { 
-  User, 
-  LoginCredentials, 
-  RegisterData, 
+import {
+  User,
+  LoginCredentials,
+  RegisterData,
   ApiResponse,
-  ApiError 
+  ApiError
 } from '../types';
 
 class EnhancedAuthService {
@@ -122,7 +122,7 @@ class EnhancedAuthService {
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string; refreshToken: string }> {
     try {
       const deviceInfo = await this.getDeviceInfo();
-      
+
       const response = await api.post<ApiResponse<{
         user: User;
         token: string;
@@ -148,7 +148,7 @@ class EnhancedAuthService {
       return { user, token, refreshToken };
     } catch (error: any) {
       console.error('Login error:', error);
-      
+
       if (error.response?.status === 401) {
         throw new Error(ERROR_CODES.AUTHENTICATION_ERROR);
       } else if (error.response?.status === 429) {
@@ -156,7 +156,7 @@ class EnhancedAuthService {
       } else if (!error.response) {
         throw new Error(ERROR_CODES.NETWORK_ERROR);
       }
-      
+
       throw new Error(error.message || ERROR_CODES.UNKNOWN_ERROR);
     }
   }
@@ -166,7 +166,7 @@ class EnhancedAuthService {
     try {
       const password = await this.authenticateWithBiometrics();
       const email = await secureStorage.getItem('user_email');
-      
+
       if (!email) {
         throw new Error('User email not found');
       }
@@ -182,7 +182,7 @@ class EnhancedAuthService {
   async register(userData: RegisterData): Promise<{ user: User; token: string; refreshToken: string }> {
     try {
       const deviceInfo = await this.getDeviceInfo();
-      
+
       const response = await api.post<ApiResponse<{
         user: User;
         token: string;
@@ -208,7 +208,7 @@ class EnhancedAuthService {
       return { user, token, refreshToken };
     } catch (error: any) {
       console.error('Registration error:', error);
-      
+
       if (error.response?.status === 409) {
         throw new Error('User already exists');
       } else if (error.response?.status === 400) {
@@ -216,7 +216,7 @@ class EnhancedAuthService {
       } else if (!error.response) {
         throw new Error(ERROR_CODES.NETWORK_ERROR);
       }
-      
+
       throw new Error(error.message || ERROR_CODES.UNKNOWN_ERROR);
     }
   }
@@ -225,7 +225,7 @@ class EnhancedAuthService {
   async logout(): Promise<void> {
     try {
       const refreshToken = await secureStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-      
+
       if (refreshToken) {
         await api.post('/auth/logout', { refreshToken });
       }
@@ -242,7 +242,7 @@ class EnhancedAuthService {
   async refreshToken(): Promise<string> {
     try {
       const refreshToken = await secureStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-      
+
       if (!refreshToken) {
         throw new Error('No refresh token available');
       }
@@ -275,19 +275,19 @@ class EnhancedAuthService {
   async forgotPassword(email: string): Promise<void> {
     try {
       const response = await api.post<ApiResponse<void>>('/auth/forgot-password', { email });
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message || 'Failed to send reset email');
       }
     } catch (error: any) {
       console.error('Forgot password error:', error);
-      
+
       if (error.response?.status === 404) {
         throw new Error('Email not found');
       } else if (!error.response) {
         throw new Error(ERROR_CODES.NETWORK_ERROR);
       }
-      
+
       throw new Error(error.message || ERROR_CODES.UNKNOWN_ERROR);
     }
   }
@@ -299,19 +299,19 @@ class EnhancedAuthService {
         token,
         password: newPassword,
       });
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message || 'Password reset failed');
       }
     } catch (error: any) {
       console.error('Reset password error:', error);
-      
+
       if (error.response?.status === 400) {
         throw new Error('Invalid or expired reset token');
       } else if (!error.response) {
         throw new Error(ERROR_CODES.NETWORK_ERROR);
       }
-      
+
       throw new Error(error.message || ERROR_CODES.UNKNOWN_ERROR);
     }
   }
@@ -320,7 +320,7 @@ class EnhancedAuthService {
   async updateProfile(userData: Partial<User>): Promise<User> {
     try {
       const response = await api.put<ApiResponse<User>>('/auth/profile', userData);
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message || 'Profile update failed');
       }
@@ -342,17 +342,17 @@ class EnhancedAuthService {
         currentPassword,
         newPassword,
       });
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message || 'Password change failed');
       }
     } catch (error: any) {
       console.error('Change password error:', error);
-      
+
       if (error.response?.status === 400) {
         throw new Error('Current password is incorrect');
       }
-      
+
       throw new Error(error.message || ERROR_CODES.UNKNOWN_ERROR);
     }
   }
@@ -361,7 +361,7 @@ class EnhancedAuthService {
   async verifyEmail(token: string): Promise<void> {
     try {
       const response = await api.post<ApiResponse<void>>('/auth/verify-email', { token });
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message || 'Email verification failed');
       }
@@ -378,7 +378,7 @@ class EnhancedAuthService {
         qrCode?: string;
         backupCodes?: string[];
       }>>('/auth/two-factor', { enable, code });
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message || 'Two-factor authentication setup failed');
       }
@@ -445,4 +445,3 @@ class EnhancedAuthService {
 
 export const enhancedAuthService = new EnhancedAuthService();
 export default enhancedAuthService;
-

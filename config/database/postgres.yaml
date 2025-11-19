@@ -40,26 +40,26 @@ tables:
       - columns: [email]
         unique: true
     partitioning: none
-  
+
   - name: roles
     description: "User roles"
     indexes: []
     partitioning: none
-  
+
   - name: user_roles
     description: "User to role mapping"
     indexes:
       - columns: [user_id, role_id]
         unique: true
     partitioning: none
-  
+
   # Portfolio Management
   - name: portfolios
     description: "User portfolios"
     indexes:
       - columns: [user_id]
     partitioning: none
-  
+
   - name: positions
     description: "Portfolio positions"
     indexes:
@@ -69,7 +69,7 @@ tables:
       type: range
       column: date
       interval: monthly
-  
+
   - name: transactions
     description: "Trading transactions"
     indexes:
@@ -80,7 +80,7 @@ tables:
       type: range
       column: transaction_date
       interval: monthly
-  
+
   # Market Data
   - name: symbols
     description: "Tradable symbols"
@@ -89,7 +89,7 @@ tables:
         unique: true
       - columns: [exchange]
     partitioning: none
-  
+
   - name: fundamentals
     description: "Company fundamentals"
     indexes:
@@ -99,7 +99,7 @@ tables:
       type: range
       column: date
       interval: quarterly
-  
+
   # Strategy Management
   - name: strategies
     description: "Trading strategies"
@@ -107,7 +107,7 @@ tables:
       - columns: [user_id]
       - columns: [name]
     partitioning: none
-  
+
   - name: strategy_backtest_results
     description: "Strategy backtest results"
     indexes:
@@ -117,7 +117,7 @@ tables:
       type: range
       column: start_date
       interval: monthly
-  
+
   - name: strategy_live_results
     description: "Strategy live trading results"
     indexes:
@@ -182,4 +182,3 @@ performance:
   autovacuum_naptime: 1min
   autovacuum_vacuum_threshold: 50
   autovacuum_analyze_threshold: 50
-

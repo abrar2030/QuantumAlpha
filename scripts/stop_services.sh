@@ -60,7 +60,7 @@ echo -e "${BLUE}=========================================${NC}"
 # Stop backend services
 if $STOP_BACKEND; then
   echo -e "\n${YELLOW}Stopping backend services...${NC}"
-  
+
   # Stop data service
   if [[ -f "$PROJECT_ROOT/logs/data_service.pid" ]]; then
     DATA_SERVICE_PID=$(cat "$PROJECT_ROOT/logs/data_service.pid")
@@ -73,7 +73,7 @@ if $STOP_BACKEND; then
     fi
     rm -f "$PROJECT_ROOT/logs/data_service.pid"
   fi
-  
+
   # Stop AI engine
   if [[ -f "$PROJECT_ROOT/logs/ai_engine.pid" ]]; then
     AI_ENGINE_PID=$(cat "$PROJECT_ROOT/logs/ai_engine.pid")
@@ -86,7 +86,7 @@ if $STOP_BACKEND; then
     fi
     rm -f "$PROJECT_ROOT/logs/ai_engine.pid"
   fi
-  
+
   # Stop risk service
   if [[ -f "$PROJECT_ROOT/logs/risk_service.pid" ]]; then
     RISK_SERVICE_PID=$(cat "$PROJECT_ROOT/logs/risk_service.pid")
@@ -99,7 +99,7 @@ if $STOP_BACKEND; then
     fi
     rm -f "$PROJECT_ROOT/logs/risk_service.pid"
   fi
-  
+
   # Stop execution service
   if [[ -f "$PROJECT_ROOT/logs/execution_service.pid" ]]; then
     EXECUTION_SERVICE_PID=$(cat "$PROJECT_ROOT/logs/execution_service.pid")
@@ -117,7 +117,7 @@ fi
 # Stop frontend services
 if $STOP_FRONTEND; then
   echo -e "\n${YELLOW}Stopping frontend services...${NC}"
-  
+
   # Stop web frontend
   if [[ -f "$PROJECT_ROOT/logs/web_frontend.pid" ]]; then
     WEB_FRONTEND_PID=$(cat "$PROJECT_ROOT/logs/web_frontend.pid")
@@ -130,7 +130,7 @@ if $STOP_FRONTEND; then
     fi
     rm -f "$PROJECT_ROOT/logs/web_frontend.pid"
   fi
-  
+
   # Kill any remaining npm processes
   FRONTEND_PIDS=$(ps aux | grep "node.*react-scripts" | grep -v grep | awk '{print $2}')
   if [[ ! -z "$FRONTEND_PIDS" ]]; then
@@ -145,9 +145,9 @@ fi
 # Stop infrastructure services
 if $STOP_INFRASTRUCTURE; then
   echo -e "\n${YELLOW}Stopping infrastructure services...${NC}"
-  
+
   DOCKER_COMPOSE_FILE="$PROJECT_ROOT/infrastructure/docker-compose.yml"
-  
+
   if [[ ! -f "$DOCKER_COMPOSE_FILE" ]]; then
     echo -e "${RED}Error: Docker Compose file not found: $DOCKER_COMPOSE_FILE${NC}"
   else
@@ -159,4 +159,3 @@ fi
 echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Services Stopped          ${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

@@ -5,6 +5,7 @@ Handles feature engineering and technical indicators.
 
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 from datetime import datetime, timedelta
@@ -17,8 +18,14 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (NotFoundError, ServiceError, SimpleCache, ValidationError,
-                    setup_logger)
+from common import (
+    NotFoundError,
+    ServiceError,
+    SimpleCache,
+    ValidationError,
+    setup_logger,
+)
+
 # Import market data service
 from data_service.market_data import MarketDataService
 

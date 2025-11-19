@@ -43,11 +43,11 @@ This project and everyone participating in it is governed by our [Code of Conduc
    # Create and activate a virtual environment
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
+
    # Install dependencies
    pip install -r requirements.txt
    pip install -r requirements-dev.txt
-   
+
    # Set up pre-commit hooks
    pre-commit install
    ```
@@ -58,7 +58,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
    # Web Frontend
    cd web-frontend
    npm install
-   
+
    # Mobile Frontend
    cd ../mobile-frontend
    npm install
@@ -210,4 +210,3 @@ npm test
 - Participate in community calls and events
 
 Thank you for contributing to QuantumAlpha!
-

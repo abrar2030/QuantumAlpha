@@ -1809,4 +1809,3 @@ Retrieves the status of a data quality issue.
   ]
 }
 ```
-

@@ -38,4 +38,3 @@ EXPOSE 8000
 
 # Set default command
 CMD ["python", "-m", "${SERVICE_NAME}.app"]
-

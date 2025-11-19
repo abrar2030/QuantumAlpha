@@ -92,9 +92,9 @@ const NotificationPanel = () => {
   }, []);
 
   const markAsRead = (id) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === id 
+    setNotifications(prev =>
+      prev.map(notification =>
+        notification.id === id
           ? { ...notification, read: true }
           : notification
       )
@@ -120,9 +120,9 @@ const NotificationPanel = () => {
 
   return (
     <Fade in={true} timeout={1000}>
-      <Paper 
+      <Paper
         elevation={0}
-        sx={{ 
+        sx={{
           p: 3,
           borderRadius: 4,
           background: 'rgba(255, 255, 255, 0.05)',
@@ -134,8 +134,8 @@ const NotificationPanel = () => {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Badge 
-              badgeContent={unreadCount} 
+            <Badge
+              badgeContent={unreadCount}
               color="error"
               sx={{
                 '& .MuiBadge-badge': {
@@ -149,7 +149,7 @@ const NotificationPanel = () => {
               Live Notifications
             </Typography>
           </Box>
-          <IconButton 
+          <IconButton
             size="small"
             sx={{ color: '#00d4ff' }}
           >
@@ -160,7 +160,7 @@ const NotificationPanel = () => {
         <List sx={{ p: 0, maxHeight: 400, overflow: 'auto' }}>
           {notifications.map((notification, index) => {
             const Icon = notification.icon;
-            
+
             return (
               <Fade in={true} timeout={500} style={{ transitionDelay: `${index * 100}ms` }} key={notification.id}>
                 <ListItem
@@ -179,8 +179,8 @@ const NotificationPanel = () => {
                   onClick={() => markAsRead(notification.id)}
                 >
                   <ListItemIcon>
-                    <Avatar 
-                      sx={{ 
+                    <Avatar
+                      sx={{
                         bgcolor: `${notification.color}20`,
                         width: 36,
                         height: 36
@@ -192,14 +192,14 @@ const NotificationPanel = () => {
                   <ListItemText
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography 
-                          variant="subtitle2" 
+                        <Typography
+                          variant="subtitle2"
                           fontWeight={notification.read ? 400 : 600}
                           color="white"
                         >
                           {notification.title}
                         </Typography>
-                        <IconButton 
+                        <IconButton
                           size="small"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -213,8 +213,8 @@ const NotificationPanel = () => {
                     }
                     secondary={
                       <Box>
-                        <Typography 
-                          variant="body2" 
+                        <Typography
+                          variant="body2"
                           color="text.secondary"
                           sx={{ mb: 0.5 }}
                         >
@@ -253,8 +253,8 @@ const NotificationPanel = () => {
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert 
-            onClose={() => setSnackbar({ ...snackbar, open: false })} 
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
             severity={snackbar.severity}
             sx={{
               background: 'rgba(0, 0, 0, 0.9)',
@@ -272,4 +272,3 @@ const NotificationPanel = () => {
 };
 
 export default NotificationPanel;
-

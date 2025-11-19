@@ -27,4 +27,3 @@ jobs:
         exempt-all-assignees: true
         operations-per-run: 100
         remove-stale-when-updated: true
-

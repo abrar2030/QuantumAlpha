@@ -22,11 +22,11 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // Render fallback UI
       return (
-        <Alert 
-          severity="error" 
+        <Alert
+          severity="error"
           variant="filled"
-          sx={{ 
-            my: 2, 
+          sx={{
+            my: 2,
             boxShadow: 3,
             '& .MuiAlert-message': {
               width: '100%'

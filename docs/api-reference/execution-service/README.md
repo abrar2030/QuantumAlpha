@@ -2046,4 +2046,3 @@ Downloads a completed report.
 #### Response
 
 The response will be a file download with the appropriate content type based on the requested format (e.g., `text/csv`, `application/json`, `application/pdf`).
-

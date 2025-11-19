@@ -254,7 +254,7 @@ data:
   config.yml: |
     # InfluxDB configuration for QuantumAlpha
     # Security-hardened configuration for financial services
-    
+
     # HTTP settings
     http-bind-address: ":8086"
     http-https-enabled: true
@@ -270,7 +270,7 @@ data:
     http-max-concurrent-write-limit: 0
     http-max-enqueued-write-limit: 0
     http-enqueued-write-timeout: 30000000000
-    
+
     # Logging
     log-enabled: true
     log-level: "info"
@@ -278,14 +278,14 @@ data:
     log-queries-after: "0s"
     log-write-tracing: false
     suppress-logo: false
-    
+
     # Data settings
     engine: "tsm1"
     index-version: "inmem"
     max-concurrent-compactions: 0
     max-index-log-file-size: "1m"
     series-id-set-cache-size: 100
-    
+
     # WAL settings
     wal-dir: "/var/lib/influxdb2/wal"
     wal-logging-enabled: true
@@ -294,21 +294,21 @@ data:
     wal-max-series-size: 1048576
     wal-flush-cold-interval: "5s"
     wal-partition-flush-delay: "2s"
-    
+
     # Data retention
     retention-enabled: true
     retention-check-interval: "30m"
-    
+
     # Shard precreation
     shard-precreation-enabled: true
     shard-precreation-check-interval: "10m"
     shard-precreation-advance-period: "30m"
-    
+
     # Monitor settings
     monitor-store-enabled: true
     monitor-store-database: "_internal"
     monitor-store-interval: "10s"
-    
+
     # Subscriber settings
     subscriber-enabled: true
     subscriber-http-timeout: "30s"
@@ -316,22 +316,21 @@ data:
     subscriber-ca-certs: ""
     subscriber-write-concurrency: 40
     subscriber-write-buffer-size: 1000
-    
+
     # Graphite settings
     graphite-enabled: false
-    
+
     # CollectD settings
     collectd-enabled: false
-    
+
     # OpenTSDB settings
     opentsdb-enabled: false
-    
+
     # UDP settings
     udp-enabled: false
-    
+
     # Continuous queries
     continuous_queries-enabled: true
     continuous_queries-log-enabled: true
     continuous_queries-query-stats-enabled: false
     continuous_queries-run-interval: "1s"
-

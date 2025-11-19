@@ -67,7 +67,7 @@ resource "aws_elasticache_replication_group" "redis" {
   automatic_failover_enabled    = var.environment == "prod" ? true : false
   multi_az_enabled              = var.environment == "prod" ? true : false
   auto_minor_version_upgrade    = true
-  
+
   tags = {
     Name        = "quantumalpha-${var.environment}-redis"
     Environment = var.environment

@@ -71,7 +71,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
     backgroundGradientTo: theme.chartBackgroundGradientTo,
     decimalPlaces: 2,
     color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    labelColor: (opacity = 1) => 
+    labelColor: (opacity = 1) =>
       `rgba(${isDarkMode ? '255, 255, 255' : '0, 0, 0'}, ${opacity})`,
     style: {
       borderRadius: 16,
@@ -244,7 +244,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
       )}
 
       {renderTimeframeSelector()}
-      
+
       <View style={styles.chartContainer}>
         {renderChart()}
       </View>
@@ -346,4 +346,3 @@ const styles = StyleSheet.create({
 });
 
 export default EnhancedChart;
-

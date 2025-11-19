@@ -254,7 +254,7 @@ data:
   redis.conf: |
     # Redis configuration for QuantumAlpha
     # Security-hardened configuration for financial services
-    
+
     # Network and security
     bind 0.0.0.0
     port 6379
@@ -262,15 +262,15 @@ data:
     tcp-backlog 511
     timeout 300
     tcp-keepalive 60
-    
+
     # Authentication
     requirepass ${REDIS_PASSWORD}
-    
+
     # Memory management
     maxmemory 512mb
     maxmemory-policy allkeys-lru
     maxmemory-samples 5
-    
+
     # Persistence
     save 900 1
     save 300 10
@@ -280,7 +280,7 @@ data:
     rdbchecksum yes
     dbfilename dump.rdb
     dir /data
-    
+
     # AOF persistence
     appendonly yes
     appendfilename "appendonly.aof"
@@ -290,22 +290,22 @@ data:
     auto-aof-rewrite-min-size 64mb
     aof-load-truncated yes
     aof-use-rdb-preamble yes
-    
+
     # Logging
     loglevel notice
     logfile ""
     syslog-enabled no
-    
+
     # Client management
     maxclients 10000
-    
+
     # Slow log
     slowlog-log-slower-than 10000
     slowlog-max-len 128
-    
+
     # Latency monitoring
     latency-monitor-threshold 100
-    
+
     # Security enhancements
     rename-command FLUSHDB ""
     rename-command FLUSHALL ""
@@ -315,15 +315,14 @@ data:
     rename-command DEBUG ""
     rename-command EVAL ""
     rename-command SCRIPT ""
-    
+
     # Client output buffer limits
     client-output-buffer-limit normal 0 0 0
     client-output-buffer-limit replica 256mb 64mb 60
     client-output-buffer-limit pubsub 32mb 8mb 60
-    
+
     # Advanced configuration
     hz 10
     dynamic-hz yes
     aof-rewrite-incremental-fsync yes
     rdb-save-incremental-fsync yes
-

@@ -222,7 +222,7 @@ services:
         level: INFO
         handlers: [file]
         propagate: false
-  
+
   ai_engine:
     loggers:
       quantumalpha.ai_engine:
@@ -237,7 +237,7 @@ services:
         level: INFO
         handlers: [file, error_file]
         propagate: false
-  
+
   risk_service:
     loggers:
       quantumalpha.risk_service:
@@ -252,7 +252,7 @@ services:
         level: INFO
         handlers: [file]
         propagate: false
-  
+
   execution_service:
     loggers:
       quantumalpha.execution_service:
@@ -267,4 +267,3 @@ services:
         level: INFO
         handlers: [file, error_file, critical_file]
         propagate: false
-

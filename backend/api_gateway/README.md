@@ -18,7 +18,7 @@ def validate_token(request):
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
         return False, "Missing or invalid Authorization header"
-    
+
     token = auth_header.split(" ")[1]
     # In a real scenario, validate token with an OAuth 2.0 provider (e.g., decode JWT, check expiry, verify signature)
     if token == "valid_access_token": # Placeholder for actual validation
@@ -35,5 +35,3 @@ def input_validation_middleware(request):
     return True, "Input valid"
 
 ```
-
-

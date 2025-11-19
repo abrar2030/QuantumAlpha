@@ -89,7 +89,7 @@ const Input = forwardRef<TextInput, InputProps>(({
           {required && <Text style={{ color: theme.error }}> *</Text>}
         </Text>
       )}
-      
+
       <View style={getContainerStyle()}>
         {leftIcon && (
           <Icon
@@ -99,7 +99,7 @@ const Input = forwardRef<TextInput, InputProps>(({
             style={styles.leftIcon}
           />
         )}
-        
+
         <TextInput
           ref={ref}
           style={[getInputStyle(), style]}
@@ -108,7 +108,7 @@ const Input = forwardRef<TextInput, InputProps>(({
           onBlur={() => setIsFocused(false)}
           {...props}
         />
-        
+
         {rightIcon && (
           <TouchableOpacity
             onPress={onRightIconPress}
@@ -122,7 +122,7 @@ const Input = forwardRef<TextInput, InputProps>(({
           </TouchableOpacity>
         )}
       </View>
-      
+
       {(error || helperText) && (
         <Text
           style={[
@@ -194,4 +194,3 @@ const styles = StyleSheet.create({
 Input.displayName = 'Input';
 
 export default Input;
-

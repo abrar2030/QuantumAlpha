@@ -99,10 +99,10 @@ src/
    ```bash
    # For iOS
    npm run ios
-   
+
    # For Android
    npm run android
-   
+
    # Start Metro bundler
    npm start
    ```

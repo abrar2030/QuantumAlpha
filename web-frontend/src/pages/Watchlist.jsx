@@ -151,7 +151,7 @@ const Watchlist = () => {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(item => 
+      filtered = filtered.filter(item =>
         item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -243,8 +243,8 @@ const Watchlist = () => {
 
     return (
       <Fade in={true} timeout={500}>
-        <Card 
-          sx={{ 
+        <Card
+          sx={{
             mb: 2,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(20px)',
@@ -262,8 +262,8 @@ const Watchlist = () => {
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} sm={3}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Avatar 
-                    sx={{ 
+                  <Avatar
+                    sx={{
                       bgcolor: '#00d4ff20',
                       color: '#00d4ff',
                       fontWeight: 700
@@ -310,21 +310,21 @@ const Watchlist = () => {
 
               <Grid item xs={6} sm={2}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                  <Chip 
+                  <Chip
                     label={item.category}
                     size="small"
-                    sx={{ 
+                    sx={{
                       background: '#00d4ff20',
                       color: '#00d4ff',
                       fontWeight: 600
                     }}
                   />
                   {item.alerts.length > 0 && (
-                    <Chip 
+                    <Chip
                       icon={<Bell size={12} />}
                       label={item.alerts.length}
                       size="small"
-                      sx={{ 
+                      sx={{
                         background: '#f59e0b20',
                         color: '#f59e0b',
                         fontWeight: 600
@@ -338,7 +338,7 @@ const Watchlist = () => {
               </Grid>
 
               <Grid item xs={12} sm={1}>
-                <IconButton 
+                <IconButton
                   onClick={(e) => handleMenuClick(e, item)}
                   sx={{ color: '#00d4ff' }}
                 >
@@ -353,7 +353,7 @@ const Watchlist = () => {
   };
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       py: 4
@@ -361,9 +361,9 @@ const Watchlist = () => {
       <Box sx={{ maxWidth: 1400, mx: 'auto', px: 3 }}>
         {/* Header */}
         <Fade in={true} timeout={800}>
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               p: 4,
               mb: 4,
               borderRadius: 4,
@@ -431,8 +431,8 @@ const Watchlist = () => {
                   onChange={(e, newValue) => setFilterCategory(newValue)}
                   options={categories}
                   renderInput={(params) => (
-                    <TextField 
-                      {...params} 
+                    <TextField
+                      {...params}
                       label="Category"
                       sx={{
                         '& .MuiOutlinedInput-root': {
@@ -454,8 +454,8 @@ const Watchlist = () => {
                   onChange={(e, newValue) => setSortBy(newValue)}
                   options={['symbol', 'price', 'change', 'volume', 'marketCap']}
                   renderInput={(params) => (
-                    <TextField 
-                      {...params} 
+                    <TextField
+                      {...params}
                       label="Sort By"
                       sx={{
                         '& .MuiOutlinedInput-root': {
@@ -472,7 +472,7 @@ const Watchlist = () => {
                 />
               </Grid>
               <Grid item xs={12} md={1}>
-                <IconButton 
+                <IconButton
                   onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
                   sx={{ color: '#00d4ff' }}
                 >
@@ -481,17 +481,17 @@ const Watchlist = () => {
               </Grid>
               <Grid item xs={12} md={3}>
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Chip 
+                  <Chip
                     label={`${filteredItems.length} items`}
-                    sx={{ 
+                    sx={{
                       background: '#00d4ff20',
                       color: '#00d4ff',
                       fontWeight: 600
                     }}
                   />
-                  <Chip 
+                  <Chip
                     label={`${watchlistItems.filter(item => item.alerts.length > 0).length} with alerts`}
-                    sx={{ 
+                    sx={{
                       background: '#f59e0b20',
                       color: '#f59e0b',
                       fontWeight: 600
@@ -512,9 +512,9 @@ const Watchlist = () => {
 
         {filteredItems.length === 0 && (
           <Fade in={true} timeout={1000}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
+              sx={{
                 p: 6,
                 textAlign: 'center',
                 borderRadius: 4,
@@ -551,8 +551,8 @@ const Watchlist = () => {
         )}
 
         {/* Add Symbol Dialog */}
-        <Dialog 
-          open={addDialogOpen} 
+        <Dialog
+          open={addDialogOpen}
           onClose={() => setAddDialogOpen(false)}
           PaperProps={{
             sx: {
@@ -601,13 +601,13 @@ const Watchlist = () => {
             </Typography>
           </DialogContent>
           <DialogActions sx={{ p: 3 }}>
-            <Button 
+            <Button
               onClick={() => setAddDialogOpen(false)}
               sx={{ color: 'text.secondary' }}
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={addToWatchlist}
               variant="contained"
               disabled={!newSymbol.trim()}
@@ -650,13 +650,13 @@ const Watchlist = () => {
             View Chart
           </MenuItem>
           <Divider sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }} />
-          <MenuItem 
+          <MenuItem
             onClick={() => {
               if (selectedItem) {
                 removeFromWatchlist(selectedItem.id);
               }
               handleMenuClose();
-            }} 
+            }}
             sx={{ color: '#ef4444' }}
           >
             <Delete size={16} style={{ marginRight: 8 }} />
@@ -671,8 +671,8 @@ const Watchlist = () => {
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert 
-            onClose={() => setSnackbar({ ...snackbar, open: false })} 
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
             severity={snackbar.severity}
             sx={{
               background: 'rgba(0, 0, 0, 0.9)',
@@ -690,4 +690,3 @@ const Watchlist = () => {
 };
 
 export default Watchlist;
-

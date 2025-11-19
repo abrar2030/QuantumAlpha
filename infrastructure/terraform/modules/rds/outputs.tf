@@ -316,4 +316,3 @@ output "monitoring_info" {
     performance_insights_retention_period = aws_db_instance.main.performance_insights_retention_period
   }
 }
-

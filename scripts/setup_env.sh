@@ -124,11 +124,11 @@ echo -e "\n${YELLOW}Setting up database...${NC}"
 if command -v docker &> /dev/null; then
   echo -e "${BLUE}Starting PostgreSQL and InfluxDB containers...${NC}"
   docker-compose -f "$PROJECT_ROOT/infrastructure/docker-compose.yml" up -d postgres influxdb redis
-  
+
   # Wait for PostgreSQL to be ready
   echo -e "${BLUE}Waiting for PostgreSQL to be ready...${NC}"
   sleep 5
-  
+
   # Create database schema
   echo -e "${BLUE}Creating database schema...${NC}"
   python "$PROJECT_ROOT/scripts/setup_db.py" --env "$ENV"
@@ -145,14 +145,14 @@ if command -v npm &> /dev/null; then
   cd "$PROJECT_ROOT/web-frontend"
   npm install
   cd "$PROJECT_ROOT"
-  
+
   if [[ -d "$PROJECT_ROOT/mobile-frontend" ]]; then
     echo -e "${BLUE}Installing mobile frontend dependencies...${NC}"
     cd "$PROJECT_ROOT/mobile-frontend"
     npm install
     cd "$PROJECT_ROOT"
   fi
-  
+
   echo -e "${GREEN}✓ Frontend dependencies installed${NC}"
 else
   echo -e "${YELLOW}Warning: npm not found. Skipping frontend dependencies installation.${NC}"
@@ -176,4 +176,3 @@ echo -e "${GREEN}=========================================${NC}"
 echo -e "\nTo start the development server, run: ${BLUE}./scripts/start_dev.sh${NC}"
 echo -e "To run tests, run: ${BLUE}./scripts/run_tests.sh${NC}"
 echo -e "To access the web dashboard, open: ${BLUE}http://localhost:3000${NC}"
-

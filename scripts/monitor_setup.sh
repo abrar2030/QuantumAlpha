@@ -133,20 +133,20 @@ fi
 # Set up monitoring locally using Docker Compose
 if [[ "$LOCAL" == true ]]; then
   echo -e "\n${YELLOW}Setting up monitoring locally using Docker Compose...${NC}"
-  
+
   # Create monitoring directory if it doesn't exist
   mkdir -p "$PROJECT_ROOT/monitoring/data"
   mkdir -p "$PROJECT_ROOT/monitoring/config"
-  
+
   # Process each component
   for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
     case $COMPONENT in
       metrics)
         echo -e "\n${BLUE}Setting up metrics monitoring (Prometheus, Grafana)...${NC}"
-        
+
         # Create Prometheus config directory
         mkdir -p "$PROJECT_ROOT/monitoring/config/prometheus"
-        
+
         # Create Prometheus config file
         cat > "$PROJECT_ROOT/monitoring/config/prometheus/prometheus.yml" << EOF
 global:
@@ -174,11 +174,11 @@ scrape_configs:
     static_configs:
       - targets: ['execution-service:8080']
 EOF
-        
+
         # Create Grafana config directory
         mkdir -p "$PROJECT_ROOT/monitoring/config/grafana/provisioning/datasources"
         mkdir -p "$PROJECT_ROOT/monitoring/config/grafana/provisioning/dashboards"
-        
+
         # Create Grafana datasource config
         cat > "$PROJECT_ROOT/monitoring/config/grafana/provisioning/datasources/datasource.yml" << EOF
 apiVersion: 1
@@ -201,7 +201,7 @@ datasources:
       password: adminpassword
     editable: false
 EOF
-        
+
         # Create Docker Compose file for metrics monitoring
         cat > "$PROJECT_ROOT/monitoring/docker-compose-metrics.yml" << EOF
 version: '3'
@@ -234,21 +234,21 @@ services:
       - prometheus
     restart: always
 EOF
-        
+
         # Start metrics monitoring
         execute_cmd "cd $PROJECT_ROOT/monitoring && docker-compose -f docker-compose-metrics.yml up -d"
-        
+
         echo -e "${GREEN}✓ Metrics monitoring set up${NC}"
         echo -e "${BLUE}Prometheus: http://localhost:9090${NC}"
         echo -e "${BLUE}Grafana: http://localhost:3000 (admin/admin)${NC}"
         ;;
-        
+
       logging)
         echo -e "\n${BLUE}Setting up logging (Elasticsearch, Fluentd, Kibana)...${NC}"
-        
+
         # Create Fluentd config directory
         mkdir -p "$PROJECT_ROOT/monitoring/config/fluentd/conf"
-        
+
         # Create Fluentd config file
         cat > "$PROJECT_ROOT/monitoring/config/fluentd/conf/fluent.conf" << EOF
 <source>
@@ -276,7 +276,7 @@ EOF
   </store>
 </match>
 EOF
-        
+
         # Create Docker Compose file for logging
         cat > "$PROJECT_ROOT/monitoring/docker-compose-logging.yml" << EOF
 version: '3'
@@ -318,21 +318,21 @@ services:
       - elasticsearch
     restart: always
 EOF
-        
+
         # Start logging
         execute_cmd "cd $PROJECT_ROOT/monitoring && docker-compose -f docker-compose-logging.yml up -d"
-        
+
         echo -e "${GREEN}✓ Logging set up${NC}"
         echo -e "${BLUE}Elasticsearch: http://localhost:9200${NC}"
         echo -e "${BLUE}Kibana: http://localhost:5601${NC}"
         ;;
-        
+
       dashboards)
         echo -e "\n${BLUE}Setting up dashboards...${NC}"
-        
+
         # Create Grafana dashboards directory
         mkdir -p "$PROJECT_ROOT/monitoring/config/grafana/provisioning/dashboards"
-        
+
         # Create dashboard provider config
         cat > "$PROJECT_ROOT/monitoring/config/grafana/provisioning/dashboards/dashboards.yml" << EOF
 apiVersion: 1
@@ -348,7 +348,7 @@ providers:
     options:
       path: /etc/grafana/provisioning/dashboards
 EOF
-        
+
         # Create system dashboard
         cat > "$PROJECT_ROOT/monitoring/config/grafana/provisioning/dashboards/system_dashboard.json" << EOF
 {
@@ -580,103 +580,103 @@ EOF
   "version": 1
 }
 EOF
-        
+
         # Restart Grafana to load dashboards
         execute_cmd "cd $PROJECT_ROOT/monitoring && docker-compose -f docker-compose-metrics.yml restart grafana"
-        
+
         echo -e "${GREEN}✓ Dashboards set up${NC}"
         echo -e "${BLUE}System Dashboard: http://localhost:3000/d/system/system-dashboard${NC}"
         ;;
-        
+
       *)
         echo -e "${RED}Error: Unknown component: $COMPONENT${NC}"
         echo "Available components: metrics, logging, dashboards"
         ;;
     esac
   done
-  
+
   echo -e "\n${GREEN}✓ Local monitoring setup complete${NC}"
 else
   # Set up monitoring in Kubernetes
   echo -e "\n${YELLOW}Setting up monitoring in Kubernetes...${NC}"
-  
+
   # Check if kubectl is installed
   if ! command -v kubectl &> /dev/null; then
     echo -e "${RED}Error: kubectl not found${NC}"
     exit 1
   fi
-  
+
   # Set Kubernetes context
   CONTEXT_CMD="kubectl config use-context $KUBE_CONTEXT"
   execute_cmd "$CONTEXT_CMD"
-  
+
   # Create namespace if it doesn't exist
   NAMESPACE_CMD="kubectl get namespace $NAMESPACE 2>/dev/null || kubectl create namespace $NAMESPACE"
   execute_cmd "$NAMESPACE_CMD"
-  
+
   # Process each component
   for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
     case $COMPONENT in
       metrics)
         echo -e "\n${BLUE}Setting up metrics monitoring (Prometheus, Grafana)...${NC}"
-        
+
         # Apply Prometheus configuration
         PROMETHEUS_CONFIG_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/prometheus-config.yaml -n $NAMESPACE"
         execute_cmd "$PROMETHEUS_CONFIG_CMD"
-        
+
         # Apply Prometheus deployment
         PROMETHEUS_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/prometheus.yaml -n $NAMESPACE"
         execute_cmd "$PROMETHEUS_CMD"
-        
+
         # Apply Grafana datasources
         GRAFANA_DS_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/grafana-datasources.yaml -n $NAMESPACE"
         execute_cmd "$GRAFANA_DS_CMD"
-        
+
         # Apply Grafana deployment
         GRAFANA_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/grafana.yaml -n $NAMESPACE"
         execute_cmd "$GRAFANA_CMD"
-        
+
         # Wait for deployments to be ready
         WAIT_PROM_CMD="kubectl rollout status deployment/prometheus -n $NAMESPACE --timeout=300s"
         execute_cmd "$WAIT_PROM_CMD"
-        
+
         WAIT_GRAF_CMD="kubectl rollout status deployment/grafana -n $NAMESPACE --timeout=300s"
         execute_cmd "$WAIT_GRAF_CMD"
-        
+
         echo -e "${GREEN}✓ Metrics monitoring set up${NC}"
         ;;
-        
+
       logging)
         echo -e "\n${BLUE}Setting up logging (Elasticsearch, Fluentd, Kibana)...${NC}"
-        
+
         # Apply Elasticsearch deployment
         ES_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/elasticsearch.yaml -n $NAMESPACE"
         execute_cmd "$ES_CMD"
-        
+
         # Apply Fluentd deployment
         FLUENTD_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/fluentd.yaml -n $NAMESPACE"
         execute_cmd "$FLUENTD_CMD"
-        
+
         # Apply Kibana deployment
         KIBANA_CMD="kubectl apply -f $PROJECT_ROOT/infrastructure/monitoring/kibana.yaml -n $NAMESPACE"
         execute_cmd "$KIBANA_CMD"
-        
+
         # Wait for deployments to be ready
         WAIT_ES_CMD="kubectl rollout status statefulset/elasticsearch -n $NAMESPACE --timeout=300s"
         execute_cmd "$WAIT_ES_CMD"
-        
+
         WAIT_KIBANA_CMD="kubectl rollout status deployment/kibana -n $NAMESPACE --timeout=300s"
         execute_cmd "$WAIT_KIBANA_CMD"
-        
+
         echo -e "${GREEN}✓ Logging set up${NC}"
         ;;
-        
+
       dashboards)
         echo -e "\n${BLUE}Setting up dashboards...${NC}"
-        
+
         # Create ConfigMap for dashboards
         mkdir -p "$PROJECT_ROOT/monitoring/dashboards"
-        
+
         # Create system dashboard
         cat > "$PROJECT_ROOT/monitoring/dashboards/system_dashboard.json" << EOF
 {
@@ -908,38 +908,38 @@ else
   "version": 1
 }
 EOF
-        
+
         # Create ConfigMap for dashboards
         DASHBOARD_CM_CMD="kubectl create configmap grafana-dashboards --from-file=$PROJECT_ROOT/monitoring/dashboards/ -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -"
         execute_cmd "$DASHBOARD_CM_CMD"
-        
+
         # Restart Grafana to load dashboards
         RESTART_CMD="kubectl rollout restart deployment/grafana -n $NAMESPACE"
         execute_cmd "$RESTART_CMD"
-        
+
         # Wait for Grafana to be ready
         WAIT_CMD="kubectl rollout status deployment/grafana -n $NAMESPACE --timeout=300s"
         execute_cmd "$WAIT_CMD"
-        
+
         echo -e "${GREEN}✓ Dashboards set up${NC}"
         ;;
-        
+
       *)
         echo -e "${RED}Error: Unknown component: $COMPONENT${NC}"
         echo "Available components: metrics, logging, dashboards"
         ;;
     esac
   done
-  
+
   # Show service URLs
   echo -e "\n${YELLOW}Monitoring URLs:${NC}"
-  
+
   # Get Prometheus URL
   if [[ "$ENV" == "dev" ]]; then
     # For local development, use NodePort
     PORT_CMD="kubectl get service prometheus -n $NAMESPACE -o jsonpath='{.spec.ports[0].nodePort}'"
     PORT=$(eval $PORT_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$PORT" ]]; then
       if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
         IP_CMD="minikube ip"
@@ -951,11 +951,11 @@ EOF
     else
       echo -e "${YELLOW}Prometheus URL not available yet${NC}"
     fi
-    
+
     # Get Grafana URL
     PORT_CMD="kubectl get service grafana -n $NAMESPACE -o jsonpath='{.spec.ports[0].nodePort}'"
     PORT=$(eval $PORT_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$PORT" ]]; then
       if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
         IP_CMD="minikube ip"
@@ -967,11 +967,11 @@ EOF
     else
       echo -e "${YELLOW}Grafana URL not available yet${NC}"
     fi
-    
+
     # Get Kibana URL
     PORT_CMD="kubectl get service kibana -n $NAMESPACE -o jsonpath='{.spec.ports[0].nodePort}'"
     PORT=$(eval $PORT_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$PORT" ]]; then
       if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
         IP_CMD="minikube ip"
@@ -987,36 +987,35 @@ EOF
     # For staging/prod, use Ingress
     PROM_URL_CMD="kubectl get ingress -n $NAMESPACE -o jsonpath='{.items[?(@.metadata.name==\"prometheus\")].status.loadBalancer.ingress[0].ip}'"
     PROM_URL=$(eval $PROM_URL_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$PROM_URL" ]]; then
       echo -e "${BLUE}Prometheus: http://$PROM_URL${NC}"
     else
       echo -e "${YELLOW}Prometheus URL not available yet${NC}"
     fi
-    
+
     GRAFANA_URL_CMD="kubectl get ingress -n $NAMESPACE -o jsonpath='{.items[?(@.metadata.name==\"grafana\")].status.loadBalancer.ingress[0].ip}'"
     GRAFANA_URL=$(eval $GRAFANA_URL_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$GRAFANA_URL" ]]; then
       echo -e "${BLUE}Grafana: http://$GRAFANA_URL (admin/admin)${NC}"
     else
       echo -e "${YELLOW}Grafana URL not available yet${NC}"
     fi
-    
+
     KIBANA_URL_CMD="kubectl get ingress -n $NAMESPACE -o jsonpath='{.items[?(@.metadata.name==\"kibana\")].status.loadBalancer.ingress[0].ip}'"
     KIBANA_URL=$(eval $KIBANA_URL_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$KIBANA_URL" ]]; then
       echo -e "${BLUE}Kibana: http://$KIBANA_URL${NC}"
     else
       echo -e "${YELLOW}Kibana URL not available yet${NC}"
     fi
   fi
-  
+
   echo -e "\n${GREEN}✓ Kubernetes monitoring setup complete${NC}"
 fi
 
 echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Monitoring Setup Complete ${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

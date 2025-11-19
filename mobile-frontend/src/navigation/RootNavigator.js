@@ -32,7 +32,7 @@ const Drawer = createDrawerNavigator();
 
 const AuthStack = () => {
   const { theme } = useTheme();
-  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -46,19 +46,19 @@ const AuthStack = () => {
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen 
-        name="Login" 
-        component={LoginScreen} 
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen 
-        name="Register" 
-        component={RegisterScreen} 
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
         options={{ title: 'Create Account' }}
       />
-      <Stack.Screen 
-        name="ForgotPassword" 
-        component={ForgotPasswordScreen} 
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
         options={{ title: 'Reset Password' }}
       />
     </Stack.Navigator>
@@ -67,7 +67,7 @@ const AuthStack = () => {
 
 const MainTabs = () => {
   const { theme, isDarkMode } = useTheme();
-  
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -139,7 +139,7 @@ const MainTabs = () => {
 
 const DashboardStack = () => {
   const { theme } = useTheme();
-  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -153,14 +153,14 @@ const DashboardStack = () => {
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen 
-        name="Dashboard" 
-        component={DashboardScreen} 
+      <Stack.Screen
+        name="Dashboard"
+        component={DashboardScreen}
         options={{ title: 'QuantumAlpha' }}
       />
-      <Stack.Screen 
-        name="Notifications" 
-        component={NotificationsScreen} 
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
       />
     </Stack.Navigator>
   );
@@ -168,7 +168,7 @@ const DashboardStack = () => {
 
 const PortfolioStack = () => {
   const { theme } = useTheme();
-  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -182,9 +182,9 @@ const PortfolioStack = () => {
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen 
-        name="Portfolio" 
-        component={PortfolioScreen} 
+      <Stack.Screen
+        name="Portfolio"
+        component={PortfolioScreen}
       />
     </Stack.Navigator>
   );
@@ -192,7 +192,7 @@ const PortfolioStack = () => {
 
 const StrategyStack = () => {
   const { theme } = useTheme();
-  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -206,13 +206,13 @@ const StrategyStack = () => {
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen 
-        name="Strategies" 
-        component={StrategyScreen} 
+      <Stack.Screen
+        name="Strategies"
+        component={StrategyScreen}
       />
-      <Stack.Screen 
-        name="StrategyDetail" 
-        component={StrategyDetailScreen} 
+      <Stack.Screen
+        name="StrategyDetail"
+        component={StrategyDetailScreen}
         options={({ route }) => ({ title: route.params?.name || 'Strategy Details' })}
       />
     </Stack.Navigator>
@@ -221,7 +221,7 @@ const StrategyStack = () => {
 
 const TradeStack = () => {
   const { theme } = useTheme();
-  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -235,9 +235,9 @@ const TradeStack = () => {
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen 
-        name="Trade" 
-        component={TradeScreen} 
+      <Stack.Screen
+        name="Trade"
+        component={TradeScreen}
       />
     </Stack.Navigator>
   );
@@ -245,7 +245,7 @@ const TradeStack = () => {
 
 const AlertsStack = () => {
   const { theme } = useTheme();
-  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -259,9 +259,9 @@ const AlertsStack = () => {
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen 
-        name="Alerts" 
-        component={AlertsScreen} 
+      <Stack.Screen
+        name="Alerts"
+        component={AlertsScreen}
       />
     </Stack.Navigator>
   );
@@ -270,7 +270,7 @@ const AlertsStack = () => {
 const DrawerNavigator = () => {
   const { theme } = useTheme();
   const { logout } = useAuth();
-  
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -332,12 +332,12 @@ const DrawerNavigator = () => {
 
 const RootNavigator = () => {
   const { isAuthenticated, loading } = useAuth();
-  
+
   if (loading) {
     // You could return a splash screen here
     return null;
   }
-  
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (

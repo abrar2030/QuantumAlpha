@@ -16,5 +16,3 @@ describe("SecureStorage", () => {
     // For this placeholder, we just ensure the function runs without error.
   });
 });
-
-

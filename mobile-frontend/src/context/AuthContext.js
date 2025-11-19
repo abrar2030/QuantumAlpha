@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const userJson = await AsyncStorage.getItem('user');
         const token = await AsyncStorage.getItem('token');
-        
+
         if (userJson && token) {
           setUser(JSON.parse(userJson));
           authService.setToken(token);
@@ -37,10 +37,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       const { user, token } = await authService.login(email, password);
-      
+
       await AsyncStorage.setItem('user', JSON.stringify(user));
       await AsyncStorage.setItem('token', token);
-      
+
       authService.setToken(token);
       setUser(user);
       return user;
@@ -57,10 +57,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       const { user, token } = await authService.register(userData);
-      
+
       await AsyncStorage.setItem('user', JSON.stringify(user));
       await AsyncStorage.setItem('token', token);
-      
+
       authService.setToken(token);
       setUser(user);
       return user;

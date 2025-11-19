@@ -39,7 +39,7 @@ class PortfolioService {
         setTimeout(() => {
           let labels = [];
           let values = [];
-          
+
           switch (period) {
             case '1D':
               labels = ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM'];
@@ -69,7 +69,7 @@ class PortfolioService {
               labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
               values = [10000, 10100, 10250, 10400];
           }
-          
+
           resolve({
             data: {
               labels,
@@ -119,39 +119,39 @@ class PortfolioService {
         setTimeout(() => {
           resolve({
             data: [
-              { 
-                symbol: 'AAPL', 
-                name: 'Apple Inc.', 
-                quantity: 10, 
-                price: 320, 
-                value: 3200, 
+              {
+                symbol: 'AAPL',
+                name: 'Apple Inc.',
+                quantity: 10,
+                price: 320,
+                value: 3200,
                 change: 1.2,
                 allocation: 30.77
               },
-              { 
-                symbol: 'MSFT', 
-                name: 'Microsoft Corp.', 
-                quantity: 8, 
-                price: 350, 
-                value: 2800, 
+              {
+                symbol: 'MSFT',
+                name: 'Microsoft Corp.',
+                quantity: 8,
+                price: 350,
+                value: 2800,
                 change: 0.8,
                 allocation: 26.92
               },
-              { 
-                symbol: 'GOOGL', 
-                name: 'Alphabet Inc.', 
-                quantity: 2, 
-                price: 1200, 
-                value: 2400, 
+              {
+                symbol: 'GOOGL',
+                name: 'Alphabet Inc.',
+                quantity: 2,
+                price: 1200,
+                value: 2400,
                 change: -0.5,
                 allocation: 23.08
               },
-              { 
-                symbol: 'AMZN', 
-                name: 'Amazon.com Inc.', 
-                quantity: 1, 
-                price: 2000, 
-                value: 2000, 
+              {
+                symbol: 'AMZN',
+                name: 'Amazon.com Inc.',
+                quantity: 1,
+                price: 2000,
+                value: 2000,
                 change: 1.5,
                 allocation: 19.23
               },
@@ -176,53 +176,53 @@ class PortfolioService {
           resolve({
             data: {
               transactions: [
-                { 
-                  id: 'tx1', 
-                  type: 'BUY', 
-                  symbol: 'AAPL', 
-                  quantity: 2, 
-                  price: 315, 
-                  total: 630, 
+                {
+                  id: 'tx1',
+                  type: 'BUY',
+                  symbol: 'AAPL',
+                  quantity: 2,
+                  price: 315,
+                  total: 630,
                   date: '2025-06-01T10:30:00Z',
                   status: 'COMPLETED'
                 },
-                { 
-                  id: 'tx2', 
-                  type: 'SELL', 
-                  symbol: 'MSFT', 
-                  quantity: 1, 
-                  price: 340, 
-                  total: 340, 
+                {
+                  id: 'tx2',
+                  type: 'SELL',
+                  symbol: 'MSFT',
+                  quantity: 1,
+                  price: 340,
+                  total: 340,
                   date: '2025-05-28T14:15:00Z',
                   status: 'COMPLETED'
                 },
-                { 
-                  id: 'tx3', 
-                  type: 'BUY', 
-                  symbol: 'GOOGL', 
-                  quantity: 1, 
-                  price: 1180, 
-                  total: 1180, 
+                {
+                  id: 'tx3',
+                  type: 'BUY',
+                  symbol: 'GOOGL',
+                  quantity: 1,
+                  price: 1180,
+                  total: 1180,
                   date: '2025-05-25T09:45:00Z',
                   status: 'COMPLETED'
                 },
-                { 
-                  id: 'tx4', 
-                  type: 'DEPOSIT', 
-                  symbol: 'USD', 
-                  quantity: 2000, 
-                  price: 1, 
-                  total: 2000, 
+                {
+                  id: 'tx4',
+                  type: 'DEPOSIT',
+                  symbol: 'USD',
+                  quantity: 2000,
+                  price: 1,
+                  total: 2000,
                   date: '2025-05-20T11:00:00Z',
                   status: 'COMPLETED'
                 },
-                { 
-                  id: 'tx5', 
-                  type: 'BUY', 
-                  symbol: 'AMZN', 
-                  quantity: 1, 
-                  price: 1950, 
-                  total: 1950, 
+                {
+                  id: 'tx5',
+                  type: 'BUY',
+                  symbol: 'AMZN',
+                  quantity: 1,
+                  price: 1950,
+                  total: 1950,
                   date: '2025-05-15T13:20:00Z',
                   status: 'COMPLETED'
                 },

@@ -289,13 +289,13 @@ data:
   postgresql.conf: |
     # PostgreSQL configuration for QuantumAlpha
     # Security-hardened configuration for financial services
-    
+
     # Connection settings
     listen_addresses = '*'
     port = 5432
     max_connections = 100
     superuser_reserved_connections = 3
-    
+
     # SSL settings
     ssl = on
     ssl_cert_file = 'server.crt'
@@ -304,22 +304,22 @@ data:
     ssl_crl_file = 'server.crl'
     ssl_prefer_server_ciphers = on
     ssl_ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256'
-    
+
     # Authentication
     password_encryption = scram-sha-256
-    
+
     # Memory settings
     shared_buffers = 256MB
     effective_cache_size = 1GB
     work_mem = 4MB
     maintenance_work_mem = 64MB
-    
+
     # WAL settings
     wal_level = replica
     max_wal_size = 1GB
     min_wal_size = 80MB
     checkpoint_completion_target = 0.9
-    
+
     # Logging settings for compliance
     log_destination = 'stderr'
     logging_collector = on
@@ -335,14 +335,14 @@ data:
     log_statement = 'all'
     log_temp_files = 0
     log_autovacuum_min_duration = 0
-    
+
     # Security settings
     row_security = on
-    
+
     # Performance settings
     random_page_cost = 1.1
     effective_io_concurrency = 200
-    
+
     # Autovacuum settings
     autovacuum = on
     autovacuum_max_workers = 3
@@ -359,13 +359,13 @@ data:
   01-init.sql: |
     -- PostgreSQL initialization script for QuantumAlpha
     -- Security-hardened configuration for financial services
-    
+
     -- Create audit schema for compliance
     CREATE SCHEMA IF NOT EXISTS audit;
-    
+
     -- Enable row level security
     ALTER DATABASE quantumalpha SET row_security = on;
-    
+
     -- Create audit table for SOX compliance
     CREATE TABLE IF NOT EXISTS audit.user_actions (
         id SERIAL PRIMARY KEY,
@@ -379,12 +379,12 @@ data:
         ip_address INET,
         user_agent TEXT
     );
-    
+
     -- Create indexes for audit queries
     CREATE INDEX IF NOT EXISTS idx_audit_user_actions_timestamp ON audit.user_actions(timestamp);
     CREATE INDEX IF NOT EXISTS idx_audit_user_actions_user_id ON audit.user_actions(user_id);
     CREATE INDEX IF NOT EXISTS idx_audit_user_actions_action ON audit.user_actions(action);
-    
+
     -- Create function for audit logging
     CREATE OR REPLACE FUNCTION audit.log_user_action()
     RETURNS TRIGGER AS $$
@@ -405,4 +405,3 @@ data:
         RETURN NULL;
     END;
     $$ LANGUAGE plpgsql;
-

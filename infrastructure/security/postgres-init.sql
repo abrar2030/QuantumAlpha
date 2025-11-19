@@ -85,4 +85,3 @@ ALTER SYSTEM SET tcp_keepalives_count = 3;
 
 -- Reload configuration
 SELECT pg_reload_conf();
-

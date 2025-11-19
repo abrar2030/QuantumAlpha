@@ -18,12 +18,21 @@ from flask_cors import CORS
 # Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (AuthenticationError, AuthorizationError, NotFoundError,
-                    ServiceError, ValidationError, get_config_manager,
-                    get_db_manager, setup_logger, validate_schema)
+from common import (
+    AuthenticationError,
+    AuthorizationError,
+    NotFoundError,
+    ServiceError,
+    ValidationError,
+    get_config_manager,
+    get_db_manager,
+    setup_logger,
+    validate_schema,
+)
 from common.validation import CancelOrderRequest, OrderRequest
 from execution_service.broker_integration import BrokerIntegration
 from execution_service.execution_strategy import ExecutionStrategy
+
 # Import service modules
 from execution_service.order_manager import OrderManager
 

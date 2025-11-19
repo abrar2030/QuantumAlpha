@@ -207,8 +207,8 @@ const Strategies = () => {
   const handleSaveStrategy = () => {
     if (selectedStrategy) {
       // Update existing strategy
-      setStrategies(prev => prev.map(s => 
-        s.id === selectedStrategy.id 
+      setStrategies(prev => prev.map(s =>
+        s.id === selectedStrategy.id
           ? { ...s, ...newStrategy }
           : s
       ));
@@ -235,17 +235,17 @@ const Strategies = () => {
   };
 
   const handleToggleStrategy = (strategyId) => {
-    setStrategies(prev => prev.map(s => 
-      s.id === strategyId 
+    setStrategies(prev => prev.map(s =>
+      s.id === strategyId
         ? { ...s, status: s.status === 'active' ? 'paused' : 'active' }
         : s
     ));
     const strategy = strategies.find(s => s.id === strategyId);
     const newStatus = strategy.status === 'active' ? 'paused' : 'active';
-    setSnackbar({ 
-      open: true, 
-      message: `Strategy ${newStatus === 'active' ? 'activated' : 'paused'}!`, 
-      severity: 'info' 
+    setSnackbar({
+      open: true,
+      message: `Strategy ${newStatus === 'active' ? 'activated' : 'paused'}!`,
+      severity: 'info'
     });
   };
 
@@ -275,8 +275,8 @@ const Strategies = () => {
 
   const StrategyCard = ({ strategy }) => (
     <Fade in={true} timeout={800}>
-      <Card 
-        sx={{ 
+      <Card
+        sx={{
           height: '100%',
           background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(10px)',
@@ -306,11 +306,11 @@ const Strategies = () => {
                 </Typography>
               </Box>
             </Box>
-            <Chip 
+            <Chip
               label={strategy.status}
               size="small"
-              sx={{ 
-                background: strategy.status === 'active' ? '#10b981' : 
+              sx={{
+                background: strategy.status === 'active' ? '#10b981' :
                            strategy.status === 'paused' ? '#f59e0b' : '#6b7280',
                 color: 'white',
                 fontWeight: 600
@@ -373,19 +373,19 @@ const Strategies = () => {
               <Typography variant="body2" color="text.secondary">
                 Risk Level
               </Typography>
-              <Chip 
+              <Chip
                 label={strategy.risk}
                 size="small"
                 variant="outlined"
-                sx={{ 
+                sx={{
                   borderColor: getRiskColor(strategy.risk),
                   color: getRiskColor(strategy.risk),
                   textTransform: 'capitalize'
                 }}
               />
             </Box>
-            <LinearProgress 
-              variant="determinate" 
+            <LinearProgress
+              variant="determinate"
               value={strategy.risk === 'low' ? 30 : strategy.risk === 'medium' ? 60 : 90}
               sx={{
                 height: 6,
@@ -403,10 +403,10 @@ const Strategies = () => {
         <CardActions sx={{ px: 3, pb: 3, pt: 0 }}>
           <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
             <Tooltip title={strategy.status === 'active' ? 'Pause Strategy' : 'Start Strategy'}>
-              <IconButton 
+              <IconButton
                 size="small"
                 onClick={() => handleToggleStrategy(strategy.id)}
-                sx={{ 
+                sx={{
                   color: strategy.status === 'active' ? '#f59e0b' : '#10b981',
                   '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }
                 }}
@@ -415,7 +415,7 @@ const Strategies = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="View Details">
-              <IconButton 
+              <IconButton
                 size="small"
                 sx={{ color: '#00d4ff', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
               >
@@ -423,7 +423,7 @@ const Strategies = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit Strategy">
-              <IconButton 
+              <IconButton
                 size="small"
                 onClick={() => handleEditStrategy(strategy)}
                 sx={{ color: '#8b5cf6', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
@@ -432,7 +432,7 @@ const Strategies = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Clone Strategy">
-              <IconButton 
+              <IconButton
                 size="small"
                 sx={{ color: '#10b981', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
               >
@@ -440,7 +440,7 @@ const Strategies = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete Strategy">
-              <IconButton 
+              <IconButton
                 size="small"
                 onClick={() => handleDeleteStrategy(strategy.id)}
                 sx={{ color: '#ef4444', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
@@ -455,9 +455,9 @@ const Strategies = () => {
   );
 
   const PerformanceTable = () => (
-    <TableContainer 
-      component={Paper} 
-      sx={{ 
+    <TableContainer
+      component={Paper}
+      sx={{
         background: 'rgba(255, 255, 255, 0.05)',
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -495,11 +495,11 @@ const Strategies = () => {
                 </Box>
               </TableCell>
               <TableCell>
-                <Chip 
+                <Chip
                   label={strategy.status}
                   size="small"
-                  sx={{ 
-                    background: strategy.status === 'active' ? '#10b981' : 
+                  sx={{
+                    background: strategy.status === 'active' ? '#10b981' :
                                strategy.status === 'paused' ? '#f59e0b' : '#6b7280',
                     color: 'white',
                     fontWeight: 600
@@ -507,8 +507,8 @@ const Strategies = () => {
                 />
               </TableCell>
               <TableCell>
-                <Typography 
-                  variant="body2" 
+                <Typography
+                  variant="body2"
                   fontWeight={600}
                   color={strategy.return > 0 ? '#10b981' : '#ef4444'}
                 >
@@ -537,21 +537,21 @@ const Strategies = () => {
               </TableCell>
               <TableCell>
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
-                  <IconButton 
+                  <IconButton
                     size="small"
                     onClick={() => handleToggleStrategy(strategy.id)}
                     sx={{ color: strategy.status === 'active' ? '#f59e0b' : '#10b981' }}
                   >
                     {strategy.status === 'active' ? <Pause size={16} /> : <PlayArrow size={16} />}
                   </IconButton>
-                  <IconButton 
+                  <IconButton
                     size="small"
                     onClick={() => handleEditStrategy(strategy)}
                     sx={{ color: '#8b5cf6' }}
                   >
                     <Edit size={16} />
                   </IconButton>
-                  <IconButton 
+                  <IconButton
                     size="small"
                     onClick={() => handleDeleteStrategy(strategy.id)}
                     sx={{ color: '#ef4444' }}
@@ -568,7 +568,7 @@ const Strategies = () => {
   );
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       py: 4
@@ -578,10 +578,10 @@ const Strategies = () => {
         <Fade in={true} timeout={800}>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-              <Typography 
-                variant="h3" 
+              <Typography
+                variant="h3"
                 fontWeight={800}
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #00d4ff, #ff00ff)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
@@ -591,10 +591,10 @@ const Strategies = () => {
                 Trading Strategies
               </Typography>
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button 
+                <Button
                   variant="outlined"
                   startIcon={<Upload size={20} />}
-                  sx={{ 
+                  sx={{
                     borderColor: '#00d4ff',
                     color: '#00d4ff',
                     '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -602,10 +602,10 @@ const Strategies = () => {
                 >
                   Import
                 </Button>
-                <Button 
+                <Button
                   variant="outlined"
                   startIcon={<Download size={20} />}
-                  sx={{ 
+                  sx={{
                     borderColor: '#00d4ff',
                     color: '#00d4ff',
                     '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -613,11 +613,11 @@ const Strategies = () => {
                 >
                   Export
                 </Button>
-                <Button 
+                <Button
                   variant="contained"
                   startIcon={<Add size={20} />}
                   onClick={handleCreateStrategy}
-                  sx={{ 
+                  sx={{
                     background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
                     boxShadow: '0 4px 20px rgba(0, 212, 255, 0.3)',
                     '&:hover': {
@@ -639,7 +639,7 @@ const Strategies = () => {
         {/* Summary Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+            <Card sx={{
               background: 'rgba(16, 185, 129, 0.1)',
               border: '1px solid rgba(16, 185, 129, 0.3)',
               borderRadius: 3
@@ -655,7 +655,7 @@ const Strategies = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+            <Card sx={{
               background: 'rgba(0, 212, 255, 0.1)',
               border: '1px solid rgba(0, 212, 255, 0.3)',
               borderRadius: 3
@@ -671,7 +671,7 @@ const Strategies = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+            <Card sx={{
               background: 'rgba(139, 92, 246, 0.1)',
               border: '1px solid rgba(139, 92, 246, 0.3)',
               borderRadius: 3
@@ -687,7 +687,7 @@ const Strategies = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+            <Card sx={{
               background: 'rgba(245, 158, 11, 0.1)',
               border: '1px solid rgba(245, 158, 11, 0.3)',
               borderRadius: 3
@@ -705,16 +705,16 @@ const Strategies = () => {
         </Grid>
 
         {/* Tabs */}
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             mb: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
-          <Tabs 
-            value={selectedTab} 
+          <Tabs
+            value={selectedTab}
             onChange={handleTabChange}
             sx={{
               '& .MuiTab-root': {
@@ -751,8 +751,8 @@ const Strategies = () => {
         {selectedTab === 2 && (
           <Grid container spacing={3}>
             <Grid item xs={12} lg={8}>
-              <Paper 
-                sx={{ 
+              <Paper
+                sx={{
                   p: 4,
                   background: 'rgba(255, 255, 255, 0.05)',
                   backdropFilter: 'blur(10px)',
@@ -767,17 +767,17 @@ const Strategies = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis 
-                        dataKey="date" 
+                      <XAxis
+                        dataKey="date"
                         stroke="rgba(255,255,255,0.7)"
                         fontSize={12}
                       />
-                      <YAxis 
+                      <YAxis
                         stroke="rgba(255,255,255,0.7)"
                         fontSize={12}
                         tickFormatter={(value) => `${value}%`}
                       />
-                      <RechartsTooltip 
+                      <RechartsTooltip
                         contentStyle={{
                           backgroundColor: 'rgba(0, 0, 0, 0.8)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -787,10 +787,10 @@ const Strategies = () => {
                       />
                       <Legend />
                       {strategies.slice(0, 3).map((strategy, index) => (
-                        <Line 
+                        <Line
                           key={strategy.id}
-                          type="monotone" 
-                          dataKey="return" 
+                          type="monotone"
+                          dataKey="return"
                           data={strategy.performance}
                           stroke={['#00d4ff', '#10b981', '#f59e0b'][index]}
                           strokeWidth={2}
@@ -803,8 +803,8 @@ const Strategies = () => {
               </Paper>
             </Grid>
             <Grid item xs={12} lg={4}>
-              <Paper 
-                sx={{ 
+              <Paper
+                sx={{
                   p: 4,
                   background: 'rgba(255, 255, 255, 0.05)',
                   backdropFilter: 'blur(10px)',
@@ -826,7 +826,7 @@ const Strategies = () => {
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                       <XAxis stroke="rgba(255,255,255,0.7)" fontSize={12} />
                       <YAxis stroke="rgba(255,255,255,0.7)" fontSize={12} />
-                      <RechartsTooltip 
+                      <RechartsTooltip
                         contentStyle={{
                           backgroundColor: 'rgba(0, 0, 0, 0.8)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -844,8 +844,8 @@ const Strategies = () => {
         )}
 
         {/* Create/Edit Strategy Dialog */}
-        <Dialog 
-          open={openDialog} 
+        <Dialog
+          open={openDialog}
           onClose={() => setOpenDialog(false)}
           maxWidth="md"
           fullWidth
@@ -960,16 +960,16 @@ const Strategies = () => {
             </Grid>
           </DialogContent>
           <DialogActions sx={{ p: 3 }}>
-            <Button 
+            <Button
               onClick={() => setOpenDialog(false)}
               sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={handleSaveStrategy}
               variant="contained"
-              sx={{ 
+              sx={{
                 background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
                 '&:hover': { background: 'linear-gradient(45deg, #0099cc, #0066aa)' }
               }}
@@ -985,10 +985,10 @@ const Strategies = () => {
           autoHideDuration={4000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
         >
-          <Alert 
-            severity={snackbar.severity} 
+          <Alert
+            severity={snackbar.severity}
             onClose={() => setSnackbar({ ...snackbar, open: false })}
-            sx={{ 
+            sx={{
               background: 'rgba(0, 0, 0, 0.8)',
               color: 'white',
               '& .MuiAlert-icon': { color: 'inherit' }
@@ -1003,4 +1003,3 @@ const Strategies = () => {
 };
 
 export default Strategies;
-

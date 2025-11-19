@@ -184,7 +184,7 @@ const Settings = () => {
   const ProfileSettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -201,10 +201,10 @@ const Settings = () => {
             }
           >
             <Avatar
-              sx={{ 
-                width: 120, 
-                height: 120, 
-                mx: 'auto', 
+              sx={{
+                width: 120,
+                height: 120,
+                mx: 'auto',
                 mb: 2,
                 bgcolor: '#00d4ff',
                 fontSize: '2rem',
@@ -224,7 +224,7 @@ const Settings = () => {
             variant="outlined"
             fullWidth
             startIcon={<User size={16} />}
-            sx={{ 
+            sx={{
               borderColor: '#00d4ff',
               color: '#00d4ff',
               '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -234,9 +234,9 @@ const Settings = () => {
           </Button>
         </Card>
       </Grid>
-      
+
       <Grid item xs={12} md={8}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -368,7 +368,7 @@ const Settings = () => {
   const SecuritySettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -382,7 +382,7 @@ const Settings = () => {
               <ListItemIcon>
                 <Shield size={20} color="#10b981" />
               </ListItemIcon>
-              <ListItemText 
+              <ListItemText
                 primary="Two-Factor Authentication"
                 secondary="Add an extra layer of security"
                 primaryTypographyProps={{ color: 'white' }}
@@ -401,7 +401,7 @@ const Settings = () => {
               <ListItemIcon>
                 <Smartphone size={20} color="#00d4ff" />
               </ListItemIcon>
-              <ListItemText 
+              <ListItemText
                 primary="Biometric Login"
                 secondary="Use fingerprint or face ID"
                 primaryTypographyProps={{ color: 'white' }}
@@ -420,7 +420,7 @@ const Settings = () => {
               <ListItemIcon>
                 <Bell size={20} color="#f59e0b" />
               </ListItemIcon>
-              <ListItemText 
+              <ListItemText
                 primary="Login Notifications"
                 secondary="Get notified of new logins"
                 primaryTypographyProps={{ color: 'white' }}
@@ -439,7 +439,7 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -483,7 +483,7 @@ const Settings = () => {
             <Button
               variant="outlined"
               startIcon={<Key size={16} />}
-              sx={{ 
+              sx={{
                 borderColor: '#00d4ff',
                 color: '#00d4ff',
                 '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -494,7 +494,7 @@ const Settings = () => {
             <Button
               variant="outlined"
               startIcon={<RefreshCw size={16} />}
-              sx={{ 
+              sx={{
                 borderColor: '#f59e0b',
                 color: '#f59e0b',
                 '&:hover': { borderColor: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }
@@ -505,7 +505,7 @@ const Settings = () => {
             <Button
               variant="outlined"
               startIcon={<Trash2 size={16} />}
-              sx={{ 
+              sx={{
                 borderColor: '#ef4444',
                 color: '#ef4444',
                 '&:hover': { borderColor: '#ef4444', background: 'rgba(239, 68, 68, 0.1)' }
@@ -523,7 +523,7 @@ const Settings = () => {
     <Grid container spacing={3}>
       {/* Email Notifications */}
       <Grid item xs={12} md={4}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -538,7 +538,7 @@ const Settings = () => {
           <List dense>
             {Object.entries(settings.notifications.email).map(([key, value]) => (
               <ListItem key={key} sx={{ px: 0 }}>
-                <ListItemText 
+                <ListItemText
                   primary={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                   primaryTypographyProps={{ color: 'white', fontSize: '0.875rem' }}
                 />
@@ -558,7 +558,7 @@ const Settings = () => {
 
       {/* Push Notifications */}
       <Grid item xs={12} md={4}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -573,7 +573,7 @@ const Settings = () => {
           <List dense>
             {Object.entries(settings.notifications.push).map(([key, value]) => (
               <ListItem key={key} sx={{ px: 0 }}>
-                <ListItemText 
+                <ListItemText
                   primary={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                   primaryTypographyProps={{ color: 'white', fontSize: '0.875rem' }}
                 />
@@ -593,7 +593,7 @@ const Settings = () => {
 
       {/* SMS Notifications */}
       <Grid item xs={12} md={4}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -608,7 +608,7 @@ const Settings = () => {
           <List dense>
             {Object.entries(settings.notifications.sms).map(([key, value]) => (
               <ListItem key={key} sx={{ px: 0 }}>
-                <ListItemText 
+                <ListItemText
                   primary={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                   primaryTypographyProps={{ color: 'white', fontSize: '0.875rem' }}
                 />
@@ -631,7 +631,7 @@ const Settings = () => {
   const TradingSettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -703,7 +703,7 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -805,7 +805,7 @@ const Settings = () => {
   const DisplaySettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -897,7 +897,7 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Card sx={{ 
+        <Card sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 3,
@@ -908,7 +908,7 @@ const Settings = () => {
           </Typography>
           <List>
             <ListItem>
-              <ListItemText 
+              <ListItemText
                 primary="Show Advanced Metrics"
                 secondary="Display detailed analytics and metrics"
                 primaryTypographyProps={{ color: 'white' }}
@@ -924,7 +924,7 @@ const Settings = () => {
             </ListItem>
             <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
             <ListItem>
-              <ListItemText 
+              <ListItemText
                 primary="Compact View"
                 secondary="Use smaller spacing and components"
                 primaryTypographyProps={{ color: 'white' }}
@@ -940,7 +940,7 @@ const Settings = () => {
             </ListItem>
             <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
             <ListItem>
-              <ListItemText 
+              <ListItemText
                 primary="Enable Animations"
                 secondary="Use smooth transitions and animations"
                 primaryTypographyProps={{ color: 'white' }}
@@ -961,7 +961,7 @@ const Settings = () => {
   );
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       py: 4
@@ -971,10 +971,10 @@ const Settings = () => {
         <Fade in={true} timeout={800}>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-              <Typography 
-                variant="h3" 
+              <Typography
+                variant="h3"
                 fontWeight={800}
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #00d4ff, #8b5cf6)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
@@ -984,11 +984,11 @@ const Settings = () => {
                 Settings
               </Typography>
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button 
+                <Button
                   variant="outlined"
                   startIcon={<RefreshCw size={20} />}
                   onClick={handleResetSettings}
-                  sx={{ 
+                  sx={{
                     borderColor: '#f59e0b',
                     color: '#f59e0b',
                     '&:hover': { borderColor: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }
@@ -996,11 +996,11 @@ const Settings = () => {
                 >
                   Reset
                 </Button>
-                <Button 
+                <Button
                   variant="contained"
                   startIcon={<Save size={20} />}
                   onClick={handleSaveSettings}
-                  sx={{ 
+                  sx={{
                     background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
                     boxShadow: '0 4px 20px rgba(0, 212, 255, 0.3)',
                     '&:hover': {
@@ -1020,16 +1020,16 @@ const Settings = () => {
         </Fade>
 
         {/* Tabs */}
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             mb: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
-          <Tabs 
-            value={selectedTab} 
+          <Tabs
+            value={selectedTab}
             onChange={handleTabChange}
             variant="scrollable"
             scrollButtons="auto"
@@ -1062,8 +1062,8 @@ const Settings = () => {
         {selectedTab === 4 && <DisplaySettings />}
 
         {/* Confirmation Dialog */}
-        <Dialog 
-          open={confirmDialog.open} 
+        <Dialog
+          open={confirmDialog.open}
           onClose={() => setConfirmDialog({ open: false, title: '', message: '', action: null })}
           PaperProps={{
             sx: {
@@ -1084,16 +1084,16 @@ const Settings = () => {
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button 
+            <Button
               onClick={() => setConfirmDialog({ open: false, title: '', message: '', action: null })}
               sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={confirmDialog.action}
               variant="contained"
-              sx={{ 
+              sx={{
                 background: '#ef4444',
                 '&:hover': { background: '#dc2626' }
               }}
@@ -1109,10 +1109,10 @@ const Settings = () => {
           autoHideDuration={4000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
         >
-          <Alert 
-            severity={snackbar.severity} 
+          <Alert
+            severity={snackbar.severity}
             onClose={() => setSnackbar({ ...snackbar, open: false })}
-            sx={{ 
+            sx={{
               background: 'rgba(0, 0, 0, 0.8)',
               color: 'white',
               '& .MuiAlert-icon': { color: 'inherit' }
@@ -1127,4 +1127,3 @@ const Settings = () => {
 };
 
 export default Settings;
-

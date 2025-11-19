@@ -466,4 +466,3 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
     dbname   = var.database_name
   })
 }
-

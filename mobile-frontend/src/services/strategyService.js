@@ -239,7 +239,7 @@ class StrategyService {
               },
             },
           };
-          
+
           resolve({
             data: strategies[strategyId] || null,
           });

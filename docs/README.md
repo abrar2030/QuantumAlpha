@@ -33,4 +33,3 @@ Then open your browser to `http://localhost:8000` to view the documentation.
 ## Contributing
 
 To contribute to the documentation, please follow the guidelines in the [Overview](./overview/) section.
-

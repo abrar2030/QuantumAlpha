@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Container, 
-  Grid, 
-  Paper, 
-  Typography, 
-  Box, 
-  Button, 
+import {
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  Box,
+  Button,
   Card,
   CardContent,
   useTheme,
@@ -17,12 +17,12 @@ import {
   IconButton,
   Avatar
 } from '@mui/material';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Activity, 
-  BarChart3, 
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Activity,
+  BarChart3,
   Zap,
   ArrowUpRight,
   ArrowDownRight,
@@ -72,28 +72,28 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [animationDelay, setAnimationDelay] = useState(0);
-  
+
   // Get data from Redux store and API
   const { portfolioValue, dailyChange, percentChange, historicalData } = useSelector((state) => state.portfolio);
   const { strategies, recentTrades } = useSelector((state) => state.strategy);
-  
+
   // RTK Query hooks with automatic loading and error states
-  const { 
-    data: portfolioData, 
-    isLoading: portfolioLoading, 
-    error: portfolioError 
+  const {
+    data: portfolioData,
+    isLoading: portfolioLoading,
+    error: portfolioError
   } = useGetPortfolioQuery();
-  
-  const { 
-    data: strategiesData, 
-    isLoading: strategiesLoading, 
-    error: strategiesError 
+
+  const {
+    data: strategiesData,
+    isLoading: strategiesLoading,
+    error: strategiesError
   } = useGetStrategiesQuery();
-  
-  const { 
-    data: tradesData, 
-    isLoading: tradesLoading, 
-    error: tradesError 
+
+  const {
+    data: tradesData,
+    isLoading: tradesLoading,
+    error: tradesError
   } = useGetTradesQuery({ limit: 5 });
 
   // Use mock data for demonstration
@@ -119,8 +119,8 @@ const Dashboard = () => {
 
   const StatCard = ({ title, value, change, icon: Icon, color, delay = 0 }) => (
     <Fade in={true} timeout={800} style={{ transitionDelay: `${delay}ms` }}>
-      <Card 
-        sx={{ 
+      <Card
+        sx={{
           height: '100%',
           background: `linear-gradient(135deg, ${color}15, ${color}05)`,
           border: `1px solid ${color}30`,
@@ -152,8 +152,8 @@ const Dashboard = () => {
             ) : (
               <ArrowDownRight size={16} color="#ef4444" />
             )}
-            <Typography 
-              variant="body2" 
+            <Typography
+              variant="body2"
               color={change > 0 ? "#10b981" : "#ef4444"}
               fontWeight={600}
             >
@@ -167,7 +167,7 @@ const Dashboard = () => {
 
   return (
     <ErrorBoundary>
-      <Box sx={{ 
+      <Box sx={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
         py: 4
@@ -176,10 +176,10 @@ const Dashboard = () => {
           {/* Hero Section */}
           <Fade in={true} timeout={1000}>
             <Box sx={{ mb: 6, textAlign: 'center' }}>
-              <Typography 
-                variant="h2" 
+              <Typography
+                variant="h2"
                 fontWeight={800}
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
@@ -190,20 +190,20 @@ const Dashboard = () => {
               >
                 QuantumAlpha Dashboard
               </Typography>
-              <Typography 
-                variant="h6" 
-                color="text.secondary" 
+              <Typography
+                variant="h6"
+                color="text.secondary"
                 sx={{ maxWidth: 600, mx: 'auto', mb: 4 }}
               >
                 Advanced AI-powered trading platform with quantum-enhanced algorithms
               </Typography>
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   size="large"
                   startIcon={<Plus size={20} />}
                   onClick={handleOpenDepositModal}
-                  sx={{ 
+                  sx={{
                     px: 4,
                     py: 1.5,
                     fontWeight: 600,
@@ -218,12 +218,12 @@ const Dashboard = () => {
                 >
                   Add Funds
                 </Button>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   size="large"
                   startIcon={<Settings size={20} />}
                   onClick={handleOpenWithdrawModal}
-                  sx={{ 
+                  sx={{
                     px: 4,
                     py: 1.5,
                     fontWeight: 600,
@@ -247,7 +247,7 @@ const Dashboard = () => {
           {/* Stats Cards */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 title="Portfolio Value"
                 value={`$${displayPortfolioData.portfolioValue?.toLocaleString() || '125,847'}`}
                 change={displayPortfolioData.percentChange || 2.31}
@@ -257,7 +257,7 @@ const Dashboard = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 title="Daily P&L"
                 value={`$${displayPortfolioData.dailyChange?.toLocaleString() || '2,847'}`}
                 change={1.8}
@@ -267,7 +267,7 @@ const Dashboard = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 title="Active Strategies"
                 value={displayStrategies?.length || 3}
                 change={12.5}
@@ -277,7 +277,7 @@ const Dashboard = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 title="Win Rate"
                 value="87.3%"
                 change={5.2}
@@ -290,11 +290,11 @@ const Dashboard = () => {
 
           {/* Performance Chart */}
           <Fade in={true} timeout={1200}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 4, 
-                mb: 4, 
+              sx={{
+                p: 4,
+                mb: 4,
                 borderRadius: 4,
                 background: 'rgba(255, 255, 255, 0.05)',
                 backdropFilter: 'blur(10px)',
@@ -306,14 +306,14 @@ const Dashboard = () => {
                 <Typography variant="h5" fontWeight={700} color="white">
                   Portfolio Performance
                 </Typography>
-                <Chip 
-                  label="Real-time" 
+                <Chip
+                  label="Real-time"
                   icon={<Zap size={16} />}
-                  sx={{ 
+                  sx={{
                     background: 'linear-gradient(45deg, #10b981, #059669)',
                     color: 'white',
                     fontWeight: 600
-                  }} 
+                  }}
                 />
               </Box>
               <Box sx={{ height: 350 }}>
@@ -326,17 +326,17 @@ const Dashboard = () => {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                    <XAxis 
-                      dataKey="date" 
+                    <XAxis
+                      dataKey="date"
                       stroke="rgba(255,255,255,0.7)"
                       fontSize={12}
                     />
-                    <YAxis 
+                    <YAxis
                       stroke="rgba(255,255,255,0.7)"
                       fontSize={12}
                       tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
                     />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -345,13 +345,13 @@ const Dashboard = () => {
                       }}
                       formatter={(value) => [`$${value.toLocaleString()}`, 'Portfolio Value']}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#00d4ff" 
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#00d4ff"
                       strokeWidth={3}
-                      fillOpacity={1} 
-                      fill="url(#colorValue)" 
+                      fillOpacity={1}
+                      fill="url(#colorValue)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -363,11 +363,11 @@ const Dashboard = () => {
           <Grid container spacing={4}>
             <Grid item xs={12} lg={8}>
               <Fade in={true} timeout={1400}>
-                <Paper 
+                <Paper
                   elevation={0}
-                  sx={{ 
-                    p: 4, 
-                    height: '100%', 
+                  sx={{
+                    p: 4,
+                    height: '100%',
                     borderRadius: 4,
                     background: 'rgba(255, 255, 255, 0.05)',
                     backdropFilter: 'blur(10px)',
@@ -380,9 +380,9 @@ const Dashboard = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {displayStrategies.map((strategy, index) => (
-                      <Card 
+                      <Card
                         key={strategy.id}
-                        sx={{ 
+                        sx={{
                           background: 'rgba(255, 255, 255, 0.05)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: 2,
@@ -400,31 +400,31 @@ const Dashboard = () => {
                                 {strategy.name}
                               </Typography>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
-                                <Chip 
-                                  label={strategy.status} 
+                                <Chip
+                                  label={strategy.status}
                                   size="small"
-                                  sx={{ 
+                                  sx={{
                                     background: strategy.status === 'active' ? '#10b981' : '#6b7280',
                                     color: 'white',
                                     fontWeight: 500
-                                  }} 
+                                  }}
                                 />
-                                <Chip 
-                                  label={`${strategy.risk} risk`} 
+                                <Chip
+                                  label={`${strategy.risk} risk`}
                                   size="small"
                                   variant="outlined"
-                                  sx={{ 
-                                    borderColor: strategy.risk === 'high' ? '#ef4444' : 
+                                  sx={{
+                                    borderColor: strategy.risk === 'high' ? '#ef4444' :
                                                 strategy.risk === 'medium' ? '#f59e0b' : '#10b981',
-                                    color: strategy.risk === 'high' ? '#ef4444' : 
+                                    color: strategy.risk === 'high' ? '#ef4444' :
                                            strategy.risk === 'medium' ? '#f59e0b' : '#10b981'
-                                  }} 
+                                  }}
                                 />
                               </Box>
                             </Box>
                             <Box sx={{ textAlign: 'right' }}>
-                              <Typography 
-                                variant="h5" 
+                              <Typography
+                                variant="h5"
                                 fontWeight={700}
                                 color={strategy.return > 0 ? '#10b981' : '#ef4444'}
                               >
@@ -444,11 +444,11 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={12} lg={4}>
               <Fade in={true} timeout={1600}>
-                <Paper 
+                <Paper
                   elevation={0}
-                  sx={{ 
-                    p: 4, 
-                    height: '100%', 
+                  sx={{
+                    p: 4,
+                    height: '100%',
                     borderRadius: 4,
                     background: 'rgba(255, 255, 255, 0.05)',
                     backdropFilter: 'blur(10px)',
@@ -461,9 +461,9 @@ const Dashboard = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {displayTrades.map((trade, index) => (
-                      <Card 
+                      <Card
                         key={trade.id}
-                        sx={{ 
+                        sx={{
                           background: 'rgba(255, 255, 255, 0.05)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: 2,
@@ -478,15 +478,15 @@ const Dashboard = () => {
                             <Typography variant="subtitle1" fontWeight={600} color="white">
                               {trade.symbol}
                             </Typography>
-                            <Chip 
-                              label={trade.type.toUpperCase()} 
+                            <Chip
+                              label={trade.type.toUpperCase()}
                               size="small"
-                              sx={{ 
+                              sx={{
                                 background: trade.type === 'buy' ? '#10b981' : '#ef4444',
                                 color: 'white',
                                 fontWeight: 500,
                                 fontSize: '0.75rem'
-                              }} 
+                              }}
                             />
                           </Box>
                           <Typography variant="body2" color="text.secondary">

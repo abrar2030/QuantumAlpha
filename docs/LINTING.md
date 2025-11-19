@@ -129,4 +129,3 @@ For more specific issues, refer to the documentation of the individual linting t
 - [isort](https://pycqa.github.io/isort/)
 - [ESLint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
-

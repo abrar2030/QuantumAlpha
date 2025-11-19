@@ -96,4 +96,3 @@ This document outlines the structure of the QuantumAlpha documentation. The docu
 - Financial Terms
 - Technical Terms
 - Platform-Specific Terminology
-

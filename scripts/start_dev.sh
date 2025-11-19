@@ -90,28 +90,28 @@ source "$PROJECT_ROOT/config/.env"
 # Start infrastructure services
 if $START_INFRASTRUCTURE; then
   echo -e "\n${YELLOW}Starting infrastructure services...${NC}"
-  
+
   DOCKER_COMPOSE_FILE="$PROJECT_ROOT/infrastructure/docker-compose.yml"
-  
+
   if [[ ! -f "$DOCKER_COMPOSE_FILE" ]]; then
     echo -e "${RED}Error: Docker Compose file not found: $DOCKER_COMPOSE_FILE${NC}"
     exit 1
   fi
-  
+
   SERVICES="postgres influxdb redis kafka zookeeper"
-  
+
   if $START_MONITORING; then
     SERVICES="$SERVICES prometheus grafana"
   fi
-  
+
   if $DETACHED; then
     docker-compose -f "$DOCKER_COMPOSE_FILE" up -d $SERVICES
   else
     docker-compose -f "$DOCKER_COMPOSE_FILE" up -d $SERVICES
   fi
-  
+
   echo -e "${GREEN}✓ Infrastructure services started${NC}"
-  
+
   # Wait for services to be ready
   echo -e "${YELLOW}Waiting for services to be ready...${NC}"
   sleep 5
@@ -120,10 +120,10 @@ fi
 # Start backend services
 if $START_BACKEND; then
   echo -e "\n${YELLOW}Starting backend services...${NC}"
-  
+
   # Create log directory if it doesn't exist
   mkdir -p "$PROJECT_ROOT/logs"
-  
+
   # Start data service
   echo -e "${BLUE}Starting data service...${NC}"
   cd "$PROJECT_ROOT/backend/data_service"
@@ -131,10 +131,10 @@ if $START_BACKEND; then
   DATA_SERVICE_PID=$!
   echo $DATA_SERVICE_PID > "$PROJECT_ROOT/logs/data_service.pid"
   echo -e "${GREEN}✓ Data service started (PID: $DATA_SERVICE_PID)${NC}"
-  
+
   # Wait for data service to be ready
   sleep 2
-  
+
   # Start AI engine
   echo -e "${BLUE}Starting AI engine...${NC}"
   cd "$PROJECT_ROOT/backend/ai_engine"
@@ -142,10 +142,10 @@ if $START_BACKEND; then
   AI_ENGINE_PID=$!
   echo $AI_ENGINE_PID > "$PROJECT_ROOT/logs/ai_engine.pid"
   echo -e "${GREEN}✓ AI engine started (PID: $AI_ENGINE_PID)${NC}"
-  
+
   # Wait for AI engine to be ready
   sleep 2
-  
+
   # Start risk service
   echo -e "${BLUE}Starting risk service...${NC}"
   cd "$PROJECT_ROOT/backend/risk_service"
@@ -153,10 +153,10 @@ if $START_BACKEND; then
   RISK_SERVICE_PID=$!
   echo $RISK_SERVICE_PID > "$PROJECT_ROOT/logs/risk_service.pid"
   echo -e "${GREEN}✓ Risk service started (PID: $RISK_SERVICE_PID)${NC}"
-  
+
   # Wait for risk service to be ready
   sleep 2
-  
+
   # Start execution service
   echo -e "${BLUE}Starting execution service...${NC}"
   cd "$PROJECT_ROOT/backend/execution_service"
@@ -164,14 +164,14 @@ if $START_BACKEND; then
   EXECUTION_SERVICE_PID=$!
   echo $EXECUTION_SERVICE_PID > "$PROJECT_ROOT/logs/execution_service.pid"
   echo -e "${GREEN}✓ Execution service started (PID: $EXECUTION_SERVICE_PID)${NC}"
-  
+
   cd "$PROJECT_ROOT"
 fi
 
 # Start frontend services
 if $START_FRONTEND; then
   echo -e "\n${YELLOW}Starting frontend services...${NC}"
-  
+
   # Start web frontend
   echo -e "${BLUE}Starting web frontend...${NC}"
   cd "$PROJECT_ROOT/web-frontend"
@@ -179,7 +179,7 @@ if $START_FRONTEND; then
   WEB_FRONTEND_PID=$!
   echo $WEB_FRONTEND_PID > "$PROJECT_ROOT/logs/web_frontend.pid"
   echo -e "${GREEN}✓ Web frontend started (PID: $WEB_FRONTEND_PID)${NC}"
-  
+
   cd "$PROJECT_ROOT"
 fi
 
@@ -208,4 +208,3 @@ if ! $DETACHED && $START_BACKEND; then
   echo -e "\n${YELLOW}Showing logs (Ctrl+C to stop)...${NC}"
   tail -f "$PROJECT_ROOT/logs/data_service.log" "$PROJECT_ROOT/logs/ai_engine.log" "$PROJECT_ROOT/logs/risk_service.log" "$PROJECT_ROOT/logs/execution_service.log"
 fi
-

@@ -15,8 +15,13 @@ from typing import Any, Callable, Dict, List, Optional
 import psutil
 import structlog
 from flask import Flask, jsonify, request
-from prometheus_client import (CONTENT_TYPE_LATEST, Counter, Gauge, Histogram,
-                               generate_latest)
+from prometheus_client import (
+    CONTENT_TYPE_LATEST,
+    Counter,
+    Gauge,
+    Histogram,
+    generate_latest,
+)
 
 from .database import db_manager, get_redis_client
 from .models import AuditLog, Order, Portfolio, User

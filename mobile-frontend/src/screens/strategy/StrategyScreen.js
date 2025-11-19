@@ -18,19 +18,19 @@ import { strategyService } from '../../services/strategyService';
 const StrategyScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [strategies, setStrategies] = useState([]);
   const [availableStrategies, setAvailableStrategies] = useState([]);
-  
+
   // Animation values
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const translateY = React.useRef(new Animated.Value(50)).current;
-  
+
   React.useEffect(() => {
     loadStrategies();
-    
+
     // Start animations when component mounts
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -45,15 +45,15 @@ const StrategyScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const loadStrategies = async () => {
     try {
       setLoading(true);
-      
+
       // In a real app, these would be API calls
       const activeStrategies = await strategyService.getActiveStrategies();
       const available = await strategyService.getAvailableStrategies();
-      
+
       setStrategies(activeStrategies);
       setAvailableStrategies(available);
     } catch (error) {
@@ -64,23 +64,23 @@ const StrategyScreen = () => {
       setRefreshing(false);
     }
   };
-  
+
   const onRefresh = () => {
     setRefreshing(true);
     loadStrategies();
   };
-  
+
   const navigateToStrategyDetail = (strategy) => {
     navigation.navigate('StrategyDetail', {
       id: strategy.id,
       name: strategy.name,
     });
   };
-  
+
   const renderStrategyItem = ({ item, index }) => {
     const itemFadeAnim = React.useRef(new Animated.Value(0)).current;
     const itemTranslateY = React.useRef(new Animated.Value(20)).current;
-    
+
     React.useEffect(() => {
       // Stagger the animations for each item
       Animated.parallel([
@@ -98,7 +98,7 @@ const StrategyScreen = () => {
         }),
       ]).start();
     }, []);
-    
+
     return (
       <Animated.View
         style={[
@@ -140,14 +140,14 @@ const StrategyScreen = () => {
               </Text>
             </View>
           </View>
-          
+
           <Text
             style={[styles.strategyDescription, { color: theme.text + 'CC' }]}
             numberOfLines={2}
           >
             {item.description}
           </Text>
-          
+
           <View style={styles.strategyFooter}>
             <View style={styles.strategyDetail}>
               <Icon name="shield" size={16} color={theme.text + '99'} />
@@ -155,14 +155,14 @@ const StrategyScreen = () => {
                 {item.risk}
               </Text>
             </View>
-            
+
             <View style={styles.strategyDetail}>
               <Icon name="chart-pie" size={16} color={theme.text + '99'} />
               <Text style={[styles.detailText, { color: theme.text + '99' }]}>
                 {item.allocation}% Allocated
               </Text>
             </View>
-            
+
             <View style={styles.strategyDetail}>
               <Icon name="clock-outline" size={16} color={theme.text + '99'} />
               <Text style={[styles.detailText, { color: theme.text + '99' }]}>
@@ -170,7 +170,7 @@ const StrategyScreen = () => {
               </Text>
             </View>
           </View>
-          
+
           <View style={styles.arrowContainer}>
             <Icon name="chevron-right" size={24} color={theme.text + '80'} />
           </View>
@@ -178,11 +178,11 @@ const StrategyScreen = () => {
       </Animated.View>
     );
   };
-  
+
   const renderAvailableStrategyItem = ({ item, index }) => {
     const itemFadeAnim = React.useRef(new Animated.Value(0)).current;
     const itemTranslateY = React.useRef(new Animated.Value(20)).current;
-    
+
     React.useEffect(() => {
       // Stagger the animations for each item
       Animated.parallel([
@@ -200,7 +200,7 @@ const StrategyScreen = () => {
         }),
       ]).start();
     }, []);
-    
+
     return (
       <Animated.View
         style={[
@@ -247,14 +247,14 @@ const StrategyScreen = () => {
               </Text>
             </View>
           </View>
-          
+
           <Text
             style={[styles.strategyDescription, { color: theme.text + 'CC' }]}
             numberOfLines={2}
           >
             {item.description}
           </Text>
-          
+
           <View style={styles.strategyFooter}>
             <View style={styles.strategyDetail}>
               <Icon name="shield" size={16} color={theme.text + '99'} />
@@ -262,14 +262,14 @@ const StrategyScreen = () => {
                 {item.risk}
               </Text>
             </View>
-            
+
             <View style={styles.strategyDetail}>
               <Icon name="chart-line-variant" size={16} color={theme.text + '99'} />
               <Text style={[styles.detailText, { color: theme.text + '99' }]}>
                 {item.expectedReturn}
               </Text>
             </View>
-            
+
             <View style={styles.strategyDetail}>
               <Icon name="cash" size={16} color={theme.text + '99'} />
               <Text style={[styles.detailText, { color: theme.text + '99' }]}>
@@ -277,7 +277,7 @@ const StrategyScreen = () => {
               </Text>
             </View>
           </View>
-          
+
           <TouchableOpacity
             style={[styles.activateButton, { backgroundColor: theme.primary }]}
             onPress={() => {
@@ -291,7 +291,7 @@ const StrategyScreen = () => {
       </Animated.View>
     );
   };
-  
+
   if (loading && !refreshing) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
@@ -302,7 +302,7 @@ const StrategyScreen = () => {
       </View>
     );
   }
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View
@@ -322,7 +322,7 @@ const StrategyScreen = () => {
           Manage your active and available strategies
         </Text>
       </Animated.View>
-      
+
       <FlatList
         data={strategies}
         renderItem={renderStrategyItem}
@@ -361,16 +361,16 @@ const StrategyScreen = () => {
                 Available Strategies
               </Text>
             </Animated.View>
-            
+
             {availableStrategies.map((item, index) =>
               renderAvailableStrategyItem({ item, index })
             )}
-            
+
             <View style={styles.footer} />
           </>
         }
       />
-      
+
       <TouchableOpacity
         style={[styles.fab, { backgroundColor: theme.primary }]}
         onPress={() => {

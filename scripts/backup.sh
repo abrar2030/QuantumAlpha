@@ -124,54 +124,54 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
   case $COMPONENT in
     postgres)
       echo -e "\n${YELLOW}Backing up PostgreSQL database...${NC}"
-      
+
       # Set default values if not in environment
       DB_HOST=${DB_HOST:-localhost}
       DB_PORT=${DB_PORT:-5432}
       DB_USERNAME=${DB_USERNAME:-postgres}
       DB_PASSWORD=${DB_PASSWORD:-postgres}
       DB_NAME=${DB_NAME:-quantumalpha}
-      
+
       # Create backup directory for PostgreSQL
       mkdir -p "$BACKUP_PATH/postgres"
-      
+
       # Set PGPASSWORD environment variable
       export PGPASSWORD="$DB_PASSWORD"
-      
+
       # Backup schema
       SCHEMA_BACKUP_CMD="pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME --schema-only -f $BACKUP_PATH/postgres/schema.sql"
       execute_cmd "$SCHEMA_BACKUP_CMD"
-      
+
       # Backup data
       DATA_BACKUP_CMD="pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME --data-only -f $BACKUP_PATH/postgres/data.sql"
       execute_cmd "$DATA_BACKUP_CMD"
-      
+
       # Backup full database (compressed)
       FULL_BACKUP_CMD="pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -Fc -f $BACKUP_PATH/postgres/full_backup.dump"
       execute_cmd "$FULL_BACKUP_CMD"
-      
+
       # Clear PGPASSWORD
       unset PGPASSWORD
-      
+
       echo -e "${GREEN}✓ PostgreSQL backup completed${NC}"
       ;;
-      
+
     influxdb)
       echo -e "\n${YELLOW}Backing up InfluxDB...${NC}"
-      
+
       # Set default values if not in environment
       INFLUXDB_URL=${INFLUXDB_URL:-http://localhost:8086}
       INFLUXDB_ORG=${INFLUXDB_ORG:-quantumalpha}
       INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-}
       INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-market_data}
-      
+
       # Create backup directory for InfluxDB
       mkdir -p "$BACKUP_PATH/influxdb"
-      
+
       # Check if influx CLI is installed
       if ! command -v influx &> /dev/null; then
         echo -e "${YELLOW}Warning: influx CLI not found. Using Docker for backup.${NC}"
-        
+
         # Use Docker to backup InfluxDB
         INFLUX_BACKUP_CMD="docker run --rm \
           -v $BACKUP_PATH/influxdb:/backup \
@@ -186,23 +186,23 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
         INFLUX_BACKUP_CMD="influx backup $BACKUP_PATH/influxdb --host $INFLUXDB_URL --org $INFLUXDB_ORG --token $INFLUXDB_TOKEN --bucket $INFLUXDB_BUCKET"
         execute_cmd "$INFLUX_BACKUP_CMD"
       fi
-      
+
       echo -e "${GREEN}✓ InfluxDB backup completed${NC}"
       ;;
-      
+
     config)
       echo -e "\n${YELLOW}Backing up configuration files...${NC}"
-      
+
       # Create backup directory for config
       mkdir -p "$BACKUP_PATH/config"
-      
+
       # Backup config directory
       CONFIG_BACKUP_CMD="cp -r $PROJECT_ROOT/config/* $BACKUP_PATH/config/"
       execute_cmd "$CONFIG_BACKUP_CMD"
-      
+
       echo -e "${GREEN}✓ Configuration backup completed${NC}"
       ;;
-      
+
     *)
       echo -e "${RED}Error: Unknown component: $COMPONENT${NC}"
       echo "Available components: postgres, influxdb, config"
@@ -219,7 +219,7 @@ echo -e "${GREEN}✓ Backup compressed: $BACKUP_DIR/$ENV-$TIMESTAMP.tar.gz${NC}"
 # Upload to S3 if bucket is specified
 if [[ ! -z "$S3_BUCKET" ]]; then
   echo -e "\n${YELLOW}Uploading backup to S3...${NC}"
-  
+
   # Check if AWS CLI is installed
   if ! command -v aws &> /dev/null; then
     echo -e "${RED}Error: AWS CLI not found${NC}"
@@ -243,4 +243,3 @@ echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Backup Completed          ${NC}"
 echo -e "${GREEN}  Backup file: $BACKUP_DIR/$ENV-$TIMESTAMP.tar.gz${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

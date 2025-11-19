@@ -133,9 +133,9 @@ mkdir -p "$PROJECT_ROOT/test-results"
 # Run unit tests
 if $RUN_UNIT; then
   echo -e "\n${YELLOW}Running unit tests...${NC}"
-  
+
   UNIT_CMD="$PYTEST_CMD"
-  
+
   if [[ "$TEST_PATH" == "$PROJECT_ROOT/tests" ]]; then
     # If no specific test path is provided, run all unit tests
     UNIT_CMD="$UNIT_CMD $PROJECT_ROOT/tests/unit"
@@ -143,23 +143,23 @@ if $RUN_UNIT; then
     # If a specific test path is provided, use it
     UNIT_CMD="$UNIT_CMD $TEST_PATH"
   fi
-  
+
   if $COVERAGE; then
     UNIT_CMD="$UNIT_CMD --cov=backend --cov-report=term --cov-report=html:$PROJECT_ROOT/test-results/coverage"
   fi
-  
+
   echo -e "${BLUE}Command: $UNIT_CMD${NC}"
   eval $UNIT_CMD
-  
+
   echo -e "${GREEN}✓ Unit tests completed${NC}"
 fi
 
 # Run integration tests
 if $RUN_INTEGRATION; then
   echo -e "\n${YELLOW}Running integration tests...${NC}"
-  
+
   INTEGRATION_CMD="$PYTEST_CMD"
-  
+
   if [[ "$TEST_PATH" == "$PROJECT_ROOT/tests" ]]; then
     # If no specific test path is provided, run all integration tests
     INTEGRATION_CMD="$INTEGRATION_CMD $PROJECT_ROOT/tests/integration"
@@ -167,24 +167,24 @@ if $RUN_INTEGRATION; then
     # If a specific test path is provided, use it
     INTEGRATION_CMD="$INTEGRATION_CMD $TEST_PATH"
   fi
-  
+
   if $COVERAGE && ! $RUN_UNIT; then
     # Only add coverage if unit tests weren't run (to avoid duplicate coverage)
     INTEGRATION_CMD="$INTEGRATION_CMD --cov=backend --cov-report=term --cov-report=html:$PROJECT_ROOT/test-results/coverage"
   fi
-  
+
   echo -e "${BLUE}Command: $INTEGRATION_CMD${NC}"
   eval $INTEGRATION_CMD
-  
+
   echo -e "${GREEN}✓ Integration tests completed${NC}"
 fi
 
 # Run system tests
 if $RUN_SYSTEM; then
   echo -e "\n${YELLOW}Running system tests...${NC}"
-  
+
   SYSTEM_CMD="$PYTEST_CMD"
-  
+
   if [[ "$TEST_PATH" == "$PROJECT_ROOT/tests" ]]; then
     # If no specific test path is provided, run all system tests
     SYSTEM_CMD="$SYSTEM_CMD $PROJECT_ROOT/tests/system"
@@ -192,15 +192,15 @@ if $RUN_SYSTEM; then
     # If a specific test path is provided, use it
     SYSTEM_CMD="$SYSTEM_CMD $TEST_PATH"
   fi
-  
+
   if $COVERAGE && ! $RUN_UNIT && ! $RUN_INTEGRATION; then
     # Only add coverage if other tests weren't run (to avoid duplicate coverage)
     SYSTEM_CMD="$SYSTEM_CMD --cov=backend --cov-report=term --cov-report=html:$PROJECT_ROOT/test-results/coverage"
   fi
-  
+
   echo -e "${BLUE}Command: $SYSTEM_CMD${NC}"
   eval $SYSTEM_CMD
-  
+
   echo -e "${GREEN}✓ System tests completed${NC}"
 fi
 
@@ -213,4 +213,3 @@ fi
 echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Tests Completed           ${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

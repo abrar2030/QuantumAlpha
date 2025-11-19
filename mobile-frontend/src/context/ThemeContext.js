@@ -43,13 +43,13 @@ export const useTheme = () => useContext(ThemeContext);
 export const ThemeProvider = ({ children }) => {
   const deviceTheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(deviceTheme === 'dark');
-  
+
   const theme = isDarkMode ? darkTheme : lightTheme;
-  
+
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
-  
+
   return (
     <ThemeContext.Provider
       value={{

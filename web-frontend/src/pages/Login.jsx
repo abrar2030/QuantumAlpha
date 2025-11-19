@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Container, 
-  Paper, 
-  TextField, 
-  Button, 
-  Typography, 
+import {
+  Box,
+  Container,
+  Paper,
+  TextField,
+  Button,
+  Typography,
   Link,
   Fade,
   Card,
@@ -13,10 +13,10 @@ import {
   InputAdornment,
   IconButton
 } from '@mui/material';
-import { 
-  Mail, 
-  Lock, 
-  Eye, 
+import {
+  Mail,
+  Lock,
+  Eye,
   EyeOff,
   ArrowRight,
   Zap,
@@ -48,8 +48,8 @@ const Login = () => {
 
   const FeatureCard = ({ icon: Icon, title, description, delay }) => (
     <Fade in={true} timeout={1000} style={{ transitionDelay: `${delay}ms` }}>
-      <Card 
-        sx={{ 
+      <Card
+        sx={{
           background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -62,9 +62,9 @@ const Login = () => {
         }}
       >
         <CardContent sx={{ p: 3, textAlign: 'center' }}>
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
             mb: 2,
             '& svg': {
               color: '#00d4ff'
@@ -84,7 +84,7 @@ const Login = () => {
   );
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       display: 'flex',
@@ -92,9 +92,9 @@ const Login = () => {
       py: 4
     }}>
       <Container maxWidth="lg">
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
           gap: 6,
           alignItems: 'center'
         }}>
@@ -102,10 +102,10 @@ const Login = () => {
           <Box>
             <Fade in={true} timeout={800}>
               <Box sx={{ mb: 6 }}>
-                <Typography 
-                  variant="h2" 
+                <Typography
+                  variant="h2"
                   fontWeight={800}
-                  sx={{ 
+                  sx={{
                     background: 'linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88)',
                     backgroundClip: 'text',
                     WebkitBackgroundClip: 'text',
@@ -116,44 +116,44 @@ const Login = () => {
                 >
                   QuantumAlpha
                 </Typography>
-                <Typography 
-                  variant="h5" 
-                  color="text.secondary" 
+                <Typography
+                  variant="h5"
+                  color="text.secondary"
                   sx={{ mb: 4, fontWeight: 300 }}
                 >
                   Next-generation AI trading platform powered by quantum algorithms
                 </Typography>
-                <Typography 
-                  variant="body1" 
-                  color="text.secondary" 
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
                   sx={{ lineHeight: 1.7 }}
                 >
-                  Experience the future of algorithmic trading with our advanced AI models, 
+                  Experience the future of algorithmic trading with our advanced AI models,
                   real-time market analysis, and quantum-enhanced risk management.
                 </Typography>
               </Box>
             </Fade>
 
             {/* Feature Cards */}
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, 
+            <Box sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
               gap: 2,
               mb: 4
             }}>
-              <FeatureCard 
+              <FeatureCard
                 icon={Zap}
                 title="Lightning Fast"
                 description="Execute trades in microseconds"
                 delay={200}
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={TrendingUp}
                 title="AI Powered"
                 description="Advanced machine learning models"
                 delay={400}
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={Shield}
                 title="Secure"
                 description="Bank-grade security protocols"
@@ -164,9 +164,9 @@ const Login = () => {
 
           {/* Right Side - Login Form */}
           <Fade in={true} timeout={1000}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
+              sx={{
                 p: 6,
                 borderRadius: 4,
                 background: 'rgba(255, 255, 255, 0.05)',
@@ -300,9 +300,9 @@ const Login = () => {
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="body2" color="text.secondary">
                     Don't have an account?{' '}
-                    <Link 
-                      href="/register" 
-                      sx={{ 
+                    <Link
+                      href="/register"
+                      sx={{
                         color: '#00d4ff',
                         textDecoration: 'none',
                         fontWeight: 600,
@@ -325,5 +325,3 @@ const Login = () => {
 };
 
 export default Login;
-
-

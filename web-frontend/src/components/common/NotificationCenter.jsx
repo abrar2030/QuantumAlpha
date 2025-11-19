@@ -121,9 +121,9 @@ const NotificationCenter = () => {
   };
 
   const markAsRead = (id) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === id 
+    setNotifications(prev =>
+      prev.map(notification =>
+        notification.id === id
           ? { ...notification, read: true }
           : notification
       )
@@ -136,7 +136,7 @@ const NotificationCenter = () => {
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => 
+    setNotifications(prev =>
       prev.map(notification => ({ ...notification, read: true }))
     );
     setSnackbar({
@@ -179,7 +179,7 @@ const NotificationCenter = () => {
 
   const NotificationItem = ({ notification }) => {
     const Icon = notification.icon;
-    
+
     return (
       <ListItem
         sx={{
@@ -195,8 +195,8 @@ const NotificationCenter = () => {
         }}
       >
         <ListItemIcon>
-          <Avatar 
-            sx={{ 
+          <Avatar
+            sx={{
               bgcolor: `${notification.color}20`,
               width: 40,
               height: 40
@@ -208,14 +208,14 @@ const NotificationCenter = () => {
         <ListItemText
           primary={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <Typography 
-                variant="subtitle2" 
+              <Typography
+                variant="subtitle2"
                 fontWeight={notification.read ? 400 : 600}
                 color="white"
               >
                 {notification.title}
               </Typography>
-              <Chip 
+              <Chip
                 label={notification.priority}
                 size="small"
                 sx={{
@@ -229,8 +229,8 @@ const NotificationCenter = () => {
           }
           secondary={
             <Box>
-              <Typography 
-                variant="body2" 
+              <Typography
+                variant="body2"
                 color="text.secondary"
                 sx={{ mb: 0.5 }}
               >
@@ -248,7 +248,7 @@ const NotificationCenter = () => {
         <ListItemSecondaryAction>
           <Box sx={{ display: 'flex', gap: 1 }}>
             {!notification.read && (
-              <IconButton 
+              <IconButton
                 size="small"
                 onClick={() => markAsRead(notification.id)}
                 sx={{ color: '#10b981' }}
@@ -256,7 +256,7 @@ const NotificationCenter = () => {
                 <Check size={16} />
               </IconButton>
             )}
-            <IconButton 
+            <IconButton
               size="small"
               onClick={() => deleteNotification(notification.id)}
               sx={{ color: '#ef4444' }}
@@ -280,8 +280,8 @@ const NotificationCenter = () => {
           }
         }}
       >
-        <Badge 
-          badgeContent={unreadCount} 
+        <Badge
+          badgeContent={unreadCount}
           color="error"
           sx={{
             '& .MuiBadge-badge': {
@@ -330,7 +330,7 @@ const NotificationCenter = () => {
             <Typography variant="h6" fontWeight={700} color="white">
               Notifications
             </Typography>
-            <Chip 
+            <Chip
               label={`${unreadCount} unread`}
               size="small"
               sx={{
@@ -362,9 +362,9 @@ const NotificationCenter = () => {
           {notifications.length > 0 ? (
             <List sx={{ p: 0 }}>
               {notifications.map((notification) => (
-                <NotificationItem 
-                  key={notification.id} 
-                  notification={notification} 
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
                 />
               ))}
             </List>
@@ -408,8 +408,8 @@ const NotificationCenter = () => {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity={snackbar.severity}
           sx={{
             background: 'rgba(0, 0, 0, 0.9)',
@@ -426,4 +426,3 @@ const NotificationCenter = () => {
 };
 
 export default NotificationCenter;
-

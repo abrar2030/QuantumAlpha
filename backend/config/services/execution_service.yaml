@@ -46,7 +46,7 @@ brokers:
       fractional_shares: true
       extended_hours: true
       short_selling: true
-  
+
   - name: interactive_brokers
     enabled: false
     description: "Interactive Brokers integration"
@@ -78,13 +78,13 @@ order_execution:
   default_broker: alpaca
   default_order_type: limit
   default_time_in_force: day
-  
+
   strategies:
     - name: market_order
       enabled: true
       description: "Simple market order execution"
       params: {}
-    
+
     - name: limit_order
       enabled: true
       description: "Limit order execution"
@@ -92,7 +92,7 @@ order_execution:
         price_improvement: 0.001  # 0.1% price improvement
         max_wait_time: 60  # seconds
         aggressive_after_wait: true
-    
+
     - name: twap
       enabled: true
       description: "Time-Weighted Average Price execution"
@@ -100,7 +100,7 @@ order_execution:
         num_slices: 5
         interval: 60  # seconds
         price_limit_buffer: 0.005  # 0.5% buffer
-    
+
     - name: vwap
       enabled: true
       description: "Volume-Weighted Average Price execution"
@@ -109,7 +109,7 @@ order_execution:
         end_time: "16:00"
         volume_profile: "historical"
         num_slices: 10
-    
+
     - name: iceberg
       enabled: true
       description: "Iceberg order execution"
@@ -117,7 +117,7 @@ order_execution:
         display_size: 100
         price_limit: "best_bid_ask"
         price_improvement: 0.0005  # 0.05% price improvement
-    
+
     - name: smart_router
       enabled: true
       description: "Smart order routing based on market conditions"
@@ -125,7 +125,7 @@ order_execution:
         liquidity_threshold: 0.5
         volatility_threshold: 0.02
         spread_threshold: 0.001
-  
+
   default_strategy: limit_order
 
 # Order Management
@@ -138,12 +138,12 @@ order_management:
       - market_hours
       - risk_limits
       - duplicate_orders
-  
+
   order_tracking:
     update_frequency: 1  # seconds
     status_change_notifications: true
     execution_details_logging: true
-  
+
   order_amendments:
     enabled: true
     allowed_fields:
@@ -151,7 +151,7 @@ order_management:
       - limit_price
       - stop_price
       - time_in_force
-  
+
   order_cancellation:
     confirmation_required: false
     log_reason: true
@@ -168,14 +168,14 @@ trading_parameters:
       after_hours_start: "16:00"
       after_hours_end: "20:00"
     timezone: "America/New_York"
-  
+
   trading_days:
     - Monday
     - Tuesday
     - Wednesday
     - Thursday
     - Friday
-  
+
   holidays:
     - "2023-01-02"  # New Year's Day (observed)
     - "2023-01-16"  # Martin Luther King Jr. Day
@@ -187,7 +187,7 @@ trading_parameters:
     - "2023-09-04"  # Labor Day
     - "2023-11-23"  # Thanksgiving Day
     - "2023-12-25"  # Christmas Day
-  
+
   circuit_breakers:
     level_1:
       decline: 0.07  # 7% decline
@@ -209,13 +209,13 @@ transaction_cost_analysis:
     - opportunity_cost
     - slippage
     - effective_spread
-  
+
   benchmarks:
     - arrival_price
     - vwap
     - twap
     - close_price
-  
+
   reporting:
     frequency: daily
     format: csv
@@ -234,7 +234,7 @@ event_processing:
       - name: position_updates
         partitions: 3
         retention_ms: 604800000  # 7 days
-    
+
     consumer_groups:
       - name: execution-service
         topics:
@@ -243,7 +243,7 @@ event_processing:
         topics:
           - execution_events
           - position_updates
-    
+
     producers:
       - name: execution-service
         topics:
@@ -262,7 +262,7 @@ monitoring:
     level: INFO
     format: json
     output: stdout
-  
+
   trade_monitoring:
     enabled: true
     metrics:
@@ -279,4 +279,3 @@ monitoring:
         high_rejection_rate: 0.1  # 10% rejection rate
         high_slippage: 0.005  # 0.5% slippage
         high_latency: 1000  # 1000ms latency
-

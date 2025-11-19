@@ -4,37 +4,37 @@ import { useTheme } from '../../context/ThemeContext';
 
 const StrategyCard = ({ strategy, onPress }) => {
   const { theme } = useTheme();
-  
+
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={[styles.container, { backgroundColor: theme.card }]}
       onPress={onPress}
     >
       <View style={styles.header}>
         <Text style={[styles.name, { color: theme.text }]}>{strategy.name}</Text>
-        <Text 
+        <Text
           style={[
-            styles.performance, 
+            styles.performance,
             { color: strategy.performance >= 0 ? theme.success : theme.error }
           ]}
         >
           {strategy.performance >= 0 ? '+' : ''}{strategy.performance}%
         </Text>
       </View>
-      
-      <Text 
+
+      <Text
         style={[styles.description, { color: theme.text + 'CC' }]}
         numberOfLines={2}
       >
         {strategy.description}
       </Text>
-      
+
       <View style={styles.footer}>
         <View style={styles.detail}>
           <Text style={[styles.detailLabel, { color: theme.text + '99' }]}>Risk</Text>
           <Text style={[styles.detailValue, { color: theme.text }]}>{strategy.risk}</Text>
         </View>
-        
+
         <View style={styles.detail}>
           <Text style={[styles.detailLabel, { color: theme.text + '99' }]}>Allocation</Text>
           <Text style={[styles.detailValue, { color: theme.text }]}>{strategy.allocation}%</Text>

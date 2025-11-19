@@ -20,17 +20,17 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const { login } = useAuth();
   const { theme } = useTheme();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Animation values
   const logoAnim = new Animated.Value(0);
   const formAnim = new Animated.Value(0);
-  
+
   React.useEffect(() => {
     // Start animations when component mounts
     Animated.sequence([
@@ -46,13 +46,13 @@ const LoginScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const handleLogin = async () => {
     if (!email || !password) {
       setError('Email and password are required');
       return;
     }
-    
+
     try {
       setLoading(true);
       setError('');
@@ -64,15 +64,15 @@ const LoginScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const navigateToRegister = () => {
     navigation.navigate('Register');
   };
-  
+
   const navigateToForgotPassword = () => {
     navigation.navigate('ForgotPassword');
   };
-  
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -104,7 +104,7 @@ const LoginScreen = () => {
           Advanced Algorithmic Trading
         </Text>
       </Animated.View>
-      
+
       <Animated.View
         style={[
           styles.formContainer,
@@ -123,14 +123,14 @@ const LoginScreen = () => {
         ]}
       >
         <Text style={[styles.formTitle, { color: theme.text }]}>Sign In</Text>
-        
+
         {error ? (
           <View style={styles.errorContainer}>
             <Icon name="alert-circle" size={20} color={theme.error} />
             <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
           </View>
         ) : null}
-        
+
         <View style={styles.inputGroup}>
           <Icon name="email" size={20} color={theme.text} style={styles.inputIcon} />
           <TextInput
@@ -143,7 +143,7 @@ const LoginScreen = () => {
             keyboardType="email-address"
           />
         </View>
-        
+
         <View style={styles.inputGroup}>
           <Icon name="lock" size={20} color={theme.text} style={styles.inputIcon} />
           <TextInput
@@ -165,7 +165,7 @@ const LoginScreen = () => {
             />
           </TouchableOpacity>
         </View>
-        
+
         <TouchableOpacity
           style={[styles.loginButton, { backgroundColor: theme.primary }]}
           onPress={handleLogin}
@@ -177,7 +177,7 @@ const LoginScreen = () => {
             <Text style={styles.loginButtonText}>Sign In</Text>
           )}
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={styles.forgotPasswordButton}
           onPress={navigateToForgotPassword}
@@ -186,13 +186,13 @@ const LoginScreen = () => {
             Forgot Password?
           </Text>
         </TouchableOpacity>
-        
+
         <View style={styles.divider}>
           <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
           <Text style={[styles.dividerText, { color: theme.text }]}>OR</Text>
           <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
         </View>
-        
+
         <TouchableOpacity
           style={[styles.registerButton, { borderColor: theme.primary }]}
           onPress={navigateToRegister}

@@ -92,7 +92,7 @@ const Profile = () => {
   );
 
   const StatCard = ({ icon: Icon, title, value, color }) => (
-    <Card sx={{ 
+    <Card sx={{
       background: `linear-gradient(135deg, ${color}15, ${color}05)`,
       border: `1px solid ${color}30`,
       borderRadius: 3,
@@ -115,7 +115,7 @@ const Profile = () => {
   );
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       py: 4
@@ -123,9 +123,9 @@ const Profile = () => {
       <Container maxWidth="xl">
         {/* Header Section */}
         <Fade in={true} timeout={800}>
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               p: 4,
               mb: 4,
               borderRadius: 4,
@@ -138,9 +138,9 @@ const Profile = () => {
             <Grid container spacing={3} alignItems="center">
               <Grid item>
                 <Box sx={{ position: 'relative' }}>
-                  <Avatar 
-                    sx={{ 
-                      width: 120, 
+                  <Avatar
+                    sx={{
+                      width: 120,
                       height: 120,
                       background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
                       fontSize: '2rem',
@@ -149,8 +149,8 @@ const Profile = () => {
                   >
                     {profileData.firstName[0]}{profileData.lastName[0]}
                   </Avatar>
-                  <IconButton 
-                    sx={{ 
+                  <IconButton
+                    sx={{
                       position: 'absolute',
                       bottom: 0,
                       right: 0,
@@ -172,15 +172,15 @@ const Profile = () => {
                   {profileData.occupation}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  <Chip 
+                  <Chip
                     label={`Risk: ${profileData.riskTolerance}`}
                     sx={{ background: '#f59e0b', color: 'white' }}
                   />
-                  <Chip 
+                  <Chip
                     label={`Experience: ${profileData.investmentExperience}`}
                     sx={{ background: '#10b981', color: 'white' }}
                   />
-                  <Chip 
+                  <Chip
                     label={profileData.twoFactorEnabled ? '2FA Enabled' : '2FA Disabled'}
                     sx={{ background: profileData.twoFactorEnabled ? '#10b981' : '#ef4444', color: 'white' }}
                   />
@@ -215,7 +215,7 @@ const Profile = () => {
         <Fade in={true} timeout={1000}>
           <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 icon={DollarSign}
                 title="Portfolio Value"
                 value="$125,847"
@@ -223,7 +223,7 @@ const Profile = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 icon={Activity}
                 title="Active Trades"
                 value="23"
@@ -231,7 +231,7 @@ const Profile = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 icon={Shield}
                 title="Security Score"
                 value="98%"
@@ -239,7 +239,7 @@ const Profile = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <StatCard 
+              <StatCard
                 icon={Calendar}
                 title="Member Since"
                 value="2022"
@@ -251,9 +251,9 @@ const Profile = () => {
 
         {/* Main Content */}
         <Fade in={true} timeout={1200}>
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               borderRadius: 4,
               background: 'rgba(255, 255, 255, 0.05)',
               backdropFilter: 'blur(20px)',
@@ -262,8 +262,8 @@ const Profile = () => {
               overflow: 'hidden'
             }}
           >
-            <Tabs 
-              value={activeTab} 
+            <Tabs
+              value={activeTab}
               onChange={(e, newValue) => setActiveTab(newValue)}
               sx={{
                 borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
@@ -454,14 +454,14 @@ const Profile = () => {
                     <ListItemIcon>
                       <Lock color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Two-Factor Authentication"
                       secondary="Add an extra layer of security to your account"
                       primaryTypographyProps={{ color: 'white' }}
                       secondaryTypographyProps={{ color: 'text.secondary' }}
                     />
                     <ListItemSecondaryAction>
-                      <Switch 
+                      <Switch
                         checked={profileData.twoFactorEnabled}
                         onChange={(e) => handleInputChange('twoFactorEnabled', e.target.checked)}
                         sx={{
@@ -480,7 +480,7 @@ const Profile = () => {
                     <ListItemIcon>
                       <Smartphone color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="SMS Verification"
                       secondary="Receive verification codes via SMS"
                       primaryTypographyProps={{ color: 'white' }}
@@ -497,7 +497,7 @@ const Profile = () => {
                     <ListItemIcon>
                       <Shield color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Login Sessions"
                       secondary="Manage your active login sessions"
                       primaryTypographyProps={{ color: 'white' }}
@@ -521,14 +521,14 @@ const Profile = () => {
                     <ListItemIcon>
                       <Mail color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Email Notifications"
                       secondary="Receive updates via email"
                       primaryTypographyProps={{ color: 'white' }}
                       secondaryTypographyProps={{ color: 'text.secondary' }}
                     />
                     <ListItemSecondaryAction>
-                      <Switch 
+                      <Switch
                         checked={profileData.emailNotifications}
                         onChange={(e) => handleInputChange('emailNotifications', e.target.checked)}
                         sx={{
@@ -547,14 +547,14 @@ const Profile = () => {
                     <ListItemIcon>
                       <Smartphone color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="SMS Notifications"
                       secondary="Receive updates via SMS"
                       primaryTypographyProps={{ color: 'white' }}
                       secondaryTypographyProps={{ color: 'text.secondary' }}
                     />
                     <ListItemSecondaryAction>
-                      <Switch 
+                      <Switch
                         checked={profileData.smsNotifications}
                         onChange={(e) => handleInputChange('smsNotifications', e.target.checked)}
                         sx={{
@@ -573,14 +573,14 @@ const Profile = () => {
                     <ListItemIcon>
                       <Bell color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Push Notifications"
                       secondary="Receive push notifications in browser"
                       primaryTypographyProps={{ color: 'white' }}
                       secondaryTypographyProps={{ color: 'text.secondary' }}
                     />
                     <ListItemSecondaryAction>
-                      <Switch 
+                      <Switch
                         checked={profileData.pushNotifications}
                         onChange={(e) => handleInputChange('pushNotifications', e.target.checked)}
                         sx={{
@@ -599,14 +599,14 @@ const Profile = () => {
                     <ListItemIcon>
                       <Activity color="#00d4ff" />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Trading Alerts"
                       secondary="Get notified about trade executions and opportunities"
                       primaryTypographyProps={{ color: 'white' }}
                       secondaryTypographyProps={{ color: 'text.secondary' }}
                     />
                     <ListItemSecondaryAction>
-                      <Switch 
+                      <Switch
                         checked={profileData.tradingAlerts}
                         onChange={(e) => handleInputChange('tradingAlerts', e.target.checked)}
                         sx={{
@@ -744,4 +744,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

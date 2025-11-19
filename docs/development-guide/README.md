@@ -1490,4 +1490,3 @@ Guidelines for contributing to the QuantumAlpha platform.
    - Participate in retrospectives
    - Share best practices
    - Mentor new contributors
-

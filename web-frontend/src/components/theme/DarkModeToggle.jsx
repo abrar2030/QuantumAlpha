@@ -41,4 +41,3 @@ const DarkModeToggle = ({ size = 24, showTooltip = true }) => {
 };
 
 export default DarkModeToggle;
-

@@ -31,10 +31,10 @@ resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
-  
+
   # Security enhancements
   enable_network_address_usage_metrics = true
-  
+
   tags = merge(var.common_tags, {
     Name                    = "${var.project_name}-vpc"
     Environment            = var.environment
@@ -503,7 +503,7 @@ resource "aws_network_acl" "database" {
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
-  
+
   route_table_ids = concat(
     [aws_route_table.public.id],
     aws_route_table.private[*].id,
@@ -543,7 +543,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_endpoint_type   = "Interface"
   subnet_ids          = aws_subnet.private[*].id
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
-  
+
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -558,7 +558,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   vpc_endpoint_type   = "Interface"
   subnet_ids          = aws_subnet.private[*].id
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
-  
+
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -614,4 +614,3 @@ resource "aws_elasticache_subnet_group" "main" {
     Environment = var.environment
   })
 }
-

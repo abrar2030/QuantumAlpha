@@ -22,4 +22,3 @@ Add any other context about the documentation issue here.
 - [ ] I've checked that this isn't already documented elsewhere
 - [ ] I've provided specific details about what needs to be updated
 - [ ] I've suggested specific improvements or additions
-

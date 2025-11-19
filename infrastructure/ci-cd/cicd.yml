@@ -256,7 +256,7 @@ jobs:
         # Update image tags in Kubernetes manifests
         sed -i "s|image: ghcr.io/${{ github.repository }}/backend:.*|image: ghcr.io/${{ github.repository }}/backend:${{ github.sha }}|g" infrastructure/kubernetes/${{ github.event.inputs.environment }}/backend-deployment.yaml
         sed -i "s|image: ghcr.io/${{ github.repository }}/web-frontend:.*|image: ghcr.io/${{ github.repository }}/web-frontend:${{ github.sha }}|g" infrastructure/kubernetes/${{ github.event.inputs.environment }}/web-frontend-deployment.yaml
-        
+
         # Apply Kubernetes manifests
         kubectl apply -f infrastructure/kubernetes/${{ github.event.inputs.environment }}/
 
@@ -264,4 +264,3 @@ jobs:
       run: |
         kubectl rollout status deployment/backend -n quantumalpha
         kubectl rollout status deployment/web-frontend -n quantumalpha
-

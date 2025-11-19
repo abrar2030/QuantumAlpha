@@ -27,7 +27,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   style,
 }) => {
   const { theme } = useTheme();
-  
+
   const getSize = () => {
     switch (size) {
       case 'small':
@@ -59,7 +59,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
 
   const renderSkeleton = () => {
     const items = [];
-    
+
     for (let i = 0; i < count; i++) {
       switch (type) {
         case 'card':
@@ -73,7 +73,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </View>
           );
           break;
-          
+
         case 'list':
           items.push(
             <View key={i} style={styles.skeletonListItem}>
@@ -90,7 +90,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </View>
           );
           break;
-          
+
         case 'chart':
           items.push(
             <View key={i} style={styles.skeletonChart}>
@@ -102,7 +102,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </View>
           );
           break;
-          
+
         case 'profile':
           items.push(
             <View key={i} style={styles.skeletonProfile}>
@@ -119,12 +119,12 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             </View>
           );
           break;
-          
+
         default:
           items.push(children);
       }
     }
-    
+
     return items;
   };
 
@@ -167,4 +167,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoadingSpinner;
-

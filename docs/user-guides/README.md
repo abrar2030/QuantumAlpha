@@ -1711,4 +1711,3 @@ A comprehensive glossary of terms used in the QuantumAlpha platform:
 - **VWAP (Volume-Weighted Average Price)**: The ratio of the value traded to total volume traded over a particular time horizon.
 - **Yield**: The income return on an investment, such as the interest or dividends received from holding a particular security.
 - **Z-Score**: The number of standard deviations by which the value of a raw score is above or below the mean value of what is being observed or measured.
-

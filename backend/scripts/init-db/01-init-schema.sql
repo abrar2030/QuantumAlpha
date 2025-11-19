@@ -310,4 +310,3 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER update_auth_api_keys_updated_at
 BEFORE UPDATE ON auth.api_keys
 FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-

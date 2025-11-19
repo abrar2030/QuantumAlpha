@@ -5,7 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 const NotificationsScreen = () => {
   const { theme } = useTheme();
-  
+
   // Mock notifications data
   const notifications = [
     {
@@ -41,7 +41,7 @@ const NotificationsScreen = () => {
       read: true,
     },
   ];
-  
+
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'system':
@@ -54,7 +54,7 @@ const NotificationsScreen = () => {
         return 'bell';
     }
   };
-  
+
   const getNotificationColor = (type) => {
     switch (type) {
       case 'system':
@@ -67,7 +67,7 @@ const NotificationsScreen = () => {
         return theme.text;
     }
   };
-  
+
   const renderNotification = (notification, index) => {
     return (
       <TouchableOpacity
@@ -95,7 +95,7 @@ const NotificationsScreen = () => {
             color={getNotificationColor(notification.type)}
           />
         </View>
-        
+
         <View style={styles.notificationContent}>
           <View style={styles.notificationHeader}>
             <Text style={[styles.notificationTitle, { color: theme.text }]}>
@@ -105,11 +105,11 @@ const NotificationsScreen = () => {
               <View style={[styles.unreadDot, { backgroundColor: theme.primary }]} />
             )}
           </View>
-          
+
           <Text style={[styles.notificationMessage, { color: theme.text + 'CC' }]}>
             {notification.message}
           </Text>
-          
+
           <Text style={[styles.notificationTime, { color: theme.text + '99' }]}>
             {new Date(notification.timestamp).toLocaleDateString()} at{' '}
             {new Date(notification.timestamp).toLocaleTimeString([], {
@@ -121,7 +121,7 @@ const NotificationsScreen = () => {
       </TouchableOpacity>
     );
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.header, { backgroundColor: theme.card }]}>
@@ -138,7 +138,7 @@ const NotificationsScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {notifications.length > 0 ? (
           notifications.map(renderNotification)

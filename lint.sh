@@ -124,23 +124,23 @@ print_status() {
 # Function to run Python linters
 run_python_linters() {
     print_header "Running Python Linters"
-    
+
     local exit_code=0
     local flake8_exit=0
     local pylint_exit=0
     local black_exit=0
     local isort_exit=0
-    
+
     # Check if Python tools are installed
     if ! command_exists python3; then
         echo -e "${RED}Error: Python 3 is not installed${NC}"
         return 1
     fi
-    
+
     # Install required Python packages if not already installed
     echo -e "${YELLOW}Checking Python linting dependencies...${NC}"
     python3 -m pip install --quiet flake8 pylint black isort
-    
+
     # Run flake8
     echo -e "${YELLOW}Running flake8...${NC}"
     if [ "$VERBOSE" = true ]; then
@@ -150,7 +150,7 @@ run_python_linters() {
     fi
     flake8_exit=$?
     print_status "flake8" $flake8_exit
-    
+
     # Run pylint
     echo -e "${YELLOW}Running pylint...${NC}"
     if [ "$VERBOSE" = true ]; then
@@ -166,7 +166,7 @@ run_python_linters() {
         print_status "pylint" 1
         exit_code=1
     fi
-    
+
     # Run black (check mode unless fix is enabled)
     echo -e "${YELLOW}Running black...${NC}"
     if [ "$FIX_ISSUES" = true ]; then
@@ -184,7 +184,7 @@ run_python_linters() {
     fi
     black_exit=$?
     print_status "black" $black_exit
-    
+
     # Run isort (check mode unless fix is enabled)
     echo -e "${YELLOW}Running isort...${NC}"
     if [ "$FIX_ISSUES" = true ]; then
@@ -202,7 +202,7 @@ run_python_linters() {
     fi
     isort_exit=$?
     print_status "isort" $isort_exit
-    
+
     # Generate report if requested
     if [ "$REPORT" = true ]; then
         echo -e "${YELLOW}Generating Python lint report...${NC}"
@@ -210,41 +210,41 @@ run_python_linters() {
         python3 -m flake8 "$BACKEND_DIR" --config="$BACKEND_CONFIG_DIR/.flake8" --format=html --htmldir="$REPORT_DIR/python/flake8" || true
         python3 -m pylint --rcfile="$BACKEND_CONFIG_DIR/.pylintrc" "$BACKEND_DIR" --output-format=html > "$REPORT_DIR/python/pylint_report.html" || true
     fi
-    
+
     # Set exit code if any tool failed
     if [ $flake8_exit -ne 0 ] || [ $black_exit -ne 0 ] || [ $isort_exit -ne 0 ]; then
         exit_code=1
     fi
-    
+
     return $exit_code
 }
 
 # Function to run JavaScript/React linters for web frontend
 run_web_frontend_linters() {
     print_header "Running Web Frontend Linters"
-    
+
     local exit_code=0
     local eslint_exit=0
     local prettier_exit=0
-    
+
     # Check if Node.js tools are installed
     if ! command_exists npm; then
         echo -e "${RED}Error: npm is not installed${NC}"
         return 1
     fi
-    
+
     # Change to web frontend directory
     cd "$WEB_FRONTEND_DIR" || return 1
-    
+
     # Install required npm packages if not already installed
     echo -e "${YELLOW}Checking web frontend linting dependencies...${NC}"
     npm install --no-save eslint prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y eslint-plugin-import eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
-    
+
     # Copy config files to the project directory if they don't exist
     cp -n "$WEB_FRONTEND_CONFIG_DIR/.eslintrc.js" ./ 2>/dev/null || true
     cp -n "$WEB_FRONTEND_CONFIG_DIR/.prettierrc" ./ 2>/dev/null || true
     cp -n "$WEB_FRONTEND_CONFIG_DIR/tsconfig.json" ./ 2>/dev/null || true
-    
+
     # Run ESLint
     echo -e "${YELLOW}Running ESLint for web frontend...${NC}"
     if [ "$FIX_ISSUES" = true ]; then
@@ -262,7 +262,7 @@ run_web_frontend_linters() {
     fi
     eslint_exit=$?
     print_status "ESLint (web)" $eslint_exit
-    
+
     # Run Prettier
     echo -e "${YELLOW}Running Prettier for web frontend...${NC}"
     if [ "$FIX_ISSUES" = true ]; then
@@ -280,51 +280,51 @@ run_web_frontend_linters() {
     fi
     prettier_exit=$?
     print_status "Prettier (web)" $prettier_exit
-    
+
     # Generate report if requested
     if [ "$REPORT" = true ]; then
         echo -e "${YELLOW}Generating web frontend lint report...${NC}"
         mkdir -p "$REPORT_DIR/web"
         npx eslint . -f html -o "$REPORT_DIR/web/eslint_report.html" || true
     fi
-    
+
     # Set exit code if any tool failed
     if [ $eslint_exit -ne 0 ] || [ $prettier_exit -ne 0 ]; then
         exit_code=1
     fi
-    
+
     # Return to project root
     cd "$PROJECT_ROOT" || return 1
-    
+
     return $exit_code
 }
 
 # Function to run JavaScript/React linters for mobile frontend
 run_mobile_frontend_linters() {
     print_header "Running Mobile Frontend Linters"
-    
+
     local exit_code=0
     local eslint_exit=0
     local prettier_exit=0
-    
+
     # Check if Node.js tools are installed
     if ! command_exists npm; then
         echo -e "${RED}Error: npm is not installed${NC}"
         return 1
     fi
-    
+
     # Change to mobile frontend directory
     cd "$MOBILE_FRONTEND_DIR" || return 1
-    
+
     # Install required npm packages if not already installed
     echo -e "${YELLOW}Checking mobile frontend linting dependencies...${NC}"
     npm install --no-save eslint prettier @react-native/eslint-config eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-native @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-prettier eslint-plugin-prettier
-    
+
     # Copy config files to the project directory if they don't exist
     cp -n "$MOBILE_FRONTEND_CONFIG_DIR/.eslintrc.js" ./ 2>/dev/null || true
     cp -n "$MOBILE_FRONTEND_CONFIG_DIR/.prettierrc" ./ 2>/dev/null || true
     cp -n "$MOBILE_FRONTEND_CONFIG_DIR/tsconfig.json" ./ 2>/dev/null || true
-    
+
     # Run ESLint
     echo -e "${YELLOW}Running ESLint for mobile frontend...${NC}"
     if [ "$FIX_ISSUES" = true ]; then
@@ -342,7 +342,7 @@ run_mobile_frontend_linters() {
     fi
     eslint_exit=$?
     print_status "ESLint (mobile)" $eslint_exit
-    
+
     # Run Prettier
     echo -e "${YELLOW}Running Prettier for mobile frontend...${NC}"
     if [ "$FIX_ISSUES" = true ]; then
@@ -360,22 +360,22 @@ run_mobile_frontend_linters() {
     fi
     prettier_exit=$?
     print_status "Prettier (mobile)" $prettier_exit
-    
+
     # Generate report if requested
     if [ "$REPORT" = true ]; then
         echo -e "${YELLOW}Generating mobile frontend lint report...${NC}"
         mkdir -p "$REPORT_DIR/mobile"
         npx eslint . -f html -o "$REPORT_DIR/mobile/eslint_report.html" || true
     fi
-    
+
     # Set exit code if any tool failed
     if [ $eslint_exit -ne 0 ] || [ $prettier_exit -ne 0 ]; then
         exit_code=1
     fi
-    
+
     # Return to project root
     cd "$PROJECT_ROOT" || return 1
-    
+
     return $exit_code
 }
 
@@ -435,4 +435,3 @@ if [ "$REPORT" = true ]; then
 fi
 
 exit $OVERALL_EXIT
-

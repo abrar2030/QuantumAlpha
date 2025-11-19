@@ -20,5 +20,3 @@ export const sendPushNotification = async (token, title, body) => {
     console.error("Error sending push notification:", error);
   }
 };
-
-

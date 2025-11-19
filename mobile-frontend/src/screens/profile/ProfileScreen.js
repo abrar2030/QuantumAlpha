@@ -20,7 +20,7 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { user, updateProfile } = useAuth();
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
@@ -30,11 +30,11 @@ const ProfileScreen = () => {
     location: user?.location || 'New York, USA',
     bio: user?.bio || 'Algorithmic trader with 5+ years of experience in quantitative finance.',
   });
-  
+
   // Animation values
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const translateY = React.useRef(new Animated.Value(50)).current;
-  
+
   React.useEffect(() => {
     // Start animations when component mounts
     Animated.parallel([
@@ -50,7 +50,7 @@ const ProfileScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const handleSaveProfile = async () => {
     try {
       setLoading(true);
@@ -63,7 +63,7 @@ const ProfileScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const renderProfileField = (label, value, field) => {
     return (
       <View style={styles.fieldContainer}>
@@ -83,7 +83,7 @@ const ProfileScreen = () => {
       </View>
     );
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View
@@ -117,7 +117,7 @@ const ProfileScreen = () => {
           )}
         </TouchableOpacity>
       </Animated.View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Animated.View
           style={{
@@ -157,21 +157,21 @@ const ProfileScreen = () => {
                 </View>
               </View>
             </View>
-            
+
             <View style={[styles.divider, { backgroundColor: theme.border }]} />
-            
+
             {renderProfileField('Full Name', userData.name, 'name')}
             {renderProfileField('Email', userData.email, 'email')}
             {renderProfileField('Phone', userData.phone, 'phone')}
             {renderProfileField('Location', userData.location, 'location')}
             {renderProfileField('Bio', userData.bio, 'bio')}
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Account Statistics
             </Text>
-            
+
             <View style={styles.statsContainer}>
               <View style={styles.statItem}>
                 <Text style={[styles.statValue, { color: theme.text }]}>42</Text>
@@ -179,21 +179,21 @@ const ProfileScreen = () => {
                   Trades
                 </Text>
               </View>
-              
+
               <View style={styles.statItem}>
                 <Text style={[styles.statValue, { color: theme.text }]}>8.3%</Text>
                 <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
                   Return
                 </Text>
               </View>
-              
+
               <View style={styles.statItem}>
                 <Text style={[styles.statValue, { color: theme.text }]}>5</Text>
                 <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
                   Strategies
                 </Text>
               </View>
-              
+
               <View style={styles.statItem}>
                 <Text style={[styles.statValue, { color: theme.text }]}>68%</Text>
                 <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
@@ -202,12 +202,12 @@ const ProfileScreen = () => {
               </View>
             </View>
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Account Security
             </Text>
-            
+
             <TouchableOpacity
               style={[styles.securityItem, { borderBottomColor: theme.border }]}
               onPress={() => {
@@ -228,7 +228,7 @@ const ProfileScreen = () => {
               </View>
               <Icon name="chevron-right" size={20} color={theme.text + '99'} />
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.securityItem, { borderBottomColor: theme.border }]}
               onPress={() => {
@@ -249,7 +249,7 @@ const ProfileScreen = () => {
               </View>
               <Icon name="chevron-right" size={20} color={theme.text + '99'} />
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={styles.securityItem}
               onPress={() => {
@@ -271,12 +271,12 @@ const ProfileScreen = () => {
               <Icon name="chevron-right" size={20} color={theme.text + '99'} />
             </TouchableOpacity>
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Preferences
             </Text>
-            
+
             <TouchableOpacity
               style={styles.preferenceItem}
               onPress={() => {

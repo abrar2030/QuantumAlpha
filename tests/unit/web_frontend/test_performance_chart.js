@@ -22,10 +22,10 @@ jest.mock('recharts', () => {
       </div>
     ),
     Line: ({ type, dataKey, stroke, activeDot, strokeWidth, dot, name, animationDuration }) => (
-      <div 
-        data-testid="line" 
-        data-type={type} 
-        data-datakey={dataKey} 
+      <div
+        data-testid="line"
+        data-type={type}
+        data-datakey={dataKey}
         data-stroke={stroke}
         data-name={name}
       />
@@ -136,7 +136,7 @@ describe('PerformanceChart Component', () => {
   test('CustomTooltip renders null when inactive', () => {
     // We need to extract the CustomTooltip component to test it directly
     // This is a bit hacky but works for testing purposes
-    const { CustomTooltip } = PerformanceChart.__reactComponents || { 
+    const { CustomTooltip } = PerformanceChart.__reactComponents || {
       // If not exposed, we can mock it based on the implementation
       CustomTooltip: ({ active, payload, label }) => {
         if (!active || !payload || !payload.length) {
@@ -170,4 +170,3 @@ describe('PerformanceChart Component', () => {
     expect(container2.firstChild).toBeNull();
   });
 });
-

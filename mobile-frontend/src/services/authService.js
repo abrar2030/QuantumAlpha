@@ -70,7 +70,7 @@ class AuthService {
       await new Promise((resolve) => {
         setTimeout(resolve, 500);
       });
-      
+
       this.token = null;
       return true;
     } catch (error) {
@@ -106,7 +106,7 @@ class AuthService {
       await new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
-      
+
       return true;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Password reset request failed');
@@ -120,7 +120,7 @@ class AuthService {
       await new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
-      
+
       return true;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Password reset failed');
@@ -134,7 +134,7 @@ class AuthService {
       await new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
-      
+
       return true;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Email verification failed');

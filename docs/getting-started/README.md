@@ -351,4 +351,3 @@ Now that you have set up the QuantumAlpha platform, you can:
 - Understand the [Architecture](../architecture/) of the platform
 
 For any issues or questions, refer to the [Troubleshooting](../troubleshooting/) section or contact support.
-

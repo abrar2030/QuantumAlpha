@@ -3,17 +3,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // Define our single API slice
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
    baseUrl: 'https://8080-i7kscfnrcqq64pgef857g-ea3b3cda.manusvm.computer/api',
     prepareHeaders: (headers, { getState }) => {
       // Get the token from auth state
       const token = getState().auth.token;
-      
+
       // If we have a token, add it to the headers
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
       }
-      
+
       return headers;
     },
   }),
@@ -38,7 +38,7 @@ export const api = createApi({
       query: () => '/auth/user',
       providesTags: ['User'],
     }),
-    
+
     // Portfolio endpoints
     getPortfolio: builder.query({
       query: () => '/portfolio',
@@ -48,7 +48,7 @@ export const api = createApi({
       query: (timeframe) => `/portfolio/history?timeframe=${timeframe}`,
       providesTags: ['Portfolio'],
     }),
-    
+
     // Strategy endpoints
     getStrategies: builder.query({
       query: () => '/strategies',
@@ -81,7 +81,7 @@ export const api = createApi({
       }),
       invalidatesTags: ['Strategy'],
     }),
-    
+
     // Trade endpoints
     getTrades: builder.query({
       query: (params) => ({
@@ -90,12 +90,12 @@ export const api = createApi({
       }),
       providesTags: ['Trade'],
     }),
-    
+
     // Market data endpoints
     getMarketData: builder.query({
       query: (symbol) => `/market-data/${symbol}`,
     }),
-    
+
     // Risk metrics endpoints
     getRiskMetrics: builder.query({
       query: (strategyId) => `/risk/metrics/${strategyId}`,

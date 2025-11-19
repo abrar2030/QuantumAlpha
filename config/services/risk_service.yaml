@@ -26,24 +26,24 @@ risk_limits:
     max_leverage: 1.5   # 1.5x maximum leverage
     max_concentration: 0.20  # 20% maximum in single position
     min_diversification: 10  # Minimum number of positions
-  
+
   position:
     max_position_size: 0.20  # 20% of portfolio
     min_position_size: 0.01  # 1% of portfolio
     max_daily_loss: 0.05     # 5% maximum daily loss per position
-  
+
   sector:
     max_sector_exposure: 0.30  # 30% maximum exposure to a single sector
     min_sectors: 3            # Minimum number of sectors
-  
+
   market:
     max_market_correlation: 0.80  # 80% maximum correlation with market
     max_beta: 1.5              # 1.5 maximum portfolio beta
-  
+
   volatility:
     max_portfolio_volatility: 0.20  # 20% annualized volatility
     volatility_lookback: 252        # 252 trading days lookback
-  
+
   trading:
     max_daily_trades: 100          # Maximum number of trades per day
     max_daily_volume: 0.10         # 10% of average daily volume
@@ -57,7 +57,7 @@ position_sizing:
       enabled: true
       description: "Equal weight allocation across all positions"
       params: {}
-    
+
     - name: volatility_sizing
       enabled: true
       description: "Position sizing based on volatility"
@@ -65,28 +65,28 @@ position_sizing:
         target_volatility: 0.15
         volatility_lookback: 63  # trading days
         max_leverage: 1.5
-    
+
     - name: kelly_criterion
       enabled: true
       description: "Kelly criterion for position sizing"
       params:
         fraction: 0.5  # Half-Kelly for conservatism
         win_rate_lookback: 100  # trades
-    
+
     - name: risk_parity
       enabled: true
       description: "Risk parity allocation"
       params:
         risk_measure: volatility
         lookback: 252  # trading days
-    
+
     - name: fixed_notional
       enabled: true
       description: "Fixed notional amount per trade"
       params:
         base_amount: 10000  # $10,000 per trade
         scaling_factor: 1.0
-  
+
   default_method: volatility_sizing
 
 # Risk Calculations
@@ -100,7 +100,7 @@ risk_calculations:
         time_horizon: 1  # days
         method: historical  # historical, parametric, monte_carlo
         lookback: 252  # trading days
-    
+
     - name: expected_shortfall
       enabled: true
       description: "Expected Shortfall (Conditional VaR)"
@@ -109,41 +109,41 @@ risk_calculations:
         time_horizon: 1  # days
         method: historical
         lookback: 252  # trading days
-    
+
     - name: sharpe_ratio
       enabled: true
       description: "Sharpe Ratio calculation"
       params:
         risk_free_rate: 0.02  # 2% annual risk-free rate
         period: 252  # trading days
-    
+
     - name: sortino_ratio
       enabled: true
       description: "Sortino Ratio calculation"
       params:
         risk_free_rate: 0.02
         period: 252  # trading days
-    
+
     - name: maximum_drawdown
       enabled: true
       description: "Maximum Drawdown calculation"
       params:
         lookback: 252  # trading days
-    
+
     - name: beta
       enabled: true
       description: "Portfolio Beta calculation"
       params:
         market_index: "SPY"
         lookback: 252  # trading days
-    
+
     - name: correlation_matrix
       enabled: true
       description: "Correlation matrix calculation"
       params:
         lookback: 252  # trading days
         min_periods: 100
-  
+
   update_frequency: 3600  # seconds
 
 # Stress Testing
@@ -157,7 +157,7 @@ stress_testing:
         volatility_increase: 2.0  # 2x volatility
         correlation_increase: 0.3  # 0.3 increase in correlations
         liquidity_decrease: 0.5  # 50% decrease in liquidity
-    
+
     - name: sector_rotation
       enabled: true
       description: "Sector rotation scenario"
@@ -167,7 +167,7 @@ stress_testing:
         financial_return: 0.05
         healthcare_return: -0.05
         consumer_return: -0.10
-    
+
     - name: interest_rate_hike
       enabled: true
       description: "Interest rate hike scenario"
@@ -176,7 +176,7 @@ stress_testing:
         bond_return: -0.05
         financial_return: 0.03
         tech_return: -0.08
-    
+
     - name: liquidity_crisis
       enabled: true
       description: "Liquidity crisis scenario"
@@ -184,7 +184,7 @@ stress_testing:
         spread_increase: 0.02  # 200 basis points
         volume_decrease: 0.7  # 70% decrease
         volatility_increase: 3.0  # 3x volatility
-    
+
     - name: historical_events
       enabled: true
       description: "Historical market events"
@@ -198,7 +198,7 @@ stress_testing:
         - name: dotcom_bubble_2000
           start_date: "2000-03-01"
           end_date: "2002-10-01"
-  
+
   frequency: daily
   report_format: pdf
 
@@ -216,7 +216,7 @@ risk_alerts:
     leverage_high: 1.4  # 1.4x leverage
     concentration_high: 0.18  # 18% concentration
     liquidity_low: 0.7  # 70% of minimum liquidity
-  
+
   cooldown: 3600  # seconds between repeated alerts
 
 # Kill Switch
@@ -232,12 +232,12 @@ kill_switch:
     - metric: leverage
       threshold: 1.5
       time_window: 60
-  
+
   actions:
     - close_all_positions
     - notify_admin
     - log_event
-  
+
   override:
     enabled: true
     authorized_roles:
@@ -257,4 +257,3 @@ monitoring:
     level: INFO
     format: json
     output: stdout
-

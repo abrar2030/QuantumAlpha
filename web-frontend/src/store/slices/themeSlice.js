@@ -60,4 +60,3 @@ export const {
 } = themeSlice.actions;
 
 export default themeSlice.reducer;
-

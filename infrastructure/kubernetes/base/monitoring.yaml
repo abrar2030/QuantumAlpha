@@ -593,7 +593,7 @@ data:
         timeInterval: "5s"
         queryTimeout: "60s"
         httpMethod: "POST"
-  
+
   dashboards.yml: |
     apiVersion: 1
     providers:
@@ -606,4 +606,3 @@ data:
       allowUiUpdates: true
       options:
         path: /var/lib/grafana/dashboards
-

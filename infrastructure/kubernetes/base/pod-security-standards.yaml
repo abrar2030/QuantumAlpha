@@ -75,7 +75,7 @@ data:
     data:
       rules: |
         # Security policy rules for QuantumAlpha
-        
+
         # Required security context settings
         securityContext:
           required: true
@@ -87,7 +87,7 @@ data:
             - ALL
           seccompProfile:
             type: RuntimeDefault
-        
+
         # Resource limits enforcement
         resources:
           required: true
@@ -97,7 +97,7 @@ data:
           requests:
             memory: required
             cpu: required
-        
+
         # Image security requirements
         images:
           allowedRegistries:
@@ -111,12 +111,12 @@ data:
           - "latest"
           - "master"
           - "main"
-        
+
         # Network security
         hostNetwork: false
         hostPID: false
         hostIPC: false
-        
+
         # Volume restrictions
         allowedVolumeTypes:
         - "configMap"
@@ -125,17 +125,17 @@ data:
         - "persistentVolumeClaim"
         - "projected"
         - "downwardAPI"
-        
+
         prohibitedVolumeTypes:
         - "hostPath"
         - "nfs"
         - "cephfs"
         - "rbd"
-        
+
         # Service account requirements
         serviceAccount:
           automountServiceAccountToken: false
-        
+
         # Compliance labels required
         requiredLabels:
         - "app"
@@ -143,11 +143,11 @@ data:
         - "compliance.sox"
         - "compliance.pci-dss"
         - "compliance.glba"
-        
+
         # Annotations requirements
         requiredAnnotations:
         - "kubernetes.io/description"
-        
+
         # Pod disruption budget requirements
         podDisruptionBudget:
           required: true
@@ -196,7 +196,7 @@ spec:
               capabilities:
                 drop:
                 - ALL
-  
+
   - name: require-resource-limits
     match:
       any:
@@ -218,7 +218,7 @@ spec:
               requests:
                 memory: "?*"
                 cpu: "?*"
-  
+
   - name: disallow-privileged-containers
     match:
       any:
@@ -237,7 +237,7 @@ spec:
           - name: "*"
             =(securityContext):
               =(privileged): "false"
-  
+
   - name: require-compliance-labels
     match:
       any:
@@ -255,7 +255,7 @@ spec:
             compliance.sox: "?*"
             compliance.pci-dss: "?*"
             compliance.glba: "?*"
-  
+
   - name: disallow-host-namespaces
     match:
       any:
@@ -271,7 +271,7 @@ spec:
           =(hostNetwork): "false"
           =(hostPID): "false"
           =(hostIPC): "false"
-  
+
   - name: restrict-volume-types
     match:
       any:
@@ -287,7 +287,7 @@ spec:
         - key: "{{ request.object.spec.volumes[?contains(keys(@), 'hostPath')] | length(@) }}"
           operator: GreaterThan
           value: 0
-  
+
   - name: require-image-digest
     match:
       any:
@@ -303,7 +303,7 @@ spec:
           containers:
           - name: "*"
             image: "*@sha256:*"
-  
+
   - name: disallow-automount-service-account-token
     match:
       any:
@@ -390,4 +390,3 @@ spec:
           annotations:
             security.scan.timestamp: "{{ time_now_utc() }}"
             compliance.last-reviewed: "{{ time_now_utc() }}"
-

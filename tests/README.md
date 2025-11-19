@@ -183,4 +183,3 @@ When adding new tests:
 ## License
 
 This test suite is part of the QuantumAlpha project and is subject to the same license terms.
-

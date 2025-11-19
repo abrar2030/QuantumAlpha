@@ -15,7 +15,7 @@ export const AlertProvider = ({ children }) => {
       timestamp: new Date(),
       read: false,
     };
-    
+
     setAlerts((prevAlerts) => [newAlert, ...prevAlerts]);
     return id;
   };

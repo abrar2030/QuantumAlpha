@@ -18,20 +18,20 @@ data:
   DB_SSL_MODE: "require"
   DB_MAX_CONNECTIONS: "20"
   DB_CONNECTION_TIMEOUT: "30"
-  
+
   # InfluxDB configuration
   INFLUXDB_URL: "https://influxdb:8086"
   INFLUXDB_ORG: "quantumalpha"
   INFLUXDB_BUCKET: "market_data"
   INFLUXDB_TIMEOUT: "30s"
-  
+
   # Redis configuration
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
   REDIS_SSL: "true"
   REDIS_TIMEOUT: "5s"
   REDIS_MAX_CONNECTIONS: "10"
-  
+
   # Kafka configuration
   KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
   KAFKA_SECURITY_PROTOCOL: "SASL_SSL"
@@ -40,44 +40,44 @@ data:
   KAFKA_CONSUMER_GROUP: "quantumalpha"
   KAFKA_AUTO_OFFSET_RESET: "earliest"
   KAFKA_ENABLE_AUTO_COMMIT: "false"
-  
+
   # Application configuration
   LOG_LEVEL: "INFO"
   LOG_FORMAT: "json"
   ENVIRONMENT: "production"
   DEBUG: "false"
-  
+
   # Security configuration
   CORS_ORIGINS: "https://quantumalpha.com,https://app.quantumalpha.com"
   CORS_METHODS: "GET,POST,PUT,DELETE,OPTIONS"
   CORS_HEADERS: "Content-Type,Authorization,X-Requested-With"
   CORS_CREDENTIALS: "true"
-  
+
   # Session configuration
   SESSION_TIMEOUT: "3600"
   SESSION_SECURE: "true"
   SESSION_HTTP_ONLY: "true"
   SESSION_SAME_SITE: "strict"
-  
+
   # Rate limiting
   RATE_LIMIT_REQUESTS: "100"
   RATE_LIMIT_WINDOW: "60"
   RATE_LIMIT_BURST: "20"
-  
+
   # Monitoring configuration
   METRICS_ENABLED: "true"
   METRICS_PORT: "9090"
   HEALTH_CHECK_INTERVAL: "30"
-  
+
   # Compliance configuration
   AUDIT_ENABLED: "true"
   AUDIT_LOG_LEVEL: "INFO"
   AUDIT_RETENTION_DAYS: "2555"  # 7 years for SOX compliance
-  
+
   # Encryption configuration
   ENCRYPTION_ALGORITHM: "AES-256-GCM"
   HASH_ALGORITHM: "SHA-256"
-  
+
   # Backup configuration
   BACKUP_ENABLED: "true"
   BACKUP_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
@@ -186,7 +186,7 @@ data:
       "lockoutThreshold": 5,
       "lockoutDuration": 900
     }
-  
+
   compliance-settings.json: |
     {
       "sox": {
@@ -209,7 +209,7 @@ data:
         "safeguardsRuleCompliance": true
       }
     }
-  
+
   security-headers.json: |
     {
       "X-Frame-Options": "SAMEORIGIN",
@@ -219,4 +219,3 @@ data:
       "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss:; frame-ancestors 'self';",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     }
-

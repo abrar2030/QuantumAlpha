@@ -28,4 +28,3 @@ Add any other context, screenshots, or mockups about the feature request here.
 - [ ] This feature aligns with the project's goals
 - [ ] This feature would benefit multiple users
 - [ ] I've searched for existing feature requests that might be similar
-

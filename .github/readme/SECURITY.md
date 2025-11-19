@@ -72,4 +72,3 @@ QuantumAlpha includes several security-related configuration options:
 - Data encryption options
 
 Please refer to the documentation for details on configuring these security features.
-

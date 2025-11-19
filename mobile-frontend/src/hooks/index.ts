@@ -23,7 +23,7 @@ export const useApiMutation = (
   options?: any
 ) => {
   const queryClient = useQueryClient();
-  
+
   return useMutation(mutationFn, {
     onSuccess: () => {
       // Invalidate and refetch queries after successful mutation
@@ -167,7 +167,7 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
 
   const handleChange = useCallback((name: string, value: any) => {
     setValues((prev: any) => ({ ...prev, [name]: value }));
-    
+
     if (touched[name]) {
       const error = validateField(name, value);
       setErrors((prev: any) => ({ ...prev, [name]: error }));
@@ -237,4 +237,3 @@ export const usePagination = (data: any[], itemsPerPage: number = 10) => {
     hasPrev: currentPage > 1,
   };
 };
-

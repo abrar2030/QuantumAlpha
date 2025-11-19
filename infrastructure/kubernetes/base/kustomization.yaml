@@ -11,20 +11,20 @@ resources:
   - namespace.yaml
   - secrets.yaml
   - configmap.yaml
-  
+
   # Security policies and standards
   - pod-security-standards.yaml
   - network-policies.yaml
-  
+
   # Database services
   - postgres.yaml
   - influxdb.yaml
   - redis.yaml
-  
+
   # Messaging services
   - zookeeper.yaml
   - kafka.yaml
-  
+
   # Application services
   - data-service.yaml
   - ai-engine.yaml
@@ -145,4 +145,3 @@ generatorOptions:
     compliance.glba: "true"
   annotations:
     config.kubernetes.io/local-config: "true"
-

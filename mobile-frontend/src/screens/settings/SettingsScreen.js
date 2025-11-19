@@ -19,16 +19,16 @@ const SettingsScreen = () => {
   const navigation = useNavigation();
   const { theme, isDarkMode, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
-  
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [biometricEnabled, setBiometricEnabled] = useState(false);
   const [autoLockEnabled, setAutoLockEnabled] = useState(true);
   const [riskLevel, setRiskLevel] = useState('medium');
-  
+
   // Animation values
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const translateY = React.useRef(new Animated.Value(50)).current;
-  
+
   React.useEffect(() => {
     // Start animations when component mounts
     Animated.parallel([
@@ -44,7 +44,7 @@ const SettingsScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -53,7 +53,7 @@ const SettingsScreen = () => {
       console.error('Logout failed:', error);
     }
   };
-  
+
   const renderSettingSwitch = (title, description, value, onValueChange) => {
     return (
       <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
@@ -73,7 +73,7 @@ const SettingsScreen = () => {
       </View>
     );
   };
-  
+
   const renderRiskLevelSelector = () => {
     return (
       <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
@@ -108,7 +108,7 @@ const SettingsScreen = () => {
               Low
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[
               styles.riskLevelButton,
@@ -131,7 +131,7 @@ const SettingsScreen = () => {
               Medium
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[
               styles.riskLevelButton,
@@ -158,7 +158,7 @@ const SettingsScreen = () => {
       </View>
     );
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View
@@ -173,7 +173,7 @@ const SettingsScreen = () => {
       >
         <Text style={[styles.headerTitle, { color: theme.text }]}>Settings</Text>
       </Animated.View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Animated.View
           style={{
@@ -192,7 +192,7 @@ const SettingsScreen = () => {
               toggleTheme
             )}
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Notifications
@@ -204,7 +204,7 @@ const SettingsScreen = () => {
               setNotificationsEnabled
             )}
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Security
@@ -222,14 +222,14 @@ const SettingsScreen = () => {
               setAutoLockEnabled
             )}
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Trading Preferences
             </Text>
             {renderRiskLevelSelector()}
           </View>
-          
+
           <View style={[styles.section, { backgroundColor: theme.card }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               About
@@ -246,7 +246,7 @@ const SettingsScreen = () => {
               </Text>
               <Icon name="chevron-right" size={20} color={theme.text + '99'} />
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.linkItem, { borderBottomColor: theme.border }]}
               onPress={() => {
@@ -259,14 +259,14 @@ const SettingsScreen = () => {
               </Text>
               <Icon name="chevron-right" size={20} color={theme.text + '99'} />
             </TouchableOpacity>
-            
+
             <View style={styles.versionContainer}>
               <Text style={[styles.versionText, { color: theme.text + '99' }]}>
                 Version 1.0.0
               </Text>
             </View>
           </View>
-          
+
           <TouchableOpacity
             style={[styles.logoutButton, { backgroundColor: theme.error }]}
             onPress={handleLogout}

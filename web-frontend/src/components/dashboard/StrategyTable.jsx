@@ -19,10 +19,10 @@ const StrategyTable = ({ strategies }) => {
           </TableHead>
           <TableBody>
             {strategies.map((strategy, index) => (
-              <TableRow 
-                key={index} 
-                sx={{ 
-                  '&:hover': { 
+              <TableRow
+                key={index}
+                sx={{
+                  '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   },
                   transition: 'background-color 0.2s ease'
@@ -31,9 +31,9 @@ const StrategyTable = ({ strategies }) => {
                 <TableCell component="th" scope="row" sx={{ fontWeight: 500 }}>
                   {strategy.name}
                 </TableCell>
-                <TableCell 
-                  align="right" 
-                  sx={{ 
+                <TableCell
+                  align="right"
+                  sx={{
                     color: strategy.return > 0 ? theme.palette.primary.main : theme.palette.error.main,
                     fontWeight: 500
                   }}
@@ -41,18 +41,18 @@ const StrategyTable = ({ strategies }) => {
                   {strategy.return > 0 ? '+' : ''}{strategy.return}%
                 </TableCell>
                 <TableCell align="right">{strategy.sharpe}</TableCell>
-                <TableCell 
-                  align="right" 
+                <TableCell
+                  align="right"
                   sx={{ color: theme.palette.error.main }}
                 >
                   {strategy.drawdown}%
                 </TableCell>
                 <TableCell align="center">
-                  <Button 
-                    size="small" 
-                    variant="outlined" 
+                  <Button
+                    size="small"
+                    variant="outlined"
                     color="primary"
-                    sx={{ 
+                    sx={{
                       minWidth: '80px',
                       fontWeight: 500
                     }}

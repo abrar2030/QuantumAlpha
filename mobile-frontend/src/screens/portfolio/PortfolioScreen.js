@@ -19,7 +19,7 @@ import { portfolioService } from '../../services/portfolioService';
 const PortfolioScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [portfolioData, setPortfolioData] = useState(null);
@@ -27,16 +27,16 @@ const PortfolioScreen = () => {
   const [assetAllocation, setAssetAllocation] = useState([]);
   const [holdings, setHoldings] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState('1M');
-  
+
   // Animation values
   const fadeAnim = new Animated.Value(0);
   const translateY = new Animated.Value(50);
-  
+
   const screenWidth = Dimensions.get('window').width;
-  
+
   useEffect(() => {
     loadPortfolioData();
-    
+
     // Start animations when component mounts
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -51,17 +51,17 @@ const PortfolioScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const loadPortfolioData = async () => {
     try {
       setLoading(true);
-      
+
       // In a real app, these would be API calls
       const portfolioSummary = await portfolioService.getPortfolioSummary();
       const performance = await portfolioService.getPerformanceHistory(selectedPeriod);
       const allocation = await portfolioService.getAssetAllocation();
       const holdingsData = await portfolioService.getHoldings();
-      
+
       setPortfolioData(portfolioSummary);
       setPerformanceData(performance);
       setAssetAllocation(allocation);
@@ -74,7 +74,7 @@ const PortfolioScreen = () => {
       setRefreshing(false);
     }
   };
-  
+
   const handlePeriodChange = async (period) => {
     setSelectedPeriod(period);
     try {
@@ -84,7 +84,7 @@ const PortfolioScreen = () => {
       console.error('Error loading performance data:', error);
     }
   };
-  
+
   if (loading) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
@@ -95,7 +95,7 @@ const PortfolioScreen = () => {
       </View>
     );
   }
-  
+
   const chartConfig = {
     backgroundColor: theme.chartBackground,
     backgroundGradientFrom: theme.chartBackgroundGradientFrom,
@@ -112,7 +112,7 @@ const PortfolioScreen = () => {
       stroke: theme.primary,
     },
   };
-  
+
   const pieChartData = assetAllocation.map((item, index) => {
     const colors = [
       '#1aff92', // Primary green
@@ -123,7 +123,7 @@ const PortfolioScreen = () => {
       '#bf5af2', // Purple
       '#ff9f0a', // Orange
     ];
-    
+
     return {
       name: item.name,
       value: item.percentage,
@@ -132,7 +132,7 @@ const PortfolioScreen = () => {
       legendFontSize: 12,
     };
   });
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View
@@ -166,7 +166,7 @@ const PortfolioScreen = () => {
           </Text>
         </View>
       </Animated.View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <View style={styles.cardHeader}>
@@ -201,7 +201,7 @@ const PortfolioScreen = () => {
               ))}
             </View>
           </View>
-          
+
           <LineChart
             data={{
               labels: performanceData.labels,
@@ -218,12 +218,12 @@ const PortfolioScreen = () => {
             style={styles.chart}
           />
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <Text style={[styles.cardTitle, { color: theme.text }]}>
             Asset Allocation
           </Text>
-          
+
           <View style={styles.pieChartContainer}>
             <PieChart
               data={pieChartData}
@@ -236,7 +236,7 @@ const PortfolioScreen = () => {
               absolute
             />
           </View>
-          
+
           <View style={styles.allocationLegend}>
             {assetAllocation.map((item, index) => (
               <View key={index} style={styles.legendItem}>
@@ -253,7 +253,7 @@ const PortfolioScreen = () => {
             ))}
           </View>
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <View style={styles.cardHeader}>
             <Text style={[styles.cardTitle, { color: theme.text }]}>
@@ -272,7 +272,7 @@ const PortfolioScreen = () => {
               <Icon name="chevron-right" size={16} color={theme.primary} />
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.holdingsHeader}>
             <Text style={[styles.holdingsHeaderText, { color: theme.text + 'CC' }]}>
               Asset
@@ -284,7 +284,7 @@ const PortfolioScreen = () => {
               Change
             </Text>
           </View>
-          
+
           {holdings.map((holding, index) => (
             <TouchableOpacity
               key={index}
@@ -308,7 +308,7 @@ const PortfolioScreen = () => {
                   {holding.name}
                 </Text>
               </View>
-              
+
               <View style={styles.holdingValue}>
                 <Text style={[styles.holdingValueText, { color: theme.text }]}>
                   ${holding.value.toLocaleString()}
@@ -317,7 +317,7 @@ const PortfolioScreen = () => {
                   {holding.quantity} @ ${holding.price}
                 </Text>
               </View>
-              
+
               <View style={styles.holdingChange}>
                 <Text
                   style={[
@@ -334,14 +334,14 @@ const PortfolioScreen = () => {
             </TouchableOpacity>
           ))}
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <View style={styles.cardHeader}>
             <Text style={[styles.cardTitle, { color: theme.text }]}>
               Quick Actions
             </Text>
           </View>
-          
+
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: theme.primary + '20' }]}
@@ -355,7 +355,7 @@ const PortfolioScreen = () => {
                 Deposit
               </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: theme.error + '20' }]}
               onPress={() => {
@@ -368,7 +368,7 @@ const PortfolioScreen = () => {
                 Withdraw
               </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: theme.info + '20' }]}
               onPress={() => {
@@ -381,7 +381,7 @@ const PortfolioScreen = () => {
                 Trade
               </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: theme.warning + '20' }]}
               onPress={() => {

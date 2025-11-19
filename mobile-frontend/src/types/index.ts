@@ -316,7 +316,7 @@ export interface Alert {
   expiresAt?: string;
 }
 
-export type AlertType = 
+export type AlertType =
   | 'price_alert'
   | 'trade_executed'
   | 'strategy_update'
@@ -488,4 +488,3 @@ export type AsyncState<T> = {
   loading: boolean;
   error: string | null;
 };
-

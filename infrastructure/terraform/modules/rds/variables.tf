@@ -451,4 +451,3 @@ variable "license_model" {
   type        = string
   default     = null
 }
-

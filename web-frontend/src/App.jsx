@@ -22,7 +22,7 @@ const App = () => {
       {/* Public routes */}
       <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
       <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
-      
+
       {/* Protected routes */}
       <Route element={<MainLayout />}>
         <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
@@ -34,7 +34,7 @@ const App = () => {
         <Route path="/news" element={isAuthenticated ? <NewsFeed /> : <Navigate to="/login" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
       </Route>
-      
+
       {/* 404 route */}
       <Route path="*" element={<NotFound />} />
     </Routes>

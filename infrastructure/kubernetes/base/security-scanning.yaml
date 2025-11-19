@@ -252,13 +252,13 @@ spec:
             - -c
             - |
               echo "Starting compliance scan..."
-              
+
               # Scan for vulnerabilities
               trivy k8s --report summary --format json --output /tmp/vulnerability-report.json cluster
-              
+
               # Scan for misconfigurations
               trivy k8s --report summary --format json --output /tmp/config-audit-report.json --scanners misconfig cluster
-              
+
               # Generate compliance report
               echo "Generating compliance report..."
               cat > /tmp/compliance-report.json << EOF
@@ -283,7 +283,7 @@ spec:
                 }
               }
               EOF
-              
+
               echo "Compliance scan completed successfully"
             volumeMounts:
             - name: tmp
@@ -375,7 +375,7 @@ data:
       - access_controls: true
       - encryption_at_rest: true
       - encryption_in_transit: true
-    
+
     controls:
       - id: "SOX-001"
         description: "All financial data access must be logged"
@@ -389,7 +389,7 @@ data:
         description: "Segregation of duties for critical operations"
         implementation: "RBAC with least privilege access"
         status: "implemented"
-  
+
   pci-dss-compliance.yaml: |
     # PCI DSS Compliance Requirements
     requirements:
@@ -399,7 +399,7 @@ data:
       - vulnerability_management: true
       - security_monitoring: true
       - incident_response: true
-    
+
     controls:
       - id: "PCI-001"
         description: "Install and maintain a firewall configuration"
@@ -417,7 +417,7 @@ data:
         description: "Encrypt transmission of cardholder data"
         implementation: "TLS encryption for all communications"
         status: "implemented"
-  
+
   glba-compliance.yaml: |
     # GLBA Compliance Requirements
     safeguards_rule:
@@ -426,7 +426,7 @@ data:
       - encryption: true
       - monitoring: true
       - incident_response: true
-    
+
     controls:
       - id: "GLBA-001"
         description: "Designate employee(s) to coordinate safeguards"
@@ -440,7 +440,7 @@ data:
         description: "Design and implement safeguards"
         implementation: "Comprehensive security controls"
         status: "implemented"
-  
+
   security-baseline.yaml: |
     # Security Baseline Configuration
     baseline_requirements:
@@ -450,7 +450,7 @@ data:
       - access_management: true
       - monitoring_logging: true
       - incident_response: true
-    
+
     security_controls:
       - name: "Container Security"
         requirements:
@@ -477,4 +477,3 @@ data:
           - least_privilege: true
           - multi_factor_authentication: true
           - service_accounts: true
-

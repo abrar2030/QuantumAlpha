@@ -386,4 +386,3 @@ variable "parameter_store_kms_key_id" {
   type        = string
   default     = ""
 }
-

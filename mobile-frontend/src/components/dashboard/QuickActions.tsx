@@ -82,7 +82,7 @@ const QuickActions: React.FC = () => {
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.text }]}>Quick Actions</Text>
       </View>
-      
+
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -149,4 +149,3 @@ const styles = StyleSheet.create({
 });
 
 export default QuickActions;
-

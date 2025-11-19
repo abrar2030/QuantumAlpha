@@ -4,7 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 const PerformanceCard = ({ title, value, change, period }) => {
   const { theme } = useTheme();
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.card }]}>
       <View style={styles.header}>
@@ -13,9 +13,9 @@ const PerformanceCard = ({ title, value, change, period }) => {
           <Text style={[styles.periodText, { color: theme.primary }]}>{period}</Text>
         </TouchableOpacity>
       </View>
-      
+
       <Text style={[styles.value, { color: theme.text }]}>{value}</Text>
-      
+
       <View style={styles.changeContainer}>
         <Text
           style={[

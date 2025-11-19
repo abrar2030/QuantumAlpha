@@ -343,4 +343,3 @@ This script:
 3. Restores PostgreSQL database
 4. Restores InfluxDB
 5. Restores configuration files
-

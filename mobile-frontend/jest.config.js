@@ -5,5 +5,3 @@ module.exports = {
     "node_modules/(?!(react-native|@react-native|@react-navigation|react-native-vector-icons)/)",
   ],
 };
-
-

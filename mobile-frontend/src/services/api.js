@@ -31,11 +31,11 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    
+
     // Handle token expiration
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         const refreshToken = await AsyncStorage.getItem('refreshToken');
         if (!refreshToken) {
@@ -44,15 +44,15 @@ api.interceptors.response.use(
           await AsyncStorage.removeItem('user');
           return Promise.reject(error);
         }
-        
+
         const response = await axios.post(
           'https://api.quantumalpha.com/v1/auth/refresh',
           { refreshToken }
         );
-        
+
         const { token } = response.data;
         await AsyncStorage.setItem('token', token);
-        
+
         // Update the authorization header
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return api(originalRequest);
@@ -64,7 +64,7 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-    
+
     return Promise.reject(error);
   }
 );

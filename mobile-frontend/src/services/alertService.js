@@ -7,7 +7,7 @@ class AlertService {
 
   subscribeToAlerts(callback) {
     this.subscribers.push(callback);
-    
+
     // Return an object with an unsubscribe method
     return {
       unsubscribe: () => {
@@ -166,7 +166,7 @@ class AlertService {
               read: true,
             },
           ];
-          
+
           resolve({
             data: {
               alerts: alerts.slice((page - 1) * limit, page * limit),
@@ -260,12 +260,12 @@ class AlertService {
   simulateNewAlert() {
     const alertTypes = ['TRADE_SIGNAL', 'RISK_WARNING', 'MARKET_UPDATE', 'TRADE_EXECUTED', 'SYSTEM_UPDATE'];
     const priorities = ['low', 'medium', 'high'];
-    
+
     const randomType = alertTypes[Math.floor(Math.random() * alertTypes.length)];
     const randomPriority = priorities[Math.floor(Math.random() * priorities.length)];
-    
+
     let title, message;
-    
+
     switch (randomType) {
       case 'TRADE_SIGNAL':
         title = 'New trading signal';
@@ -291,7 +291,7 @@ class AlertService {
         title = 'Notification';
         message = 'You have a new notification';
     }
-    
+
     const newAlert = {
       id: `alert${Date.now()}`,
       type: randomType,
@@ -301,9 +301,9 @@ class AlertService {
       priority: randomPriority,
       read: false,
     };
-    
+
     this._notifySubscribers(newAlert);
-    
+
     return newAlert;
   }
 }

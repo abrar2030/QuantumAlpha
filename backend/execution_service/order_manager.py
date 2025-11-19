@@ -5,6 +5,7 @@ Handles order management and execution.
 
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 import uuid
@@ -15,8 +16,14 @@ from sqlalchemy.orm import Session
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (AuthenticationError, AuthorizationError, NotFoundError,
-                    ServiceError, ValidationError, setup_logger)
+from common import (
+    AuthenticationError,
+    AuthorizationError,
+    NotFoundError,
+    ServiceError,
+    ValidationError,
+    setup_logger,
+)
 from common.models import Execution, Order
 
 # Configure logging

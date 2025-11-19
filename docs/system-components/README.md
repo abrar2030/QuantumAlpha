@@ -437,43 +437,43 @@ graph LR
     %% Data sources
     MarketData[Market Data] --> DataService
     AltData[Alternative Data] --> DataService
-    
+
     %% Data processing
     DataService --> |"Raw Data"| TSDB[(Time Series DB)]
     DataService --> |"Processed Data"| DocStore[(Document Store)]
     DataService --> |"Features"| FeatureStore[(Feature Store)]
     DataService --> |"Market Events"| Kafka
-    
+
     %% AI Engine
     FeatureStore --> AIEngine
     TSDB --> AIEngine
     AIEngine --> |"Models"| ModelRegistry[(Model Registry)]
     AIEngine --> |"Signals"| Kafka
-    
+
     %% Risk Service
     TSDB --> RiskService
     Kafka --> |"Portfolio Events"| RiskService
     RiskService --> |"Risk Metrics"| Kafka
     RiskService --> |"Position Sizes"| Kafka
-    
+
     %% Execution Service
     Kafka --> |"Signals"| ExecutionService
     Kafka --> |"Position Sizes"| ExecutionService
     ExecutionService --> |"Orders"| Brokers[Brokers]
     Brokers --> |"Fills"| ExecutionService
     ExecutionService --> |"Trade Events"| Kafka
-    
+
     %% Backtesting
     TSDB --> BacktestEngine
     FeatureStore --> BacktestEngine
     ModelRegistry --> BacktestEngine
     BacktestEngine --> |"Results"| ResultsDB[(Results DB)]
-    
+
     %% Frontend
     Kafka --> WebUI[Web Dashboard]
     ResultsDB --> WebUI
     TSDB --> WebUI
-    
+
     %% Style
     classDef primary fill:#3498db,stroke:#2980b9,color:white
     classDef secondary fill:#2ecc71,stroke:#27ae60,color:white
@@ -481,7 +481,7 @@ graph LR
     classDef external fill:#e74c3c,stroke:#c0392b,color:white
     classDef messaging fill:#f39c12,stroke:#d35400,color:white
     classDef ui fill:#1abc9c,stroke:#16a085,color:white
-    
+
     class DataService,AIEngine,RiskService,ExecutionService,BacktestEngine primary
     class MarketData,AltData secondary
     class TSDB,DocStore,FeatureStore,ModelRegistry,ResultsDB storage
@@ -502,34 +502,34 @@ graph TD
                 ControllerManager[Controller Manager]
                 ETCD[etcd]
             end
-            
+
             subgraph "Worker Nodes"
                 subgraph "Node 1"
                     DataPods1[Data Service Pods]
                     AIPods1[AI Engine Pods]
                 end
-                
+
                 subgraph "Node 2"
                     RiskPods[Risk Service Pods]
                     ExecutionPods[Execution Service Pods]
                 end
-                
+
                 subgraph "Node 3"
                     BacktestPods[Backtest Engine Pods]
                     WebPods[Web Frontend Pods]
                 end
             end
-            
+
             subgraph "Storage"
                 PV[Persistent Volumes]
             end
-            
+
             subgraph "Networking"
                 Ingress[Ingress Controller]
                 ServiceMesh[Service Mesh]
             end
         end
-        
+
         subgraph "Managed Services"
             ManagedDB[Managed Databases]
             ManagedKafka[Managed Kafka]
@@ -537,37 +537,37 @@ graph TD
             LoadBalancer[Load Balancer]
         end
     end
-    
+
     subgraph "External Systems"
         DataProviders[Data Providers]
         Brokers[Brokers/Exchanges]
         Users[Users]
     end
-    
+
     %% Connections
     LoadBalancer --> Ingress
     Ingress --> WebPods
     Ingress --> API
-    
+
     DataPods1 --> ManagedDB
     AIPods1 --> ManagedDB
     RiskPods --> ManagedDB
     ExecutionPods --> ManagedDB
     BacktestPods --> ManagedDB
-    
+
     DataPods1 --> ManagedKafka
     AIPods1 --> ManagedKafka
     RiskPods --> ManagedKafka
     ExecutionPods --> ManagedKafka
-    
+
     DataPods1 --> ObjectStorage
     AIPods1 --> ObjectStorage
     BacktestPods --> ObjectStorage
-    
+
     DataPods1 --> DataProviders
     ExecutionPods --> Brokers
     Users --> LoadBalancer
-    
+
     %% Style
     classDef k8s fill:#326CE5,stroke:#2654B9,color:white
     classDef node fill:#3498db,stroke:#2980b9,color:white
@@ -576,7 +576,7 @@ graph TD
     classDef network fill:#e67e22,stroke:#d35400,color:white
     classDef managed fill:#f1c40f,stroke:#f39c12,color:white
     classDef external fill:#e74c3c,stroke:#c0392b,color:white
-    
+
     class API,Scheduler,ControllerManager,ETCD k8s
     class "Node 1","Node 2","Node 3" node
     class DataPods1,AIPods1,RiskPods,ExecutionPods,BacktestPods,WebPods pod
@@ -597,28 +597,28 @@ graph TD
             NetworkPolicies[Network Policies]
             VPN[VPN]
         end
-        
+
         subgraph "Authentication & Authorization"
             IdentityProvider[Identity Provider]
             RBAC[Role-Based Access Control]
             OAuth[OAuth 2.0]
             MFA[Multi-Factor Authentication]
         end
-        
+
         subgraph "Data Security"
             Encryption[Encryption]
             KeyManagement[Key Management]
             DataMasking[Data Masking]
             AccessControl[Data Access Control]
         end
-        
+
         subgraph "Application Security"
             SecureCode[Secure Coding]
             SAST[Static Analysis]
             DAST[Dynamic Analysis]
             Dependency[Dependency Scanning]
         end
-        
+
         subgraph "Monitoring & Response"
             SIEM[Security Information & Event Management]
             IDS[Intrusion Detection]
@@ -626,11 +626,11 @@ graph TD
             Incident[Incident Response]
         end
     end
-    
+
     %% External entities
     Users[Users] --> WAF
     APIs[API Clients] --> WAF
-    
+
     %% Flow
     WAF --> Firewall
     Firewall --> IdentityProvider
@@ -638,7 +638,7 @@ graph TD
     OAuth --> RBAC
     RBAC --> AccessControl
     AccessControl --> Encryption
-    
+
     %% Monitoring
     Firewall --> Logging
     IdentityProvider --> Logging
@@ -646,7 +646,7 @@ graph TD
     Logging --> SIEM
     SIEM --> IDS
     IDS --> Incident
-    
+
     %% Style
     classDef network fill:#3498db,stroke:#2980b9,color:white
     classDef auth fill:#2ecc71,stroke:#27ae60,color:white
@@ -654,7 +654,7 @@ graph TD
     classDef app fill:#e67e22,stroke:#d35400,color:white
     classDef monitor fill:#f1c40f,stroke:#f39c12,color:white
     classDef external fill:#e74c3c,stroke:#c0392b,color:white
-    
+
     class Firewall,WAF,NetworkPolicies,VPN network
     class IdentityProvider,RBAC,OAuth,MFA auth
     class Encryption,KeyManagement,DataMasking,AccessControl data
@@ -671,7 +671,7 @@ graph LR
         Code[Code Repository]
         PR[Pull Request]
     end
-    
+
     subgraph "CI Pipeline"
         Build[Build]
         UnitTest[Unit Tests]
@@ -680,7 +680,7 @@ graph LR
         SecurityScan[Security Scan]
         Artifact[Artifact Repository]
     end
-    
+
     subgraph "CD Pipeline"
         Deploy_Dev[Deploy to Dev]
         E2ETest[End-to-End Tests]
@@ -688,13 +688,13 @@ graph LR
         UAT[User Acceptance Tests]
         Deploy_Prod[Deploy to Production]
     end
-    
+
     subgraph "Monitoring"
         Metrics[Metrics Collection]
         Alerts[Alerts]
         Dashboards[Dashboards]
     end
-    
+
     %% Flow
     Code --> PR
     PR --> Build
@@ -703,23 +703,23 @@ graph LR
     IntegrationTest --> StaticAnalysis
     StaticAnalysis --> SecurityScan
     SecurityScan --> Artifact
-    
+
     Artifact --> Deploy_Dev
     Deploy_Dev --> E2ETest
     E2ETest --> Deploy_Staging
     Deploy_Staging --> UAT
     UAT --> Deploy_Prod
-    
+
     Deploy_Prod --> Metrics
     Metrics --> Alerts
     Metrics --> Dashboards
-    
+
     %% Style
     classDef dev fill:#3498db,stroke:#2980b9,color:white
     classDef ci fill:#2ecc71,stroke:#27ae60,color:white
     classDef cd fill:#9b59b6,stroke:#8e44ad,color:white
     classDef monitor fill:#f1c40f,stroke:#f39c12,color:white
-    
+
     class Code,PR dev
     class Build,UnitTest,IntegrationTest,StaticAnalysis,SecurityScan,Artifact ci
     class Deploy_Dev,E2ETest,Deploy_Staging,UAT,Deploy_Prod cd
@@ -727,4 +727,3 @@ graph LR
 ```
 
 These diagrams provide a visual representation of the QuantumAlpha system architecture, showing the relationships between different components and services. They can be rendered using Mermaid.js or any compatible Markdown renderer that supports Mermaid diagrams.
-

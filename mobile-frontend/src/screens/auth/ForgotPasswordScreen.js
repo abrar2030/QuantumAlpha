@@ -19,7 +19,7 @@ import { useTheme } from '../../context/ThemeContext';
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  
+
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -30,11 +30,11 @@ const ForgotPasswordScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // Animation values
   const fadeAnim = new Animated.Value(0);
   const slideAnim = new Animated.Value(0);
-  
+
   React.useEffect(() => {
     // Start animations when component mounts
     Animated.parallel([
@@ -50,32 +50,32 @@ const ForgotPasswordScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
   };
-  
+
   const handleSendResetCode = async () => {
     if (!email.trim()) {
       setError('Email address is required');
       return;
     }
-    
+
     if (!validateEmail(email)) {
       setError('Please enter a valid email address');
       return;
     }
-    
+
     try {
       setLoading(true);
       setError('');
-      
+
       // Simulate API call to send reset code
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // In a real app, this would make an API call to send the reset code
       console.log('Sending password reset code to:', email);
-      
+
       setStep('code');
       setSuccess(true);
     } catch (err) {
@@ -84,28 +84,28 @@ const ForgotPasswordScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const handleVerifyCode = async () => {
     if (!verificationCode.trim()) {
       setError('Verification code is required');
       return;
     }
-    
+
     if (verificationCode.length !== 6) {
       setError('Please enter the complete 6-digit code');
       return;
     }
-    
+
     try {
       setLoading(true);
       setError('');
-      
+
       // Simulate API call to verify code
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // In a real app, this would verify the code with the backend
       console.log('Verifying code:', verificationCode);
-      
+
       setStep('newPassword');
     } catch (err) {
       setError('Invalid verification code. Please try again.');
@@ -113,33 +113,33 @@ const ForgotPasswordScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const handleResetPassword = async () => {
     if (!newPassword) {
       setError('New password is required');
       return;
     }
-    
+
     if (newPassword.length < 8) {
       setError('Password must be at least 8 characters long');
       return;
     }
-    
+
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     try {
       setLoading(true);
       setError('');
-      
+
       // Simulate API call to reset password
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // In a real app, this would reset the password via API
       console.log('Resetting password for:', email);
-      
+
       // Show success and navigate back to login
       alert('Password reset successfully! You can now log in with your new password.');
       navigation.navigate('Login');
@@ -149,15 +149,15 @@ const ForgotPasswordScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const handleResendCode = async () => {
     try {
       setLoading(true);
       setError('');
-      
+
       // Simulate API call to resend code
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       alert('Verification code sent again!');
     } catch (err) {
       setError('Failed to resend code. Please try again.');
@@ -165,7 +165,7 @@ const ForgotPasswordScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const renderEmailStep = () => (
     <Animated.View
       style={[
@@ -186,22 +186,22 @@ const ForgotPasswordScreen = () => {
       <View style={styles.iconContainer}>
         <Icon name="email-outline" size={60} color={theme.primary} />
       </View>
-      
+
       <Text style={[styles.title, { color: theme.text }]}>
         Reset Password
       </Text>
-      
+
       <Text style={[styles.subtitle, { color: theme.text + 'CC' }]}>
         Enter your email address and we'll send you a verification code to reset your password.
       </Text>
-      
+
       {error ? (
         <View style={styles.errorContainer}>
           <Icon name="alert-circle" size={20} color={theme.error} />
           <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
         </View>
       ) : null}
-      
+
       <View style={styles.inputGroup}>
         <Icon name="email" size={20} color={theme.text} style={styles.inputIcon} />
         <TextInput
@@ -215,7 +215,7 @@ const ForgotPasswordScreen = () => {
           editable={!loading}
         />
       </View>
-      
+
       <TouchableOpacity
         style={[
           styles.primaryButton,
@@ -233,7 +233,7 @@ const ForgotPasswordScreen = () => {
       </TouchableOpacity>
     </Animated.View>
   );
-  
+
   const renderCodeStep = () => (
     <Animated.View
       style={[
@@ -254,23 +254,23 @@ const ForgotPasswordScreen = () => {
       <View style={styles.iconContainer}>
         <Icon name="shield-check-outline" size={60} color={theme.success} />
       </View>
-      
+
       <Text style={[styles.title, { color: theme.text }]}>
         Check Your Email
       </Text>
-      
+
       <Text style={[styles.subtitle, { color: theme.text + 'CC' }]}>
         We've sent a 6-digit verification code to{'\n'}
         <Text style={{ fontWeight: 'bold' }}>{email}</Text>
       </Text>
-      
+
       {error ? (
         <View style={styles.errorContainer}>
           <Icon name="alert-circle" size={20} color={theme.error} />
           <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
         </View>
       ) : null}
-      
+
       <View style={styles.inputGroup}>
         <Icon name="lock-outline" size={20} color={theme.text} style={styles.inputIcon} />
         <TextInput
@@ -284,7 +284,7 @@ const ForgotPasswordScreen = () => {
           editable={!loading}
         />
       </View>
-      
+
       <TouchableOpacity
         style={[
           styles.primaryButton,
@@ -300,7 +300,7 @@ const ForgotPasswordScreen = () => {
           <Text style={styles.primaryButtonText}>Verify Code</Text>
         )}
       </TouchableOpacity>
-      
+
       <View style={styles.resendContainer}>
         <Text style={[styles.resendText, { color: theme.text + 'CC' }]}>
           Didn't receive the code?
@@ -313,7 +313,7 @@ const ForgotPasswordScreen = () => {
       </View>
     </Animated.View>
   );
-  
+
   const renderNewPasswordStep = () => (
     <Animated.View
       style={[
@@ -334,22 +334,22 @@ const ForgotPasswordScreen = () => {
       <View style={styles.iconContainer}>
         <Icon name="lock-reset" size={60} color={theme.primary} />
       </View>
-      
+
       <Text style={[styles.title, { color: theme.text }]}>
         Create New Password
       </Text>
-      
+
       <Text style={[styles.subtitle, { color: theme.text + 'CC' }]}>
         Your new password must be different from your previous password.
       </Text>
-      
+
       {error ? (
         <View style={styles.errorContainer}>
           <Icon name="alert-circle" size={20} color={theme.error} />
           <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
         </View>
       ) : null}
-      
+
       <View style={styles.inputGroup}>
         <Icon name="lock" size={20} color={theme.text} style={styles.inputIcon} />
         <TextInput
@@ -372,7 +372,7 @@ const ForgotPasswordScreen = () => {
           />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.inputGroup}>
         <Icon name="lock-check" size={20} color={theme.text} style={styles.inputIcon} />
         <TextInput
@@ -395,7 +395,7 @@ const ForgotPasswordScreen = () => {
           />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.passwordRequirements}>
         <Text style={[styles.requirementText, { color: theme.text + 'CC' }]}>
           • Password must be at least 8 characters long
@@ -407,7 +407,7 @@ const ForgotPasswordScreen = () => {
           • Include at least one number or special character
         </Text>
       </View>
-      
+
       <TouchableOpacity
         style={[
           styles.primaryButton,
@@ -425,7 +425,7 @@ const ForgotPasswordScreen = () => {
       </TouchableOpacity>
     </Animated.View>
   );
-  
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -439,13 +439,13 @@ const ForgotPasswordScreen = () => {
           <Icon name="arrow-left" size={24} color={theme.text} />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.content}>
         {step === 'email' && renderEmailStep()}
         {step === 'code' && renderCodeStep()}
         {step === 'newPassword' && renderNewPasswordStep()}
       </View>
-      
+
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.loginButton}
@@ -602,4 +602,3 @@ const styles = StyleSheet.create({
 });
 
 export default ForgotPasswordScreen;
-

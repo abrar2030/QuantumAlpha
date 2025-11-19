@@ -252,8 +252,8 @@ const NewsFeed = () => {
 
   const NewsCard = ({ article }) => (
     <Fade in={true} timeout={500}>
-      <Card 
-        sx={{ 
+      <Card
+        sx={{
           mb: 3,
           background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(20px)',
@@ -274,7 +274,7 @@ const NewsFeed = () => {
               height="200"
               image={article.imageUrl}
               alt={article.title}
-              sx={{ 
+              sx={{
                 borderRadius: '12px 0 0 12px',
                 objectFit: 'cover'
               }}
@@ -284,20 +284,20 @@ const NewsFeed = () => {
             <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Chip 
+                  <Chip
                     label={article.category}
                     size="small"
-                    sx={{ 
+                    sx={{
                       background: '#00d4ff20',
                       color: '#00d4ff',
                       fontWeight: 600
                     }}
                   />
-                  <Chip 
+                  <Chip
                     icon={getSentimentIcon(article.sentiment)}
                     label={article.sentiment}
                     size="small"
-                    sx={{ 
+                    sx={{
                       background: `${getSentimentColor(article.sentiment)}20`,
                       color: getSentimentColor(article.sentiment),
                       fontWeight: 600
@@ -305,13 +305,13 @@ const NewsFeed = () => {
                   />
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <IconButton 
+                  <IconButton
                     onClick={() => toggleBookmark(article.id)}
                     sx={{ color: bookmarkedItems.has(article.id) ? '#f59e0b' : '#6b7280' }}
                   >
                     {bookmarkedItems.has(article.id) ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
                   </IconButton>
-                  <IconButton 
+                  <IconButton
                     onClick={(e) => handleMenuClick(e, article)}
                     sx={{ color: '#00d4ff' }}
                   >
@@ -386,12 +386,12 @@ const NewsFeed = () => {
 
               <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
                 {article.tags.map((tag) => (
-                  <Chip 
+                  <Chip
                     key={tag}
                     label={tag}
                     size="small"
                     variant="outlined"
-                    sx={{ 
+                    sx={{
                       borderColor: 'rgba(255, 255, 255, 0.2)',
                       color: 'rgba(255, 255, 255, 0.7)',
                       fontSize: '0.7rem'
@@ -425,7 +425,7 @@ const NewsFeed = () => {
   );
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       py: 4
@@ -433,9 +433,9 @@ const NewsFeed = () => {
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
         {/* Header */}
         <Fade in={true} timeout={800}>
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
+            sx={{
               p: 4,
               mb: 4,
               borderRadius: 4,
@@ -458,10 +458,10 @@ const NewsFeed = () => {
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Chip 
+                <Chip
                   icon={<Zap size={16} />}
-                  label="Live Updates" 
-                  sx={{ 
+                  label="Live Updates"
+                  sx={{
                     background: 'linear-gradient(45deg, #10b981, #059669)',
                     color: 'white',
                     fontWeight: 600,
@@ -471,9 +471,9 @@ const NewsFeed = () => {
                       '50%': { opacity: 0.7 },
                       '100%': { opacity: 1 },
                     },
-                  }} 
+                  }}
                 />
-                <IconButton 
+                <IconButton
                   onClick={() => window.location.reload()}
                   sx={{ color: '#00d4ff' }}
                 >
@@ -516,14 +516,14 @@ const NewsFeed = () => {
                       label={category}
                       onClick={() => setSelectedCategory(category)}
                       sx={{
-                        background: selectedCategory === category 
-                          ? 'linear-gradient(45deg, #00d4ff, #0099cc)' 
+                        background: selectedCategory === category
+                          ? 'linear-gradient(45deg, #00d4ff, #0099cc)'
                           : 'rgba(255, 255, 255, 0.1)',
                         color: 'white',
                         fontWeight: selectedCategory === category ? 700 : 500,
                         '&:hover': {
-                          background: selectedCategory === category 
-                            ? 'linear-gradient(45deg, #0099cc, #0066aa)' 
+                          background: selectedCategory === category
+                            ? 'linear-gradient(45deg, #0099cc, #0066aa)'
                             : 'rgba(255, 255, 255, 0.2)',
                         }
                       }}
@@ -547,9 +547,9 @@ const NewsFeed = () => {
             ))
           ) : (
             <Fade in={true} timeout={1000}>
-              <Paper 
+              <Paper
                 elevation={0}
-                sx={{ 
+                sx={{
                   p: 6,
                   textAlign: 'center',
                   borderRadius: 4,
@@ -592,13 +592,13 @@ const NewsFeed = () => {
             <ExternalLink size={16} style={{ marginRight: 8 }} />
             Open in New Tab
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={() => {
               if (selectedArticle) {
                 toggleBookmark(selectedArticle.id);
               }
               handleMenuClose();
-            }} 
+            }}
             sx={{ color: 'white' }}
           >
             {selectedArticle && bookmarkedItems.has(selectedArticle.id) ? (
@@ -622,8 +622,8 @@ const NewsFeed = () => {
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert 
-            onClose={() => setSnackbar({ ...snackbar, open: false })} 
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
             severity={snackbar.severity}
             sx={{
               background: 'rgba(0, 0, 0, 0.9)',
@@ -641,4 +641,3 @@ const NewsFeed = () => {
 };
 
 export default NewsFeed;
-

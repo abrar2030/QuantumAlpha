@@ -25,8 +25,8 @@ const PortfolioSummary = ({ portfolioValue, dailyChange, percentChange, isLoadin
         ${portfolioValue.toLocaleString()}
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-        <Typography 
-          variant="h6" 
+        <Typography
+          variant="h6"
           color={dailyChange >= 0 ? 'primary' : 'error'}
           sx={{ fontWeight: 500 }}
         >

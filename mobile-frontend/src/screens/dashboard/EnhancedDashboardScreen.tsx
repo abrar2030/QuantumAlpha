@@ -42,12 +42,12 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { addAlert } = useAlert();
-  
+
   const [refreshing, setRefreshing] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState('1D');
-  
+
   const screenWidth = Dimensions.get('window').width;
-  
+
   // API Queries with React Query
   const {
     data: portfolioData,
@@ -122,16 +122,16 @@ const DashboardScreen = () => {
       addAlert(newAlert);
       HapticFeedback.trigger('notificationSuccess');
     });
-    
+
     return () => {
       alertListener.unsubscribe();
     };
   }, [addAlert]);
-  
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     HapticFeedback.trigger('impactLight');
-    
+
     try {
       await Promise.all([
         refetchPortfolio(),
@@ -143,20 +143,20 @@ const DashboardScreen = () => {
       setRefreshing(false);
     }
   }, [refetchPortfolio]);
-  
+
   const navigateToStrategy = useCallback((strategy: Strategy) => {
     HapticFeedback.trigger('impactLight');
-    navigation.navigate('StrategyDetail', { 
+    navigation.navigate('StrategyDetail', {
       id: strategy.id,
-      name: strategy.name 
+      name: strategy.name
     });
   }, [navigation]);
-  
+
   const navigateToAlerts = useCallback(() => {
     HapticFeedback.trigger('impactLight');
     navigation.navigate('AlertsTab');
   }, [navigation]);
-  
+
   const navigateToNotifications = useCallback(() => {
     HapticFeedback.trigger('impactLight');
     navigation.navigate('Notifications');
@@ -175,7 +175,7 @@ const DashboardScreen = () => {
           <Text style={[styles.subtitle, { color: theme.text }]}>Portfolio Dashboard</Text>
         </View>
         <View style={styles.headerIcons}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.iconButton}
             onPress={navigateToNotifications}
           >
@@ -188,7 +188,7 @@ const DashboardScreen = () => {
               </View>
             )}
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.iconButton}
             onPress={() => navigation.openDrawer()}
           >
@@ -210,9 +210,9 @@ const DashboardScreen = () => {
 
     return (
       <Animatable.View animation="fadeInUp" delay={100}>
-        <Card 
-          variant="elevated" 
-          padding="large" 
+        <Card
+          variant="elevated"
+          padding="large"
           margin="medium"
           style={[styles.portfolioSummary, { backgroundColor: theme.surface }]}
         >
@@ -223,15 +223,15 @@ const DashboardScreen = () => {
             {formatCurrency(portfolioData.totalValue)}
           </Text>
           <View style={styles.changeContainer}>
-            <Icon 
-              name={isPositive ? "trending-up" : "trending-down"} 
-              size={20} 
+            <Icon
+              name={isPositive ? "trending-up" : "trending-down"}
+              size={20}
               color={isPositive ? COLORS.CHART.POSITIVE : COLORS.CHART.NEGATIVE}
             />
             <Text
               style={[
                 styles.changeText,
-                { 
+                {
                   color: isPositive ? COLORS.CHART.POSITIVE : COLORS.CHART.NEGATIVE,
                   marginLeft: SPACING.XS,
                 }
@@ -301,12 +301,12 @@ const DashboardScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           {strategies && strategies.length > 0 ? (
             strategies.slice(0, 3).map((strategy: Strategy, index: number) => (
-              <Animatable.View 
-                key={strategy.id} 
-                animation="fadeInRight" 
+              <Animatable.View
+                key={strategy.id}
+                animation="fadeInRight"
                 delay={600 + index * 100}
               >
                 <StrategyCard
@@ -367,12 +367,12 @@ const DashboardScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           {recentAlerts && recentAlerts.length > 0 ? (
             recentAlerts.map((alert: Alert, index: number) => (
-              <Animatable.View 
-                key={alert.id} 
-                animation="fadeInLeft" 
+              <Animatable.View
+                key={alert.id}
+                animation="fadeInLeft"
                 delay={900 + index * 100}
               >
                 <AlertItem alert={alert} />
@@ -407,11 +407,11 @@ const DashboardScreen = () => {
       </SafeAreaView>
     );
   }
-  
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       {renderHeader()}
-      
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
@@ -548,4 +548,3 @@ const styles = StyleSheet.create({
 });
 
 export default DashboardScreen;
-

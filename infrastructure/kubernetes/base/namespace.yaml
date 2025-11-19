@@ -57,4 +57,3 @@ spec:
   - max:
       storage: "100Gi"
     type: PersistentVolumeClaim
-

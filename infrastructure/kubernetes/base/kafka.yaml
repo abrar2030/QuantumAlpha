@@ -418,4 +418,3 @@ metadata:
   annotations:
     kubernetes.io/description: "Service account for Kafka"
 automountServiceAccountToken: false
-

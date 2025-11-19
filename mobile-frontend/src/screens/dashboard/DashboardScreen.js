@@ -32,7 +32,7 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { addAlert } = useAlert();
-  
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [portfolioData, setPortfolioData] = useState({
@@ -46,9 +46,9 @@ const DashboardScreen = () => {
   });
   const [strategies, setStrategies] = useState([]);
   const [recentAlerts, setRecentAlerts] = useState([]);
-  
+
   const screenWidth = Dimensions.get('window').width;
-  
+
   useEffect(() => {
     const initApp = async () => {
       // Biometric authentication on app launch/dashboard load
@@ -82,28 +82,28 @@ const DashboardScreen = () => {
       alertListener.unsubscribe();
     };
   }, []);
-  
+
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      
+
       // In a real app, these would be API calls to the backend services
       const portfolioResponse = await portfolioService.getPortfolioSummary();
       const performanceResponse = await portfolioService.getPerformanceHistory();
       const strategiesResponse = await strategyService.getActiveStrategies();
       const alertsResponse = await alertService.getRecentAlerts(5);
-      
+
       setPortfolioData({
         value: portfolioResponse.totalValue,
         dailyChange: portfolioResponse.dailyChange,
         percentChange: portfolioResponse.percentChange,
       });
-      
+
       setPerformanceData({
         labels: performanceResponse.labels,
         datasets: [{ data: performanceResponse.values }],
       });
-      
+
       setStrategies(strategiesResponse);
       setRecentAlerts(alertsResponse);
     } catch (error) {
@@ -114,27 +114,27 @@ const DashboardScreen = () => {
       setRefreshing(false);
     }
   };
-  
+
   const onRefresh = () => {
     setRefreshing(true);
     loadDashboardData();
   };
-  
+
   const navigateToStrategy = (strategy) => {
-    navigation.navigate('StrategyDetail', { 
+    navigation.navigate('StrategyDetail', {
       id: strategy.id,
-      name: strategy.name 
+      name: strategy.name
     });
   };
-  
+
   const navigateToAlerts = () => {
     navigation.navigate('AlertsTab');
   };
-  
+
   const navigateToNotifications = () => {
     navigation.navigate('Notifications');
   };
-  
+
   if (loading && !refreshing) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
@@ -145,14 +145,14 @@ const DashboardScreen = () => {
       </View>
     );
   }
-  
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.header, { backgroundColor: theme.card }]}>
         <View style={styles.headerContent}>
           <Text style={[styles.title, { color: theme.text }]}>QuantumAlpha</Text>
           <View style={styles.headerIcons}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.iconButton}
               onPress={navigateToNotifications}
             >
@@ -165,7 +165,7 @@ const DashboardScreen = () => {
                 </View>
               )}
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.iconButton}
               onPress={() => navigation.openDrawer()}
             >
@@ -175,7 +175,7 @@ const DashboardScreen = () => {
         </View>
         <Text style={[styles.subtitle, { color: theme.text }]}>Portfolio Dashboard</Text>
       </View>
-      
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
@@ -205,7 +205,7 @@ const DashboardScreen = () => {
             </Text>
           </View>
         </View>
-        
+
         <View style={styles.chartContainer}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>Performance</Text>
           <LineChart
@@ -232,9 +232,9 @@ const DashboardScreen = () => {
             style={styles.chart}
           />
         </View>
-        
+
         <MarketOverview />
-        
+
         <View style={styles.strategiesContainer}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
@@ -246,7 +246,7 @@ const DashboardScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           {strategies.map((strategy) => (
             <StrategyCard
               key={strategy.id}
@@ -255,7 +255,7 @@ const DashboardScreen = () => {
             />
           ))}
         </View>
-        
+
         <View style={styles.alertsContainer}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
@@ -267,7 +267,7 @@ const DashboardScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           {recentAlerts.length > 0 ? (
             recentAlerts.map((alert) => (
               <AlertItem key={alert.id} alert={alert} />

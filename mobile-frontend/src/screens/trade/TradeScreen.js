@@ -18,7 +18,7 @@ import { useTheme } from '../../context/ThemeContext';
 const TradeScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  
+
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -27,11 +27,11 @@ const TradeScreen = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  
+
   // Animation values
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const translateY = React.useRef(new Animated.Value(50)).current;
-  
+
   // Mock data for popular assets
   const popularAssets = [
     { symbol: 'AAPL', name: 'Apple Inc.', price: 320.45, change: 1.2 },
@@ -41,7 +41,7 @@ const TradeScreen = () => {
     { symbol: 'TSLA', name: 'Tesla Inc.', price: 780.65, change: 2.3 },
     { symbol: 'META', name: 'Meta Platforms Inc.', price: 320.30, change: -0.3 },
   ];
-  
+
   useEffect(() => {
     // Start animations when component mounts
     Animated.parallel([
@@ -57,7 +57,7 @@ const TradeScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   useEffect(() => {
     if (searchQuery.length > 0) {
       // Simulate search results
@@ -71,33 +71,33 @@ const TradeScreen = () => {
       setSearchResults([]);
     }
   }, [searchQuery]);
-  
+
   const handleAssetSelect = (asset) => {
     setSelectedAsset(asset);
     setSearchQuery('');
     setSearchResults([]);
   };
-  
+
   const handlePlaceOrder = () => {
     if (!selectedAsset || !quantity) {
       alert('Please select an asset and enter quantity');
       return;
     }
-    
+
     setLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
       alert(`Order placed: ${orderSide.toUpperCase()} ${quantity} ${selectedAsset.symbol} at ${orderType === 'market' ? 'market price' : '$' + price}`);
-      
+
       // Reset form
       setSelectedAsset(null);
       setQuantity('');
       setPrice('');
     }, 1500);
   };
-  
+
   const renderAssetItem = ({ item }) => {
     return (
       <TouchableOpacity
@@ -129,7 +129,7 @@ const TradeScreen = () => {
       </TouchableOpacity>
     );
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View
@@ -144,7 +144,7 @@ const TradeScreen = () => {
       >
         <Text style={[styles.headerTitle, { color: theme.text }]}>Trade</Text>
       </Animated.View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Animated.View
           style={{
@@ -168,7 +168,7 @@ const TradeScreen = () => {
                 </TouchableOpacity>
               ) : null}
             </View>
-            
+
             {searchResults.length > 0 && (
               <View style={[styles.searchResults, { backgroundColor: theme.background }]}>
                 <FlatList
@@ -180,7 +180,7 @@ const TradeScreen = () => {
               </View>
             )}
           </View>
-          
+
           {!selectedAsset ? (
             <View style={[styles.popularAssetsContainer, { backgroundColor: theme.card }]}>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>
@@ -242,7 +242,7 @@ const TradeScreen = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              
+
               <View style={styles.priceContainer}>
                 <Text style={[styles.currentPrice, { color: theme.text }]}>
                   ${selectedAsset.price.toFixed(2)}
@@ -260,7 +260,7 @@ const TradeScreen = () => {
                   {selectedAsset.change}%
                 </Text>
               </View>
-              
+
               <View style={styles.orderTypeContainer}>
                 <Text style={[styles.formLabel, { color: theme.text }]}>
                   Order Type
@@ -312,7 +312,7 @@ const TradeScreen = () => {
                   </TouchableOpacity>
                 </View>
               </View>
-              
+
               <View style={styles.orderSideContainer}>
                 <Text style={[styles.formLabel, { color: theme.text }]}>
                   Order Side
@@ -362,7 +362,7 @@ const TradeScreen = () => {
                   </TouchableOpacity>
                 </View>
               </View>
-              
+
               <View style={styles.inputContainer}>
                 <Text style={[styles.formLabel, { color: theme.text }]}>
                   Quantity
@@ -379,7 +379,7 @@ const TradeScreen = () => {
                   keyboardType="numeric"
                 />
               </View>
-              
+
               {orderType === 'limit' && (
                 <View style={styles.inputContainer}>
                   <Text style={[styles.formLabel, { color: theme.text }]}>
@@ -398,7 +398,7 @@ const TradeScreen = () => {
                   />
                 </View>
               )}
-              
+
               <View style={styles.orderSummary}>
                 <Text style={[styles.summaryTitle, { color: theme.text }]}>
                   Order Summary
@@ -465,7 +465,7 @@ const TradeScreen = () => {
                   </Text>
                 </View>
               </View>
-              
+
               <TouchableOpacity
                 style={[
                   styles.placeOrderButton,
@@ -485,7 +485,7 @@ const TradeScreen = () => {
                   </Text>
                 )}
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={[styles.cancelButton, { borderColor: theme.border }]}
                 onPress={() => setSelectedAsset(null)}

@@ -90,7 +90,7 @@ models:
       inference:
         batch_size: 32
         confidence_threshold: 0.6
-    
+
     - name: xgboost_daily
       enabled: true
       algorithm: xgboost
@@ -120,7 +120,7 @@ models:
         target: price_close_normalized
       inference:
         batch_size: 1000
-  
+
   sentiment_analysis:
     - name: bert_sentiment
       enabled: true
@@ -143,7 +143,7 @@ models:
       inference:
         batch_size: 16
         confidence_threshold: 0.7
-  
+
   portfolio_optimization:
     - name: mean_variance
       enabled: true
@@ -163,7 +163,7 @@ models:
           max_position_size: 0.2
           min_position_size: 0.01
           max_sector_exposure: 0.3
-    
+
     - name: hierarchical_risk_parity
       enabled: true
       algorithm: hierarchical_risk_parity
@@ -205,7 +205,7 @@ reinforcement_learning:
         type: sharpe_ratio
         window: 20
       episode_length: 252  # trading days
-  
+
   agents:
     - name: dqn_trader
       enabled: true
@@ -226,7 +226,7 @@ reinforcement_learning:
         evaluation_frequency: 10
       inference:
         exploration_rate: 0.01
-    
+
     - name: ppo_trader
       enabled: true
       algorithm: ppo
@@ -262,7 +262,7 @@ ensemble:
         lstm_daily: 0.6
         xgboost_daily: 0.4
       aggregation: weighted_average
-    
+
     - name: stacking_ensemble
       enabled: false
       version: 1.0.0
@@ -336,4 +336,3 @@ monitoring:
       thresholds:
         accuracy_drop: 0.1
         drift_detected: true
-

@@ -10,5 +10,3 @@ const StrategyDetails = () => {
 };
 
 export default StrategyDetails;
-
-

@@ -7,10 +7,10 @@ const RecentTradesList = ({ trades }) => {
   return (
     <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
       {trades.map((trade) => (
-        <Card 
-          key={trade.id} 
-          sx={{ 
-            mb: 2, 
+        <Card
+          key={trade.id}
+          sx={{
+            mb: 2,
             backgroundColor: 'background.paper',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             '&:hover': {
@@ -30,8 +30,8 @@ const RecentTradesList = ({ trades }) => {
                 </Typography>
               </Grid>
               <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                <Typography 
-                  variant="body1" 
+                <Typography
+                  variant="body1"
                   color={trade.type === 'BUY' ? 'primary' : 'error'}
                   fontWeight="bold"
                 >

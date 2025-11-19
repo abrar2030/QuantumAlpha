@@ -1,7 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
-  BASE_URL: __DEV__ 
-    ? 'https://api-dev.quantumalpha.com/v1' 
+  BASE_URL: __DEV__
+    ? 'https://api-dev.quantumalpha.com/v1'
     : 'https://api.quantumalpha.com/v1',
   TIMEOUT: 10000,
   RETRY_ATTEMPTS: 3,
@@ -10,8 +10,8 @@ export const API_CONFIG = {
 
 // WebSocket Configuration
 export const WS_CONFIG = {
-  URL: __DEV__ 
-    ? 'wss://ws-dev.quantumalpha.com' 
+  URL: __DEV__
+    ? 'wss://ws-dev.quantumalpha.com'
     : 'wss://ws.quantumalpha.com',
   RECONNECT_INTERVAL: 5000,
   MAX_RECONNECT_ATTEMPTS: 5,
@@ -52,7 +52,7 @@ export const ROUTES = {
   FORGOT_PASSWORD: 'ForgotPassword',
   VERIFY_EMAIL: 'VerifyEmail',
   RESET_PASSWORD: 'ResetPassword',
-  
+
   // Main Stack
   DASHBOARD: 'Dashboard',
   PORTFOLIO: 'Portfolio',
@@ -64,7 +64,7 @@ export const ROUTES = {
   SETTINGS: 'Settings',
   NOTIFICATIONS: 'Notifications',
   HELP: 'Help',
-  
+
   // Additional Screens
   MARKET_OVERVIEW: 'MarketOverview',
   ASSET_DETAIL: 'AssetDetail',
@@ -86,7 +86,7 @@ export const COLORS = {
   WARNING: '#ffcc00',
   ERROR: '#ff4d4d',
   INFO: '#0066cc',
-  
+
   // Light Theme
   LIGHT: {
     BACKGROUND: '#f8f9fa',
@@ -96,7 +96,7 @@ export const COLORS = {
     BORDER: '#e1e1e1',
     SHADOW: '#000000',
   },
-  
+
   // Dark Theme
   DARK: {
     BACKGROUND: '#121212',
@@ -106,7 +106,7 @@ export const COLORS = {
     BORDER: '#2c2c2c',
     SHADOW: '#000000',
   },
-  
+
   // Chart Colors
   CHART: {
     POSITIVE: '#34c759',
@@ -128,7 +128,7 @@ export const TYPOGRAPHY = {
     BOLD: 'System',
     LIGHT: 'System',
   },
-  
+
   FONT_SIZE: {
     XS: 10,
     SM: 12,
@@ -140,7 +140,7 @@ export const TYPOGRAPHY = {
     TITLE: 28,
     HEADING: 32,
   },
-  
+
   LINE_HEIGHT: {
     XS: 14,
     SM: 16,
@@ -280,4 +280,3 @@ export const CHART_CONFIG = {
   ANIMATION_DURATION: 1000,
   REFRESH_INTERVAL: 30000, // 30 seconds
 };
-

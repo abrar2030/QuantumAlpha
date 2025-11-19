@@ -6,6 +6,7 @@ Provides comprehensive factor analysis and risk decomposition tools.
 import json
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 from dataclasses import dataclass

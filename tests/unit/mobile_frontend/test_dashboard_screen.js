@@ -81,40 +81,40 @@ describe('DashboardScreen Component', () => {
 
   test('renders loading state initially', () => {
     render(<DashboardScreen />);
-    
+
     expect(screen.getByTestId('loading-indicator')).toBeTruthy();
     expect(screen.getByText('Loading dashboard...')).toBeTruthy();
   });
 
   test('renders dashboard content after loading', async () => {
     render(<DashboardScreen />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Check portfolio summary
     expect(screen.getByText('$125,000')).toBeTruthy();
     expect(screen.getByText('+$2,500 (2.0%)')).toBeTruthy();
-    
+
     // Check performance chart
     expect(screen.getByTestId('performance-chart')).toBeTruthy();
-    
+
     // Check market overview
     expect(screen.getByTestId('market-overview')).toBeTruthy();
-    
+
     // Check strategies section
     expect(screen.getByText('Active Strategies')).toBeTruthy();
     expect(screen.getByText('See All')).toBeTruthy();
-    
+
     // Check strategy cards
     const strategyCards = screen.getAllByTestId('strategy-card');
     expect(strategyCards.length).toBe(2);
-    
+
     // Check alerts section
     expect(screen.getByText('Recent Alerts')).toBeTruthy();
-    
+
     // Check alert items
     const alertItems = screen.getAllByTestId('alert-item');
     expect(alertItems.length).toBe(2);
@@ -123,32 +123,32 @@ describe('DashboardScreen Component', () => {
   test('handles empty alerts gracefully', async () => {
     // Mock empty alerts
     require('../../../QuantumAlpha-main/mobile-frontend/src/services/alertService').getRecentAlerts.mockResolvedValueOnce([]);
-    
+
     render(<DashboardScreen />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Check empty state for alerts
     expect(screen.getByText('No recent alerts')).toBeTruthy();
   });
 
   test('navigates to strategy details when strategy card is pressed', async () => {
     const navigation = require('@react-navigation/native').useNavigation();
-    
+
     render(<DashboardScreen />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Find and press the first strategy card
     const strategyCards = screen.getAllByTestId('strategy-card');
     fireEvent.press(strategyCards[0]);
-    
+
     // Check if navigation was called with correct params
     expect(navigation.navigate).toHaveBeenCalledWith('StrategyDetail', {
       strategyId: 'strategy1',
@@ -157,38 +157,38 @@ describe('DashboardScreen Component', () => {
 
   test('navigates to alerts screen when "See All" is pressed in alerts section', async () => {
     const navigation = require('@react-navigation/native').useNavigation();
-    
+
     render(<DashboardScreen />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Find and press the "See All" button in alerts section
     const seeAllButtons = screen.getAllByText('See All');
     // The second "See All" button should be for alerts
     fireEvent.press(seeAllButtons[1]);
-    
+
     // Check if navigation was called with correct screen
     expect(navigation.navigate).toHaveBeenCalledWith('AlertsTab');
   });
 
   test('navigates to strategies screen when "See All" is pressed in strategies section', async () => {
     const navigation = require('@react-navigation/native').useNavigation();
-    
+
     render(<DashboardScreen />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Find and press the "See All" button in strategies section
     const seeAllButtons = screen.getAllByText('See All');
     // The first "See All" button should be for strategies
     fireEvent.press(seeAllButtons[0]);
-    
+
     // Check if navigation was called with correct screen
     expect(navigation.navigate).toHaveBeenCalledWith('StrategyTab');
   });
@@ -198,19 +198,19 @@ describe('DashboardScreen Component', () => {
     require('../../../QuantumAlpha-main/mobile-frontend/src/services/portfolioService').getPortfolioSummary.mockRejectedValueOnce(
       new Error('Failed to fetch portfolio data')
     );
-    
+
     render(<DashboardScreen />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Check error state
     expect(screen.getByText('Error loading dashboard data')).toBeTruthy();
     expect(screen.getByText('Please try again later')).toBeTruthy();
     expect(screen.getByTestId('retry-button')).toBeTruthy();
-    
+
     // Test retry functionality
     require('../../../QuantumAlpha-main/mobile-frontend/src/services/portfolioService').getPortfolioSummary.mockResolvedValueOnce({
       totalValue: 125000,
@@ -221,19 +221,18 @@ describe('DashboardScreen Component', () => {
         { symbol: 'MSFT', quantity: 50, currentValue: 12500 },
       ],
     });
-    
+
     fireEvent.press(screen.getByTestId('retry-button'));
-    
+
     // Should show loading again
     expect(screen.getByTestId('loading-indicator')).toBeTruthy();
-    
+
     // Wait for loading to complete again
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).toBeNull();
     });
-    
+
     // Should show dashboard content now
     expect(screen.getByText('$125,000')).toBeTruthy();
   });
 });
-

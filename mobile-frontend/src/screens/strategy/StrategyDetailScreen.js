@@ -20,18 +20,18 @@ const StrategyDetailScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { id, name } = route.params;
-  
+
   const [loading, setLoading] = useState(true);
   const [strategy, setStrategy] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
-  
+
   // Animation values
   const fadeAnim = new Animated.Value(0);
   const translateY = new Animated.Value(50);
-  
+
   useEffect(() => {
     loadStrategyDetails();
-    
+
     // Set navigation options dynamically
     navigation.setOptions({
       title: name || 'Strategy Details',
@@ -48,7 +48,7 @@ const StrategyDetailScreen = () => {
       ),
     });
   }, []);
-  
+
   useEffect(() => {
     if (!loading) {
       // Start animations when data is loaded
@@ -66,7 +66,7 @@ const StrategyDetailScreen = () => {
       ]).start();
     }
   }, [loading]);
-  
+
   const loadStrategyDetails = async () => {
     try {
       setLoading(true);
@@ -79,12 +79,12 @@ const StrategyDetailScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const toggleStrategyStatus = async () => {
     try {
       const newStatus = strategy.status === 'Active' ? false : true;
       await strategyService.toggleStrategyStatus(id, newStatus);
-      
+
       // Update local state
       setStrategy({
         ...strategy,
@@ -95,11 +95,11 @@ const StrategyDetailScreen = () => {
       // In a real app, you would handle errors appropriately
     }
   };
-  
+
   const updateAllocation = async (newAllocation) => {
     try {
       await strategyService.updateStrategyAllocation(id, newAllocation);
-      
+
       // Update local state
       setStrategy({
         ...strategy,
@@ -110,7 +110,7 @@ const StrategyDetailScreen = () => {
       // In a real app, you would handle errors appropriately
     }
   };
-  
+
   if (loading) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
@@ -121,7 +121,7 @@ const StrategyDetailScreen = () => {
       </View>
     );
   }
-  
+
   if (!strategy) {
     return (
       <View style={[styles.errorContainer, { backgroundColor: theme.background }]}>
@@ -138,9 +138,9 @@ const StrategyDetailScreen = () => {
       </View>
     );
   }
-  
+
   const screenWidth = Dimensions.get('window').width;
-  
+
   const renderOverviewTab = () => {
     return (
       <View style={styles.tabContent}>
@@ -172,7 +172,7 @@ const StrategyDetailScreen = () => {
               </Text>
             </View>
           </View>
-          
+
           <LineChart
             data={{
               labels: strategy.performanceHistory.labels,
@@ -204,13 +204,13 @@ const StrategyDetailScreen = () => {
             style={styles.chart}
           />
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <Text style={[styles.cardTitle, { color: theme.text }]}>Strategy Details</Text>
           <Text style={[styles.description, { color: theme.text }]}>
             {strategy.description}
           </Text>
-          
+
           <View style={styles.detailsGrid}>
             <View style={styles.detailItem}>
               <Icon name="calendar" size={20} color={theme.text + 'CC'} />
@@ -223,7 +223,7 @@ const StrategyDetailScreen = () => {
                 </Text>
               </View>
             </View>
-            
+
             <View style={styles.detailItem}>
               <Icon name="shield-outline" size={20} color={theme.text + 'CC'} />
               <View style={styles.detailTextContainer}>
@@ -235,7 +235,7 @@ const StrategyDetailScreen = () => {
                 </Text>
               </View>
             </View>
-            
+
             <View style={styles.detailItem}>
               <Icon name="chart-line" size={20} color={theme.text + 'CC'} />
               <View style={styles.detailTextContainer}>
@@ -247,7 +247,7 @@ const StrategyDetailScreen = () => {
                 </Text>
               </View>
             </View>
-            
+
             <View style={styles.detailItem}>
               <Icon name="chart-pie" size={20} color={theme.text + 'CC'} />
               <View style={styles.detailTextContainer}>
@@ -261,10 +261,10 @@ const StrategyDetailScreen = () => {
             </View>
           </View>
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <Text style={[styles.cardTitle, { color: theme.text }]}>Holdings</Text>
-          
+
           <View style={styles.holdingsContainer}>
             {strategy.holdings.map((holding, index) => (
               <View
@@ -324,7 +324,7 @@ const StrategyDetailScreen = () => {
       </View>
     );
   };
-  
+
   const renderParametersTab = () => {
     return (
       <View style={styles.tabContent}>
@@ -335,7 +335,7 @@ const StrategyDetailScreen = () => {
           <Text style={[styles.paramDescription, { color: theme.text + 'CC' }]}>
             These parameters define how the strategy operates and makes trading decisions.
           </Text>
-          
+
           {strategy.parameters.map((param, index) => (
             <View
               key={index}
@@ -356,7 +356,7 @@ const StrategyDetailScreen = () => {
             </View>
           ))}
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <Text style={[styles.cardTitle, { color: theme.text }]}>
             Allocation Control
@@ -364,7 +364,7 @@ const StrategyDetailScreen = () => {
           <Text style={[styles.paramDescription, { color: theme.text + 'CC' }]}>
             Adjust the capital allocation for this strategy.
           </Text>
-          
+
           <View style={styles.allocationControl}>
             <Text style={[styles.allocationValue, { color: theme.text }]}>
               {strategy.allocation}%
@@ -398,7 +398,7 @@ const StrategyDetailScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-          
+
           <View style={styles.allocationBarContainer}>
             <View
               style={[styles.allocationBar, { backgroundColor: theme.border }]}
@@ -423,12 +423,12 @@ const StrategyDetailScreen = () => {
             </View>
           </View>
         </View>
-        
+
         <View style={[styles.card, { backgroundColor: theme.card }]}>
           <Text style={[styles.cardTitle, { color: theme.text }]}>
             Strategy Controls
           </Text>
-          
+
           <View style={styles.controlButtons}>
             <TouchableOpacity
               style={[
@@ -449,7 +449,7 @@ const StrategyDetailScreen = () => {
                 {strategy.status === 'Active' ? 'Pause Strategy' : 'Activate Strategy'}
               </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.controlButton, { backgroundColor: theme.info }]}
               onPress={() => {
@@ -460,7 +460,7 @@ const StrategyDetailScreen = () => {
               <Icon name="test-tube" size={20} color="#FFFFFF" />
               <Text style={styles.controlButtonText}>Run Backtest</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.controlButton, { backgroundColor: theme.warning }]}
               onPress={() => {
@@ -476,7 +476,7 @@ const StrategyDetailScreen = () => {
       </View>
     );
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View
@@ -503,11 +503,11 @@ const StrategyDetailScreen = () => {
             {strategy.status}
           </Text>
         </View>
-        
+
         <Text style={[styles.strategyName, { color: theme.text }]}>
           {strategy.name}
         </Text>
-        
+
         <View style={styles.performanceContainer}>
           <Text
             style={[
@@ -525,7 +525,7 @@ const StrategyDetailScreen = () => {
           </Text>
         </View>
       </Animated.View>
-      
+
       <View style={[styles.tabs, { backgroundColor: theme.card }]}>
         <TouchableOpacity
           style={[
@@ -549,7 +549,7 @@ const StrategyDetailScreen = () => {
             Overview
           </Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.tab,
@@ -573,7 +573,7 @@ const StrategyDetailScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {activeTab === 'overview' ? renderOverviewTab() : renderParametersTab()}
       </ScrollView>

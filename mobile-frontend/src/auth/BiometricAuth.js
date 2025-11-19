@@ -18,5 +18,3 @@ export const authenticateWithBiometrics = async () => {
     return false;
   }
 };
-
-

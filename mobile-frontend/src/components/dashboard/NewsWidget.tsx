@@ -124,7 +124,7 @@ const NewsWidget: React.FC<NewsWidgetProps> = ({ data, loading }) => {
                 resizeMode={FastImage.resizeMode.cover}
               />
             )}
-            
+
             <View style={styles.newsContent}>
               <View style={styles.newsHeader}>
                 <Text style={[styles.newsSource, { color: theme.primary }]}>
@@ -140,15 +140,15 @@ const NewsWidget: React.FC<NewsWidgetProps> = ({ data, loading }) => {
                   </View>
                 )}
               </View>
-              
+
               <Text style={[styles.newsTitle, { color: theme.text }]} numberOfLines={3}>
                 {article.title}
               </Text>
-              
+
               <Text style={[styles.newsSummary, { color: theme.text + '80' }]} numberOfLines={2}>
                 {truncateText(article.summary, 100)}
               </Text>
-              
+
               <View style={styles.newsFooter}>
                 <Text style={[styles.newsTime, { color: theme.text + '60' }]}>
                   {formatRelativeTime(article.publishedAt)}
@@ -268,4 +268,3 @@ const styles = StyleSheet.create({
 });
 
 export default NewsWidget;
-

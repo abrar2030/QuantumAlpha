@@ -110,24 +110,24 @@ mkdir -p "$PROJECT_ROOT/logs"
 case $SERVICE in
   data-service)
     echo -e "\n${YELLOW}Starting data service...${NC}"
-    
+
     SERVICE_DIR="$PROJECT_ROOT/backend/data_service"
     LOG_FILE="$PROJECT_ROOT/logs/data_service.log"
     PID_FILE="$PROJECT_ROOT/logs/data_service.pid"
-    
+
     if [[ ! -d "$SERVICE_DIR" ]]; then
       echo -e "${RED}Error: Data service directory not found: $SERVICE_DIR${NC}"
       exit 1
     fi
-    
+
     cd "$SERVICE_DIR"
-    
+
     # Set port if specified
     if [[ ! -z "$PORT" ]]; then
       export APP_PORT="$PORT"
       echo -e "${BLUE}Using custom port: $PORT${NC}"
     fi
-    
+
     # Start service
     if $DEBUG; then
       echo -e "${BLUE}Starting data service in debug mode...${NC}"
@@ -148,27 +148,27 @@ case $SERVICE in
       fi
     fi
     ;;
-    
+
   ai-engine)
     echo -e "\n${YELLOW}Starting AI engine...${NC}"
-    
+
     SERVICE_DIR="$PROJECT_ROOT/backend/ai_engine"
     LOG_FILE="$PROJECT_ROOT/logs/ai_engine.log"
     PID_FILE="$PROJECT_ROOT/logs/ai_engine.pid"
-    
+
     if [[ ! -d "$SERVICE_DIR" ]]; then
       echo -e "${RED}Error: AI engine directory not found: $SERVICE_DIR${NC}"
       exit 1
     fi
-    
+
     cd "$SERVICE_DIR"
-    
+
     # Set port if specified
     if [[ ! -z "$PORT" ]]; then
       export APP_PORT="$PORT"
       echo -e "${BLUE}Using custom port: $PORT${NC}"
     fi
-    
+
     # Start service
     if $DEBUG; then
       echo -e "${BLUE}Starting AI engine in debug mode...${NC}"
@@ -189,27 +189,27 @@ case $SERVICE in
       fi
     fi
     ;;
-    
+
   risk-service)
     echo -e "\n${YELLOW}Starting risk service...${NC}"
-    
+
     SERVICE_DIR="$PROJECT_ROOT/backend/risk_service"
     LOG_FILE="$PROJECT_ROOT/logs/risk_service.log"
     PID_FILE="$PROJECT_ROOT/logs/risk_service.pid"
-    
+
     if [[ ! -d "$SERVICE_DIR" ]]; then
       echo -e "${RED}Error: Risk service directory not found: $SERVICE_DIR${NC}"
       exit 1
     fi
-    
+
     cd "$SERVICE_DIR"
-    
+
     # Set port if specified
     if [[ ! -z "$PORT" ]]; then
       export APP_PORT="$PORT"
       echo -e "${BLUE}Using custom port: $PORT${NC}"
     fi
-    
+
     # Start service
     if $DEBUG; then
       echo -e "${BLUE}Starting risk service in debug mode...${NC}"
@@ -230,27 +230,27 @@ case $SERVICE in
       fi
     fi
     ;;
-    
+
   execution-service)
     echo -e "\n${YELLOW}Starting execution service...${NC}"
-    
+
     SERVICE_DIR="$PROJECT_ROOT/backend/execution_service"
     LOG_FILE="$PROJECT_ROOT/logs/execution_service.log"
     PID_FILE="$PROJECT_ROOT/logs/execution_service.pid"
-    
+
     if [[ ! -d "$SERVICE_DIR" ]]; then
       echo -e "${RED}Error: Execution service directory not found: $SERVICE_DIR${NC}"
       exit 1
     fi
-    
+
     cd "$SERVICE_DIR"
-    
+
     # Set port if specified
     if [[ ! -z "$PORT" ]]; then
       export APP_PORT="$PORT"
       echo -e "${BLUE}Using custom port: $PORT${NC}"
     fi
-    
+
     # Start service
     if $DEBUG; then
       echo -e "${BLUE}Starting execution service in debug mode...${NC}"
@@ -271,27 +271,27 @@ case $SERVICE in
       fi
     fi
     ;;
-    
+
   web-frontend)
     echo -e "\n${YELLOW}Starting web frontend...${NC}"
-    
+
     SERVICE_DIR="$PROJECT_ROOT/web-frontend"
     LOG_FILE="$PROJECT_ROOT/logs/web_frontend.log"
     PID_FILE="$PROJECT_ROOT/logs/web_frontend.pid"
-    
+
     if [[ ! -d "$SERVICE_DIR" ]]; then
       echo -e "${RED}Error: Web frontend directory not found: $SERVICE_DIR${NC}"
       exit 1
     fi
-    
+
     cd "$SERVICE_DIR"
-    
+
     # Set port if specified
     if [[ ! -z "$PORT" ]]; then
       export PORT="$PORT"
       echo -e "${BLUE}Using custom port: $PORT${NC}"
     fi
-    
+
     # Start service
     if $DEBUG; then
       echo -e "${BLUE}Starting web frontend in debug mode...${NC}"
@@ -312,7 +312,7 @@ case $SERVICE in
       fi
     fi
     ;;
-    
+
   *)
     echo -e "${RED}Error: Unknown service: $SERVICE${NC}"
     echo "Available services: data-service, ai-engine, risk-service, execution-service, web-frontend"
@@ -328,4 +328,3 @@ if $DETACHED; then
   echo -e "To view logs: ${BLUE}tail -f $LOG_FILE${NC}"
   echo -e "To stop the service: ${BLUE}kill $(cat $PID_FILE)${NC}"
 fi
-

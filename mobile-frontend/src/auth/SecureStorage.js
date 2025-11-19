@@ -29,5 +29,3 @@ export const deleteDataSecurely = async (key) => {
     console.error(`Error deleting ${key}:`, error);
   }
 };
-
-

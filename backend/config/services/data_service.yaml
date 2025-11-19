@@ -42,7 +42,7 @@ data_sources:
           path: /query
           params:
             function: OVERVIEW
-    
+
     - name: polygon
       type: rest_api
       priority: 2
@@ -56,7 +56,7 @@ data_sources:
           path: /v3/trades/{ticker}
         - name: quotes
           path: /v3/quotes/{ticker}
-    
+
     - name: iex_cloud
       type: rest_api
       priority: 3
@@ -68,7 +68,7 @@ data_sources:
           path: /stock/{symbol}/quote
         - name: historical
           path: /stock/{symbol}/chart/{range}
-  
+
   alternative_data:
     - name: news_api
       type: rest_api
@@ -81,7 +81,7 @@ data_sources:
           path: /v2/everything
         - name: top_headlines
           path: /v2/top-headlines
-    
+
     - name: twitter
       type: streaming_api
       priority: 2
@@ -91,7 +91,7 @@ data_sources:
       endpoints:
         - name: filtered_stream
           path: /2/tweets/search/stream
-    
+
     - name: sec_edgar
       type: file_download
       priority: 3
@@ -120,7 +120,7 @@ data_processing:
       params:
         method: z_score
         threshold: 3.0
-  
+
   alternative_data:
     - name: sentiment_analysis
       enabled: true
@@ -160,7 +160,7 @@ feature_engineering:
       params:
         window: 20
         num_std: 2
-  
+
   derived_features:
     - name: price_momentum
       enabled: true
@@ -185,7 +185,7 @@ storage:
   time_series:
     type: influxdb
     bucket: market_data
-    retention_policy: 
+    retention_policy:
       name: default
       duration: 90d
     continuous_queries:
@@ -201,7 +201,7 @@ storage:
           INTO market_data_1h
           FROM market_data
           GROUP BY time(1h), symbol
-  
+
   relational:
     type: postgresql
     tables:
@@ -292,4 +292,3 @@ monitoring:
     level: INFO
     format: json
     output: stdout
-

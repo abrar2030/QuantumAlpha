@@ -130,8 +130,8 @@ const Analytics = () => {
   };
 
   const MetricCard = ({ metric, value, change, color, icon: Icon }) => (
-    <Card 
-      sx={{ 
+    <Card
+      sx={{
         height: '100%',
         background: `linear-gradient(135deg, ${color}15, ${color}05)`,
         border: `1px solid ${color}30`,
@@ -163,8 +163,8 @@ const Analytics = () => {
           ) : (
             <TrendingDown size={16} color="#ef4444" />
           )}
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color={change > 0 ? "#10b981" : "#ef4444"}
             fontWeight={600}
           >
@@ -179,8 +179,8 @@ const Analytics = () => {
     <Grid container spacing={3}>
       {/* Portfolio Performance Chart */}
       <Grid item xs={12} lg={8}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -216,7 +216,7 @@ const Analytics = () => {
                 startIcon={<RefreshCw size={16} />}
                 onClick={handleRefresh}
                 disabled={refreshing}
-                sx={{ 
+                sx={{
                   borderColor: '#00d4ff',
                   color: '#00d4ff',
                   '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -230,17 +230,17 @@ const Analytics = () => {
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={mockPortfolioData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis 
-                  dataKey="date" 
+                <XAxis
+                  dataKey="date"
                   stroke="rgba(255,255,255,0.7)"
                   fontSize={12}
                 />
-                <YAxis 
+                <YAxis
                   stroke="rgba(255,255,255,0.7)"
                   fontSize={12}
                   tickFormatter={(value) => `${value}%`}
                 />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -249,17 +249,17 @@ const Analytics = () => {
                   }}
                 />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="return" 
-                  fill="url(#colorPortfolio)" 
+                <Area
+                  type="monotone"
+                  dataKey="return"
+                  fill="url(#colorPortfolio)"
                   stroke="#00d4ff"
                   strokeWidth={3}
                   name="Portfolio Return"
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="benchmark" 
+                <Line
+                  type="monotone"
+                  dataKey="benchmark"
                   stroke="#f59e0b"
                   strokeWidth={2}
                   strokeDasharray="5 5"
@@ -279,8 +279,8 @@ const Analytics = () => {
 
       {/* Asset Allocation */}
       <Grid item xs={12} lg={4}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -308,7 +308,7 @@ const Analytics = () => {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -323,13 +323,13 @@ const Analytics = () => {
             {mockAssetAllocation.map((asset, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box 
-                    sx={{ 
-                      width: 12, 
-                      height: 12, 
-                      borderRadius: '50%', 
-                      backgroundColor: asset.color 
-                    }} 
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: '50%',
+                      backgroundColor: asset.color
+                    }}
                   />
                   <Typography variant="body2" color="white">
                     {asset.name}
@@ -352,7 +352,7 @@ const Analytics = () => {
         <Grid container spacing={3}>
           {mockRiskMetrics.map((metric, index) => (
             <Grid item xs={12} sm={6} md={4} lg={2} key={index}>
-              <MetricCard 
+              <MetricCard
                 metric={metric.metric}
                 value={metric.value}
                 change={metric.change}
@@ -370,8 +370,8 @@ const Analytics = () => {
     <Grid container spacing={3}>
       {/* Strategy Performance Scatter */}
       <Grid item xs={12} lg={8}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -386,7 +386,7 @@ const Analytics = () => {
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis 
+                <XAxis
                   type="number"
                   dataKey="volatility"
                   name="Volatility"
@@ -394,7 +394,7 @@ const Analytics = () => {
                   fontSize={12}
                   tickFormatter={(value) => `${value}%`}
                 />
-                <YAxis 
+                <YAxis
                   type="number"
                   dataKey="return"
                   name="Return"
@@ -402,7 +402,7 @@ const Analytics = () => {
                   fontSize={12}
                   tickFormatter={(value) => `${value}%`}
                 />
-                <Tooltip 
+                <Tooltip
                   cursor={{ strokeDasharray: '3 3' }}
                   contentStyle={{
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -411,13 +411,13 @@ const Analytics = () => {
                     color: 'white'
                   }}
                   formatter={(value, name) => [
-                    `${value}${name === 'return' ? '%' : name === 'volatility' ? '%' : ''}`, 
+                    `${value}${name === 'return' ? '%' : name === 'volatility' ? '%' : ''}`,
                     name === 'return' ? 'Return' : name === 'volatility' ? 'Volatility' : 'Sharpe Ratio'
                   ]}
                 />
-                <Scatter 
-                  name="Strategies" 
-                  data={mockStrategyPerformance} 
+                <Scatter
+                  name="Strategies"
+                  data={mockStrategyPerformance}
                   fill="#00d4ff"
                 />
               </ScatterChart>
@@ -428,8 +428,8 @@ const Analytics = () => {
 
       {/* Strategy Performance Table */}
       <Grid item xs={12} lg={4}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -444,9 +444,9 @@ const Analytics = () => {
             {mockStrategyPerformance
               .sort((a, b) => b.sharpe - a.sharpe)
               .map((strategy, index) => (
-              <Card 
+              <Card
                 key={index}
-                sx={{ 
+                sx={{
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: 2
@@ -457,10 +457,10 @@ const Analytics = () => {
                     <Typography variant="body1" fontWeight={600} color="white">
                       {strategy.strategy}
                     </Typography>
-                    <Chip 
+                    <Chip
                       label={`#${index + 1}`}
                       size="small"
-                      sx={{ 
+                      sx={{
                         background: index === 0 ? '#10b981' : index === 1 ? '#f59e0b' : '#8b5cf6',
                         color: 'white',
                         fontWeight: 600
@@ -493,8 +493,8 @@ const Analytics = () => {
                         Allocation: {strategy.allocation}%
                       </Typography>
                     </Box>
-                    <LinearProgress 
-                      variant="determinate" 
+                    <LinearProgress
+                      variant="determinate"
                       value={strategy.allocation}
                       sx={{
                         height: 4,
@@ -520,8 +520,8 @@ const Analytics = () => {
     <Grid container spacing={3}>
       {/* Recent Trades Table */}
       <Grid item xs={12}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -538,7 +538,7 @@ const Analytics = () => {
                 variant="outlined"
                 size="small"
                 startIcon={<Filter size={16} />}
-                sx={{ 
+                sx={{
                   borderColor: '#00d4ff',
                   color: '#00d4ff',
                   '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -550,7 +550,7 @@ const Analytics = () => {
                 variant="outlined"
                 size="small"
                 startIcon={<Download size={16} />}
-                sx={{ 
+                sx={{
                   borderColor: '#00d4ff',
                   color: '#00d4ff',
                   '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
@@ -579,10 +579,10 @@ const Analytics = () => {
                     <TableCell sx={{ color: 'white' }}>{trade.date}</TableCell>
                     <TableCell sx={{ color: 'white', fontWeight: 600 }}>{trade.symbol}</TableCell>
                     <TableCell>
-                      <Chip 
+                      <Chip
                         label={trade.type.toUpperCase()}
                         size="small"
-                        sx={{ 
+                        sx={{
                           background: trade.type === 'buy' ? '#10b981' : '#ef4444',
                           color: 'white',
                           fontWeight: 600
@@ -592,8 +592,8 @@ const Analytics = () => {
                     <TableCell sx={{ color: 'white' }}>{trade.quantity}</TableCell>
                     <TableCell sx={{ color: 'white' }}>${trade.price.toFixed(2)}</TableCell>
                     <TableCell>
-                      <Typography 
-                        variant="body2" 
+                      <Typography
+                        variant="body2"
                         fontWeight={600}
                         color={trade.pnl > 0 ? '#10b981' : '#ef4444'}
                       >
@@ -613,8 +613,8 @@ const Analytics = () => {
 
       {/* P&L Distribution */}
       <Grid item xs={12} md={6}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -638,15 +638,15 @@ const Analytics = () => {
                 { range: '1000+', count: 2 }
               ]}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis 
-                  dataKey="range" 
+                <XAxis
+                  dataKey="range"
                   stroke="rgba(255,255,255,0.7)"
                   fontSize={10}
                   angle={-45}
                   textAnchor="end"
                 />
                 <YAxis stroke="rgba(255,255,255,0.7)" fontSize={12} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -663,8 +663,8 @@ const Analytics = () => {
 
       {/* Win/Loss Ratio */}
       <Grid item xs={12} md={6}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -693,7 +693,7 @@ const Analytics = () => {
                   <Cell fill="#10b981" />
                   <Cell fill="#ef4444" />
                 </Pie>
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -721,8 +721,8 @@ const Analytics = () => {
   const CorrelationAnalysis = () => (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             p: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
@@ -753,13 +753,13 @@ const Analytics = () => {
                       {item.correlation.toFixed(2)}
                     </TableCell>
                     <TableCell>
-                      <Chip 
+                      <Chip
                         label={
                           Math.abs(item.correlation) > 0.7 ? 'Strong' :
                           Math.abs(item.correlation) > 0.4 ? 'Moderate' : 'Weak'
                         }
                         size="small"
-                        sx={{ 
+                        sx={{
                           background: Math.abs(item.correlation) > 0.7 ? '#ef4444' :
                                      Math.abs(item.correlation) > 0.4 ? '#f59e0b' : '#10b981',
                           color: 'white',
@@ -768,8 +768,8 @@ const Analytics = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <LinearProgress 
-                        variant="determinate" 
+                      <LinearProgress
+                        variant="determinate"
                         value={Math.abs(item.correlation) * 100}
                         sx={{
                           height: 8,
@@ -793,7 +793,7 @@ const Analytics = () => {
   );
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
       py: 4
@@ -803,10 +803,10 @@ const Analytics = () => {
         <Fade in={true} timeout={800}>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-              <Typography 
-                variant="h3" 
+              <Typography
+                variant="h3"
                 fontWeight={800}
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #00d4ff, #8b5cf6)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
@@ -815,10 +815,10 @@ const Analytics = () => {
               >
                 Portfolio Analytics
               </Typography>
-              <Button 
+              <Button
                 variant="contained"
                 startIcon={<Download size={20} />}
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
                   boxShadow: '0 4px 20px rgba(0, 212, 255, 0.3)',
                   '&:hover': {
@@ -844,16 +844,16 @@ const Analytics = () => {
         )}
 
         {/* Tabs */}
-        <Paper 
-          sx={{ 
+        <Paper
+          sx={{
             mb: 4,
             background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
-          <Tabs 
-            value={selectedTab} 
+          <Tabs
+            value={selectedTab}
             onChange={handleTabChange}
             sx={{
               '& .MuiTab-root': {
@@ -886,4 +886,3 @@ const Analytics = () => {
 };
 
 export default Analytics;
-

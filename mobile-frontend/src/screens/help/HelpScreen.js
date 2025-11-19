@@ -5,7 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 const HelpScreen = () => {
   const { theme } = useTheme();
-  
+
   const helpSections = [
     {
       title: 'Getting Started',
@@ -44,11 +44,11 @@ const HelpScreen = () => {
       ]
     }
   ];
-  
+
   const renderHelpSection = (section, index) => {
     return (
-      <View 
-        key={index} 
+      <View
+        key={index}
         style={[styles.sectionContainer, { backgroundColor: theme.card }]}
       >
         <View style={styles.sectionHeader}>
@@ -57,12 +57,12 @@ const HelpScreen = () => {
             {section.title}
           </Text>
         </View>
-        
+
         {section.items.map((item, itemIndex) => (
-          <TouchableOpacity 
+          <TouchableOpacity
             key={itemIndex}
             style={[
-              styles.helpItem, 
+              styles.helpItem,
               itemIndex < section.items.length - 1 && { borderBottomWidth: 1, borderBottomColor: theme.border }
             ]}
             onPress={() => {
@@ -84,16 +84,16 @@ const HelpScreen = () => {
       </View>
     );
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.header, { backgroundColor: theme.card }]}>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Help & Support</Text>
       </View>
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.searchContainer, { backgroundColor: theme.card }]}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.searchButton, { backgroundColor: theme.background }]}
             onPress={() => {
               // In a real app, this would open a search screen
@@ -106,14 +106,14 @@ const HelpScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         <View style={[styles.contactContainer, { backgroundColor: theme.card }]}>
           <Text style={[styles.contactTitle, { color: theme.text }]}>
             Need assistance?
           </Text>
-          
+
           <View style={styles.contactButtons}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.contactButton, { backgroundColor: theme.primary + '20' }]}
               onPress={() => {
                 // In a real app, this would open chat support
@@ -125,8 +125,8 @@ const HelpScreen = () => {
                 Chat Support
               </Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               style={[styles.contactButton, { backgroundColor: theme.info + '20' }]}
               onPress={() => {
                 // In a real app, this would open email support
@@ -140,9 +140,9 @@ const HelpScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-        
+
         {helpSections.map(renderHelpSection)}
-        
+
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.text + '99' }]}>
             QuantumAlpha v1.0.0

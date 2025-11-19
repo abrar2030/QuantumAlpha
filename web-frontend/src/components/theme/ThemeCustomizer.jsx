@@ -238,9 +238,9 @@ const ThemeCustomizer = () => {
 
   return (
     <Fade in={true} timeout={1000}>
-      <Paper 
+      <Paper
         elevation={0}
-        sx={{ 
+        sx={{
           p: 4,
           borderRadius: 4,
           background: 'rgba(255, 255, 255, 0.05)',
@@ -292,11 +292,11 @@ const ThemeCustomizer = () => {
                   <Grid item xs={4} key={option.value}>
                     <Card
                       sx={{
-                        background: theme.theme === option.value 
-                          ? `${theme.primaryColor}20` 
+                        background: theme.theme === option.value
+                          ? `${theme.primaryColor}20`
                           : 'rgba(255, 255, 255, 0.05)',
-                        border: `1px solid ${theme.theme === option.value 
-                          ? theme.primaryColor 
+                        border: `1px solid ${theme.theme === option.value
+                          ? theme.primaryColor
                           : 'rgba(255, 255, 255, 0.1)'}`,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
@@ -308,14 +308,14 @@ const ThemeCustomizer = () => {
                       onClick={() => handleThemeChange(option.value)}
                     >
                       <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                        <Icon 
-                          size={32} 
-                          color={theme.theme === option.value ? theme.primaryColor : '#6b7280'} 
+                        <Icon
+                          size={32}
+                          color={theme.theme === option.value ? theme.primaryColor : '#6b7280'}
                           style={{ marginBottom: 8 }}
                         />
-                        <Typography 
-                          variant="subtitle2" 
-                          fontWeight={600} 
+                        <Typography
+                          variant="subtitle2"
+                          fontWeight={600}
                           color={theme.theme === option.value ? theme.primaryColor : 'white'}
                           sx={{ mb: 1 }}
                         >
@@ -369,7 +369,7 @@ const ThemeCustomizer = () => {
               {colorPresets.map((preset) => (
                 <Grid item xs={4} key={preset.name}>
                   <Box sx={{ textAlign: 'center' }}>
-                    <ColorSwatch 
+                    <ColorSwatch
                       preset={preset}
                       isSelected={theme.primaryColor === preset.primary}
                     />
@@ -585,8 +585,8 @@ const ThemeCustomizer = () => {
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert 
-            onClose={() => setSnackbar({ ...snackbar, open: false })} 
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
             severity={snackbar.severity}
             sx={{
               background: 'rgba(0, 0, 0, 0.9)',
@@ -604,4 +604,3 @@ const ThemeCustomizer = () => {
 };
 
 export default ThemeCustomizer;
-

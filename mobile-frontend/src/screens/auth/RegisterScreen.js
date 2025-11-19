@@ -22,7 +22,7 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
   const { register } = useAuth();
   const { theme } = useTheme();
-  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -36,11 +36,11 @@ const RegisterScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  
+
   // Animation values
   const logoAnim = new Animated.Value(0);
   const formAnim = new Animated.Value(0);
-  
+
   React.useEffect(() => {
     // Start animations when component mounts
     Animated.sequence([
@@ -56,12 +56,12 @@ const RegisterScreen = () => {
       }),
     ]).start();
   }, []);
-  
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setError(''); // Clear error when user starts typing
   };
-  
+
   const validateForm = () => {
     if (!formData.firstName.trim()) {
       setError('First name is required');
@@ -97,12 +97,12 @@ const RegisterScreen = () => {
     }
     return true;
   };
-  
+
   const handleRegister = async () => {
     if (!validateForm()) {
       return;
     }
-    
+
     try {
       setLoading(true);
       setError('');
@@ -114,11 +114,11 @@ const RegisterScreen = () => {
       setLoading(false);
     }
   };
-  
+
   const navigateToLogin = () => {
     navigation.navigate('Login');
   };
-  
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -151,7 +151,7 @@ const RegisterScreen = () => {
             Join the Future of Trading
           </Text>
         </Animated.View>
-        
+
         <Animated.View
           style={[
             styles.formContainer,
@@ -170,14 +170,14 @@ const RegisterScreen = () => {
           ]}
         >
           <Text style={[styles.formTitle, { color: theme.text }]}>Create Account</Text>
-          
+
           {error ? (
             <View style={styles.errorContainer}>
               <Icon name="alert-circle" size={20} color={theme.error} />
               <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
             </View>
           ) : null}
-          
+
           <View style={styles.nameRow}>
             <View style={[styles.inputGroup, styles.halfWidth]}>
               <Icon name="account" size={20} color={theme.text} style={styles.inputIcon} />
@@ -190,7 +190,7 @@ const RegisterScreen = () => {
                 autoCapitalize="words"
               />
             </View>
-            
+
             <View style={[styles.inputGroup, styles.halfWidth]}>
               <Icon name="account" size={20} color={theme.text} style={styles.inputIcon} />
               <TextInput
@@ -203,7 +203,7 @@ const RegisterScreen = () => {
               />
             </View>
           </View>
-          
+
           <View style={styles.inputGroup}>
             <Icon name="email" size={20} color={theme.text} style={styles.inputIcon} />
             <TextInput
@@ -216,7 +216,7 @@ const RegisterScreen = () => {
               keyboardType="email-address"
             />
           </View>
-          
+
           <View style={styles.inputGroup}>
             <Icon name="phone" size={20} color={theme.text} style={styles.inputIcon} />
             <TextInput
@@ -228,7 +228,7 @@ const RegisterScreen = () => {
               keyboardType="phone-pad"
             />
           </View>
-          
+
           <View style={styles.inputGroup}>
             <Icon name="lock" size={20} color={theme.text} style={styles.inputIcon} />
             <TextInput
@@ -250,7 +250,7 @@ const RegisterScreen = () => {
               />
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.inputGroup}>
             <Icon name="lock-check" size={20} color={theme.text} style={styles.inputIcon} />
             <TextInput
@@ -272,13 +272,13 @@ const RegisterScreen = () => {
               />
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.passwordRequirements}>
             <Text style={[styles.requirementText, { color: theme.text + 'CC' }]}>
               Password must be at least 8 characters long
             </Text>
           </View>
-          
+
           <TouchableOpacity
             style={styles.termsContainer}
             onPress={() => setAcceptedTerms(!acceptedTerms)}
@@ -303,7 +303,7 @@ const RegisterScreen = () => {
               </Text>
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.registerButton, { backgroundColor: theme.primary }]}
             onPress={handleRegister}
@@ -315,13 +315,13 @@ const RegisterScreen = () => {
               <Text style={styles.registerButtonText}>Create Account</Text>
             )}
           </TouchableOpacity>
-          
+
           <View style={styles.divider}>
             <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
             <Text style={[styles.dividerText, { color: theme.text }]}>OR</Text>
             <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
           </View>
-          
+
           <View style={styles.socialButtons}>
             <TouchableOpacity
               style={[styles.socialButton, { borderColor: theme.border }]}
@@ -335,7 +335,7 @@ const RegisterScreen = () => {
                 Google
               </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.socialButton, { borderColor: theme.border }]}
               onPress={() => {
@@ -349,7 +349,7 @@ const RegisterScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           <TouchableOpacity
             style={styles.loginButton}
             onPress={navigateToLogin}
@@ -544,4 +544,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
-

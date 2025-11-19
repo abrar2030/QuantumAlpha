@@ -21,5 +21,3 @@ describe("Login Flow", () => {
     await expect(element(by.id("dashboardScreen"))).toBeVisible();
   });
 });
-
-

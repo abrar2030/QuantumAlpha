@@ -173,4 +173,3 @@ int-import-graph=
 [EXCEPTIONS]
 # Exceptions that will emit a warning when being caught
 overgeneral-exceptions=Exception
-

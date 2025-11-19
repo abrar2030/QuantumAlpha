@@ -113,4 +113,3 @@ mkdocs serve
 ```
 
 Then open your browser to `http://localhost:8000` to view the documentation.
-

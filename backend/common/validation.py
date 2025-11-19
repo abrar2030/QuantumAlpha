@@ -14,8 +14,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import bleach
 import structlog
 from flask import jsonify, request
-from marshmallow import (Schema, ValidationError, fields, post_load, pre_load,
-                         validate)
+from marshmallow import Schema, ValidationError, fields, post_load, pre_load, validate
 from marshmallow.decorators import validates, validates_schema
 
 logger = structlog.get_logger(__name__)

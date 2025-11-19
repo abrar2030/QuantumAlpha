@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
-  
+
 namespace: quantumalpha-staging
 
 patchesStrategicMerge:

@@ -7,7 +7,7 @@ import { Dimensions } from 'react-native';
 const MarketOverview = () => {
   const { theme } = useTheme();
   const screenWidth = Dimensions.get('window').width;
-  
+
   // Mock market data
   const marketData = {
     indices: [
@@ -24,11 +24,11 @@ const MarketOverview = () => {
       ],
     },
   };
-  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.card }]}>
       <Text style={[styles.title, { color: theme.text }]}>Market Overview</Text>
-      
+
       <View style={styles.indicesContainer}>
         {marketData.indices.map((index, i) => (
           <View key={i} style={styles.indexItem}>
@@ -47,7 +47,7 @@ const MarketOverview = () => {
           </View>
         ))}
       </View>
-      
+
       <LineChart
         data={marketData.chartData}
         width={screenWidth - 40}

@@ -13,32 +13,32 @@ buckets:
     description: "Market data time series"
     retention_period: 90d
     shard_group_duration: 1d
-  
+
   - name: market_data_5m
     description: "5-minute downsampled market data"
     retention_period: 180d
     shard_group_duration: 1d
-  
+
   - name: market_data_1h
     description: "1-hour downsampled market data"
     retention_period: 365d
     shard_group_duration: 1d
-  
+
   - name: market_data_1d
     description: "1-day downsampled market data"
     retention_period: 1825d  # 5 years
     shard_group_duration: 7d
-  
+
   - name: technical_indicators
     description: "Technical indicators time series"
     retention_period: 90d
     shard_group_duration: 1d
-  
+
   - name: portfolio_metrics
     description: "Portfolio performance metrics"
     retention_period: 1825d  # 5 years
     shard_group_duration: 7d
-  
+
   - name: system_metrics
     description: "System performance metrics"
     retention_period: 30d
@@ -65,7 +65,7 @@ measurements:
         type: integer
       - name: vwap
         type: float
-  
+
   - name: quote
     bucket: market_data
     tags:
@@ -82,7 +82,7 @@ measurements:
         type: integer
       - name: spread
         type: float
-  
+
   - name: trade
     bucket: market_data
     tags:
@@ -94,7 +94,7 @@ measurements:
         type: float
       - name: size
         type: integer
-  
+
   - name: technical_indicator
     bucket: technical_indicators
     tags:
@@ -104,7 +104,7 @@ measurements:
     fields:
       - name: value
         type: float
-  
+
   - name: portfolio_performance
     bucket: portfolio_metrics
     tags:
@@ -123,7 +123,7 @@ measurements:
         type: float
       - name: drawdown
         type: float
-  
+
   - name: system_performance
     bucket: system_metrics
     tags:
@@ -154,7 +154,7 @@ continuous_queries:
         |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
         |> to(bucket: "market_data_5m", org: "quantumalpha")
     every: 5m
-  
+
   - name: downsample_price_1h
     query: >
       from(bucket: "market_data")
@@ -163,7 +163,7 @@ continuous_queries:
         |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)
         |> to(bucket: "market_data_1h", org: "quantumalpha")
     every: 1h
-  
+
   - name: downsample_price_1d
     query: >
       from(bucket: "market_data")
@@ -172,7 +172,7 @@ continuous_queries:
         |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)
         |> to(bucket: "market_data_1d", org: "quantumalpha")
     every: 1d
-  
+
   - name: calculate_daily_metrics
     query: >
       from(bucket: "portfolio_metrics")
@@ -187,22 +187,22 @@ tasks:
   - name: clean_old_data
     query: >
       option task = {name: "clean_old_data", every: 1d}
-      
+
       delete_old_data = (bucket, measurement, older_than) => {
         from(bucket: bucket)
           |> range(start: 0, stop: older_than)
           |> filter(fn: (r) => r._measurement == measurement)
           |> drop()
       }
-      
+
       delete_old_data(bucket: "market_data", measurement: "trade", older_than: -30d)
       delete_old_data(bucket: "system_metrics", measurement: "system_performance", older_than: -7d)
     every: 1d
-  
+
   - name: compute_volatility
     query: >
       option task = {name: "compute_volatility", every: 1h}
-      
+
       from(bucket: "market_data")
         |> range(start: -30d)
         |> filter(fn: (r) => r._measurement == "price" and r._field == "close")
@@ -247,4 +247,3 @@ performance:
   max_concurrent_compactions: 0
   max_series_per_database: 1000000
   max_values_per_tag: 100000
-

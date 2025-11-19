@@ -145,7 +145,7 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
             <XAxis dataKey="time" stroke="rgba(255,255,255,0.7)" fontSize={12} />
             <YAxis stroke="rgba(255,255,255,0.7)" fontSize={12} domain={['dataMin - 1', 'dataMax + 1']} />
-            <RechartsTooltip 
+            <RechartsTooltip
               contentStyle={{
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -154,19 +154,19 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
               }}
             />
             <Legend />
-            <Line 
-              type="monotone" 
-              dataKey="close" 
-              stroke="#00d4ff" 
+            <Line
+              type="monotone"
+              dataKey="close"
+              stroke="#00d4ff"
               strokeWidth={2}
               dot={false}
               name="Price"
             />
             {indicators.sma && (
-              <Line 
-                type="monotone" 
-                dataKey="sma" 
-                stroke="#f59e0b" 
+              <Line
+                type="monotone"
+                dataKey="sma"
+                stroke="#f59e0b"
                 strokeWidth={1}
                 strokeDasharray="5 5"
                 dot={false}
@@ -174,10 +174,10 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
               />
             )}
             {indicators.ema && (
-              <Line 
-                type="monotone" 
-                dataKey="ema" 
-                stroke="#8b5cf6" 
+              <Line
+                type="monotone"
+                dataKey="ema"
+                stroke="#8b5cf6"
                 strokeWidth={1}
                 strokeDasharray="3 3"
                 dot={false}
@@ -199,7 +199,7 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
             <XAxis dataKey="time" stroke="rgba(255,255,255,0.7)" fontSize={12} />
             <YAxis stroke="rgba(255,255,255,0.7)" fontSize={12} domain={['dataMin - 1', 'dataMax + 1']} />
-            <RechartsTooltip 
+            <RechartsTooltip
               contentStyle={{
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -207,13 +207,13 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
                 color: 'white'
               }}
             />
-            <Area 
-              type="monotone" 
-              dataKey="close" 
-              stroke="#00d4ff" 
+            <Area
+              type="monotone"
+              dataKey="close"
+              stroke="#00d4ff"
               strokeWidth={2}
-              fillOpacity={1} 
-              fill="url(#colorPrice)" 
+              fillOpacity={1}
+              fill="url(#colorPrice)"
             />
           </AreaChart>
         );
@@ -224,7 +224,7 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
             <XAxis dataKey="time" stroke="rgba(255,255,255,0.7)" fontSize={12} />
             <YAxis stroke="rgba(255,255,255,0.7)" fontSize={12} />
-            <RechartsTooltip 
+            <RechartsTooltip
               contentStyle={{
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -242,7 +242,7 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
             <XAxis dataKey="time" stroke="rgba(255,255,255,0.7)" fontSize={12} />
             <YAxis stroke="rgba(255,255,255,0.7)" fontSize={12} domain={['dataMin - 1', 'dataMax + 1']} />
-            <RechartsTooltip 
+            <RechartsTooltip
               contentStyle={{
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -262,10 +262,10 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
             <Line type="monotone" dataKey="open" stroke="transparent" />
             <Line type="monotone" dataKey="close" stroke="#00d4ff" strokeWidth={2} dot={false} />
             {indicators.sma && (
-              <Line 
-                type="monotone" 
-                dataKey="sma" 
-                stroke="#f59e0b" 
+              <Line
+                type="monotone"
+                dataKey="sma"
+                stroke="#f59e0b"
                 strokeWidth={1}
                 strokeDasharray="5 5"
                 dot={false}
@@ -279,9 +279,9 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
 
   return (
     <Fade in={true} timeout={1000}>
-      <Paper 
+      <Paper
         elevation={0}
-        sx={{ 
+        sx={{
           p: 3,
           borderRadius: 4,
           background: 'rgba(255, 255, 255, 0.05)',
@@ -297,14 +297,14 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
             <Typography variant="h6" fontWeight={700} color="white">
               {title} - {symbol}
             </Typography>
-            <Chip 
-              label="Real-time" 
+            <Chip
+              label="Real-time"
               icon={<Zap size={16} />}
-              sx={{ 
+              sx={{
                 background: 'linear-gradient(45deg, #10b981, #059669)',
                 color: 'white',
                 fontWeight: 600
-              }} 
+              }}
             />
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -328,13 +328,13 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
                 </Button>
               ))}
             </ButtonGroup>
-            <IconButton 
+            <IconButton
               onClick={() => setIsFullscreen(!isFullscreen)}
               sx={{ color: '#00d4ff' }}
             >
               <Maximize2 size={20} />
             </IconButton>
-            <IconButton 
+            <IconButton
               onClick={handleMenuClick}
               sx={{ color: '#00d4ff' }}
             >
@@ -496,4 +496,3 @@ const AdvancedChart = ({ symbol = 'AAPL', title = 'Advanced Trading Chart' }) =>
 };
 
 export default AdvancedChart;
-

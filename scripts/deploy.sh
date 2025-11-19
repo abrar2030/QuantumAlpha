@@ -141,10 +141,10 @@ execute_cmd() {
 # Build Docker images
 if $BUILD; then
   echo -e "\n${YELLOW}Building Docker images...${NC}"
-  
+
   for SERVICE in "${SERVICES_ARRAY[@]}"; do
     echo -e "\n${BLUE}Building $SERVICE...${NC}"
-    
+
     case $SERVICE in
       web-frontend)
         BUILD_DIR="$PROJECT_ROOT/web-frontend"
@@ -153,22 +153,22 @@ if $BUILD; then
         BUILD_DIR="$PROJECT_ROOT/backend/$SERVICE"
         ;;
     esac
-    
+
     if [[ ! -d "$BUILD_DIR" ]]; then
       echo -e "${RED}Error: Service directory not found: $BUILD_DIR${NC}"
       continue
     fi
-    
+
     # Build Docker image
     BUILD_CMD="docker build -t $REGISTRY/$NAMESPACE/$SERVICE:$TAG $BUILD_DIR"
     execute_cmd "$BUILD_CMD"
-    
+
     if [[ "$TAG" != "latest" ]]; then
       # Also tag as latest
       TAG_CMD="docker tag $REGISTRY/$NAMESPACE/$SERVICE:$TAG $REGISTRY/$NAMESPACE/$SERVICE:latest"
       execute_cmd "$TAG_CMD"
     fi
-    
+
     echo -e "${GREEN}✓ Built $SERVICE${NC}"
   done
 fi
@@ -176,20 +176,20 @@ fi
 # Push Docker images to registry
 if $PUSH; then
   echo -e "\n${YELLOW}Pushing Docker images to registry...${NC}"
-  
+
   for SERVICE in "${SERVICES_ARRAY[@]}"; do
     echo -e "\n${BLUE}Pushing $SERVICE...${NC}"
-    
+
     # Push Docker image
     PUSH_CMD="docker push $REGISTRY/$NAMESPACE/$SERVICE:$TAG"
     execute_cmd "$PUSH_CMD"
-    
+
     if [[ "$TAG" != "latest" ]]; then
       # Also push latest tag
       PUSH_LATEST_CMD="docker push $REGISTRY/$NAMESPACE/$SERVICE:latest"
       execute_cmd "$PUSH_LATEST_CMD"
     fi
-    
+
     echo -e "${GREEN}✓ Pushed $SERVICE${NC}"
   done
 fi
@@ -197,19 +197,19 @@ fi
 # Deploy to Kubernetes
 if $DEPLOY; then
   echo -e "\n${YELLOW}Deploying to Kubernetes...${NC}"
-  
+
   # Check if kubectl is installed
   if ! command -v kubectl &> /dev/null; then
     echo -e "${RED}Error: kubectl not found${NC}"
     exit 1
   fi
-  
+
   # Check if kustomize is installed
   if ! command -v kustomize &> /dev/null; then
     echo -e "${RED}Error: kustomize not found${NC}"
     exit 1
   fi
-  
+
   # Set Kubernetes context based on environment
   case $ENV in
     dev)
@@ -222,51 +222,51 @@ if $DEPLOY; then
       KUBE_CONTEXT="quantumalpha-prod"
       ;;
   esac
-  
+
   # Set Kubernetes context
   CONTEXT_CMD="kubectl config use-context $KUBE_CONTEXT"
   execute_cmd "$CONTEXT_CMD"
-  
+
   # Deploy using kustomize
   KUSTOMIZE_DIR="$PROJECT_ROOT/infrastructure/kubernetes/overlays/$ENV"
-  
+
   if [[ ! -d "$KUSTOMIZE_DIR" ]]; then
     echo -e "${RED}Error: Kustomize directory not found: $KUSTOMIZE_DIR${NC}"
     exit 1
   fi
-  
+
   cd "$KUSTOMIZE_DIR"
-  
+
   # Update image tags in kustomization
   for SERVICE in "${SERVICES_ARRAY[@]}"; do
     IMAGE_CMD="kustomize edit set image $REGISTRY/$NAMESPACE/$SERVICE:$TAG"
     execute_cmd "$IMAGE_CMD"
   done
-  
+
   # Apply kustomization
   APPLY_CMD="kustomize build . | kubectl apply -f -"
   execute_cmd "$APPLY_CMD"
-  
+
   echo -e "${GREEN}✓ Deployed to Kubernetes${NC}"
-  
+
   # Wait for deployments to be ready
   echo -e "\n${YELLOW}Waiting for deployments to be ready...${NC}"
-  
+
   for SERVICE in "${SERVICES_ARRAY[@]}"; do
     WAIT_CMD="kubectl rollout status deployment/$SERVICE -n $NAMESPACE --timeout=300s"
     execute_cmd "$WAIT_CMD"
   done
-  
+
   echo -e "${GREEN}✓ All deployments are ready${NC}"
-  
+
   # Show service URLs
   echo -e "\n${YELLOW}Service URLs:${NC}"
-  
+
   for SERVICE in "${SERVICES_ARRAY[@]}"; do
     if [[ "$SERVICE" == "web-frontend" ]]; then
       URL_CMD="kubectl get ingress -n $NAMESPACE -o jsonpath='{.items[?(@.metadata.name==\"web-frontend\")].status.loadBalancer.ingress[0].ip}'"
       URL=$(eval $URL_CMD)
-      
+
       if [[ ! -z "$URL" ]]; then
         echo -e "${BLUE}Web Frontend: http://$URL${NC}"
       else
@@ -275,7 +275,7 @@ if $DEPLOY; then
     else
       PORT_CMD="kubectl get service $SERVICE -n $NAMESPACE -o jsonpath='{.spec.ports[0].port}'"
       PORT=$(eval $PORT_CMD)
-      
+
       if [[ ! -z "$PORT" ]]; then
         echo -e "${BLUE}$SERVICE: http://$SERVICE.$NAMESPACE.svc.cluster.local:$PORT${NC}"
       fi
@@ -286,4 +286,3 @@ fi
 echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Deployment Completed      ${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

@@ -434,4 +434,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 6. Event-Driven Backtesting with Python - [https://www.quantstart.com/articles/Event-Driven-Backtesting-with-Python-Part-I/](https://www.quantstart.com/articles/Event-Driven-Backtesting-with-Python-Part-I/)
 7. Building algorithmic trading strategies with Amazon SageMaker - [https://aws.amazon.com/blogs/machine-learning/building-algorithmic-trading-strategies-with-amazon-sagemaker/](https://aws.amazon.com/blogs/machine-learning/building-algorithmic-trading-strategies-with-amazon-sagemaker/)
 8. Ray for Machine Learning & AI Computing - [https://www.ray.io/](https://www.ray.io/)
-

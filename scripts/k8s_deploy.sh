@@ -158,38 +158,38 @@ fi
 # Create namespace if it doesn't exist (for apply action)
 if [[ "$ACTION" == "apply" ]]; then
   echo -e "\n${YELLOW}Ensuring namespace exists: $NAMESPACE${NC}"
-  
+
   NAMESPACE_CMD="kubectl get namespace $NAMESPACE 2>/dev/null || kubectl create namespace $NAMESPACE"
   execute_cmd "$NAMESPACE_CMD"
-  
+
   echo -e "${GREEN}✓ Namespace ready: $NAMESPACE${NC}"
 fi
 
 # Process each component
 for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
   echo -e "\n${YELLOW}Processing component: $COMPONENT${NC}"
-  
+
   case $COMPONENT in
     infrastructure)
       echo -e "\n${BLUE}Deploying infrastructure components...${NC}"
-      
+
       # Define infrastructure components
       INFRA_COMPONENTS=("postgres" "influxdb" "redis" "kafka" "zookeeper")
-      
+
       for INFRA in "${INFRA_COMPONENTS[@]}"; do
         echo -e "\n${BLUE}Processing $INFRA...${NC}"
-        
+
         YAML_FILE="$PROJECT_ROOT/infrastructure/kubernetes/base/$INFRA.yaml"
-        
+
         if [[ ! -f "$YAML_FILE" ]]; then
           echo -e "${YELLOW}Warning: YAML file not found: $YAML_FILE${NC}"
           continue
         fi
-        
+
         # Apply or delete the resource
         KUBE_CMD="kubectl $ACTION -f $YAML_FILE -n $NAMESPACE"
         execute_cmd "$KUBE_CMD"
-        
+
         # Wait for resource to be ready if applying
         if [[ "$ACTION" == "apply" && "$WAIT" == true ]]; then
           if [[ "$INFRA" == "postgres" || "$INFRA" == "influxdb" || "$INFRA" == "redis" ]]; then
@@ -200,61 +200,61 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
             execute_cmd "$WAIT_CMD"
           fi
         fi
-        
+
         echo -e "${GREEN}✓ Processed $INFRA${NC}"
       done
       ;;
-      
+
     services)
       echo -e "\n${BLUE}Deploying service components...${NC}"
-      
+
       # Define service components
       SERVICE_COMPONENTS=("data-service" "ai-engine" "risk-service" "execution-service" "web-frontend")
-      
+
       for SERVICE in "${SERVICE_COMPONENTS[@]}"; do
         echo -e "\n${BLUE}Processing $SERVICE...${NC}"
-        
+
         YAML_FILE="$PROJECT_ROOT/infrastructure/kubernetes/base/$SERVICE.yaml"
-        
+
         if [[ ! -f "$YAML_FILE" ]]; then
           echo -e "${YELLOW}Warning: YAML file not found: $YAML_FILE${NC}"
           continue
         fi
-        
+
         # Apply or delete the resource
         KUBE_CMD="kubectl $ACTION -f $YAML_FILE -n $NAMESPACE"
         execute_cmd "$KUBE_CMD"
-        
+
         # Wait for resource to be ready if applying
         if [[ "$ACTION" == "apply" && "$WAIT" == true ]]; then
           WAIT_CMD="kubectl rollout status deployment/$SERVICE -n $NAMESPACE --timeout=300s"
           execute_cmd "$WAIT_CMD"
         fi
-        
+
         echo -e "${GREEN}✓ Processed $SERVICE${NC}"
       done
       ;;
-      
+
     monitoring)
       echo -e "\n${BLUE}Deploying monitoring components...${NC}"
-      
+
       # Define monitoring components
       MONITORING_COMPONENTS=("prometheus" "grafana" "elasticsearch" "fluentd" "kibana")
-      
+
       for MONITOR in "${MONITORING_COMPONENTS[@]}"; do
         echo -e "\n${BLUE}Processing $MONITOR...${NC}"
-        
+
         YAML_FILE="$PROJECT_ROOT/infrastructure/monitoring/$MONITOR.yaml"
-        
+
         if [[ ! -f "$YAML_FILE" ]]; then
           echo -e "${YELLOW}Warning: YAML file not found: $YAML_FILE${NC}"
           continue
         fi
-        
+
         # Apply or delete the resource
         KUBE_CMD="kubectl $ACTION -f $YAML_FILE -n $NAMESPACE"
         execute_cmd "$KUBE_CMD"
-        
+
         # Wait for resource to be ready if applying
         if [[ "$ACTION" == "apply" && "$WAIT" == true ]]; then
           if [[ "$MONITOR" == "prometheus" || "$MONITOR" == "grafana" || "$MONITOR" == "kibana" ]]; then
@@ -268,11 +268,11 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
             execute_cmd "$WAIT_CMD"
           fi
         fi
-        
+
         echo -e "${GREEN}✓ Processed $MONITOR${NC}"
       done
       ;;
-      
+
     *)
       echo -e "${RED}Error: Unknown component: $COMPONENT${NC}"
       echo "Available components: infrastructure, services, monitoring"
@@ -283,18 +283,18 @@ done
 # Apply environment-specific overlays if action is apply
 if [[ "$ACTION" == "apply" ]]; then
   echo -e "\n${YELLOW}Applying environment-specific overlays...${NC}"
-  
+
   KUSTOMIZE_DIR="$PROJECT_ROOT/infrastructure/kubernetes/overlays/$ENV"
-  
+
   if [[ ! -d "$KUSTOMIZE_DIR" ]]; then
     echo -e "${RED}Error: Kustomize directory not found: $KUSTOMIZE_DIR${NC}"
   else
     cd "$KUSTOMIZE_DIR"
-    
+
     # Apply kustomization
     APPLY_CMD="kustomize build . | kubectl apply -f - -n $NAMESPACE"
     execute_cmd "$APPLY_CMD"
-    
+
     echo -e "${GREEN}✓ Applied environment-specific overlays${NC}"
   fi
 fi
@@ -302,16 +302,16 @@ fi
 # Show service URLs if action is apply
 if [[ "$ACTION" == "apply" ]]; then
   echo -e "\n${YELLOW}Service URLs:${NC}"
-  
+
   # Wait a moment for services to be ready
   sleep 5
-  
+
   # Get web frontend URL
   if [[ "$ENV" == "dev" ]]; then
     # For local development, use NodePort
     PORT_CMD="kubectl get service web-frontend -n $NAMESPACE -o jsonpath='{.spec.ports[0].nodePort}'"
     PORT=$(eval $PORT_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$PORT" ]]; then
       if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
         IP_CMD="minikube ip"
@@ -327,21 +327,21 @@ if [[ "$ACTION" == "apply" ]]; then
     # For staging/prod, use Ingress
     URL_CMD="kubectl get ingress -n $NAMESPACE -o jsonpath='{.items[?(@.metadata.name==\"web-frontend\")].status.loadBalancer.ingress[0].ip}'"
     URL=$(eval $URL_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$URL" ]]; then
       echo -e "${BLUE}Web Frontend: http://$URL${NC}"
     else
       echo -e "${YELLOW}Web Frontend URL not available yet${NC}"
     fi
   fi
-  
+
   # Show backend service URLs
   SERVICES=("data-service" "ai-engine" "risk-service" "execution-service")
-  
+
   for SERVICE in "${SERVICES[@]}"; do
     PORT_CMD="kubectl get service $SERVICE -n $NAMESPACE -o jsonpath='{.spec.ports[0].port}'"
     PORT=$(eval $PORT_CMD 2>/dev/null || echo "")
-    
+
     if [[ ! -z "$PORT" ]]; then
       echo -e "${BLUE}$SERVICE: http://$SERVICE.$NAMESPACE.svc.cluster.local:$PORT${NC}"
     fi
@@ -352,4 +352,3 @@ echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Kubernetes Deployment     ${NC}"
 echo -e "${GREEN}  Completed                              ${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

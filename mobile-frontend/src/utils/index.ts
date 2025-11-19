@@ -28,7 +28,7 @@ export const hp = (percentage: number) => {
 export const normalize = (size: number) => {
   const scale = windowData.width / 320;
   const newSize = size * scale;
-  
+
   if (Platform.OS === 'ios') {
     return Math.round(PixelRatio.roundToNearestPixel(newSize));
   } else {
@@ -132,7 +132,7 @@ export const isStrongPassword = (password: string): boolean => {
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumbers = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
+
   return (
     password.length >= minLength &&
     hasUpperCase &&
@@ -172,7 +172,7 @@ export const sortBy = <T>(array: T[], key: keyof T, direction: 'asc' | 'desc' = 
   return [...array].sort((a, b) => {
     const aVal = a[key];
     const bVal = b[key];
-    
+
     if (aVal < bVal) return direction === 'asc' ? -1 : 1;
     if (aVal > bVal) return direction === 'asc' ? 1 : -1;
     return 0;
@@ -202,7 +202,7 @@ export const retry = async <T>(
   delayMs: number = 1000
 ): Promise<T> => {
   let lastError: Error;
-  
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await fn();
@@ -213,7 +213,7 @@ export const retry = async <T>(
       }
     }
   }
-  
+
   throw lastError!;
 };
 
@@ -234,7 +234,7 @@ export const secureStorage = {
       throw error;
     }
   },
-  
+
   getItem: async (key: string): Promise<string | null> => {
     try {
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -251,7 +251,7 @@ export const secureStorage = {
       return null;
     }
   },
-  
+
   removeItem: async (key: string): Promise<void> => {
     try {
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -268,4 +268,3 @@ export const secureStorage = {
     }
   },
 };
-

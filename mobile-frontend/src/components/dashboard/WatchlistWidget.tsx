@@ -98,7 +98,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
 
   const renderAssetItem = (asset: Asset, index: number) => {
     const isPositive = asset.change >= 0;
-    
+
     return (
       <Animatable.View
         key={asset.symbol}
@@ -117,7 +117,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
               {asset.name}
             </Text>
           </View>
-          
+
           <View style={styles.assetPricing}>
             <Text style={[styles.assetPrice, { color: theme.text }]}>
               {formatCurrency(asset.price)}
@@ -176,7 +176,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
       <Card variant="elevated" padding="none" margin="medium">
         {watchlistData && watchlistData.length > 0 ? (
           <View style={styles.assetList}>
-            {watchlistData.slice(0, maxItems).map((asset, index) => 
+            {watchlistData.slice(0, maxItems).map((asset, index) =>
               renderAssetItem(asset, index)
             )}
           </View>
@@ -302,4 +302,3 @@ const styles = StyleSheet.create({
 });
 
 export default WatchlistWidget;
-

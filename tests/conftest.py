@@ -18,8 +18,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from backend.common.config import ConfigManager
     from backend.common.database import DatabaseManager
-    from backend.common.models import (Execution, Model, Order, Portfolio,
-                                       Signal, Strategy, User)
+    from backend.common.models import (
+        Execution,
+        Model,
+        Order,
+        Portfolio,
+        Signal,
+        Strategy,
+        User,
+    )
 except ImportError:
     pass  # Handle imports gracefully when modules are not available
 

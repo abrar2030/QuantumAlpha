@@ -116,13 +116,13 @@ if [[ -z "$BACKUP_FILE" && ! -z "$TIMESTAMP" ]]; then
     # Download from S3
     S3_PATH="s3://$S3_BUCKET/$S3_PREFIX/$ENV/$TIMESTAMP.tar.gz"
     BACKUP_FILE="$BACKUP_DIR/$ENV-$TIMESTAMP.tar.gz"
-    
+
     # Check if AWS CLI is installed
     if ! command -v aws &> /dev/null; then
       echo -e "${RED}Error: AWS CLI not found${NC}"
       exit 1
     fi
-    
+
     echo -e "${YELLOW}Downloading backup from S3: $S3_PATH${NC}"
     if ! $DRY_RUN; then
       mkdir -p "$BACKUP_DIR"
@@ -200,48 +200,48 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
   case $COMPONENT in
     postgres)
       echo -e "\n${YELLOW}Restoring PostgreSQL database...${NC}"
-      
+
       # Check if PostgreSQL backup exists
       if [[ ! -d "$RESTORE_PATH/postgres" && ! $DRY_RUN ]]; then
         echo -e "${YELLOW}Warning: PostgreSQL backup not found in the archive${NC}"
         continue
       fi
-      
+
       # Set default values if not in environment
       DB_HOST=${DB_HOST:-localhost}
       DB_PORT=${DB_PORT:-5432}
       DB_USERNAME=${DB_USERNAME:-postgres}
       DB_PASSWORD=${DB_PASSWORD:-postgres}
       DB_NAME=${DB_NAME:-quantumalpha}
-      
+
       # Set PGPASSWORD environment variable
       export PGPASSWORD="$DB_PASSWORD"
-      
+
       # Check if database exists
       DB_EXISTS_CMD="psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -lqt | cut -d \\| -f 1 | grep -qw $DB_NAME"
-      
+
       if $DRY_RUN; then
         echo -e "${YELLOW}[DRY RUN] Checking if database exists: $DB_NAME${NC}"
       else
         if eval $DB_EXISTS_CMD; then
           echo -e "${YELLOW}Database exists: $DB_NAME${NC}"
-          
+
           # Drop connections to the database
           DROP_CONN_CMD="psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -c \"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$DB_NAME' AND pid <> pg_backend_pid();\" postgres"
           execute_cmd "$DROP_CONN_CMD"
-          
+
           # Drop database
           DROP_DB_CMD="psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -c \"DROP DATABASE $DB_NAME;\" postgres"
           execute_cmd "$DROP_DB_CMD"
         else
           echo -e "${YELLOW}Database does not exist: $DB_NAME${NC}"
         fi
-        
+
         # Create database
         CREATE_DB_CMD="psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -c \"CREATE DATABASE $DB_NAME;\" postgres"
         execute_cmd "$CREATE_DB_CMD"
       fi
-      
+
       # Restore full database
       if [[ -f "$RESTORE_PATH/postgres/full_backup.dump" || $DRY_RUN ]]; then
         RESTORE_CMD="pg_restore -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -v $RESTORE_PATH/postgres/full_backup.dump"
@@ -252,39 +252,39 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
           SCHEMA_RESTORE_CMD="psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f $RESTORE_PATH/postgres/schema.sql"
           execute_cmd "$SCHEMA_RESTORE_CMD"
         fi
-        
+
         # Restore data
         if [[ -f "$RESTORE_PATH/postgres/data.sql" || $DRY_RUN ]]; then
           DATA_RESTORE_CMD="psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_NAME -f $RESTORE_PATH/postgres/data.sql"
           execute_cmd "$DATA_RESTORE_CMD"
         fi
       fi
-      
+
       # Clear PGPASSWORD
       unset PGPASSWORD
-      
+
       echo -e "${GREEN}✓ PostgreSQL restore completed${NC}"
       ;;
-      
+
     influxdb)
       echo -e "\n${YELLOW}Restoring InfluxDB...${NC}"
-      
+
       # Check if InfluxDB backup exists
       if [[ ! -d "$RESTORE_PATH/influxdb" && ! $DRY_RUN ]]; then
         echo -e "${YELLOW}Warning: InfluxDB backup not found in the archive${NC}"
         continue
       fi
-      
+
       # Set default values if not in environment
       INFLUXDB_URL=${INFLUXDB_URL:-http://localhost:8086}
       INFLUXDB_ORG=${INFLUXDB_ORG:-quantumalpha}
       INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-}
       INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-market_data}
-      
+
       # Check if influx CLI is installed
       if ! command -v influx &> /dev/null; then
         echo -e "${YELLOW}Warning: influx CLI not found. Using Docker for restore.${NC}"
-        
+
         # Use Docker to restore InfluxDB
         INFLUX_RESTORE_CMD="docker run --rm \
           -v $RESTORE_PATH/influxdb:/backup \
@@ -299,36 +299,36 @@ for COMPONENT in "${COMPONENTS_ARRAY[@]}"; do
         INFLUX_RESTORE_CMD="influx restore $RESTORE_PATH/influxdb --host $INFLUXDB_URL --org $INFLUXDB_ORG --token $INFLUXDB_TOKEN --bucket $INFLUXDB_BUCKET"
         execute_cmd "$INFLUX_RESTORE_CMD"
       fi
-      
+
       echo -e "${GREEN}✓ InfluxDB restore completed${NC}"
       ;;
-      
+
     config)
       echo -e "\n${YELLOW}Restoring configuration files...${NC}"
-      
+
       # Check if config backup exists
       if [[ ! -d "$RESTORE_PATH/config" && ! $DRY_RUN ]]; then
         echo -e "${YELLOW}Warning: Configuration backup not found in the archive${NC}"
         continue
       fi
-      
+
       # Backup current config
       CURRENT_CONFIG_BACKUP="$PROJECT_ROOT/config.bak"
       BACKUP_CURRENT_CMD="mv $PROJECT_ROOT/config $CURRENT_CONFIG_BACKUP"
       execute_cmd "$BACKUP_CURRENT_CMD"
-      
+
       # Create config directory
       MKDIR_CMD="mkdir -p $PROJECT_ROOT/config"
       execute_cmd "$MKDIR_CMD"
-      
+
       # Restore config
       RESTORE_CONFIG_CMD="cp -r $RESTORE_PATH/config/* $PROJECT_ROOT/config/"
       execute_cmd "$RESTORE_CONFIG_CMD"
-      
+
       echo -e "${GREEN}✓ Configuration restore completed${NC}"
       echo -e "${YELLOW}Note: Original configuration backed up to $CURRENT_CONFIG_BACKUP${NC}"
       ;;
-      
+
     *)
       echo -e "${RED}Error: Unknown component: $COMPONENT${NC}"
       echo "Available components: postgres, influxdb, config"
@@ -345,4 +345,3 @@ echo -e "${GREEN}✓ Temporary files cleaned up${NC}"
 echo -e "\n${GREEN}=========================================${NC}"
 echo -e "${GREEN}  QuantumAlpha Restore Completed         ${NC}"
 echo -e "${GREEN}=========================================${NC}"
-

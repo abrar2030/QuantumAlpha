@@ -16,25 +16,25 @@ ON CONFLICT (symbol) DO NOTHING;
 -- Insert sample AI models
 INSERT INTO ai_models.models (id, name, description, type, status, parameters, metrics)
 VALUES
-    ('lstm_model_001', 'LSTM Price Predictor', 'LSTM model for price prediction', 'lstm', 'trained', 
-     '{"layers": 2, "units": 64, "dropout": 0.2, "optimizer": "adam"}', 
+    ('lstm_model_001', 'LSTM Price Predictor', 'LSTM model for price prediction', 'lstm', 'trained',
+     '{"layers": 2, "units": 64, "dropout": 0.2, "optimizer": "adam"}',
      '{"mse": 0.0023, "mae": 0.0345, "r2": 0.87}'),
-    ('cnn_model_001', 'CNN Pattern Detector', 'CNN model for pattern detection', 'cnn', 'trained', 
-     '{"filters": 32, "kernel_size": 3, "pool_size": 2, "optimizer": "adam"}', 
+    ('cnn_model_001', 'CNN Pattern Detector', 'CNN model for pattern detection', 'cnn', 'trained',
+     '{"filters": 32, "kernel_size": 3, "pool_size": 2, "optimizer": "adam"}',
      '{"accuracy": 0.92, "precision": 0.89, "recall": 0.91}'),
-    ('rl_model_001', 'RL Trading Agent', 'Reinforcement learning model for trading', 'reinforcement', 'trained', 
-     '{"algorithm": "ppo", "gamma": 0.99, "learning_rate": 0.0003}', 
+    ('rl_model_001', 'RL Trading Agent', 'Reinforcement learning model for trading', 'reinforcement', 'trained',
+     '{"algorithm": "ppo", "gamma": 0.99, "learning_rate": 0.0003}',
      '{"avg_reward": 245.6, "max_reward": 512.3, "win_rate": 0.68}')
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert sample portfolios
 INSERT INTO risk_management.portfolios (id, name, description, owner_id, parameters)
 VALUES
-    ('portfolio_001', 'Tech Growth Portfolio', 'Portfolio focused on tech growth stocks', 'user_001', 
+    ('portfolio_001', 'Tech Growth Portfolio', 'Portfolio focused on tech growth stocks', 'user_001',
      '{"risk_tolerance": "high", "investment_horizon": "long_term", "rebalance_frequency": "quarterly"}'),
-    ('portfolio_002', 'Balanced Portfolio', 'Balanced portfolio with mixed assets', 'user_001', 
+    ('portfolio_002', 'Balanced Portfolio', 'Balanced portfolio with mixed assets', 'user_001',
      '{"risk_tolerance": "medium", "investment_horizon": "medium_term", "rebalance_frequency": "monthly"}'),
-    ('portfolio_003', 'Crypto Portfolio', 'Portfolio focused on cryptocurrencies', 'user_002', 
+    ('portfolio_003', 'Crypto Portfolio', 'Portfolio focused on cryptocurrencies', 'user_002',
      '{"risk_tolerance": "very_high", "investment_horizon": "short_term", "rebalance_frequency": "weekly"}')
 ON CONFLICT (id) DO NOTHING;
 
@@ -96,4 +96,3 @@ VALUES
     ('broker_account_002', 'Alpaca', 'A1234567', 'api_key_2', 'api_secret_2', '{"paper_trading": true}', TRUE),
     ('broker_account_003', 'Binance', 'B1234567', 'api_key_3', 'api_secret_3', '{"paper_trading": true}', TRUE)
 ON CONFLICT (id) DO NOTHING;
-
