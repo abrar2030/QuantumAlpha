@@ -9,9 +9,14 @@ import pyotp
 import redis
 import structlog
 from flask import jsonify, request
-from flask_jwt_extended import (JWTManager, create_access_token,
-                                create_refresh_token, get_jwt,
-                                get_jwt_identity, jwt_required)
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    create_refresh_token,
+    get_jwt,
+    get_jwt_identity,
+    jwt_required,
+)
 
 from .audit import log_security_event
 from .database import get_db_session

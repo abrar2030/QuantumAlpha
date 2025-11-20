@@ -19,8 +19,7 @@ sys.path.append(
 # Import module to test
 try:
     from backend.ai_engine.model_manager import ModelManager
-    from backend.common.exceptions import (NotFoundError, ServiceError,
-                                           ValidationError)
+    from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
 except ImportError:
     # Mock the classes for testing when imports fail
     class ModelManager:

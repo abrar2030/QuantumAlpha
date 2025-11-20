@@ -109,8 +109,7 @@ def calculate_metrics(actual: np.ndarray, predicted: np.ndarray) -> Dict[str, fl
     Returns:
         Dictionary of metrics
     """
-    from sklearn.metrics import (mean_absolute_error, mean_squared_error,
-                                 r2_score)
+    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
     mse = mean_squared_error(actual, predicted)
     rmse = np.sqrt(mse)

@@ -17,9 +17,15 @@ sys.path.append(
 
 # Import module to test
 try:
-    from backend.common.auth import (AuthManager, generate_token,
-                                     hash_password, require_auth, require_role,
-                                     verify_password, verify_token)
+    from backend.common.auth import (
+        AuthManager,
+        generate_token,
+        hash_password,
+        require_auth,
+        require_role,
+        verify_password,
+        verify_token,
+    )
     from backend.common.exceptions import AuthError, ValidationError
 except ImportError:
     # Mock the classes and functions for testing when imports fail

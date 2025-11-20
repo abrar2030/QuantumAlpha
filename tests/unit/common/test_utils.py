@@ -19,18 +19,28 @@ sys.path.append(
 # Import module to test
 try:
     from backend.common.exceptions import ValidationError
-    from backend.common.utils import (calculate_moving_average,
-                                      calculate_percentage_change, deep_get,
-                                      deep_set, denormalize_data,
-                                      dict_to_object, filter_dict_by_keys,
-                                      flatten_dict, format_timestamp,
-                                      generate_id, merge_dictionaries,
-                                      normalize_data, object_to_dict,
-                                      parse_timestamp, resample_data,
-                                      unflatten_dict, validate_enum_field,
-                                      validate_field_range,
-                                      validate_field_type,
-                                      validate_required_fields)
+    from backend.common.utils import (
+        calculate_moving_average,
+        calculate_percentage_change,
+        deep_get,
+        deep_set,
+        denormalize_data,
+        dict_to_object,
+        filter_dict_by_keys,
+        flatten_dict,
+        format_timestamp,
+        generate_id,
+        merge_dictionaries,
+        normalize_data,
+        object_to_dict,
+        parse_timestamp,
+        resample_data,
+        unflatten_dict,
+        validate_enum_field,
+        validate_field_range,
+        validate_field_type,
+        validate_required_fields,
+    )
 except ImportError:
     # Mock the functions for testing when imports fail
     def generate_id(prefix="id"):

@@ -5,6 +5,7 @@ Handles continuous data ingestion and model updates.
 
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 import threading

@@ -15,8 +15,7 @@ sys.path.append(
 
 # Import module to test
 try:
-    from backend.common.exceptions import (NotFoundError, ServiceError,
-                                           ValidationError)
+    from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
     from backend.common.models import Execution, Order
     from backend.execution_service.order_manager import OrderManager
 except ImportError:

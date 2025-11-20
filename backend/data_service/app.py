@@ -18,11 +18,17 @@ from flask_cors import CORS
 # Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (ServiceError, get_config_manager, get_db_manager,
-                    setup_logger, validate_schema)
+from common import (
+    ServiceError,
+    get_config_manager,
+    get_db_manager,
+    setup_logger,
+    validate_schema,
+)
 from common.validation import MarketDataRequest
 from data_service.alternative_data import AlternativeDataService
 from data_service.feature_engineering import FeatureEngineeringService
+
 # Import service modules
 from data_service.market_data import MarketDataService
 

@@ -9,19 +9,23 @@ from common.audit import audit_logger, log_security_event
 from common.auth import auth_manager, require_auth, require_role
 from common.database import cleanup_database, db_manager, initialize_database
 from common.logging_config import setup_logging
-from common.monitoring import (create_monitoring_blueprint,
-                               create_request_monitoring_middleware,
-                               monitoring_service)
-from common.validation import (OrderSchema, UserLoginSchema,
-                               UserRegistrationSchema, ValidationError,
-                               validate_json)
+from common.monitoring import (
+    create_monitoring_blueprint,
+    create_request_monitoring_middleware,
+    monitoring_service,
+)
+from common.validation import (
+    OrderSchema,
+    UserLoginSchema,
+    UserRegistrationSchema,
+    ValidationError,
+    validate_json,
+)
 from flask import Flask, g, jsonify, request
 from flask_cors import CORS
-from flask_jwt_extended import (JWTManager, get_jwt_identity,
-                                verify_jwt_in_request)
+from flask_jwt_extended import JWTManager, get_jwt_identity, verify_jwt_in_request
 from services.portfolio_service import portfolio_service
-from services.trading_engine import (OrderRequest, OrderSide, OrderType,
-                                     trading_engine)
+from services.trading_engine import OrderRequest, OrderSide, OrderType, trading_engine
 
 from config import Config
 

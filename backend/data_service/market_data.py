@@ -5,6 +5,7 @@ Handles market data collection, storage, and retrieval.
 
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 import uuid
@@ -17,8 +18,14 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (RateLimiter, ServiceError, SimpleCache, ValidationError,
-                    parse_period, setup_logger)
+from common import (
+    RateLimiter,
+    ServiceError,
+    SimpleCache,
+    ValidationError,
+    parse_period,
+    setup_logger,
+)
 
 # Configure logging
 logger = setup_logger("market_data_service", logging.INFO)

@@ -5,6 +5,7 @@ Provides detailed performance attribution and decomposition analysis.
 
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 from dataclasses import dataclass

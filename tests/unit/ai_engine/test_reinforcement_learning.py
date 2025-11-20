@@ -17,11 +17,12 @@ sys.path.append(
 
 # Import module to test
 try:
-    from backend.ai_engine.reinforcement_learning import (RLAgent,
-                                                          RLEnvironment,
-                                                          RLTrainer)
-    from backend.common.exceptions import (NotFoundError, ServiceError,
-                                           ValidationError)
+    from backend.ai_engine.reinforcement_learning import (
+        RLAgent,
+        RLEnvironment,
+        RLTrainer,
+    )
+    from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
 except ImportError:
     # Mock the classes for testing when imports fail
     class RLAgent:

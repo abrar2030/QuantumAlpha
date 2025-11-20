@@ -5,6 +5,7 @@ Handles alternative data collection, processing, and retrieval.
 
 import logging
 import os
+
 # Add parent directory to path to import common modules
 import sys
 from datetime import datetime, timedelta
@@ -14,8 +15,7 @@ import requests
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (RateLimiter, ServiceError, SimpleCache, ValidationError,
-                    setup_logger)
+from common import RateLimiter, ServiceError, SimpleCache, ValidationError, setup_logger
 
 # Configure logging
 logger = setup_logger("alternative_data_service", logging.INFO)

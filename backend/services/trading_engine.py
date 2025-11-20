@@ -9,8 +9,16 @@ from sqlalchemy import and_
 
 from .audit import audit_logger
 from .database import get_db_session, get_redis_client
-from .models import (AuditAction, Order, OrderExecution, OrderSide,
-                     OrderStatus, OrderType, Portfolio, Position)
+from .models import (
+    AuditAction,
+    Order,
+    OrderExecution,
+    OrderSide,
+    OrderStatus,
+    OrderType,
+    Portfolio,
+    Position,
+)
 from .portfolio_service import MarketDataService, portfolio_service
 from .validation import FinancialValidator
 

@@ -18,11 +18,17 @@ from flask_cors import CORS
 # Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from common import (ServiceError, ValidationError, get_config_manager,
-                    get_db_manager, setup_logger, validate_schema)
-from common.validation import (PositionSizeRequest, RiskMetricsRequest,
-                               StressTestRequest)
+from common import (
+    ServiceError,
+    ValidationError,
+    get_config_manager,
+    get_db_manager,
+    setup_logger,
+    validate_schema,
+)
+from common.validation import PositionSizeRequest, RiskMetricsRequest, StressTestRequest
 from risk_service.position_sizing import PositionSizing
+
 # Import service modules
 from risk_service.risk_calculator import RiskCalculator
 from risk_service.stress_testing import StressTesting
