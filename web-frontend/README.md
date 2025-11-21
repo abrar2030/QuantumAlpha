@@ -42,11 +42,13 @@ web-frontend/
 ## Getting Started
 
 1. Install dependencies:
+
    ```
    npm install
    ```
 
 2. Start development server:
+
    ```
    npm run dev
    ```
@@ -59,6 +61,7 @@ web-frontend/
 ## API Integration
 
 The frontend is designed to integrate with the following backend services:
+
 - Authentication Service
 - Data Service
 - Execution Service
@@ -68,6 +71,7 @@ The frontend is designed to integrate with the following backend services:
 ## Browser Compatibility
 
 The frontend is compatible with all modern browsers including:
+
 - Chrome
 - Firefox
 - Safari

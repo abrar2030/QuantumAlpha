@@ -1,10 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   drawerOpen: false,
   darkMode: true,
   notifications: [],
-  currentView: 'dashboard',
+  currentView: "dashboard",
   loading: {
     global: false,
     portfolio: false,
@@ -27,7 +27,7 @@ const initialState = {
 };
 
 const uiSlice = createSlice({
-  name: 'ui',
+  name: "ui",
   initialState,
   reducers: {
     toggleDrawer: (state) => {
@@ -50,7 +50,7 @@ const uiSlice = createSlice({
     },
     removeNotification: (state, action) => {
       state.notifications = state.notifications.filter(
-        (notification) => notification.id !== action.payload
+        (notification) => notification.id !== action.payload,
       );
     },
     clearNotifications: (state) => {

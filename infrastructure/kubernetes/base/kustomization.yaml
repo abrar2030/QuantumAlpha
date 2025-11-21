@@ -123,18 +123,18 @@ patchesJson6902:
 configMapGenerator:
   - name: app-config
     literals:
-    - ENVIRONMENT=production
-    - LOG_LEVEL=INFO
-    - METRICS_ENABLED=true
-    - AUDIT_ENABLED=true
-    - COMPLIANCE_MODE=strict
-    - SECURITY_LEVEL=high
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - METRICS_ENABLED=true
+      - AUDIT_ENABLED=true
+      - COMPLIANCE_MODE=strict
+      - SECURITY_LEVEL=high
 
 secretGenerator:
   - name: app-secrets
     literals:
-    - JWT_SECRET=changeme_jwt_secret_in_production
-    - ENCRYPTION_KEY=changeme_encryption_key_in_production
+      - JWT_SECRET=changeme_jwt_secret_in_production
+      - ENCRYPTION_KEY=changeme_encryption_key_in_production
     type: Opaque
 
 generatorOptions:

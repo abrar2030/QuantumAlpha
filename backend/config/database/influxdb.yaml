@@ -5,7 +5,7 @@ connection:
   url: ${INFLUXDB_URL}
   org: ${INFLUXDB_ORG}
   token: ${INFLUXDB_TOKEN}
-  timeout: 30000  # milliseconds
+  timeout: 30000 # milliseconds
 
 # Buckets
 buckets:
@@ -26,7 +26,7 @@ buckets:
 
   - name: market_data_1d
     description: "1-day downsampled market data"
-    retention_period: 1825d  # 5 years
+    retention_period: 1825d # 5 years
     shard_group_duration: 7d
 
   - name: technical_indicators
@@ -36,7 +36,7 @@ buckets:
 
   - name: portfolio_metrics
     description: "Portfolio performance metrics"
-    retention_period: 1825d  # 5 years
+    retention_period: 1825d # 5 years
     shard_group_duration: 7d
 
   - name: system_metrics
@@ -218,7 +218,7 @@ tasks:
 # Backup Configuration
 backup:
   enabled: true
-  schedule: "0 3 * * *"  # 3 AM daily
+  schedule: "0 3 * * *" # 3 AM daily
   retention:
     days: 30
     keep_daily: 7
@@ -240,8 +240,8 @@ monitoring:
 
 # Performance Tuning
 performance:
-  cache_max_memory_size: 1073741824  # 1GB
-  cache_snapshot_memory_size: 26214400  # 25MB
+  cache_max_memory_size: 1073741824 # 1GB
+  cache_snapshot_memory_size: 26214400 # 25MB
   cache_snapshot_write_cold_duration: "10m"
   compact_full_write_cold_duration: "4h"
   max_concurrent_compactions: 0

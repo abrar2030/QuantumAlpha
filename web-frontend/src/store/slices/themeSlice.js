@@ -1,27 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   darkMode: false,
-  theme: 'dark', // 'light', 'dark', 'auto'
-  primaryColor: '#00d4ff',
-  accentColor: '#0099cc',
-  fontSize: 'medium', // 'small', 'medium', 'large'
+  theme: "dark", // 'light', 'dark', 'auto'
+  primaryColor: "#00d4ff",
+  accentColor: "#0099cc",
+  fontSize: "medium", // 'small', 'medium', 'large'
   animations: true,
   compactMode: false,
-  highContrast: false
+  highContrast: false,
 };
 
 const themeSlice = createSlice({
-  name: 'theme',
+  name: "theme",
   initialState,
   reducers: {
     toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
-      state.theme = state.darkMode ? 'dark' : 'light';
+      state.theme = state.darkMode ? "dark" : "light";
     },
     setTheme: (state, action) => {
       state.theme = action.payload;
-      state.darkMode = action.payload === 'dark';
+      state.darkMode = action.payload === "dark";
     },
     setPrimaryColor: (state, action) => {
       state.primaryColor = action.payload;
@@ -43,8 +43,8 @@ const themeSlice = createSlice({
     },
     resetTheme: (state) => {
       return initialState;
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -56,7 +56,7 @@ export const {
   toggleAnimations,
   toggleCompactMode,
   toggleHighContrast,
-  resetTheme
+  resetTheme,
 } = themeSlice.actions;
 
 export default themeSlice.reducer;

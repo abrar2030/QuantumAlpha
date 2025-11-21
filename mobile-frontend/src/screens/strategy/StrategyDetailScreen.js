@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,12 +8,12 @@ import {
   ActivityIndicator,
   Dimensions,
   Animated,
-} from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { LineChart, PieChart } from 'react-native-chart-kit';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
-import { strategyService } from '../../services/strategyService';
+} from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { LineChart, PieChart } from "react-native-chart-kit";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
+import { strategyService } from "../../services/strategyService";
 
 const StrategyDetailScreen = () => {
   const route = useRoute();
@@ -23,7 +23,7 @@ const StrategyDetailScreen = () => {
 
   const [loading, setLoading] = useState(true);
   const [strategy, setStrategy] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
   // Animation values
   const fadeAnim = new Animated.Value(0);
@@ -34,13 +34,13 @@ const StrategyDetailScreen = () => {
 
     // Set navigation options dynamically
     navigation.setOptions({
-      title: name || 'Strategy Details',
+      title: name || "Strategy Details",
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 16 }}
           onPress={() => {
             // In a real app, this would open a menu with options
-            alert('Strategy options');
+            alert("Strategy options");
           }}
         >
           <Icon name="dots-vertical" size={24} color={theme.text} />
@@ -73,7 +73,7 @@ const StrategyDetailScreen = () => {
       const data = await strategyService.getStrategyDetails(id);
       setStrategy(data);
     } catch (error) {
-      console.error('Error loading strategy details:', error);
+      console.error("Error loading strategy details:", error);
       // In a real app, you would handle errors appropriately
     } finally {
       setLoading(false);
@@ -82,16 +82,16 @@ const StrategyDetailScreen = () => {
 
   const toggleStrategyStatus = async () => {
     try {
-      const newStatus = strategy.status === 'Active' ? false : true;
+      const newStatus = strategy.status === "Active" ? false : true;
       await strategyService.toggleStrategyStatus(id, newStatus);
 
       // Update local state
       setStrategy({
         ...strategy,
-        status: newStatus ? 'Active' : 'Inactive',
+        status: newStatus ? "Active" : "Inactive",
       });
     } catch (error) {
-      console.error('Error toggling strategy status:', error);
+      console.error("Error toggling strategy status:", error);
       // In a real app, you would handle errors appropriately
     }
   };
@@ -106,14 +106,16 @@ const StrategyDetailScreen = () => {
         allocation: newAllocation,
       });
     } catch (error) {
-      console.error('Error updating allocation:', error);
+      console.error("Error updating allocation:", error);
       // In a real app, you would handle errors appropriately
     }
   };
 
   if (loading) {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+      <View
+        style={[styles.loadingContainer, { backgroundColor: theme.background }]}
+      >
         <ActivityIndicator size="large" color={theme.primary} />
         <Text style={[styles.loadingText, { color: theme.text }]}>
           Loading strategy details...
@@ -124,7 +126,9 @@ const StrategyDetailScreen = () => {
 
   if (!strategy) {
     return (
-      <View style={[styles.errorContainer, { backgroundColor: theme.background }]}>
+      <View
+        style={[styles.errorContainer, { backgroundColor: theme.background }]}
+      >
         <Icon name="alert-circle" size={60} color={theme.error} />
         <Text style={[styles.errorText, { color: theme.text }]}>
           Strategy not found
@@ -139,19 +143,23 @@ const StrategyDetailScreen = () => {
     );
   }
 
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
 
   const renderOverviewTab = () => {
     return (
       <View style={styles.tabContent}>
         <View style={[styles.card, { backgroundColor: theme.card }]}>
-          <Text style={[styles.cardTitle, { color: theme.text }]}>Performance</Text>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>
+            Performance
+          </Text>
           <View style={styles.performanceSummary}>
             <View style={styles.performanceItem}>
               <Text style={[styles.performanceValue, { color: theme.text }]}>
                 {strategy.totalReturn}%
               </Text>
-              <Text style={[styles.performanceLabel, { color: theme.text + 'CC' }]}>
+              <Text
+                style={[styles.performanceLabel, { color: theme.text + "CC" }]}
+              >
                 Total Return
               </Text>
             </View>
@@ -159,7 +167,9 @@ const StrategyDetailScreen = () => {
               <Text style={[styles.performanceValue, { color: theme.text }]}>
                 {strategy.sharpeRatio}
               </Text>
-              <Text style={[styles.performanceLabel, { color: theme.text + 'CC' }]}>
+              <Text
+                style={[styles.performanceLabel, { color: theme.text + "CC" }]}
+              >
                 Sharpe Ratio
               </Text>
             </View>
@@ -167,7 +177,9 @@ const StrategyDetailScreen = () => {
               <Text style={[styles.performanceValue, { color: theme.text }]}>
                 {strategy.maxDrawdown}%
               </Text>
-              <Text style={[styles.performanceLabel, { color: theme.text + 'CC' }]}>
+              <Text
+                style={[styles.performanceLabel, { color: theme.text + "CC" }]}
+              >
                 Max Drawdown
               </Text>
             </View>
@@ -190,13 +202,14 @@ const StrategyDetailScreen = () => {
               backgroundGradientTo: theme.chartBackgroundGradientTo,
               decimalPlaces: 1,
               color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(${theme.isDarkMode ? '255, 255, 255' : '0, 0, 0'}, ${opacity})`,
+              labelColor: (opacity = 1) =>
+                `rgba(${theme.isDarkMode ? "255, 255, 255" : "0, 0, 0"}, ${opacity})`,
               style: {
                 borderRadius: 16,
               },
               propsForDots: {
-                r: '6',
-                strokeWidth: '2',
+                r: "6",
+                strokeWidth: "2",
                 stroke: theme.primary,
               },
             }}
@@ -206,16 +219,20 @@ const StrategyDetailScreen = () => {
         </View>
 
         <View style={[styles.card, { backgroundColor: theme.card }]}>
-          <Text style={[styles.cardTitle, { color: theme.text }]}>Strategy Details</Text>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>
+            Strategy Details
+          </Text>
           <Text style={[styles.description, { color: theme.text }]}>
             {strategy.description}
           </Text>
 
           <View style={styles.detailsGrid}>
             <View style={styles.detailItem}>
-              <Icon name="calendar" size={20} color={theme.text + 'CC'} />
+              <Icon name="calendar" size={20} color={theme.text + "CC"} />
               <View style={styles.detailTextContainer}>
-                <Text style={[styles.detailLabel, { color: theme.text + 'CC' }]}>
+                <Text
+                  style={[styles.detailLabel, { color: theme.text + "CC" }]}
+                >
                   Inception
                 </Text>
                 <Text style={[styles.detailValue, { color: theme.text }]}>
@@ -225,9 +242,11 @@ const StrategyDetailScreen = () => {
             </View>
 
             <View style={styles.detailItem}>
-              <Icon name="shield-outline" size={20} color={theme.text + 'CC'} />
+              <Icon name="shield-outline" size={20} color={theme.text + "CC"} />
               <View style={styles.detailTextContainer}>
-                <Text style={[styles.detailLabel, { color: theme.text + 'CC' }]}>
+                <Text
+                  style={[styles.detailLabel, { color: theme.text + "CC" }]}
+                >
                   Risk Level
                 </Text>
                 <Text style={[styles.detailValue, { color: theme.text }]}>
@@ -237,9 +256,11 @@ const StrategyDetailScreen = () => {
             </View>
 
             <View style={styles.detailItem}>
-              <Icon name="chart-line" size={20} color={theme.text + 'CC'} />
+              <Icon name="chart-line" size={20} color={theme.text + "CC"} />
               <View style={styles.detailTextContainer}>
-                <Text style={[styles.detailLabel, { color: theme.text + 'CC' }]}>
+                <Text
+                  style={[styles.detailLabel, { color: theme.text + "CC" }]}
+                >
                   Win Rate
                 </Text>
                 <Text style={[styles.detailValue, { color: theme.text }]}>
@@ -249,9 +270,11 @@ const StrategyDetailScreen = () => {
             </View>
 
             <View style={styles.detailItem}>
-              <Icon name="chart-pie" size={20} color={theme.text + 'CC'} />
+              <Icon name="chart-pie" size={20} color={theme.text + "CC"} />
               <View style={styles.detailTextContainer}>
-                <Text style={[styles.detailLabel, { color: theme.text + 'CC' }]}>
+                <Text
+                  style={[styles.detailLabel, { color: theme.text + "CC" }]}
+                >
                   Allocation
                 </Text>
                 <Text style={[styles.detailValue, { color: theme.text }]}>
@@ -263,7 +286,9 @@ const StrategyDetailScreen = () => {
         </View>
 
         <View style={[styles.card, { backgroundColor: theme.card }]}>
-          <Text style={[styles.cardTitle, { color: theme.text }]}>Holdings</Text>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>
+            Holdings
+          </Text>
 
           <View style={styles.holdingsContainer}>
             {strategy.holdings.map((holding, index) => (
@@ -286,11 +311,13 @@ const StrategyDetailScreen = () => {
                       styles.holdingPerformance,
                       {
                         color:
-                          holding.performance >= 0 ? theme.success : theme.error,
+                          holding.performance >= 0
+                            ? theme.success
+                            : theme.error,
                       },
                     ]}
                   >
-                    {holding.performance >= 0 ? '+' : ''}
+                    {holding.performance >= 0 ? "+" : ""}
                     {holding.performance}%
                   </Text>
                 </View>
@@ -312,7 +339,10 @@ const StrategyDetailScreen = () => {
                     />
                   </View>
                   <Text
-                    style={[styles.holdingAllocationText, { color: theme.text + 'CC' }]}
+                    style={[
+                      styles.holdingAllocationText,
+                      { color: theme.text + "CC" },
+                    ]}
                   >
                     {holding.allocation}%
                   </Text>
@@ -332,8 +362,9 @@ const StrategyDetailScreen = () => {
           <Text style={[styles.cardTitle, { color: theme.text }]}>
             Strategy Parameters
           </Text>
-          <Text style={[styles.paramDescription, { color: theme.text + 'CC' }]}>
-            These parameters define how the strategy operates and makes trading decisions.
+          <Text style={[styles.paramDescription, { color: theme.text + "CC" }]}>
+            These parameters define how the strategy operates and makes trading
+            decisions.
           </Text>
 
           {strategy.parameters.map((param, index) => (
@@ -361,7 +392,7 @@ const StrategyDetailScreen = () => {
           <Text style={[styles.cardTitle, { color: theme.text }]}>
             Allocation Control
           </Text>
-          <Text style={[styles.paramDescription, { color: theme.text + 'CC' }]}>
+          <Text style={[styles.paramDescription, { color: theme.text + "CC" }]}>
             Adjust the capital allocation for this strategy.
           </Text>
 
@@ -406,18 +437,27 @@ const StrategyDetailScreen = () => {
               <View
                 style={[
                   styles.allocationFill,
-                  { backgroundColor: theme.primary, width: `${strategy.allocation}%` },
+                  {
+                    backgroundColor: theme.primary,
+                    width: `${strategy.allocation}%`,
+                  },
                 ]}
               />
             </View>
             <View style={styles.allocationLabels}>
-              <Text style={[styles.allocationLabel, { color: theme.text + 'CC' }]}>
+              <Text
+                style={[styles.allocationLabel, { color: theme.text + "CC" }]}
+              >
                 0%
               </Text>
-              <Text style={[styles.allocationLabel, { color: theme.text + 'CC' }]}>
+              <Text
+                style={[styles.allocationLabel, { color: theme.text + "CC" }]}
+              >
                 50%
               </Text>
-              <Text style={[styles.allocationLabel, { color: theme.text + 'CC' }]}>
+              <Text
+                style={[styles.allocationLabel, { color: theme.text + "CC" }]}
+              >
                 100%
               </Text>
             </View>
@@ -435,18 +475,20 @@ const StrategyDetailScreen = () => {
                 styles.controlButton,
                 {
                   backgroundColor:
-                    strategy.status === 'Active' ? theme.error : theme.success,
+                    strategy.status === "Active" ? theme.error : theme.success,
                 },
               ]}
               onPress={toggleStrategyStatus}
             >
               <Icon
-                name={strategy.status === 'Active' ? 'pause' : 'play'}
+                name={strategy.status === "Active" ? "pause" : "play"}
                 size={20}
                 color="#FFFFFF"
               />
               <Text style={styles.controlButtonText}>
-                {strategy.status === 'Active' ? 'Pause Strategy' : 'Activate Strategy'}
+                {strategy.status === "Active"
+                  ? "Pause Strategy"
+                  : "Activate Strategy"}
               </Text>
             </TouchableOpacity>
 
@@ -454,7 +496,7 @@ const StrategyDetailScreen = () => {
               style={[styles.controlButton, { backgroundColor: theme.info }]}
               onPress={() => {
                 // In a real app, this would navigate to a backtest screen
-                alert('Would navigate to backtest screen');
+                alert("Would navigate to backtest screen");
               }}
             >
               <Icon name="test-tube" size={20} color="#FFFFFF" />
@@ -465,7 +507,7 @@ const StrategyDetailScreen = () => {
               style={[styles.controlButton, { backgroundColor: theme.warning }]}
               onPress={() => {
                 // In a real app, this would reset the strategy
-                alert('Would reset strategy parameters');
+                alert("Would reset strategy parameters");
               }}
             >
               <Icon name="refresh" size={20} color="#FFFFFF" />
@@ -495,7 +537,7 @@ const StrategyDetailScreen = () => {
               styles.statusIndicator,
               {
                 backgroundColor:
-                  strategy.status === 'Active' ? theme.success : theme.error,
+                  strategy.status === "Active" ? theme.success : theme.error,
               },
             ]}
           />
@@ -517,10 +559,12 @@ const StrategyDetailScreen = () => {
               },
             ]}
           >
-            {strategy.performance >= 0 ? '+' : ''}
+            {strategy.performance >= 0 ? "+" : ""}
             {strategy.performance}%
           </Text>
-          <Text style={[styles.performancePeriod, { color: theme.text + 'CC' }]}>
+          <Text
+            style={[styles.performancePeriod, { color: theme.text + "CC" }]}
+          >
             Today
           </Text>
         </View>
@@ -530,19 +574,19 @@ const StrategyDetailScreen = () => {
         <TouchableOpacity
           style={[
             styles.tab,
-            activeTab === 'overview' && [
+            activeTab === "overview" && [
               styles.activeTab,
               { borderBottomColor: theme.primary },
             ],
           ]}
-          onPress={() => setActiveTab('overview')}
+          onPress={() => setActiveTab("overview")}
         >
           <Text
             style={[
               styles.tabText,
               {
                 color:
-                  activeTab === 'overview' ? theme.primary : theme.text + 'CC',
+                  activeTab === "overview" ? theme.primary : theme.text + "CC",
               },
             ]}
           >
@@ -553,19 +597,21 @@ const StrategyDetailScreen = () => {
         <TouchableOpacity
           style={[
             styles.tab,
-            activeTab === 'parameters' && [
+            activeTab === "parameters" && [
               styles.activeTab,
               { borderBottomColor: theme.primary },
             ],
           ]}
-          onPress={() => setActiveTab('parameters')}
+          onPress={() => setActiveTab("parameters")}
         >
           <Text
             style={[
               styles.tabText,
               {
                 color:
-                  activeTab === 'parameters' ? theme.primary : theme.text + 'CC',
+                  activeTab === "parameters"
+                    ? theme.primary
+                    : theme.text + "CC",
               },
             ]}
           >
@@ -575,7 +621,7 @@ const StrategyDetailScreen = () => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {activeTab === 'overview' ? renderOverviewTab() : renderParametersTab()}
+        {activeTab === "overview" ? renderOverviewTab() : renderParametersTab()}
       </ScrollView>
     </View>
   );
@@ -587,8 +633,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingText: {
     marginTop: 10,
@@ -596,8 +642,8 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   errorText: {
@@ -611,16 +657,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   backButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   header: {
     padding: 20,
   },
   statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   statusIndicator: {
     width: 8,
@@ -633,38 +679,38 @@ const styles = StyleSheet.create({
   },
   strategyName: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 5,
   },
   performanceContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
     marginTop: 5,
   },
   performanceText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   performancePeriod: {
     fontSize: 14,
     marginLeft: 5,
   },
   tabs: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   tab: {
     flex: 1,
     paddingVertical: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   activeTab: {
     borderBottomWidth: 2,
   },
   tabText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   scrollContent: {
     padding: 16,
@@ -677,7 +723,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -685,20 +731,20 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
   },
   performanceSummary: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   performanceItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   performanceValue: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   performanceLabel: {
     fontSize: 12,
@@ -714,16 +760,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   detailsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginHorizontal: -8,
   },
   detailItem: {
-    width: '50%',
+    width: "50%",
     paddingHorizontal: 8,
     marginBottom: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   detailTextContainer: {
     marginLeft: 10,
@@ -733,7 +779,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginTop: 2,
   },
   holdingsContainer: {
@@ -743,38 +789,38 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   holdingMain: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   holdingSymbol: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   holdingPerformance: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   holdingAllocationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   holdingAllocationBar: {
     flex: 1,
     height: 6,
     borderRadius: 3,
     marginRight: 10,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   holdingAllocationFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 3,
   },
   holdingAllocationText: {
     fontSize: 12,
     width: 40,
-    textAlign: 'right',
+    textAlign: "right",
   },
   paramDescription: {
     fontSize: 14,
@@ -789,28 +835,28 @@ const styles = StyleSheet.create({
   },
   parameterValue: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   allocationControl: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   allocationValue: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   allocationButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   allocationButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
     borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 10,
   },
   allocationBarContainer: {
@@ -820,15 +866,15 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginBottom: 5,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   allocationFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 4,
   },
   allocationLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   allocationLabel: {
     fontSize: 12,
@@ -837,17 +883,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   controlButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     borderRadius: 8,
     marginBottom: 10,
   },
   controlButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 8,
   },
 });

@@ -33,37 +33,44 @@ src/
 ## 🛠 Technologies Used
 
 ### Core Technologies
+
 - **React Native 0.72.7**: Latest stable version with improved performance
 - **TypeScript 5.2.2**: Full type safety and better developer experience
 - **React Navigation 6**: Modern navigation with stack, tab, and drawer navigators
 
 ### State Management & Data Fetching
+
 - **React Query 3.39.3**: Powerful data synchronization for React
 - **Zustand 4.4.7**: Lightweight state management
 - **React Context**: Built-in state management for global state
 
 ### UI & Animations
+
 - **React Native Reanimated 3.5.4**: Smooth animations and gestures
 - **React Native Animatable 1.3.3**: Easy-to-use animation library
 - **React Native Linear Gradient 2.8.3**: Beautiful gradient effects
 - **React Native Vector Icons 10.0.2**: Comprehensive icon library
 
 ### Charts & Visualization
+
 - **React Native Chart Kit 6.12.0**: Beautiful and responsive charts
 - **React Native SVG 14.0.0**: SVG support for custom graphics
 
 ### Security & Authentication
+
 - **React Native Biometrics 3.0.1**: Biometric authentication support
 - **React Native Keychain 8.1.3**: Secure storage for sensitive data
 - **React Native Device Info 10.11.0**: Device information for security
 
 ### Performance & UX
+
 - **React Native Fast Image 8.6.3**: Optimized image loading and caching
 - **React Native Skeleton Placeholder 5.2.4**: Beautiful loading skeletons
 - **React Native Haptic Feedback 2.2.0**: Tactile feedback for better UX
 - **React Native NetInfo 11.2.1**: Network connectivity monitoring
 
 ### Development Tools
+
 - **ESLint**: Code linting and formatting
 - **Prettier**: Code formatting
 - **Jest**: Testing framework
@@ -72,6 +79,7 @@ src/
 ## 🔧 Installation & Setup
 
 ### Prerequisites
+
 - Node.js >= 16
 - React Native CLI
 - Android Studio (for Android development)
@@ -80,6 +88,7 @@ src/
 ### Installation Steps
 
 1. **Install Dependencies**
+
    ```bash
    npm install
    # or
@@ -87,6 +96,7 @@ src/
    ```
 
 2. **iOS Setup**
+
    ```bash
    cd ios && pod install && cd ..
    ```
@@ -96,6 +106,7 @@ src/
    - Create local.properties file with SDK path
 
 4. **Run the Application**
+
    ```bash
    # For iOS
    npm run ios
@@ -110,6 +121,7 @@ src/
 ## 📱 Features Overview
 
 ### Authentication
+
 - Email/password login with validation
 - Biometric authentication (Face ID, Touch ID, Fingerprint)
 - Two-factor authentication support
@@ -117,6 +129,7 @@ src/
 - Remember me functionality
 
 ### Dashboard
+
 - Real-time portfolio overview
 - Interactive performance charts
 - Market overview with trending assets
@@ -126,6 +139,7 @@ src/
 - Customizable watchlist
 
 ### Portfolio Management
+
 - Comprehensive portfolio analytics
 - Real-time position tracking
 - Performance metrics and risk analysis
@@ -134,6 +148,7 @@ src/
 - Profit/loss tracking
 
 ### Trading
+
 - Real-time market data
 - Advanced order types (market, limit, stop, stop-limit)
 - Risk management tools
@@ -142,6 +157,7 @@ src/
 - Price alerts
 
 ### Strategies
+
 - Browse and follow trading strategies
 - Strategy performance analytics
 - Risk assessment
@@ -149,6 +165,7 @@ src/
 - Strategy comparison tools
 
 ### Security Features
+
 - Biometric authentication
 - Secure data storage
 - Session management
@@ -158,6 +175,7 @@ src/
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary**: #1aff92 (Quantum Green)
 - **Secondary**: #0066cc (Blue)
 - **Success**: #34c759 (Green)
@@ -166,11 +184,13 @@ src/
 - **Info**: #0066cc (Blue)
 
 ### Typography
+
 - **Font Family**: System fonts for optimal performance
 - **Font Sizes**: Responsive scaling from 10px to 32px
 - **Font Weights**: Light, Regular, Medium, Bold
 
 ### Spacing
+
 - **XS**: 4px
 - **SM**: 8px
 - **MD**: 16px
@@ -181,16 +201,19 @@ src/
 ## 🧪 Testing
 
 ### Unit Testing
+
 ```bash
 npm test
 ```
 
 ### E2E Testing
+
 ```bash
 npm run test:e2e
 ```
 
 ### Type Checking
+
 ```bash
 npm run type-check
 ```
@@ -214,6 +237,7 @@ npm run type-check
 ## 🌐 API Integration
 
 The app integrates with the QuantumAlpha backend API for:
+
 - User authentication and management
 - Real-time market data
 - Portfolio and trading operations
@@ -230,16 +254,19 @@ The app integrates with the QuantumAlpha backend API for:
 ## 🚀 Deployment
 
 ### Development Build
+
 ```bash
 npm run build:dev
 ```
 
 ### Production Build
+
 ```bash
 npm run build:prod
 ```
 
 ### Code Signing
+
 - iOS: Configure provisioning profiles and certificates
 - Android: Configure keystore and signing keys
 

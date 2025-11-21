@@ -1,30 +1,30 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Auth Screens
-import LoginScreen from '../screens/auth/LoginScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import LoginScreen from "../screens/auth/LoginScreen";
+import RegisterScreen from "../screens/auth/RegisterScreen";
+import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 
 // Main Screens
-import DashboardScreen from '../screens/dashboard/DashboardScreen';
-import PortfolioScreen from '../screens/portfolio/PortfolioScreen';
-import StrategyScreen from '../screens/strategy/StrategyScreen';
-import StrategyDetailScreen from '../screens/strategy/StrategyDetailScreen';
-import TradeScreen from '../screens/trade/TradeScreen';
-import AlertsScreen from '../screens/alerts/AlertsScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
-import SettingsScreen from '../screens/settings/SettingsScreen';
+import DashboardScreen from "../screens/dashboard/DashboardScreen";
+import PortfolioScreen from "../screens/portfolio/PortfolioScreen";
+import StrategyScreen from "../screens/strategy/StrategyScreen";
+import StrategyDetailScreen from "../screens/strategy/StrategyDetailScreen";
+import TradeScreen from "../screens/trade/TradeScreen";
+import AlertsScreen from "../screens/alerts/AlertsScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import SettingsScreen from "../screens/settings/SettingsScreen";
 
 // Other Screens
-import NotificationsScreen from '../screens/notifications/NotificationsScreen';
-import HelpScreen from '../screens/help/HelpScreen';
+import NotificationsScreen from "../screens/notifications/NotificationsScreen";
+import HelpScreen from "../screens/help/HelpScreen";
 
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,7 +41,7 @@ const AuthStack = () => {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         cardStyle: { backgroundColor: theme.background },
       }}
@@ -54,12 +54,12 @@ const AuthStack = () => {
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
-        options={{ title: 'Create Account' }}
+        options={{ title: "Create Account" }}
       />
       <Stack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
-        options={{ title: 'Reset Password' }}
+        options={{ title: "Reset Password" }}
       />
     </Stack.Navigator>
   );
@@ -72,7 +72,7 @@ const MainTabs = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: isDarkMode ? '#888888' : '#555555',
+        tabBarInactiveTintColor: isDarkMode ? "#888888" : "#555555",
         tabBarStyle: {
           backgroundColor: theme.card,
           borderTopColor: theme.border,
@@ -87,7 +87,7 @@ const MainTabs = () => {
         name="DashboardTab"
         component={DashboardStack}
         options={{
-          tabBarLabel: 'Dashboard',
+          tabBarLabel: "Dashboard",
           tabBarIcon: ({ color, size }) => (
             <Icon name="view-dashboard" color={color} size={size} />
           ),
@@ -97,7 +97,7 @@ const MainTabs = () => {
         name="PortfolioTab"
         component={PortfolioStack}
         options={{
-          tabBarLabel: 'Portfolio',
+          tabBarLabel: "Portfolio",
           tabBarIcon: ({ color, size }) => (
             <Icon name="chart-line" color={color} size={size} />
           ),
@@ -107,7 +107,7 @@ const MainTabs = () => {
         name="StrategyTab"
         component={StrategyStack}
         options={{
-          tabBarLabel: 'Strategies',
+          tabBarLabel: "Strategies",
           tabBarIcon: ({ color, size }) => (
             <Icon name="strategy" color={color} size={size} />
           ),
@@ -117,7 +117,7 @@ const MainTabs = () => {
         name="TradeTab"
         component={TradeStack}
         options={{
-          tabBarLabel: 'Trade',
+          tabBarLabel: "Trade",
           tabBarIcon: ({ color, size }) => (
             <Icon name="swap-horizontal" color={color} size={size} />
           ),
@@ -127,7 +127,7 @@ const MainTabs = () => {
         name="AlertsTab"
         component={AlertsStack}
         options={{
-          tabBarLabel: 'Alerts',
+          tabBarLabel: "Alerts",
           tabBarIcon: ({ color, size }) => (
             <Icon name="bell" color={color} size={size} />
           ),
@@ -148,7 +148,7 @@ const DashboardStack = () => {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         cardStyle: { backgroundColor: theme.background },
       }}
@@ -156,12 +156,9 @@ const DashboardStack = () => {
       <Stack.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ title: 'QuantumAlpha' }}
+        options={{ title: "QuantumAlpha" }}
       />
-      <Stack.Screen
-        name="Notifications"
-        component={NotificationsScreen}
-      />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
     </Stack.Navigator>
   );
 };
@@ -177,15 +174,12 @@ const PortfolioStack = () => {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen
-        name="Portfolio"
-        component={PortfolioScreen}
-      />
+      <Stack.Screen name="Portfolio" component={PortfolioScreen} />
     </Stack.Navigator>
   );
 };
@@ -201,19 +195,18 @@ const StrategyStack = () => {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen
-        name="Strategies"
-        component={StrategyScreen}
-      />
+      <Stack.Screen name="Strategies" component={StrategyScreen} />
       <Stack.Screen
         name="StrategyDetail"
         component={StrategyDetailScreen}
-        options={({ route }) => ({ title: route.params?.name || 'Strategy Details' })}
+        options={({ route }) => ({
+          title: route.params?.name || "Strategy Details",
+        })}
       />
     </Stack.Navigator>
   );
@@ -230,15 +223,12 @@ const TradeStack = () => {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen
-        name="Trade"
-        component={TradeScreen}
-      />
+      <Stack.Screen name="Trade" component={TradeScreen} />
     </Stack.Navigator>
   );
 };
@@ -254,15 +244,12 @@ const AlertsStack = () => {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
         cardStyle: { backgroundColor: theme.background },
       }}
     >
-      <Stack.Screen
-        name="Alerts"
-        component={AlertsScreen}
-      />
+      <Stack.Screen name="Alerts" component={AlertsScreen} />
     </Stack.Navigator>
   );
 };
@@ -290,7 +277,7 @@ const DrawerNavigator = () => {
         name="MainTabs"
         component={MainTabs}
         options={{
-          title: 'Home',
+          title: "Home",
           drawerIcon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
           ),
@@ -300,7 +287,7 @@ const DrawerNavigator = () => {
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
-          title: 'Profile',
+          title: "Profile",
           drawerIcon: ({ color, size }) => (
             <Icon name="account" color={color} size={size} />
           ),
@@ -310,7 +297,7 @@ const DrawerNavigator = () => {
         name="SettingsScreen"
         component={SettingsScreen}
         options={{
-          title: 'Settings',
+          title: "Settings",
           drawerIcon: ({ color, size }) => (
             <Icon name="cog" color={color} size={size} />
           ),
@@ -320,7 +307,7 @@ const DrawerNavigator = () => {
         name="HelpScreen"
         component={HelpScreen}
         options={{
-          title: 'Help & Support',
+          title: "Help & Support",
           drawerIcon: ({ color, size }) => (
             <Icon name="help-circle" color={color} size={size} />
           ),

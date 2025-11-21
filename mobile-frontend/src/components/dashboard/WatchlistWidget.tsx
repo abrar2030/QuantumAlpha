@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import * as Animatable from 'react-native-animatable';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
+import * as Animatable from "react-native-animatable";
 
-import { useTheme } from '../../context/ThemeContext';
-import { useApiQuery } from '../../hooks';
-import Card from '../ui/Card';
-import { SkeletonLoader } from '../ui/LoadingSpinner';
-import { formatCurrency, formatPercentage } from '../../utils';
-import { SPACING, COLORS } from '../../constants';
-import { Asset } from '../../types';
+import { useTheme } from "../../context/ThemeContext";
+import { useApiQuery } from "../../hooks";
+import Card from "../ui/Card";
+import { SkeletonLoader } from "../ui/LoadingSpinner";
+import { formatCurrency, formatPercentage } from "../../utils";
+import { SPACING, COLORS } from "../../constants";
+import { Asset } from "../../types";
 
 interface WatchlistWidgetProps {
   maxItems?: number;
@@ -25,32 +25,31 @@ interface WatchlistWidgetProps {
 const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  const [selectedTab, setSelectedTab] = useState<'stocks' | 'crypto'>('stocks');
+  const [selectedTab, setSelectedTab] = useState<"stocks" | "crypto">("stocks");
 
-  const {
-    data: watchlistData,
-    isLoading,
-  } = useApiQuery(
-    ['watchlist', selectedTab],
+  const { data: watchlistData, isLoading } = useApiQuery(
+    ["watchlist", selectedTab],
     () => fetchWatchlistData(selectedTab),
     {
       refetchInterval: 30000, // Refetch every 30 seconds
-    }
+    },
   );
 
   // Mock function - replace with actual API call
-  const fetchWatchlistData = async (type: 'stocks' | 'crypto'): Promise<Asset[]> => {
+  const fetchWatchlistData = async (
+    type: "stocks" | "crypto",
+  ): Promise<Asset[]> => {
     // This would be replaced with actual API call
     const mockData: Asset[] = [
       {
-        symbol: type === 'stocks' ? 'AAPL' : 'BTC',
-        name: type === 'stocks' ? 'Apple Inc.' : 'Bitcoin',
-        type: type === 'stocks' ? 'stock' : 'crypto',
-        exchange: type === 'stocks' ? 'NASDAQ' : 'Binance',
-        currency: 'USD',
-        price: type === 'stocks' ? 175.43 : 43250.00,
-        change: type === 'stocks' ? 2.15 : -1250.00,
-        changePercent: type === 'stocks' ? 1.24 : -2.81,
+        symbol: type === "stocks" ? "AAPL" : "BTC",
+        name: type === "stocks" ? "Apple Inc." : "Bitcoin",
+        type: type === "stocks" ? "stock" : "crypto",
+        exchange: type === "stocks" ? "NASDAQ" : "Binance",
+        currency: "USD",
+        price: type === "stocks" ? 175.43 : 43250.0,
+        change: type === "stocks" ? 2.15 : -1250.0,
+        changePercent: type === "stocks" ? 1.24 : -2.81,
         volume: 1000000,
         isActive: true,
         isTradable: true,
@@ -61,25 +60,28 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
   };
 
   const handleAssetPress = (asset: Asset) => {
-    navigation.navigate('AssetDetail' as never, { symbol: asset.symbol } as never);
+    navigation.navigate(
+      "AssetDetail" as never,
+      { symbol: asset.symbol } as never,
+    );
   };
 
   const handleSeeAllPress = () => {
-    navigation.navigate('Watchlist' as never);
+    navigation.navigate("Watchlist" as never);
   };
 
-  const handleTabPress = (tab: 'stocks' | 'crypto') => {
+  const handleTabPress = (tab: "stocks" | "crypto") => {
     setSelectedTab(tab);
   };
 
-  const renderTabButton = (tab: 'stocks' | 'crypto', label: string) => (
+  const renderTabButton = (tab: "stocks" | "crypto", label: string) => (
     <TouchableOpacity
       style={[
         styles.tabButton,
         {
-          backgroundColor: selectedTab === tab ? theme.primary : 'transparent',
+          backgroundColor: selectedTab === tab ? theme.primary : "transparent",
           borderColor: theme.primary,
-        }
+        },
       ]}
       onPress={() => handleTabPress(tab)}
     >
@@ -87,8 +89,8 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
         style={[
           styles.tabText,
           {
-            color: selectedTab === tab ? '#ffffff' : theme.primary,
-          }
+            color: selectedTab === tab ? "#ffffff" : theme.primary,
+          },
         ]}
       >
         {label}
@@ -113,7 +115,10 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
             <Text style={[styles.assetSymbol, { color: theme.text }]}>
               {asset.symbol}
             </Text>
-            <Text style={[styles.assetName, { color: theme.text + '80' }]} numberOfLines={1}>
+            <Text
+              style={[styles.assetName, { color: theme.text + "80" }]}
+              numberOfLines={1}
+            >
               {asset.name}
             </Text>
           </View>
@@ -124,17 +129,21 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
             </Text>
             <View style={styles.changeContainer}>
               <Icon
-                name={isPositive ? 'trending-up' : 'trending-down'}
+                name={isPositive ? "trending-up" : "trending-down"}
                 size={12}
-                color={isPositive ? COLORS.CHART.POSITIVE : COLORS.CHART.NEGATIVE}
+                color={
+                  isPositive ? COLORS.CHART.POSITIVE : COLORS.CHART.NEGATIVE
+                }
               />
               <Text
                 style={[
                   styles.assetChange,
                   {
-                    color: isPositive ? COLORS.CHART.POSITIVE : COLORS.CHART.NEGATIVE,
+                    color: isPositive
+                      ? COLORS.CHART.POSITIVE
+                      : COLORS.CHART.NEGATIVE,
                     marginLeft: 4,
-                  }
+                  },
                 ]}
               >
                 {formatPercentage(asset.changePercent)}
@@ -169,26 +178,26 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({ maxItems = 5 }) => {
       </View>
 
       <View style={styles.tabContainer}>
-        {renderTabButton('stocks', 'Stocks')}
-        {renderTabButton('crypto', 'Crypto')}
+        {renderTabButton("stocks", "Stocks")}
+        {renderTabButton("crypto", "Crypto")}
       </View>
 
       <Card variant="elevated" padding="none" margin="medium">
         {watchlistData && watchlistData.length > 0 ? (
           <View style={styles.assetList}>
-            {watchlistData.slice(0, maxItems).map((asset, index) =>
-              renderAssetItem(asset, index)
-            )}
+            {watchlistData
+              .slice(0, maxItems)
+              .map((asset, index) => renderAssetItem(asset, index))}
           </View>
         ) : (
           <View style={styles.emptyState}>
-            <Icon name="eye-off" size={40} color={theme.text + '60'} />
+            <Icon name="eye-off" size={40} color={theme.text + "60"} />
             <Text style={[styles.emptyStateText, { color: theme.text }]}>
               No assets in watchlist
             </Text>
             <TouchableOpacity
               style={[styles.addButton, { borderColor: theme.primary }]}
-              onPress={() => navigation.navigate('AssetSearch' as never)}
+              onPress={() => navigation.navigate("AssetSearch" as never)}
             >
               <Icon name="plus" size={16} color={theme.primary} />
               <Text style={[styles.addButtonText, { color: theme.primary }]}>
@@ -207,22 +216,22 @@ const styles = StyleSheet.create({
     marginVertical: SPACING.MD,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: SPACING.MD,
     marginBottom: SPACING.SM,
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   seeAllText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   tabContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: SPACING.MD,
     marginBottom: SPACING.SM,
   },
@@ -235,15 +244,15 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   assetList: {
     paddingVertical: SPACING.XS,
   },
   assetItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: SPACING.MD,
     paddingVertical: SPACING.SM,
     borderBottomWidth: 0.5,
@@ -253,42 +262,42 @@ const styles = StyleSheet.create({
   },
   assetSymbol: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   assetName: {
     fontSize: 12,
     marginTop: 2,
   },
   assetPricing: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   assetPrice: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   changeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 2,
   },
   assetChange: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: SPACING.XXL,
   },
   emptyStateText: {
     marginTop: SPACING.SM,
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: SPACING.MD,
   },
   addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: SPACING.MD,
     paddingVertical: SPACING.SM,
     borderWidth: 1,
@@ -296,7 +305,7 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: SPACING.XS,
   },
 });

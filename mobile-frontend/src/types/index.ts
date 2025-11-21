@@ -23,7 +23,7 @@ export interface User {
 }
 
 export interface UserPreferences {
-  theme: 'light' | 'dark' | 'auto';
+  theme: "light" | "dark" | "auto";
   notifications: NotificationSettings;
   trading: TradingPreferences;
   privacy: PrivacySettings;
@@ -49,15 +49,15 @@ export interface TradingPreferences {
 }
 
 export interface PrivacySettings {
-  profileVisibility: 'public' | 'private' | 'friends';
+  profileVisibility: "public" | "private" | "friends";
   tradingActivityVisible: boolean;
   portfolioVisible: boolean;
   analyticsEnabled: boolean;
 }
 
 export interface Subscription {
-  plan: 'free' | 'basic' | 'premium' | 'professional';
-  status: 'active' | 'inactive' | 'cancelled' | 'expired';
+  plan: "free" | "basic" | "premium" | "professional";
+  status: "active" | "inactive" | "cancelled" | "expired";
   startDate: string;
   endDate?: string;
   features: string[];
@@ -146,11 +146,22 @@ export interface RiskMetrics {
 }
 
 // Trading Types
-export type OrderType = 'market' | 'limit' | 'stop' | 'stop_limit';
-export type OrderSide = 'buy' | 'sell';
-export type TimeInForce = 'GTC' | 'IOC' | 'FOK' | 'DAY';
-export type OrderStatus = 'pending' | 'filled' | 'partially_filled' | 'cancelled' | 'rejected';
-export type AssetType = 'stock' | 'crypto' | 'forex' | 'commodity' | 'index' | 'etf';
+export type OrderType = "market" | "limit" | "stop" | "stop_limit";
+export type OrderSide = "buy" | "sell";
+export type TimeInForce = "GTC" | "IOC" | "FOK" | "DAY";
+export type OrderStatus =
+  | "pending"
+  | "filled"
+  | "partially_filled"
+  | "cancelled"
+  | "rejected";
+export type AssetType =
+  | "stock"
+  | "crypto"
+  | "forex"
+  | "commodity"
+  | "index"
+  | "etf";
 
 export interface Order {
   id: string;
@@ -258,12 +269,12 @@ export interface Strategy {
   id: string;
   name: string;
   description: string;
-  type: 'algorithmic' | 'manual' | 'copy_trading';
-  status: 'active' | 'inactive' | 'paused';
+  type: "algorithmic" | "manual" | "copy_trading";
+  status: "active" | "inactive" | "paused";
   performance: StrategyPerformance;
   parameters: StrategyParameters;
   assets: string[];
-  riskLevel: 'low' | 'medium' | 'high';
+  riskLevel: "low" | "medium" | "high";
   minInvestment: number;
   maxInvestment?: number;
   fees: StrategyFees;
@@ -310,24 +321,24 @@ export interface Alert {
   condition?: AlertCondition;
   isRead: boolean;
   isActive: boolean;
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: "low" | "medium" | "high" | "critical";
   createdAt: string;
   triggeredAt?: string;
   expiresAt?: string;
 }
 
 export type AlertType =
-  | 'price_alert'
-  | 'trade_executed'
-  | 'strategy_update'
-  | 'portfolio_update'
-  | 'news_update'
-  | 'system_maintenance'
-  | 'security_alert'
-  | 'promotion';
+  | "price_alert"
+  | "trade_executed"
+  | "strategy_update"
+  | "portfolio_update"
+  | "news_update"
+  | "system_maintenance"
+  | "security_alert"
+  | "promotion";
 
 export interface AlertCondition {
-  operator: 'above' | 'below' | 'crosses_above' | 'crosses_below' | 'equals';
+  operator: "above" | "below" | "crosses_above" | "crosses_below" | "equals";
   value: number;
   indicator?: string;
 }
@@ -345,7 +356,7 @@ export interface NewsArticle {
   publishedAt: string;
   category: string;
   tags: string[];
-  sentiment?: 'positive' | 'negative' | 'neutral';
+  sentiment?: "positive" | "negative" | "neutral";
   relevantSymbols: string[];
   isBookmarked?: boolean;
 }
@@ -431,7 +442,14 @@ export type AlertsStackParamList = {
 export interface FormField {
   name: string;
   label: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'select' | 'checkbox' | 'radio';
+  type:
+    | "text"
+    | "email"
+    | "password"
+    | "number"
+    | "select"
+    | "checkbox"
+    | "radio";
   placeholder?: string;
   required?: boolean;
   validation?: ValidationRule[];
@@ -439,7 +457,7 @@ export interface FormField {
 }
 
 export interface ValidationRule {
-  type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
+  type: "required" | "email" | "minLength" | "maxLength" | "pattern" | "custom";
   value?: any;
   message: string;
 }
@@ -469,7 +487,7 @@ export interface ThemeContextType {
   theme: Theme;
   isDarkMode: boolean;
   toggleTheme: () => void;
-  setTheme: (theme: 'light' | 'dark' | 'auto') => void;
+  setTheme: (theme: "light" | "dark" | "auto") => void;
 }
 
 // Utility Types

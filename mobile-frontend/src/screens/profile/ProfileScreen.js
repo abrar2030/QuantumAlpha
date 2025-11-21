@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,11 @@ import {
   ActivityIndicator,
   Animated,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
-import { useAuth } from '../../context/AuthContext';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -24,11 +24,13 @@ const ProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
-    name: user?.name || 'Demo User',
-    email: user?.email || 'demo@example.com',
-    phone: user?.phone || '+1 (555) 123-4567',
-    location: user?.location || 'New York, USA',
-    bio: user?.bio || 'Algorithmic trader with 5+ years of experience in quantitative finance.',
+    name: user?.name || "Demo User",
+    email: user?.email || "demo@example.com",
+    phone: user?.phone || "+1 (555) 123-4567",
+    location: user?.location || "New York, USA",
+    bio:
+      user?.bio ||
+      "Algorithmic trader with 5+ years of experience in quantitative finance.",
   });
 
   // Animation values
@@ -57,7 +59,7 @@ const ProfileScreen = () => {
       await updateProfile(userData);
       setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       // In a real app, you would handle errors appropriately
     } finally {
       setLoading(false);
@@ -67,7 +69,9 @@ const ProfileScreen = () => {
   const renderProfileField = (label, value, field) => {
     return (
       <View style={styles.fieldContainer}>
-        <Text style={[styles.fieldLabel, { color: theme.text + 'CC' }]}>{label}</Text>
+        <Text style={[styles.fieldLabel, { color: theme.text + "CC" }]}>
+          {label}
+        </Text>
         {isEditing ? (
           <TextInput
             style={[
@@ -78,7 +82,9 @@ const ProfileScreen = () => {
             onChangeText={(text) => setUserData({ ...userData, [field]: text })}
           />
         ) : (
-          <Text style={[styles.fieldValue, { color: theme.text }]}>{value}</Text>
+          <Text style={[styles.fieldValue, { color: theme.text }]}>
+            {value}
+          </Text>
         )}
       </View>
     );
@@ -112,7 +118,7 @@ const ProfileScreen = () => {
             <ActivityIndicator size="small" color={theme.primary} />
           ) : (
             <Text style={[styles.editButtonText, { color: theme.primary }]}>
-              {isEditing ? 'Save' : 'Edit'}
+              {isEditing ? "Save" : "Edit"}
             </Text>
           )}
         </TouchableOpacity>
@@ -129,15 +135,18 @@ const ProfileScreen = () => {
             <View style={styles.profileHeader}>
               <View style={styles.avatarContainer}>
                 <Image
-                  source={require('../../assets/avatar.png')}
+                  source={require("../../assets/avatar.png")}
                   style={styles.avatar}
                 />
                 {isEditing && (
                   <TouchableOpacity
-                    style={[styles.changeAvatarButton, { backgroundColor: theme.primary }]}
+                    style={[
+                      styles.changeAvatarButton,
+                      { backgroundColor: theme.primary },
+                    ]}
                     onPress={() => {
                       // In a real app, this would open image picker
-                      alert('Would open image picker');
+                      alert("Would open image picker");
                     }}
                   >
                     <Icon name="camera" size={16} color="#FFFFFF" />
@@ -148,7 +157,9 @@ const ProfileScreen = () => {
                 <Text style={[styles.profileName, { color: theme.text }]}>
                   {userData.name}
                 </Text>
-                <Text style={[styles.profileEmail, { color: theme.text + 'CC' }]}>
+                <Text
+                  style={[styles.profileEmail, { color: theme.text + "CC" }]}
+                >
                   {userData.email}
                 </Text>
                 <View style={styles.membershipBadge}>
@@ -160,11 +171,11 @@ const ProfileScreen = () => {
 
             <View style={[styles.divider, { backgroundColor: theme.border }]} />
 
-            {renderProfileField('Full Name', userData.name, 'name')}
-            {renderProfileField('Email', userData.email, 'email')}
-            {renderProfileField('Phone', userData.phone, 'phone')}
-            {renderProfileField('Location', userData.location, 'location')}
-            {renderProfileField('Bio', userData.bio, 'bio')}
+            {renderProfileField("Full Name", userData.name, "name")}
+            {renderProfileField("Email", userData.email, "email")}
+            {renderProfileField("Phone", userData.phone, "phone")}
+            {renderProfileField("Location", userData.location, "location")}
+            {renderProfileField("Bio", userData.bio, "bio")}
           </View>
 
           <View style={[styles.section, { backgroundColor: theme.card }]}>
@@ -174,29 +185,35 @@ const ProfileScreen = () => {
 
             <View style={styles.statsContainer}>
               <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: theme.text }]}>42</Text>
-                <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
+                <Text style={[styles.statValue, { color: theme.text }]}>
+                  42
+                </Text>
+                <Text style={[styles.statLabel, { color: theme.text + "CC" }]}>
                   Trades
                 </Text>
               </View>
 
               <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: theme.text }]}>8.3%</Text>
-                <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
+                <Text style={[styles.statValue, { color: theme.text }]}>
+                  8.3%
+                </Text>
+                <Text style={[styles.statLabel, { color: theme.text + "CC" }]}>
                   Return
                 </Text>
               </View>
 
               <View style={styles.statItem}>
                 <Text style={[styles.statValue, { color: theme.text }]}>5</Text>
-                <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
+                <Text style={[styles.statLabel, { color: theme.text + "CC" }]}>
                   Strategies
                 </Text>
               </View>
 
               <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: theme.text }]}>68%</Text>
-                <Text style={[styles.statLabel, { color: theme.text + 'CC' }]}>
+                <Text style={[styles.statValue, { color: theme.text }]}>
+                  68%
+                </Text>
+                <Text style={[styles.statLabel, { color: theme.text + "CC" }]}>
                   Win Rate
                 </Text>
               </View>
@@ -212,63 +229,84 @@ const ProfileScreen = () => {
               style={[styles.securityItem, { borderBottomColor: theme.border }]}
               onPress={() => {
                 // In a real app, this would navigate to change password screen
-                alert('Would navigate to change password screen');
+                alert("Would navigate to change password screen");
               }}
             >
               <View style={styles.securityItemContent}>
                 <Icon name="lock" size={24} color={theme.primary} />
                 <View style={styles.securityItemText}>
-                  <Text style={[styles.securityItemTitle, { color: theme.text }]}>
+                  <Text
+                    style={[styles.securityItemTitle, { color: theme.text }]}
+                  >
                     Change Password
                   </Text>
-                  <Text style={[styles.securityItemDescription, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[
+                      styles.securityItemDescription,
+                      { color: theme.text + "CC" },
+                    ]}
+                  >
                     Last changed 30 days ago
                   </Text>
                 </View>
               </View>
-              <Icon name="chevron-right" size={20} color={theme.text + '99'} />
+              <Icon name="chevron-right" size={20} color={theme.text + "99"} />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.securityItem, { borderBottomColor: theme.border }]}
               onPress={() => {
                 // In a real app, this would navigate to 2FA setup screen
-                alert('Would navigate to 2FA setup screen');
+                alert("Would navigate to 2FA setup screen");
               }}
             >
               <View style={styles.securityItemContent}>
                 <Icon name="shield-check" size={24} color={theme.primary} />
                 <View style={styles.securityItemText}>
-                  <Text style={[styles.securityItemTitle, { color: theme.text }]}>
+                  <Text
+                    style={[styles.securityItemTitle, { color: theme.text }]}
+                  >
                     Two-Factor Authentication
                   </Text>
-                  <Text style={[styles.securityItemDescription, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[
+                      styles.securityItemDescription,
+                      { color: theme.text + "CC" },
+                    ]}
+                  >
                     Enabled
                   </Text>
                 </View>
               </View>
-              <Icon name="chevron-right" size={20} color={theme.text + '99'} />
+              <Icon name="chevron-right" size={20} color={theme.text + "99"} />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.securityItem}
               onPress={() => {
                 // In a real app, this would navigate to device management screen
-                alert('Would navigate to device management screen');
+                alert("Would navigate to device management screen");
               }}
             >
               <View style={styles.securityItemContent}>
                 <Icon name="devices" size={24} color={theme.primary} />
                 <View style={styles.securityItemText}>
-                  <Text style={[styles.securityItemTitle, { color: theme.text }]}>
+                  <Text
+                    style={[styles.securityItemTitle, { color: theme.text }]}
+                  >
                     Manage Devices
                   </Text>
-                  <Text style={[styles.securityItemDescription, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[
+                      styles.securityItemDescription,
+                      { color: theme.text + "CC" },
+                    ]}
+                  >
                     2 active devices
                   </Text>
                 </View>
               </View>
-              <Icon name="chevron-right" size={20} color={theme.text + '99'} />
+              <Icon name="chevron-right" size={20} color={theme.text + "99"} />
             </TouchableOpacity>
           </View>
 
@@ -280,16 +318,18 @@ const ProfileScreen = () => {
             <TouchableOpacity
               style={styles.preferenceItem}
               onPress={() => {
-                navigation.navigate('SettingsScreen');
+                navigation.navigate("SettingsScreen");
               }}
             >
               <View style={styles.preferenceItemContent}>
                 <Icon name="cog" size={24} color={theme.primary} />
-                <Text style={[styles.preferenceItemTitle, { color: theme.text }]}>
+                <Text
+                  style={[styles.preferenceItemTitle, { color: theme.text }]}
+                >
                   Settings
                 </Text>
               </View>
-              <Icon name="chevron-right" size={20} color={theme.text + '99'} />
+              <Icon name="chevron-right" size={20} color={theme.text + "99"} />
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -303,23 +343,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   editButton: {
     padding: 8,
   },
   editButtonText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   scrollContent: {
     padding: 16,
@@ -329,19 +369,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
   avatarContainer: {
-    position: 'relative',
+    position: "relative",
   },
   avatar: {
     width: 80,
@@ -349,14 +389,14 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   changeAvatarButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     bottom: 0,
     width: 28,
     height: 28,
     borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   profileInfo: {
     marginLeft: 16,
@@ -364,27 +404,27 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   profileEmail: {
     fontSize: 14,
     marginTop: 2,
   },
   membershipBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 215, 0, 0.2)",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginTop: 8,
   },
   membershipText: {
     fontSize: 12,
-    color: '#FFD700',
+    color: "#FFD700",
     marginLeft: 4,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   divider: {
     height: 1,
@@ -410,8 +450,8 @@ const styles = StyleSheet.create({
   section: {
     borderRadius: 12,
     marginBottom: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -419,38 +459,38 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     padding: 16,
     paddingBottom: 8,
   },
   statsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: 16,
     paddingTop: 8,
   },
   statItem: {
-    width: '50%',
+    width: "50%",
     paddingVertical: 8,
   },
   statValue: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   statLabel: {
     fontSize: 12,
     marginTop: 2,
   },
   securityItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
   },
   securityItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   securityItemText: {
@@ -465,14 +505,14 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   preferenceItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
   },
   preferenceItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   preferenceItemTitle: {
     fontSize: 16,

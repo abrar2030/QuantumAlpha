@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -15,8 +15,8 @@ import {
   Fade,
   Chip,
   IconButton,
-  Avatar
-} from '@mui/material';
+  Avatar,
+} from "@mui/material";
 import {
   TrendingUp,
   TrendingDown,
@@ -28,17 +28,32 @@ import {
   ArrowDownRight,
   Eye,
   Settings,
-  Plus
-} from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { useGetPortfolioQuery, useGetStrategiesQuery, useGetTradesQuery } from '../services/api';
-import PortfolioSummary from '../components/dashboard/PortfolioSummary';
-import PerformanceChart from '../components/dashboard/PerformanceChart';
-import StrategyTable from '../components/dashboard/StrategyTable';
-import RecentTradesList from '../components/dashboard/RecentTradesList';
-import ErrorBoundary from '../components/common/ErrorBoundary';
-import { toggleModal } from '../store/slices/uiSlice';
+  Plus,
+} from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+} from "recharts";
+import {
+  useGetPortfolioQuery,
+  useGetStrategiesQuery,
+  useGetTradesQuery,
+} from "../services/api";
+import PortfolioSummary from "../components/dashboard/PortfolioSummary";
+import PerformanceChart from "../components/dashboard/PerformanceChart";
+import StrategyTable from "../components/dashboard/StrategyTable";
+import RecentTradesList from "../components/dashboard/RecentTradesList";
+import ErrorBoundary from "../components/common/ErrorBoundary";
+import { toggleModal } from "../store/slices/uiSlice";
 
 // Mock data for demonstration
 const mockPortfolioData = {
@@ -46,54 +61,94 @@ const mockPortfolioData = {
   dailyChange: 2847.32,
   percentChange: 2.31,
   historicalData: [
-    { date: '2024-01-01', value: 100000 },
-    { date: '2024-02-01', value: 105000 },
-    { date: '2024-03-01', value: 108000 },
-    { date: '2024-04-01', value: 112000 },
-    { date: '2024-05-01', value: 118000 },
-    { date: '2024-06-01', value: 125847 }
-  ]
+    { date: "2024-01-01", value: 100000 },
+    { date: "2024-02-01", value: 105000 },
+    { date: "2024-03-01", value: 108000 },
+    { date: "2024-04-01", value: 112000 },
+    { date: "2024-05-01", value: 118000 },
+    { date: "2024-06-01", value: 125847 },
+  ],
 };
 
 const mockStrategies = [
-  { id: 1, name: 'AI Momentum', return: 15.2, status: 'active', risk: 'medium' },
-  { id: 2, name: 'Quantum Alpha', return: 23.8, status: 'active', risk: 'high' },
-  { id: 3, name: 'Conservative Growth', return: 8.4, status: 'active', risk: 'low' }
+  {
+    id: 1,
+    name: "AI Momentum",
+    return: 15.2,
+    status: "active",
+    risk: "medium",
+  },
+  {
+    id: 2,
+    name: "Quantum Alpha",
+    return: 23.8,
+    status: "active",
+    risk: "high",
+  },
+  {
+    id: 3,
+    name: "Conservative Growth",
+    return: 8.4,
+    status: "active",
+    risk: "low",
+  },
 ];
 
 const mockTrades = [
-  { id: 1, symbol: 'AAPL', type: 'buy', amount: 1500, price: 175.23, time: '2 hours ago' },
-  { id: 2, symbol: 'TSLA', type: 'sell', amount: 2300, price: 245.67, time: '4 hours ago' },
-  { id: 3, symbol: 'NVDA', type: 'buy', amount: 1800, price: 892.45, time: '6 hours ago' }
+  {
+    id: 1,
+    symbol: "AAPL",
+    type: "buy",
+    amount: 1500,
+    price: 175.23,
+    time: "2 hours ago",
+  },
+  {
+    id: 2,
+    symbol: "TSLA",
+    type: "sell",
+    amount: 2300,
+    price: 245.67,
+    time: "4 hours ago",
+  },
+  {
+    id: 3,
+    symbol: "NVDA",
+    type: "buy",
+    amount: 1800,
+    price: 892.45,
+    time: "6 hours ago",
+  },
 ];
 
 const Dashboard = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [animationDelay, setAnimationDelay] = useState(0);
 
   // Get data from Redux store and API
-  const { portfolioValue, dailyChange, percentChange, historicalData } = useSelector((state) => state.portfolio);
+  const { portfolioValue, dailyChange, percentChange, historicalData } =
+    useSelector((state) => state.portfolio);
   const { strategies, recentTrades } = useSelector((state) => state.strategy);
 
   // RTK Query hooks with automatic loading and error states
   const {
     data: portfolioData,
     isLoading: portfolioLoading,
-    error: portfolioError
+    error: portfolioError,
   } = useGetPortfolioQuery();
 
   const {
     data: strategiesData,
     isLoading: strategiesLoading,
-    error: strategiesError
+    error: strategiesError,
   } = useGetStrategiesQuery();
 
   const {
     data: tradesData,
     isLoading: tradesLoading,
-    error: tradesError
+    error: tradesError,
   } = useGetTradesQuery({ limit: 5 });
 
   // Use mock data for demonstration
@@ -103,16 +158,16 @@ const Dashboard = () => {
 
   // Handle deposit/withdraw modals
   const handleOpenDepositModal = () => {
-    dispatch(toggleModal({ modal: 'deposit', value: true }));
+    dispatch(toggleModal({ modal: "deposit", value: true }));
   };
 
   const handleOpenWithdrawModal = () => {
-    dispatch(toggleModal({ modal: 'withdraw', value: true }));
+    dispatch(toggleModal({ modal: "withdraw", value: true }));
   };
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setAnimationDelay(prev => prev + 200);
+      setAnimationDelay((prev) => prev + 200);
     }, 200);
     return () => clearInterval(timer);
   }, []);
@@ -121,21 +176,28 @@ const Dashboard = () => {
     <Fade in={true} timeout={800} style={{ transitionDelay: `${delay}ms` }}>
       <Card
         sx={{
-          height: '100%',
+          height: "100%",
           background: `linear-gradient(135deg, ${color}15, ${color}05)`,
           border: `1px solid ${color}30`,
           borderRadius: 3,
-          transition: 'all 0.3s ease',
-          cursor: 'pointer',
-          '&:hover': {
-            transform: 'translateY(-4px)',
+          transition: "all 0.3s ease",
+          cursor: "pointer",
+          "&:hover": {
+            transform: "translateY(-4px)",
             boxShadow: `0 8px 25px ${color}25`,
             border: `1px solid ${color}50`,
-          }
+          },
         }}
       >
         <CardContent sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 2,
+            }}
+          >
             <Typography variant="body2" color="text.secondary" fontWeight={500}>
               {title}
             </Typography>
@@ -143,10 +205,14 @@ const Dashboard = () => {
               <Icon size={20} color={color} />
             </Avatar>
           </Box>
-          <Typography variant="h4" fontWeight={700} sx={{ mb: 1, color: color }}>
+          <Typography
+            variant="h4"
+            fontWeight={700}
+            sx={{ mb: 1, color: color }}
+          >
             {value}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {change > 0 ? (
               <ArrowUpRight size={16} color="#10b981" />
             ) : (
@@ -157,7 +223,8 @@ const Dashboard = () => {
               color={change > 0 ? "#10b981" : "#ef4444"}
               fontWeight={600}
             >
-              {change > 0 ? '+' : ''}{change}%
+              {change > 0 ? "+" : ""}
+              {change}%
             </Typography>
           </Box>
         </CardContent>
@@ -167,25 +234,29 @@ const Dashboard = () => {
 
   return (
     <ErrorBoundary>
-      <Box sx={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
-        py: 4
-      }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background:
+            "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+          py: 4,
+        }}
+      >
         <Container maxWidth="xl">
           {/* Hero Section */}
           <Fade in={true} timeout={1000}>
-            <Box sx={{ mb: 6, textAlign: 'center' }}>
+            <Box sx={{ mb: 6, textAlign: "center" }}>
               <Typography
                 variant="h2"
                 fontWeight={800}
                 sx={{
-                  background: 'linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  background:
+                    "linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
                   mb: 2,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' }
+                  fontSize: { xs: "2.5rem", md: "3.5rem" },
                 }}
               >
                 QuantumAlpha Dashboard
@@ -193,11 +264,19 @@ const Dashboard = () => {
               <Typography
                 variant="h6"
                 color="text.secondary"
-                sx={{ maxWidth: 600, mx: 'auto', mb: 4 }}
+                sx={{ maxWidth: 600, mx: "auto", mb: 4 }}
               >
-                Advanced AI-powered trading platform with quantum-enhanced algorithms
+                Advanced AI-powered trading platform with quantum-enhanced
+                algorithms
               </Typography>
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+              >
                 <Button
                   variant="contained"
                   size="large"
@@ -207,13 +286,13 @@ const Dashboard = () => {
                     px: 4,
                     py: 1.5,
                     fontWeight: 600,
-                    background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
-                    boxShadow: '0 4px 20px rgba(0, 212, 255, 0.3)',
-                    '&:hover': {
-                      background: 'linear-gradient(45deg, #0099cc, #0066aa)',
-                      boxShadow: '0 6px 25px rgba(0, 212, 255, 0.4)',
-                      transform: 'translateY(-2px)'
-                    }
+                    background: "linear-gradient(45deg, #00d4ff, #0099cc)",
+                    boxShadow: "0 4px 20px rgba(0, 212, 255, 0.3)",
+                    "&:hover": {
+                      background: "linear-gradient(45deg, #0099cc, #0066aa)",
+                      boxShadow: "0 6px 25px rgba(0, 212, 255, 0.4)",
+                      transform: "translateY(-2px)",
+                    },
                   }}
                 >
                   Add Funds
@@ -228,14 +307,14 @@ const Dashboard = () => {
                     py: 1.5,
                     fontWeight: 600,
                     borderWidth: 2,
-                    borderColor: '#00d4ff',
-                    color: '#00d4ff',
-                    '&:hover': {
+                    borderColor: "#00d4ff",
+                    color: "#00d4ff",
+                    "&:hover": {
                       borderWidth: 2,
-                      borderColor: '#00d4ff',
-                      background: 'rgba(0, 212, 255, 0.1)',
-                      transform: 'translateY(-2px)'
-                    }
+                      borderColor: "#00d4ff",
+                      background: "rgba(0, 212, 255, 0.1)",
+                      transform: "translateY(-2px)",
+                    },
                   }}
                 >
                   Settings
@@ -249,7 +328,7 @@ const Dashboard = () => {
             <Grid item xs={12} sm={6} md={3}>
               <StatCard
                 title="Portfolio Value"
-                value={`$${displayPortfolioData.portfolioValue?.toLocaleString() || '125,847'}`}
+                value={`$${displayPortfolioData.portfolioValue?.toLocaleString() || "125,847"}`}
                 change={displayPortfolioData.percentChange || 2.31}
                 icon={DollarSign}
                 color="#00d4ff"
@@ -259,7 +338,7 @@ const Dashboard = () => {
             <Grid item xs={12} sm={6} md={3}>
               <StatCard
                 title="Daily P&L"
-                value={`$${displayPortfolioData.dailyChange?.toLocaleString() || '2,847'}`}
+                value={`$${displayPortfolioData.dailyChange?.toLocaleString() || "2,847"}`}
                 change={1.8}
                 icon={TrendingUp}
                 color="#10b981"
@@ -296,13 +375,20 @@ const Dashboard = () => {
                 p: 4,
                 mb: 4,
                 borderRadius: 4,
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                background: "rgba(255, 255, 255, 0.05)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 3,
+                }}
+              >
                 <Typography variant="h5" fontWeight={700} color="white">
                   Portfolio Performance
                 </Typography>
@@ -310,9 +396,9 @@ const Dashboard = () => {
                   label="Real-time"
                   icon={<Zap size={16} />}
                   sx={{
-                    background: 'linear-gradient(45deg, #10b981, #059669)',
-                    color: 'white',
-                    fontWeight: 600
+                    background: "linear-gradient(45deg, #10b981, #059669)",
+                    color: "white",
+                    fontWeight: 600,
                   }}
                 />
               </Box>
@@ -320,12 +406,29 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={displayPortfolioData.historicalData}>
                     <defs>
-                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#00d4ff" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#00d4ff" stopOpacity={0}/>
+                      <linearGradient
+                        id="colorValue"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#00d4ff"
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#00d4ff"
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="rgba(255,255,255,0.1)"
+                    />
                     <XAxis
                       dataKey="date"
                       stroke="rgba(255,255,255,0.7)"
@@ -334,16 +437,21 @@ const Dashboard = () => {
                     <YAxis
                       stroke="rgba(255,255,255,0.7)"
                       fontSize={12}
-                      tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
+                      tickFormatter={(value) =>
+                        `$${(value / 1000).toFixed(0)}k`
+                      }
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '8px',
-                        color: 'white'
+                        backgroundColor: "rgba(0, 0, 0, 0.8)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)",
+                        borderRadius: "8px",
+                        color: "white",
                       }}
-                      formatter={(value) => [`$${value.toLocaleString()}`, 'Portfolio Value']}
+                      formatter={(value) => [
+                        `$${value.toLocaleString()}`,
+                        "Portfolio Value",
+                      ]}
                     />
                     <Area
                       type="monotone"
@@ -367,46 +475,73 @@ const Dashboard = () => {
                   elevation={0}
                   sx={{
                     p: 4,
-                    height: '100%',
+                    height: "100%",
                     borderRadius: 4,
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                    background: "rgba(255, 255, 255, 0.05)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
                   }}
                 >
-                  <Typography variant="h5" fontWeight={700} color="white" sx={{ mb: 3 }}>
+                  <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    color="white"
+                    sx={{ mb: 3 }}
+                  >
                     AI Strategy Performance
                   </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     {displayStrategies.map((strategy, index) => (
                       <Card
                         key={strategy.id}
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          background: "rgba(255, 255, 255, 0.05)",
+                          border: "1px solid rgba(255, 255, 255, 0.1)",
                           borderRadius: 2,
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            background: 'rgba(255, 255, 255, 0.1)',
-                            transform: 'translateX(8px)'
-                          }
+                          transition: "all 0.3s ease",
+                          "&:hover": {
+                            background: "rgba(255, 255, 255, 0.1)",
+                            transform: "translateX(8px)",
+                          },
                         }}
                       >
                         <CardContent sx={{ p: 3 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
                             <Box>
-                              <Typography variant="h6" fontWeight={600} color="white">
+                              <Typography
+                                variant="h6"
+                                fontWeight={600}
+                                color="white"
+                              >
                                 {strategy.name}
                               </Typography>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 2,
+                                  mt: 1,
+                                }}
+                              >
                                 <Chip
                                   label={strategy.status}
                                   size="small"
                                   sx={{
-                                    background: strategy.status === 'active' ? '#10b981' : '#6b7280',
-                                    color: 'white',
-                                    fontWeight: 500
+                                    background:
+                                      strategy.status === "active"
+                                        ? "#10b981"
+                                        : "#6b7280",
+                                    color: "white",
+                                    fontWeight: 500,
                                   }}
                                 />
                                 <Chip
@@ -414,23 +549,36 @@ const Dashboard = () => {
                                   size="small"
                                   variant="outlined"
                                   sx={{
-                                    borderColor: strategy.risk === 'high' ? '#ef4444' :
-                                                strategy.risk === 'medium' ? '#f59e0b' : '#10b981',
-                                    color: strategy.risk === 'high' ? '#ef4444' :
-                                           strategy.risk === 'medium' ? '#f59e0b' : '#10b981'
+                                    borderColor:
+                                      strategy.risk === "high"
+                                        ? "#ef4444"
+                                        : strategy.risk === "medium"
+                                          ? "#f59e0b"
+                                          : "#10b981",
+                                    color:
+                                      strategy.risk === "high"
+                                        ? "#ef4444"
+                                        : strategy.risk === "medium"
+                                          ? "#f59e0b"
+                                          : "#10b981",
                                   }}
                                 />
                               </Box>
                             </Box>
-                            <Box sx={{ textAlign: 'right' }}>
+                            <Box sx={{ textAlign: "right" }}>
                               <Typography
                                 variant="h5"
                                 fontWeight={700}
-                                color={strategy.return > 0 ? '#10b981' : '#ef4444'}
+                                color={
+                                  strategy.return > 0 ? "#10b981" : "#ef4444"
+                                }
                               >
                                 +{strategy.return}%
                               </Typography>
-                              <IconButton size="small" sx={{ color: '#00d4ff' }}>
+                              <IconButton
+                                size="small"
+                                sx={{ color: "#00d4ff" }}
+                              >
                                 <Eye size={16} />
                               </IconButton>
                             </Box>
@@ -448,44 +596,63 @@ const Dashboard = () => {
                   elevation={0}
                   sx={{
                     p: 4,
-                    height: '100%',
+                    height: "100%",
                     borderRadius: 4,
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                    background: "rgba(255, 255, 255, 0.05)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
                   }}
                 >
-                  <Typography variant="h5" fontWeight={700} color="white" sx={{ mb: 3 }}>
+                  <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    color="white"
+                    sx={{ mb: 3 }}
+                  >
                     Recent Trades
                   </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     {displayTrades.map((trade, index) => (
                       <Card
                         key={trade.id}
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          background: "rgba(255, 255, 255, 0.05)",
+                          border: "1px solid rgba(255, 255, 255, 0.1)",
                           borderRadius: 2,
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            background: 'rgba(255, 255, 255, 0.1)',
-                          }
+                          transition: "all 0.3s ease",
+                          "&:hover": {
+                            background: "rgba(255, 255, 255, 0.1)",
+                          },
                         }}
                       >
                         <CardContent sx={{ p: 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                            <Typography variant="subtitle1" fontWeight={600} color="white">
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              mb: 1,
+                            }}
+                          >
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={600}
+                              color="white"
+                            >
                               {trade.symbol}
                             </Typography>
                             <Chip
                               label={trade.type.toUpperCase()}
                               size="small"
                               sx={{
-                                background: trade.type === 'buy' ? '#10b981' : '#ef4444',
-                                color: 'white',
+                                background:
+                                  trade.type === "buy" ? "#10b981" : "#ef4444",
+                                color: "white",
                                 fontWeight: 500,
-                                fontSize: '0.75rem'
+                                fontSize: "0.75rem",
                               }}
                             />
                           </Box>

@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef } from "react";
 import {
   View,
   TextInput,
@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   TextInputProps,
   ViewStyle,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -18,129 +18,142 @@ interface InputProps extends TextInputProps {
   leftIcon?: string;
   rightIcon?: string;
   onRightIconPress?: () => void;
-  variant?: 'outlined' | 'filled' | 'underlined';
-  size?: 'small' | 'medium' | 'large';
+  variant?: "outlined" | "filled" | "underlined";
+  size?: "small" | "medium" | "large";
   containerStyle?: ViewStyle;
   required?: boolean;
 }
 
-const Input = forwardRef<TextInput, InputProps>(({
-  label,
-  error,
-  helperText,
-  leftIcon,
-  rightIcon,
-  onRightIconPress,
-  variant = 'outlined',
-  size = 'medium',
-  containerStyle,
-  required = false,
-  style,
-  ...props
-}, ref) => {
-  const { theme } = useTheme();
-  const [isFocused, setIsFocused] = useState(false);
+const Input = forwardRef<TextInput, InputProps>(
+  (
+    {
+      label,
+      error,
+      helperText,
+      leftIcon,
+      rightIcon,
+      onRightIconPress,
+      variant = "outlined",
+      size = "medium",
+      containerStyle,
+      required = false,
+      style,
+      ...props
+    },
+    ref,
+  ) => {
+    const { theme } = useTheme();
+    const [isFocused, setIsFocused] = useState(false);
 
-  const getContainerStyle = () => {
-    const baseStyle = {
-      ...styles.container,
-      ...styles[size],
+    const getContainerStyle = () => {
+      const baseStyle = {
+        ...styles.container,
+        ...styles[size],
+      };
+
+      switch (variant) {
+        case "outlined":
+          return {
+            ...baseStyle,
+            ...styles.outlined,
+            borderColor: error
+              ? theme.error
+              : isFocused
+                ? theme.primary
+                : theme.border,
+            backgroundColor: theme.card,
+          };
+        case "filled":
+          return {
+            ...baseStyle,
+            ...styles.filled,
+            backgroundColor: theme.background,
+            borderBottomColor: error
+              ? theme.error
+              : isFocused
+                ? theme.primary
+                : theme.border,
+          };
+        case "underlined":
+          return {
+            ...baseStyle,
+            ...styles.underlined,
+            borderBottomColor: error
+              ? theme.error
+              : isFocused
+                ? theme.primary
+                : theme.border,
+          };
+        default:
+          return baseStyle;
+      }
     };
 
-    switch (variant) {
-      case 'outlined':
-        return {
-          ...baseStyle,
-          ...styles.outlined,
-          borderColor: error ? theme.error : isFocused ? theme.primary : theme.border,
-          backgroundColor: theme.card,
-        };
-      case 'filled':
-        return {
-          ...baseStyle,
-          ...styles.filled,
-          backgroundColor: theme.background,
-          borderBottomColor: error ? theme.error : isFocused ? theme.primary : theme.border,
-        };
-      case 'underlined':
-        return {
-          ...baseStyle,
-          ...styles.underlined,
-          borderBottomColor: error ? theme.error : isFocused ? theme.primary : theme.border,
-        };
-      default:
-        return baseStyle;
-    }
-  };
-
-  const getInputStyle = () => {
-    return {
-      ...styles.input,
-      color: theme.text,
-      fontSize: size === 'small' ? 14 : size === 'large' ? 18 : 16,
+    const getInputStyle = () => {
+      return {
+        ...styles.input,
+        color: theme.text,
+        fontSize: size === "small" ? 14 : size === "large" ? 18 : 16,
+      };
     };
-  };
 
-  return (
-    <View style={[containerStyle]}>
-      {label && (
-        <Text style={[styles.label, { color: theme.text }]}>
-          {label}
-          {required && <Text style={{ color: theme.error }}> *</Text>}
-        </Text>
-      )}
-
-      <View style={getContainerStyle()}>
-        {leftIcon && (
-          <Icon
-            name={leftIcon}
-            size={20}
-            color={theme.text}
-            style={styles.leftIcon}
-          />
+    return (
+      <View style={[containerStyle]}>
+        {label && (
+          <Text style={[styles.label, { color: theme.text }]}>
+            {label}
+            {required && <Text style={{ color: theme.error }}> *</Text>}
+          </Text>
         )}
 
-        <TextInput
-          ref={ref}
-          style={[getInputStyle(), style]}
-          placeholderTextColor={theme.text + '80'}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          {...props}
-        />
-
-        {rightIcon && (
-          <TouchableOpacity
-            onPress={onRightIconPress}
-            style={styles.rightIcon}
-          >
+        <View style={getContainerStyle()}>
+          {leftIcon && (
             <Icon
-              name={rightIcon}
+              name={leftIcon}
               size={20}
               color={theme.text}
+              style={styles.leftIcon}
             />
-          </TouchableOpacity>
+          )}
+
+          <TextInput
+            ref={ref}
+            style={[getInputStyle(), style]}
+            placeholderTextColor={theme.text + "80"}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            {...props}
+          />
+
+          {rightIcon && (
+            <TouchableOpacity
+              onPress={onRightIconPress}
+              style={styles.rightIcon}
+            >
+              <Icon name={rightIcon} size={20} color={theme.text} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {(error || helperText) && (
+          <Text
+            style={[
+              styles.helperText,
+              { color: error ? theme.error : theme.text + "80" },
+            ]}
+          >
+            {error || helperText}
+          </Text>
         )}
       </View>
-
-      {(error || helperText) && (
-        <Text
-          style={[
-            styles.helperText,
-            { color: error ? theme.error : theme.text + '80' }
-          ]}
-        >
-          {error || helperText}
-        </Text>
-      )}
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 8,
     paddingHorizontal: 12,
   },
@@ -174,7 +187,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
   },
   helperText: {
@@ -191,6 +204,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 export default Input;

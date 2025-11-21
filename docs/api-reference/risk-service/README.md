@@ -38,13 +38,13 @@ Retrieves a list of all configured risk models.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `type` | string | Filter by model type (e.g., `var`, `cvar`, `factor_model`) |
-| `asset_class` | string | Filter by asset class (e.g., `equity`, `fixed_income`, `multi_asset`) |
-| `status` | string | Filter by model status (e.g., `active`, `inactive`, `calibrating`) |
-| `limit` | integer | Maximum number of models to return (default: 100) |
-| `offset` | integer | Number of models to skip (default: 0) |
+| Parameter     | Type    | Description                                                           |
+| ------------- | ------- | --------------------------------------------------------------------- |
+| `type`        | string  | Filter by model type (e.g., `var`, `cvar`, `factor_model`)            |
+| `asset_class` | string  | Filter by asset class (e.g., `equity`, `fixed_income`, `multi_asset`) |
+| `status`      | string  | Filter by model status (e.g., `active`, `inactive`, `calibrating`)    |
+| `limit`       | integer | Maximum number of models to return (default: 100)                     |
+| `offset`      | integer | Number of models to skip (default: 0)                                 |
 
 #### Response
 
@@ -99,8 +99,8 @@ Retrieves a specific risk model by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                          |
+| ---------- | ------ | ------------------------------------ |
 | `model_id` | string | The ID of the risk model to retrieve |
 
 #### Response
@@ -155,7 +155,14 @@ Creates a new risk model.
   "asset_class": "multi_asset",
   "description": "Factor model for multi-asset portfolios incorporating macroeconomic and style factors.",
   "parameters": {
-    "factors": ["market", "size", "value", "momentum", "interest_rate", "inflation"],
+    "factors": [
+      "market",
+      "size",
+      "value",
+      "momentum",
+      "interest_rate",
+      "inflation"
+    ],
     "covariance_matrix_estimation": "ewma",
     "ewma_lambda": 0.94
   },
@@ -174,7 +181,14 @@ Creates a new risk model.
   "description": "Factor model for multi-asset portfolios incorporating macroeconomic and style factors.",
   "status": "calibrating",
   "parameters": {
-    "factors": ["market", "size", "value", "momentum", "interest_rate", "inflation"],
+    "factors": [
+      "market",
+      "size",
+      "value",
+      "momentum",
+      "interest_rate",
+      "inflation"
+    ],
     "covariance_matrix_estimation": "ewma",
     "ewma_lambda": 0.94
   },
@@ -193,8 +207,8 @@ Updates an existing risk model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                        |
+| ---------- | ------ | ---------------------------------- |
 | `model_id` | string | The ID of the risk model to update |
 
 #### Request Body
@@ -203,7 +217,15 @@ Updates an existing risk model.
 {
   "description": "Updated Factor model for multi-asset portfolios with revised factor set.",
   "parameters": {
-    "factors": ["market", "size", "value", "momentum", "interest_rate", "inflation", "credit_spread"],
+    "factors": [
+      "market",
+      "size",
+      "value",
+      "momentum",
+      "interest_rate",
+      "inflation",
+      "credit_spread"
+    ],
     "covariance_matrix_estimation": "ewma",
     "ewma_lambda": 0.97
   },
@@ -222,7 +244,15 @@ Updates an existing risk model.
   "description": "Updated Factor model for multi-asset portfolios with revised factor set.",
   "status": "calibrating",
   "parameters": {
-    "factors": ["market", "size", "value", "momentum", "interest_rate", "inflation", "credit_spread"],
+    "factors": [
+      "market",
+      "size",
+      "value",
+      "momentum",
+      "interest_rate",
+      "inflation",
+      "credit_spread"
+    ],
     "covariance_matrix_estimation": "ewma",
     "ewma_lambda": 0.97
   },
@@ -241,8 +271,8 @@ Deletes a risk model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                        |
+| ---------- | ------ | ---------------------------------- |
 | `model_id` | string | The ID of the risk model to delete |
 
 #### Response
@@ -264,8 +294,8 @@ Triggers a manual calibration for a risk model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                           |
+| ---------- | ------ | ------------------------------------- |
 | `model_id` | string | The ID of the risk model to calibrate |
 
 #### Request Body
@@ -298,10 +328,10 @@ Retrieves the status of a risk model calibration job.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_id` | string | The ID of the risk model |
-| `job_id` | string | The ID of the calibration job |
+| Parameter  | Type   | Description                   |
+| ---------- | ------ | ----------------------------- |
+| `model_id` | string | The ID of the risk model      |
+| `job_id`   | string | The ID of the calibration job |
 
 #### Response
 
@@ -329,8 +359,8 @@ Triggers a validation process for a risk model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                          |
+| ---------- | ------ | ------------------------------------ |
 | `model_id` | string | The ID of the risk model to validate |
 
 #### Request Body
@@ -364,10 +394,10 @@ Retrieves the results of a risk model validation job.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_id` | string | The ID of the risk model |
-| `job_id` | string | The ID of the validation job |
+| Parameter  | Type   | Description                  |
+| ---------- | ------ | ---------------------------- |
+| `model_id` | string | The ID of the risk model     |
+| `job_id`   | string | The ID of the validation job |
 
 #### Response
 
@@ -408,7 +438,6 @@ Retrieves the results of a risk model validation job.
   ]
 }
 ```
-
 
 ## Portfolio Risk
 
@@ -475,17 +504,17 @@ Calculates risk metrics for a portfolio.
 {
   "calculation_id": "calc_123456",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "portfolio_risk_metrics": {
     "model_123456": {
       "var": {
-        "value": 37500.00,
+        "value": 37500.0,
         "percentage": 0.03,
         "confidence_level": 0.99,
         "holding_period": 1
       },
       "cvar": {
-        "value": 45000.00,
+        "value": 45000.0,
         "percentage": 0.036,
         "confidence_level": 0.99,
         "holding_period": 1
@@ -505,13 +534,13 @@ Calculates risk metrics for a portfolio.
     },
     "model_789012": {
       "var": {
-        "value": 87500.00,
+        "value": 87500.0,
         "percentage": 0.07,
         "confidence_level": 0.975,
         "holding_period": 5
       },
       "cvar": {
-        "value": 100000.00,
+        "value": 100000.0,
         "percentage": 0.08,
         "confidence_level": 0.975,
         "holding_period": 5
@@ -522,7 +551,7 @@ Calculates risk metrics for a portfolio.
     "AAPL": {
       "model_123456": {
         "var_contribution": {
-          "value": 15000.00,
+          "value": 15000.0,
           "percentage": 0.04,
           "contribution_percentage": 0.4
         },
@@ -533,18 +562,18 @@ Calculates risk metrics for a portfolio.
     "MSFT": {
       "model_123456": {
         "var_contribution": {
-          "value": 12000.00,
+          "value": 12000.0,
           "percentage": 0.03,
           "contribution_percentage": 0.32
         },
-        "volatility": 0.20,
+        "volatility": 0.2,
         "beta": 1.05
       }
     },
     "GOOGL": {
       "model_123456": {
         "var_contribution": {
-          "value": 7500.00,
+          "value": 7500.0,
           "percentage": 0.025,
           "contribution_percentage": 0.2
         },
@@ -555,11 +584,11 @@ Calculates risk metrics for a portfolio.
     "TLT": {
       "model_123456": {
         "var_contribution": {
-          "value": 3000.00,
+          "value": 3000.0,
           "percentage": 0.015,
           "contribution_percentage": 0.08
         },
-        "volatility": 0.10,
+        "volatility": 0.1,
         "beta": -0.2
       }
     }
@@ -577,14 +606,14 @@ Retrieves historical risk metrics for a portfolio.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | The ID of the portfolio |
-| `model_id` | string | The ID of the risk model |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `metrics` | string | Comma-separated list of metrics (e.g., `var,cvar,volatility`) |
-| `interval` | string | Data interval (`1d`, `1w`, `1mo`) |
+| Parameter      | Type   | Description                                                   |
+| -------------- | ------ | ------------------------------------------------------------- |
+| `portfolio_id` | string | The ID of the portfolio                                       |
+| `model_id`     | string | The ID of the risk model                                      |
+| `start_date`   | string | Start date in ISO 8601 format (e.g., `2025-01-01`)            |
+| `end_date`     | string | End date in ISO 8601 format (e.g., `2025-06-01`)              |
+| `metrics`      | string | Comma-separated list of metrics (e.g., `var,cvar,volatility`) |
+| `interval`     | string | Data interval (`1d`, `1w`, `1mo`)                             |
 
 #### Response
 
@@ -595,14 +624,14 @@ Retrieves historical risk metrics for a portfolio.
   "data": [
     {
       "date": "2025-06-01",
-      "portfolio_value": 1250000.00,
+      "portfolio_value": 1250000.0,
       "metrics": {
         "var": {
-          "value": 37500.00,
+          "value": 37500.0,
           "percentage": 0.03
         },
         "cvar": {
-          "value": 45000.00,
+          "value": 45000.0,
           "percentage": 0.036
         },
         "volatility": 0.18
@@ -610,14 +639,14 @@ Retrieves historical risk metrics for a portfolio.
     },
     {
       "date": "2025-05-01",
-      "portfolio_value": 1200000.00,
+      "portfolio_value": 1200000.0,
       "metrics": {
         "var": {
-          "value": 36000.00,
+          "value": 36000.0,
           "percentage": 0.03
         },
         "cvar": {
-          "value": 43200.00,
+          "value": 43200.0,
           "percentage": 0.036
         },
         "volatility": 0.17
@@ -625,14 +654,14 @@ Retrieves historical risk metrics for a portfolio.
     },
     {
       "date": "2025-04-01",
-      "portfolio_value": 1180000.00,
+      "portfolio_value": 1180000.0,
       "metrics": {
         "var": {
-          "value": 35400.00,
+          "value": 35400.0,
           "percentage": 0.03
         },
         "cvar": {
-          "value": 42480.00,
+          "value": 42480.0,
           "percentage": 0.036
         },
         "volatility": 0.16
@@ -696,13 +725,13 @@ Calculates risk decomposition for a portfolio.
 {
   "calculation_id": "calc_789012",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "model_id": "model_345678",
   "decomposition_type": "factor",
   "total_risk": {
     "volatility": 0.18,
     "var": {
-      "value": 37500.00,
+      "value": 37500.0,
       "percentage": 0.03
     }
   },
@@ -712,7 +741,7 @@ Calculates risk decomposition for a portfolio.
       "volatility_contribution": 0.12,
       "volatility_contribution_percentage": 0.667,
       "var_contribution": {
-        "value": 25000.00,
+        "value": 25000.0,
         "percentage": 0.02,
         "contribution_percentage": 0.667
       }
@@ -742,7 +771,7 @@ Calculates risk decomposition for a portfolio.
       "volatility_contribution": 0.015,
       "volatility_contribution_percentage": 0.083,
       "var_contribution": {
-        "value": 3125.00,
+        "value": 3125.0,
         "percentage": 0.0025,
         "contribution_percentage": 0.083
       }
@@ -773,7 +802,7 @@ Calculates risk decomposition for a portfolio.
       "volatility_contribution": 0.072,
       "volatility_contribution_percentage": 0.4,
       "var_contribution": {
-        "value": 15000.00,
+        "value": 15000.0,
         "percentage": 0.012,
         "contribution_percentage": 0.4
       },
@@ -790,7 +819,7 @@ Calculates risk decomposition for a portfolio.
       "volatility_contribution": 0.054,
       "volatility_contribution_percentage": 0.3,
       "var_contribution": {
-        "value": 11250.00,
+        "value": 11250.0,
         "percentage": 0.009,
         "contribution_percentage": 0.3
       },
@@ -807,7 +836,7 @@ Calculates risk decomposition for a portfolio.
       "volatility_contribution": 0.036,
       "volatility_contribution_percentage": 0.2,
       "var_contribution": {
-        "value": 7500.00,
+        "value": 7500.0,
         "percentage": 0.006,
         "contribution_percentage": 0.2
       },
@@ -824,7 +853,7 @@ Calculates risk decomposition for a portfolio.
       "volatility_contribution": 0.018,
       "volatility_contribution_percentage": 0.1,
       "var_contribution": {
-        "value": 3750.00,
+        "value": 3750.0,
         "percentage": 0.003,
         "contribution_percentage": 0.1
       },
@@ -863,11 +892,7 @@ Calculates correlation between portfolios or assets.
       "name": "Portfolio B"
     }
   ],
-  "assets": [
-    "SPY",
-    "AGG",
-    "GLD"
-  ],
+  "assets": ["SPY", "AGG", "GLD"],
   "start_date": "2025-01-01",
   "end_date": "2025-06-01",
   "frequency": "daily",
@@ -893,27 +918,27 @@ Calculates correlation between portfolios or assets.
       "portfolio_789012": 1.0,
       "SPY": 0.65,
       "AGG": 0.45,
-      "GLD": 0.20
+      "GLD": 0.2
     },
     "SPY": {
       "portfolio_123456": 0.85,
       "portfolio_789012": 0.65,
       "SPY": 1.0,
-      "AGG": 0.10,
+      "AGG": 0.1,
       "GLD": 0.05
     },
     "AGG": {
       "portfolio_123456": 0.25,
       "portfolio_789012": 0.45,
-      "SPY": 0.10,
+      "SPY": 0.1,
       "AGG": 1.0,
-      "GLD": 0.30
+      "GLD": 0.3
     },
     "GLD": {
       "portfolio_123456": 0.15,
-      "portfolio_789012": 0.20,
+      "portfolio_789012": 0.2,
       "SPY": 0.05,
-      "AGG": 0.30,
+      "AGG": 0.3,
       "GLD": 1.0
     }
   },
@@ -991,29 +1016,29 @@ Calculates portfolio sensitivity to various risk factors.
 {
   "calculation_id": "calc_456789",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "sensitivities": {
     "equity_market": {
       "shocks": [-0.1, -0.05, 0.05, 0.1],
-      "pnl": [-125000.00, -62500.00, 62500.00, 125000.00],
+      "pnl": [-125000.0, -62500.0, 62500.0, 125000.0],
       "pnl_percentage": [-0.1, -0.05, 0.05, 0.1],
       "beta": 1.0
     },
     "interest_rate": {
       "shocks": [-0.01, -0.005, 0.005, 0.01],
-      "pnl": [12500.00, 6250.00, -6250.00, -12500.00],
+      "pnl": [12500.0, 6250.0, -6250.0, -12500.0],
       "pnl_percentage": [0.01, 0.005, -0.005, -0.01],
       "duration": -1.0
     },
     "credit_spread": {
       "shocks": [-0.005, -0.0025, 0.0025, 0.005],
-      "pnl": [6250.00, 3125.00, -3125.00, -6250.00],
+      "pnl": [6250.0, 3125.0, -3125.0, -6250.0],
       "pnl_percentage": [0.005, 0.0025, -0.0025, -0.005],
       "spread_duration": -1.0
     },
     "usd_exchange_rate": {
       "shocks": [-0.05, -0.025, 0.025, 0.05],
-      "pnl": [-12500.00, -6250.00, 6250.00, 12500.00],
+      "pnl": [-12500.0, -6250.0, 6250.0, 12500.0],
       "pnl_percentage": [-0.01, -0.005, 0.005, 0.01],
       "fx_exposure": 0.2
     }
@@ -1158,7 +1183,7 @@ Calculates liquidity risk metrics for a portfolio.
 {
   "calculation_id": "calc_567890",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "portfolio_liquidity_metrics": {
     "normal": {
       "time_to_liquidate": {
@@ -1167,7 +1192,7 @@ Calculates liquidity risk metrics for a portfolio.
         "days_100_percent": 10
       },
       "liquidation_cost": {
-        "value": 6250.00,
+        "value": 6250.0,
         "percentage": 0.005
       },
       "liquidity_score": 0.9
@@ -1179,7 +1204,7 @@ Calculates liquidity risk metrics for a portfolio.
         "days_100_percent": 20
       },
       "liquidation_cost": {
-        "value": 18750.00,
+        "value": 18750.0,
         "percentage": 0.015
       },
       "liquidity_score": 0.75
@@ -1191,7 +1216,7 @@ Calculates liquidity risk metrics for a portfolio.
         "days_100_percent": 50
       },
       "liquidation_cost": {
-        "value": 62500.00,
+        "value": 62500.0,
         "percentage": 0.05
       },
       "liquidity_score": 0.5
@@ -1282,7 +1307,6 @@ Calculates liquidity risk metrics for a portfolio.
 }
 ```
 
-
 ## Scenario Analysis
 
 ### List Scenarios
@@ -1295,12 +1319,12 @@ Retrieves a list of all available scenarios.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `type` | string | Filter by scenario type (e.g., `historical`, `hypothetical`, `monte_carlo`) |
-| `category` | string | Filter by scenario category (e.g., `market_crash`, `interest_rate_shock`, `geopolitical`) |
-| `limit` | integer | Maximum number of scenarios to return (default: 100) |
-| `offset` | integer | Number of scenarios to skip (default: 0) |
+| Parameter  | Type    | Description                                                                               |
+| ---------- | ------- | ----------------------------------------------------------------------------------------- |
+| `type`     | string  | Filter by scenario type (e.g., `historical`, `hypothetical`, `monte_carlo`)               |
+| `category` | string  | Filter by scenario category (e.g., `market_crash`, `interest_rate_shock`, `geopolitical`) |
+| `limit`    | integer | Maximum number of scenarios to return (default: 100)                                      |
+| `offset`   | integer | Number of scenarios to skip (default: 0)                                                  |
 
 #### Response
 
@@ -1355,8 +1379,8 @@ Retrieves a specific scenario by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter     | Type   | Description                        |
+| ------------- | ------ | ---------------------------------- |
 | `scenario_id` | string | The ID of the scenario to retrieve |
 
 #### Response
@@ -1397,21 +1421,21 @@ Retrieves a specific scenario by ID.
   "asset_class_impacts": {
     "equity": {
       "us_large_cap": -0.55,
-      "us_small_cap": -0.60,
-      "europe": -0.50,
+      "us_small_cap": -0.6,
+      "europe": -0.5,
       "japan": -0.45,
       "emerging_markets": -0.65
     },
     "fixed_income": {
       "us_treasury": 0.05,
-      "us_corporate_investment_grade": -0.10,
+      "us_corporate_investment_grade": -0.1,
       "us_corporate_high_yield": -0.35,
-      "emerging_market_debt": -0.30
+      "emerging_market_debt": -0.3
     },
     "alternatives": {
-      "real_estate": -0.40,
-      "commodities": -0.50,
-      "hedge_funds": -0.20
+      "real_estate": -0.4,
+      "commodities": -0.5,
+      "hedge_funds": -0.2
     }
   },
   "created_at": "2025-01-15T10:00:00Z",
@@ -1460,7 +1484,7 @@ Creates a new scenario.
   "asset_class_impacts": {
     "equity": {
       "us_large_cap": -0.25,
-      "us_small_cap": -0.30,
+      "us_small_cap": -0.3,
       "europe": -0.28,
       "japan": -0.26,
       "emerging_markets": -0.35
@@ -1469,11 +1493,11 @@ Creates a new scenario.
       "us_treasury": 0.02,
       "us_corporate_investment_grade": -0.05,
       "us_corporate_high_yield": -0.15,
-      "emerging_market_debt": -0.20
+      "emerging_market_debt": -0.2
     },
     "alternatives": {
-      "real_estate": -0.10,
-      "commodities": -0.20,
+      "real_estate": -0.1,
+      "commodities": -0.2,
       "hedge_funds": -0.08
     }
   }
@@ -1514,7 +1538,7 @@ Creates a new scenario.
   "asset_class_impacts": {
     "equity": {
       "us_large_cap": -0.25,
-      "us_small_cap": -0.30,
+      "us_small_cap": -0.3,
       "europe": -0.28,
       "japan": -0.26,
       "emerging_markets": -0.35
@@ -1523,11 +1547,11 @@ Creates a new scenario.
       "us_treasury": 0.02,
       "us_corporate_investment_grade": -0.05,
       "us_corporate_high_yield": -0.15,
-      "emerging_market_debt": -0.20
+      "emerging_market_debt": -0.2
     },
     "alternatives": {
-      "real_estate": -0.10,
-      "commodities": -0.20,
+      "real_estate": -0.1,
+      "commodities": -0.2,
       "hedge_funds": -0.08
     }
   },
@@ -1546,8 +1570,8 @@ Updates an existing scenario.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter     | Type   | Description                      |
+| ------------- | ------ | -------------------------------- |
 | `scenario_id` | string | The ID of the scenario to update |
 
 #### Request Body
@@ -1559,7 +1583,7 @@ Updates an existing scenario.
   "market_shocks": [
     {
       "factor": "equity_market",
-      "value": -0.30
+      "value": -0.3
     },
     {
       "factor": "credit_spread_investment_grade",
@@ -1580,22 +1604,22 @@ Updates an existing scenario.
   ],
   "asset_class_impacts": {
     "equity": {
-      "us_large_cap": -0.30,
+      "us_large_cap": -0.3,
       "us_small_cap": -0.35,
       "europe": -0.32,
       "japan": -0.28,
-      "emerging_markets": -0.40
+      "emerging_markets": -0.4
     },
     "fixed_income": {
       "us_treasury": 0.03,
       "us_corporate_investment_grade": -0.08,
-      "us_corporate_high_yield": -0.20,
+      "us_corporate_high_yield": -0.2,
       "emerging_market_debt": -0.25
     },
     "alternatives": {
       "real_estate": -0.15,
       "commodities": -0.25,
-      "hedge_funds": -0.10
+      "hedge_funds": -0.1
     }
   }
 }
@@ -1613,7 +1637,7 @@ Updates an existing scenario.
   "market_shocks": [
     {
       "factor": "equity_market",
-      "value": -0.30
+      "value": -0.3
     },
     {
       "factor": "credit_spread_investment_grade",
@@ -1634,22 +1658,22 @@ Updates an existing scenario.
   ],
   "asset_class_impacts": {
     "equity": {
-      "us_large_cap": -0.30,
+      "us_large_cap": -0.3,
       "us_small_cap": -0.35,
       "europe": -0.32,
       "japan": -0.28,
-      "emerging_markets": -0.40
+      "emerging_markets": -0.4
     },
     "fixed_income": {
       "us_treasury": 0.03,
       "us_corporate_investment_grade": -0.08,
-      "us_corporate_high_yield": -0.20,
+      "us_corporate_high_yield": -0.2,
       "emerging_market_debt": -0.25
     },
     "alternatives": {
       "real_estate": -0.15,
       "commodities": -0.25,
-      "hedge_funds": -0.10
+      "hedge_funds": -0.1
     }
   },
   "created_at": "2025-06-06T15:00:00Z",
@@ -1667,8 +1691,8 @@ Deletes a scenario.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter     | Type   | Description                      |
+| ------------- | ------ | -------------------------------- |
 | `scenario_id` | string | The ID of the scenario to delete |
 
 #### Response
@@ -1716,11 +1740,7 @@ Runs a scenario analysis on a portfolio.
       }
     ]
   },
-  "scenarios": [
-    "scenario_123456",
-    "scenario_789012",
-    "scenario_901234"
-  ],
+  "scenarios": ["scenario_123456", "scenario_789012", "scenario_901234"],
   "calculation_date": "2025-06-06",
   "include_position_level_impacts": true
 }
@@ -1732,44 +1752,44 @@ Runs a scenario analysis on a portfolio.
 {
   "analysis_id": "analysis_123456",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "scenario_results": [
     {
       "scenario_id": "scenario_123456",
       "scenario_name": "2008 Financial Crisis",
       "portfolio_impact": {
-        "value": -687500.00,
+        "value": -687500.0,
         "percentage": -0.55
       },
       "position_impacts": {
         "AAPL": {
-          "value": -275000.00,
+          "value": -275000.0,
           "percentage": -0.55
         },
         "MSFT": {
-          "value": -220000.00,
+          "value": -220000.0,
           "percentage": -0.55
         },
         "GOOGL": {
-          "value": -55000.00,
+          "value": -55000.0,
           "percentage": -0.55
         },
         "TLT": {
-          "value": 12500.00,
+          "value": 12500.0,
           "percentage": 0.05
         }
       },
       "risk_metrics": {
         "var": {
-          "value": 687500.00,
+          "value": 687500.0,
           "percentage": 0.55
         },
         "expected_shortfall": {
-          "value": 750000.00,
-          "percentage": 0.60
+          "value": 750000.0,
+          "percentage": 0.6
         },
         "max_drawdown": {
-          "value": 687500.00,
+          "value": 687500.0,
           "percentage": 0.55
         }
       }
@@ -1778,39 +1798,39 @@ Runs a scenario analysis on a portfolio.
       "scenario_id": "scenario_789012",
       "scenario_name": "Fed Rate Hike 100bps",
       "portfolio_impact": {
-        "value": -125000.00,
-        "percentage": -0.10
+        "value": -125000.0,
+        "percentage": -0.1
       },
       "position_impacts": {
         "AAPL": {
-          "value": -25000.00,
+          "value": -25000.0,
           "percentage": -0.05
         },
         "MSFT": {
-          "value": -20000.00,
+          "value": -20000.0,
           "percentage": -0.05
         },
         "GOOGL": {
-          "value": -5000.00,
+          "value": -5000.0,
           "percentage": -0.05
         },
         "TLT": {
-          "value": -75000.00,
-          "percentage": -0.30
+          "value": -75000.0,
+          "percentage": -0.3
         }
       },
       "risk_metrics": {
         "var": {
-          "value": 125000.00,
-          "percentage": 0.10
+          "value": 125000.0,
+          "percentage": 0.1
         },
         "expected_shortfall": {
-          "value": 150000.00,
+          "value": 150000.0,
           "percentage": 0.12
         },
         "max_drawdown": {
-          "value": 125000.00,
-          "percentage": 0.10
+          "value": 125000.0,
+          "percentage": 0.1
         }
       }
     },
@@ -1818,39 +1838,39 @@ Runs a scenario analysis on a portfolio.
       "scenario_id": "scenario_901234",
       "scenario_name": "Global Trade War Escalation (Updated)",
       "portfolio_impact": {
-        "value": -375000.00,
-        "percentage": -0.30
+        "value": -375000.0,
+        "percentage": -0.3
       },
       "position_impacts": {
         "AAPL": {
-          "value": -150000.00,
-          "percentage": -0.30
+          "value": -150000.0,
+          "percentage": -0.3
         },
         "MSFT": {
-          "value": -120000.00,
-          "percentage": -0.30
+          "value": -120000.0,
+          "percentage": -0.3
         },
         "GOOGL": {
-          "value": -30000.00,
-          "percentage": -0.30
+          "value": -30000.0,
+          "percentage": -0.3
         },
         "TLT": {
-          "value": 7500.00,
+          "value": 7500.0,
           "percentage": 0.03
         }
       },
       "risk_metrics": {
         "var": {
-          "value": 375000.00,
-          "percentage": 0.30
+          "value": 375000.0,
+          "percentage": 0.3
         },
         "expected_shortfall": {
-          "value": 400000.00,
+          "value": 400000.0,
           "percentage": 0.32
         },
         "max_drawdown": {
-          "value": 375000.00,
-          "percentage": 0.30
+          "value": 375000.0,
+          "percentage": 0.3
         }
       }
     }
@@ -1884,10 +1904,10 @@ Creates a Monte Carlo scenario.
   "risk_factors": [
     {
       "name": "equity_market",
-      "mean": -0.30,
-      "volatility": 0.10,
-      "min": -0.60,
-      "max": -0.10
+      "mean": -0.3,
+      "volatility": 0.1,
+      "min": -0.6,
+      "max": -0.1
     },
     {
       "name": "interest_rate_10y",
@@ -1992,10 +2012,10 @@ Creates a Monte Carlo scenario.
   "risk_factors": [
     {
       "name": "equity_market",
-      "mean": -0.30,
-      "volatility": 0.10,
-      "min": -0.60,
-      "max": -0.10
+      "mean": -0.3,
+      "volatility": 0.1,
+      "min": -0.6,
+      "max": -0.1
     },
     {
       "name": "interest_rate_10y",
@@ -2131,7 +2151,7 @@ Runs a Monte Carlo scenario analysis on a portfolio.
 {
   "analysis_id": "analysis_789012",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "scenario_id": "scenario_567890",
   "scenario_name": "Equity Market Crash Monte Carlo",
   "simulation_summary": {
@@ -2141,163 +2161,163 @@ Runs a Monte Carlo scenario analysis on a portfolio.
   },
   "portfolio_impact": {
     "mean": {
-      "value": -375000.00,
-      "percentage": -0.30
+      "value": -375000.0,
+      "percentage": -0.3
     },
     "median": {
-      "value": -362500.00,
+      "value": -362500.0,
       "percentage": -0.29
     },
     "min": {
-      "value": -750000.00,
-      "percentage": -0.60
+      "value": -750000.0,
+      "percentage": -0.6
     },
     "max": {
-      "value": -125000.00,
-      "percentage": -0.10
+      "value": -125000.0,
+      "percentage": -0.1
     },
     "std_dev": {
-      "value": 125000.00,
-      "percentage": 0.10
+      "value": 125000.0,
+      "percentage": 0.1
     },
     "var_99": {
-      "value": -687500.00,
+      "value": -687500.0,
       "percentage": -0.55
     },
     "expected_shortfall_99": {
-      "value": -725000.00,
+      "value": -725000.0,
       "percentage": -0.58
     }
   },
   "position_impacts": {
     "AAPL": {
       "mean": {
-        "value": -150000.00,
-        "percentage": -0.30
+        "value": -150000.0,
+        "percentage": -0.3
       },
       "median": {
-        "value": -145000.00,
+        "value": -145000.0,
         "percentage": -0.29
       },
       "min": {
-        "value": -300000.00,
-        "percentage": -0.60
+        "value": -300000.0,
+        "percentage": -0.6
       },
       "max": {
-        "value": -50000.00,
-        "percentage": -0.10
+        "value": -50000.0,
+        "percentage": -0.1
       },
       "std_dev": {
-        "value": 50000.00,
-        "percentage": 0.10
+        "value": 50000.0,
+        "percentage": 0.1
       },
       "var_99": {
-        "value": -275000.00,
+        "value": -275000.0,
         "percentage": -0.55
       },
       "expected_shortfall_99": {
-        "value": -290000.00,
+        "value": -290000.0,
         "percentage": -0.58
       }
     },
     "MSFT": {
       "mean": {
-        "value": -120000.00,
-        "percentage": -0.30
+        "value": -120000.0,
+        "percentage": -0.3
       },
       "median": {
-        "value": -116000.00,
+        "value": -116000.0,
         "percentage": -0.29
       },
       "min": {
-        "value": -240000.00,
-        "percentage": -0.60
+        "value": -240000.0,
+        "percentage": -0.6
       },
       "max": {
-        "value": -40000.00,
-        "percentage": -0.10
+        "value": -40000.0,
+        "percentage": -0.1
       },
       "std_dev": {
-        "value": 40000.00,
-        "percentage": 0.10
+        "value": 40000.0,
+        "percentage": 0.1
       },
       "var_99": {
-        "value": -220000.00,
+        "value": -220000.0,
         "percentage": -0.55
       },
       "expected_shortfall_99": {
-        "value": -232000.00,
+        "value": -232000.0,
         "percentage": -0.58
       }
     },
     "GOOGL": {
       "mean": {
-        "value": -30000.00,
-        "percentage": -0.30
+        "value": -30000.0,
+        "percentage": -0.3
       },
       "median": {
-        "value": -29000.00,
+        "value": -29000.0,
         "percentage": -0.29
       },
       "min": {
-        "value": -60000.00,
-        "percentage": -0.60
+        "value": -60000.0,
+        "percentage": -0.6
       },
       "max": {
-        "value": -10000.00,
-        "percentage": -0.10
+        "value": -10000.0,
+        "percentage": -0.1
       },
       "std_dev": {
-        "value": 10000.00,
-        "percentage": 0.10
+        "value": 10000.0,
+        "percentage": 0.1
       },
       "var_99": {
-        "value": -55000.00,
+        "value": -55000.0,
         "percentage": -0.55
       },
       "expected_shortfall_99": {
-        "value": -58000.00,
+        "value": -58000.0,
         "percentage": -0.58
       }
     },
     "TLT": {
       "mean": {
-        "value": -75000.00,
-        "percentage": -0.30
+        "value": -75000.0,
+        "percentage": -0.3
       },
       "median": {
-        "value": -72500.00,
+        "value": -72500.0,
         "percentage": -0.29
       },
       "min": {
-        "value": -150000.00,
-        "percentage": -0.60
+        "value": -150000.0,
+        "percentage": -0.6
       },
       "max": {
-        "value": -25000.00,
-        "percentage": -0.10
+        "value": -25000.0,
+        "percentage": -0.1
       },
       "std_dev": {
-        "value": 25000.00,
-        "percentage": 0.10
+        "value": 25000.0,
+        "percentage": 0.1
       },
       "var_99": {
-        "value": -137500.00,
+        "value": -137500.0,
         "percentage": -0.55
       },
       "expected_shortfall_99": {
-        "value": -145000.00,
+        "value": -145000.0,
         "percentage": -0.58
       }
     }
   },
   "risk_factor_realizations": {
     "equity_market": {
-      "mean": -0.30,
+      "mean": -0.3,
       "median": -0.29,
       "min": -0.59,
       "max": -0.11,
-      "std_dev": 0.10,
+      "std_dev": 0.1,
       "percentile_1": -0.55,
       "percentile_5": -0.48,
       "percentile_95": -0.14,
@@ -2352,7 +2372,6 @@ Runs a Monte Carlo scenario analysis on a portfolio.
 }
 ```
 
-
 ## Stress Testing
 
 ### List Stress Tests
@@ -2365,12 +2384,12 @@ Retrieves a list of all available stress tests.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `type` | string | Filter by stress test type (e.g., `historical`, `hypothetical`, `regulatory`) |
-| `category` | string | Filter by stress test category (e.g., `market_crash`, `interest_rate_shock`, `liquidity_crisis`) |
-| `limit` | integer | Maximum number of stress tests to return (default: 100) |
-| `offset` | integer | Number of stress tests to skip (default: 0) |
+| Parameter  | Type    | Description                                                                                      |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------ |
+| `type`     | string  | Filter by stress test type (e.g., `historical`, `hypothetical`, `regulatory`)                    |
+| `category` | string  | Filter by stress test category (e.g., `market_crash`, `interest_rate_shock`, `liquidity_crisis`) |
+| `limit`    | integer | Maximum number of stress tests to return (default: 100)                                          |
+| `offset`   | integer | Number of stress tests to skip (default: 0)                                                      |
 
 #### Response
 
@@ -2421,8 +2440,8 @@ Retrieves a specific stress test by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter        | Type   | Description                           |
+| ---------------- | ------ | ------------------------------------- |
 | `stress_test_id` | string | The ID of the stress test to retrieve |
 
 #### Response
@@ -2497,8 +2516,12 @@ Retrieves a specific stress test by ID.
       },
       "fixed_income": {
         "us_treasury": [3.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.5],
-        "us_corporate_investment_grade": [-5.0, -2.5, -1.5, -0.5, 0.0, 0.5, 1.0, 1.5],
-        "us_corporate_high_yield": [-20.0, -10.0, -7.5, -3.5, 0.0, 3.5, 5.0, 7.5],
+        "us_corporate_investment_grade": [
+          -5.0, -2.5, -1.5, -0.5, 0.0, 0.5, 1.0, 1.5
+        ],
+        "us_corporate_high_yield": [
+          -20.0, -10.0, -7.5, -3.5, 0.0, 3.5, 5.0, 7.5
+        ],
         "emerging_market_debt": [-15.0, -7.5, -5.0, -2.5, 0.0, 2.5, 3.5, 5.0]
       },
       "alternatives": {
@@ -2674,8 +2697,8 @@ Updates an existing stress test.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter        | Type   | Description                         |
+| ---------------- | ------ | ----------------------------------- |
 | `stress_test_id` | string | The ID of the stress test to update |
 
 #### Request Body
@@ -2824,8 +2847,8 @@ Deletes a stress test.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter        | Type   | Description                         |
+| ---------------- | ------ | ----------------------------------- |
 | `stress_test_id` | string | The ID of the stress test to delete |
 
 #### Response
@@ -2886,191 +2909,191 @@ Runs a stress test on a portfolio.
 {
   "run_id": "stress_run_123456",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "stress_test_id": "stress_test_901234",
   "stress_test_name": "Stagflation Scenario (Updated)",
   "overall_impact": {
-    "value": -250000.00,
-    "percentage": -0.20
+    "value": -250000.0,
+    "percentage": -0.2
   },
   "time_series_impacts": [
     {
       "date": "2025-09-30",
-      "portfolio_value": 1000000.00,
+      "portfolio_value": 1000000.0,
       "change": {
-        "value": -250000.00,
-        "percentage": -0.20
+        "value": -250000.0,
+        "percentage": -0.2
       }
     },
     {
       "date": "2025-12-31",
-      "portfolio_value": 1062500.00,
+      "portfolio_value": 1062500.0,
       "change": {
-        "value": -187500.00,
+        "value": -187500.0,
         "percentage": -0.15
       }
     },
     {
       "date": "2026-03-31",
-      "portfolio_value": 1125000.00,
+      "portfolio_value": 1125000.0,
       "change": {
-        "value": -125000.00,
-        "percentage": -0.10
+        "value": -125000.0,
+        "percentage": -0.1
       }
     },
     {
       "date": "2026-06-30",
-      "portfolio_value": 1187500.00,
+      "portfolio_value": 1187500.0,
       "change": {
-        "value": -62500.00,
+        "value": -62500.0,
         "percentage": -0.05
       }
     }
   ],
   "position_impacts": {
     "AAPL": {
-      "initial_value": 500000.00,
+      "initial_value": 500000.0,
       "time_series": [
         {
           "date": "2025-09-30",
-          "value": 400000.00,
+          "value": 400000.0,
           "change": {
-            "value": -100000.00,
-            "percentage": -0.20
+            "value": -100000.0,
+            "percentage": -0.2
           }
         },
         {
           "date": "2025-12-31",
-          "value": 425000.00,
+          "value": 425000.0,
           "change": {
-            "value": -75000.00,
+            "value": -75000.0,
             "percentage": -0.15
           }
         },
         {
           "date": "2026-03-31",
-          "value": 450000.00,
+          "value": 450000.0,
           "change": {
-            "value": -50000.00,
-            "percentage": -0.10
+            "value": -50000.0,
+            "percentage": -0.1
           }
         },
         {
           "date": "2026-06-30",
-          "value": 475000.00,
+          "value": 475000.0,
           "change": {
-            "value": -25000.00,
+            "value": -25000.0,
             "percentage": -0.05
           }
         }
       ]
     },
     "MSFT": {
-      "initial_value": 400000.00,
+      "initial_value": 400000.0,
       "time_series": [
         {
           "date": "2025-09-30",
-          "value": 320000.00,
+          "value": 320000.0,
           "change": {
-            "value": -80000.00,
-            "percentage": -0.20
+            "value": -80000.0,
+            "percentage": -0.2
           }
         },
         {
           "date": "2025-12-31",
-          "value": 340000.00,
+          "value": 340000.0,
           "change": {
-            "value": -60000.00,
+            "value": -60000.0,
             "percentage": -0.15
           }
         },
         {
           "date": "2026-03-31",
-          "value": 360000.00,
+          "value": 360000.0,
           "change": {
-            "value": -40000.00,
-            "percentage": -0.10
+            "value": -40000.0,
+            "percentage": -0.1
           }
         },
         {
           "date": "2026-06-30",
-          "value": 380000.00,
+          "value": 380000.0,
           "change": {
-            "value": -20000.00,
+            "value": -20000.0,
             "percentage": -0.05
           }
         }
       ]
     },
     "GOOGL": {
-      "initial_value": 100000.00,
+      "initial_value": 100000.0,
       "time_series": [
         {
           "date": "2025-09-30",
-          "value": 80000.00,
+          "value": 80000.0,
           "change": {
-            "value": -20000.00,
-            "percentage": -0.20
+            "value": -20000.0,
+            "percentage": -0.2
           }
         },
         {
           "date": "2025-12-31",
-          "value": 85000.00,
+          "value": 85000.0,
           "change": {
-            "value": -15000.00,
+            "value": -15000.0,
             "percentage": -0.15
           }
         },
         {
           "date": "2026-03-31",
-          "value": 90000.00,
+          "value": 90000.0,
           "change": {
-            "value": -10000.00,
-            "percentage": -0.10
+            "value": -10000.0,
+            "percentage": -0.1
           }
         },
         {
           "date": "2026-06-30",
-          "value": 95000.00,
+          "value": 95000.0,
           "change": {
-            "value": -5000.00,
+            "value": -5000.0,
             "percentage": -0.05
           }
         }
       ]
     },
     "TLT": {
-      "initial_value": 250000.00,
+      "initial_value": 250000.0,
       "time_series": [
         {
           "date": "2025-09-30",
-          "value": 200000.00,
+          "value": 200000.0,
           "change": {
-            "value": -50000.00,
-            "percentage": -0.20
+            "value": -50000.0,
+            "percentage": -0.2
           }
         },
         {
           "date": "2025-12-31",
-          "value": 212500.00,
+          "value": 212500.0,
           "change": {
-            "value": -37500.00,
+            "value": -37500.0,
             "percentage": -0.15
           }
         },
         {
           "date": "2026-03-31",
-          "value": 225000.00,
+          "value": 225000.0,
           "change": {
-            "value": -25000.00,
-            "percentage": -0.10
+            "value": -25000.0,
+            "percentage": -0.1
           }
         },
         {
           "date": "2026-06-30",
-          "value": 237500.00,
+          "value": 237500.0,
           "change": {
-            "value": -12500.00,
+            "value": -12500.0,
             "percentage": -0.05
           }
         }
@@ -3079,16 +3102,16 @@ Runs a stress test on a portfolio.
   },
   "risk_metrics": {
     "var": {
-      "value": 250000.00,
-      "percentage": 0.20
+      "value": 250000.0,
+      "percentage": 0.2
     },
     "expected_shortfall": {
-      "value": 275000.00,
+      "value": 275000.0,
       "percentage": 0.22
     },
     "max_drawdown": {
-      "value": 250000.00,
-      "percentage": 0.20,
+      "value": 250000.0,
+      "percentage": 0.2,
       "date": "2025-09-30"
     }
   },
@@ -3147,26 +3170,26 @@ Compares multiple stress tests on a portfolio.
 {
   "comparison_id": "comparison_123456",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "stress_test_results": [
     {
       "stress_test_id": "stress_test_123456",
       "stress_test_name": "CCAR 2025 Severely Adverse Scenario",
       "overall_impact": {
-        "value": -687500.00,
+        "value": -687500.0,
         "percentage": -0.55
       },
       "risk_metrics": {
         "var": {
-          "value": 687500.00,
+          "value": 687500.0,
           "percentage": 0.55
         },
         "expected_shortfall": {
-          "value": 750000.00,
-          "percentage": 0.60
+          "value": 750000.0,
+          "percentage": 0.6
         },
         "max_drawdown": {
-          "value": 687500.00,
+          "value": 687500.0,
           "percentage": 0.55
         }
       }
@@ -3175,21 +3198,21 @@ Compares multiple stress tests on a portfolio.
       "stress_test_id": "stress_test_789012",
       "stress_test_name": "Liquidity Crisis Stress Test",
       "overall_impact": {
-        "value": -375000.00,
-        "percentage": -0.30
+        "value": -375000.0,
+        "percentage": -0.3
       },
       "risk_metrics": {
         "var": {
-          "value": 375000.00,
-          "percentage": 0.30
+          "value": 375000.0,
+          "percentage": 0.3
         },
         "expected_shortfall": {
-          "value": 400000.00,
+          "value": 400000.0,
           "percentage": 0.32
         },
         "max_drawdown": {
-          "value": 375000.00,
-          "percentage": 0.30
+          "value": 375000.0,
+          "percentage": 0.3
         }
       }
     },
@@ -3197,21 +3220,21 @@ Compares multiple stress tests on a portfolio.
       "stress_test_id": "stress_test_901234",
       "stress_test_name": "Stagflation Scenario (Updated)",
       "overall_impact": {
-        "value": -250000.00,
-        "percentage": -0.20
+        "value": -250000.0,
+        "percentage": -0.2
       },
       "risk_metrics": {
         "var": {
-          "value": 250000.00,
-          "percentage": 0.20
+          "value": 250000.0,
+          "percentage": 0.2
         },
         "expected_shortfall": {
-          "value": 275000.00,
+          "value": 275000.0,
           "percentage": 0.22
         },
         "max_drawdown": {
-          "value": 250000.00,
-          "percentage": 0.20
+          "value": 250000.0,
+          "percentage": 0.2
         }
       }
     }
@@ -3220,18 +3243,17 @@ Compares multiple stress tests on a portfolio.
     "equity": {
       "stress_test_123456": -0.55,
       "stress_test_789012": -0.35,
-      "stress_test_901234": -0.20
+      "stress_test_901234": -0.2
     },
     "fixed_income": {
       "stress_test_123456": 0.05,
       "stress_test_789012": -0.15,
-      "stress_test_901234": -0.20
+      "stress_test_901234": -0.2
     }
   },
   "created_at": "2025-06-06T18:00:00Z"
 }
 ```
-
 
 ## Risk Attribution
 
@@ -3314,7 +3336,7 @@ Calculates risk attribution for a portfolio.
     "equity": {
       "portfolio_weight": 0.8,
       "benchmark_weight": 0.7,
-      "portfolio_return": 0.10,
+      "portfolio_return": 0.1,
       "benchmark_return": 0.09,
       "allocation_effect": 0.002,
       "selection_effect": 0.005,
@@ -3372,17 +3394,17 @@ Calculates risk attribution for a portfolio.
       "benchmark_return": 0.09,
       "allocation_effect": 0.024,
       "selection_effect": 0.024,
-      "interaction_effect": 0.000,
+      "interaction_effect": 0.0,
       "total_active_return": 0.048
     },
     "MSFT": {
       "portfolio_weight": 0.32,
       "benchmark_weight": 0.0,
-      "portfolio_return": 0.10,
+      "portfolio_return": 0.1,
       "benchmark_return": 0.09,
       "allocation_effect": 0.0032,
       "selection_effect": 0.0032,
-      "interaction_effect": 0.000,
+      "interaction_effect": 0.0,
       "total_active_return": 0.0064
     },
     "GOOGL": {
@@ -3392,7 +3414,7 @@ Calculates risk attribution for a portfolio.
       "benchmark_return": 0.09,
       "allocation_effect": -0.0008,
       "selection_effect": -0.0008,
-      "interaction_effect": 0.000,
+      "interaction_effect": 0.0,
       "total_active_return": -0.0016
     },
     "TLT": {
@@ -3402,7 +3424,7 @@ Calculates risk attribution for a portfolio.
       "benchmark_return": 0.02,
       "allocation_effect": 0.002,
       "selection_effect": 0.002,
-      "interaction_effect": 0.000,
+      "interaction_effect": 0.0,
       "total_active_return": 0.004
     },
     "SPY": {
@@ -3440,14 +3462,14 @@ Retrieves historical risk attribution for a portfolio.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | The ID of the portfolio |
-| `benchmark_id` | string | The ID of the benchmark portfolio |
-| `model_id` | string | The ID of the risk model |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2024-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `frequency` | string | Data interval (`monthly`, `quarterly`, `annual`) |
+| Parameter      | Type   | Description                                        |
+| -------------- | ------ | -------------------------------------------------- |
+| `portfolio_id` | string | The ID of the portfolio                            |
+| `benchmark_id` | string | The ID of the benchmark portfolio                  |
+| `model_id`     | string | The ID of the risk model                           |
+| `start_date`   | string | Start date in ISO 8601 format (e.g., `2024-01-01`) |
+| `end_date`     | string | End date in ISO 8601 format (e.g., `2025-06-01`)   |
+| `frequency`    | string | Data interval (`monthly`, `quarterly`, `annual`)   |
 
 #### Response
 
@@ -3471,7 +3493,7 @@ Retrieves historical risk attribution for a portfolio.
     },
     {
       "date": "2025-05-01",
-      "portfolio_return": 0.020,
+      "portfolio_return": 0.02,
       "benchmark_return": 0.018,
       "active_return": 0.002,
       "attribution_summary": {
@@ -3549,12 +3571,12 @@ Calculates factor risk attribution for a portfolio.
 {
   "attribution_id": "attr_factor_123456",
   "calculation_date": "2025-06-06",
-  "portfolio_value": 1250000.00,
+  "portfolio_value": 1250000.0,
   "model_id": "model_345678",
   "total_risk": {
     "volatility": 0.18,
     "var": {
-      "value": 37500.00,
+      "value": 37500.0,
       "percentage": 0.03
     }
   },
@@ -3566,7 +3588,7 @@ Calculates factor risk attribution for a portfolio.
         "volatility": 0.12,
         "volatility_percentage": 0.667,
         "var": {
-          "value": 25000.00,
+          "value": 25000.0,
           "percentage": 0.02,
           "contribution_percentage": 0.667
         }
@@ -3605,7 +3627,7 @@ Calculates factor risk attribution for a portfolio.
         "volatility": 0.015,
         "volatility_percentage": 0.083,
         "var": {
-          "value": 3125.00,
+          "value": 3125.0,
           "percentage": 0.0025,
           "contribution_percentage": 0.083
         }
@@ -3642,7 +3664,7 @@ Calculates factor risk attribution for a portfolio.
     "volatility": 0.03,
     "volatility_percentage": 0.167,
     "var": {
-      "value": 6250.00,
+      "value": 6250.0,
       "percentage": 0.005,
       "contribution_percentage": 0.167
     }
@@ -3650,7 +3672,6 @@ Calculates factor risk attribution for a portfolio.
   "created_at": "2025-06-06T19:00:00Z"
 }
 ```
-
 
 ## Limits Management
 
@@ -3664,13 +3685,13 @@ Retrieves a list of all configured risk limits.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | Filter by portfolio ID |
-| `type` | string | Filter by limit type (e.g., `exposure`, `var`, `concentration`) |
-| `status` | string | Filter by limit status (e.g., `active`, `breached`, `warning`) |
-| `limit` | integer | Maximum number of risk limits to return (default: 100) |
-| `offset` | integer | Number of risk limits to skip (default: 0) |
+| Parameter      | Type    | Description                                                     |
+| -------------- | ------- | --------------------------------------------------------------- |
+| `portfolio_id` | string  | Filter by portfolio ID                                          |
+| `type`         | string  | Filter by limit type (e.g., `exposure`, `var`, `concentration`) |
+| `status`       | string  | Filter by limit status (e.g., `active`, `breached`, `warning`)  |
+| `limit`        | integer | Maximum number of risk limits to return (default: 100)          |
+| `offset`       | integer | Number of risk limits to skip (default: 0)                      |
 
 #### Response
 
@@ -3710,7 +3731,7 @@ Retrieves a list of all configured risk limits.
       },
       "threshold": {
         "warning": 0.35,
-        "breach": 0.40
+        "breach": 0.4
       },
       "status": "warning",
       "current_value": 0.38,
@@ -3730,7 +3751,7 @@ Retrieves a list of all configured risk limits.
       },
       "threshold": {
         "warning": 0.075,
-        "breach": 0.10
+        "breach": 0.1
       },
       "status": "breached",
       "current_value": 0.12,
@@ -3755,8 +3776,8 @@ Retrieves a specific risk limit by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                          |
+| ---------- | ------ | ------------------------------------ |
 | `limit_id` | string | The ID of the risk limit to retrieve |
 
 #### Response
@@ -3889,8 +3910,8 @@ Updates an existing risk limit.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                        |
+| ---------- | ------ | ---------------------------------- |
 | `limit_id` | string | The ID of the risk limit to update |
 
 #### Request Body
@@ -3908,7 +3929,11 @@ Updates an existing risk limit.
     "breach": 0.08
   },
   "notifications": {
-    "email": ["risk_manager@example.com", "portfolio_manager@example.com", "cro@example.com"],
+    "email": [
+      "risk_manager@example.com",
+      "portfolio_manager@example.com",
+      "cro@example.com"
+    ],
     "webhook": ["https://api.example.com/risk-alerts"],
     "frequency": "immediate"
   }
@@ -3935,7 +3960,11 @@ Updates an existing risk limit.
   "status": "pending",
   "current_value": null,
   "notifications": {
-    "email": ["risk_manager@example.com", "portfolio_manager@example.com", "cro@example.com"],
+    "email": [
+      "risk_manager@example.com",
+      "portfolio_manager@example.com",
+      "cro@example.com"
+    ],
     "webhook": ["https://api.example.com/risk-alerts"],
     "frequency": "immediate"
   },
@@ -3955,8 +3984,8 @@ Deletes a risk limit.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                        |
+| ---------- | ------ | ---------------------------------- |
 | `limit_id` | string | The ID of the risk limit to delete |
 
 #### Response
@@ -4016,7 +4045,7 @@ Checks all risk limits for a portfolio.
       "type": "concentration",
       "threshold": {
         "warning": 0.35,
-        "breach": 0.40
+        "breach": 0.4
       },
       "previous_value": 0.36,
       "current_value": 0.38,
@@ -4029,7 +4058,7 @@ Checks all risk limits for a portfolio.
       "type": "exposure",
       "threshold": {
         "warning": 0.075,
-        "breach": 0.10
+        "breach": 0.1
       },
       "previous_value": 0.11,
       "current_value": 0.12,
@@ -4051,15 +4080,15 @@ Retrieves the history of risk limit breaches.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | Filter by portfolio ID |
-| `limit_id` | string | Filter by limit ID |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `status` | string | Filter by breach status (e.g., `active`, `resolved`) |
-| `limit` | integer | Maximum number of breaches to return (default: 100) |
-| `offset` | integer | Number of breaches to skip (default: 0) |
+| Parameter      | Type    | Description                                          |
+| -------------- | ------- | ---------------------------------------------------- |
+| `portfolio_id` | string  | Filter by portfolio ID                               |
+| `limit_id`     | string  | Filter by limit ID                                   |
+| `start_date`   | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)   |
+| `end_date`     | string  | End date in ISO 8601 format (e.g., `2025-06-01`)     |
+| `status`       | string  | Filter by breach status (e.g., `active`, `resolved`) |
+| `limit`        | integer | Maximum number of breaches to return (default: 100)  |
+| `offset`       | integer | Number of breaches to skip (default: 0)              |
 
 #### Response
 
@@ -4074,7 +4103,7 @@ Retrieves the history of risk limit breaches.
       "start_date": "2025-06-01",
       "end_date": null,
       "status": "active",
-      "threshold": 0.10,
+      "threshold": 0.1,
       "max_value": 0.12,
       "current_value": 0.12,
       "resolution_plan": {
@@ -4122,8 +4151,8 @@ Creates a resolution plan for a risk limit breach.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                                          |
+| ----------- | ------ | ---------------------------------------------------- |
 | `breach_id` | string | The ID of the breach to create a resolution plan for |
 
 #### Request Body
@@ -4198,10 +4227,10 @@ Updates a resolution plan for a risk limit breach.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `breach_id` | string | The ID of the breach |
-| `plan_id` | string | The ID of the resolution plan to update |
+| Parameter   | Type   | Description                             |
+| ----------- | ------ | --------------------------------------- |
+| `breach_id` | string | The ID of the breach                    |
+| `plan_id`   | string | The ID of the resolution plan to update |
 
 #### Request Body
 
@@ -4264,7 +4293,6 @@ Updates a resolution plan for a risk limit breach.
 }
 ```
 
-
 ## Compliance
 
 ### List Compliance Rules
@@ -4277,13 +4305,13 @@ Retrieves a list of all configured compliance rules.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | Filter by portfolio ID |
-| `type` | string | Filter by rule type (e.g., `regulatory`, `internal`, `client`) |
-| `status` | string | Filter by rule status (e.g., `active`, `violated`, `warning`) |
-| `limit` | integer | Maximum number of compliance rules to return (default: 100) |
-| `offset` | integer | Number of compliance rules to skip (default: 0) |
+| Parameter      | Type    | Description                                                    |
+| -------------- | ------- | -------------------------------------------------------------- |
+| `portfolio_id` | string  | Filter by portfolio ID                                         |
+| `type`         | string  | Filter by rule type (e.g., `regulatory`, `internal`, `client`) |
+| `status`       | string  | Filter by rule status (e.g., `active`, `violated`, `warning`)  |
+| `limit`        | integer | Maximum number of compliance rules to return (default: 100)    |
+| `offset`       | integer | Number of compliance rules to skip (default: 0)                |
 
 #### Response
 
@@ -4362,8 +4390,8 @@ Retrieves a specific compliance rule by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter | Type   | Description                               |
+| --------- | ------ | ----------------------------------------- |
 | `rule_id` | string | The ID of the compliance rule to retrieve |
 
 #### Response
@@ -4448,7 +4476,10 @@ Creates a new compliance rule.
     "large_exposure_threshold_percentage": 5.0
   },
   "notifications": {
-    "email": ["compliance_officer@example.com", "portfolio_manager@example.com"],
+    "email": [
+      "compliance_officer@example.com",
+      "portfolio_manager@example.com"
+    ],
     "webhook": ["https://api.example.com/compliance-alerts"],
     "frequency": "immediate"
   },
@@ -4478,7 +4509,10 @@ Creates a new compliance rule.
   "status": "pending",
   "current_value": null,
   "notifications": {
-    "email": ["compliance_officer@example.com", "portfolio_manager@example.com"],
+    "email": [
+      "compliance_officer@example.com",
+      "portfolio_manager@example.com"
+    ],
     "webhook": ["https://api.example.com/compliance-alerts"],
     "frequency": "immediate"
   },
@@ -4503,8 +4537,8 @@ Updates an existing compliance rule.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter | Type   | Description                             |
+| --------- | ------ | --------------------------------------- |
 | `rule_id` | string | The ID of the compliance rule to update |
 
 #### Request Body
@@ -4520,7 +4554,11 @@ Updates an existing compliance rule.
     "exclude_government_securities": true
   },
   "notifications": {
-    "email": ["compliance_officer@example.com", "portfolio_manager@example.com", "cco@example.com"],
+    "email": [
+      "compliance_officer@example.com",
+      "portfolio_manager@example.com",
+      "cco@example.com"
+    ],
     "webhook": ["https://api.example.com/compliance-alerts"],
     "frequency": "immediate"
   }
@@ -4546,7 +4584,11 @@ Updates an existing compliance rule.
   "status": "pending",
   "current_value": null,
   "notifications": {
-    "email": ["compliance_officer@example.com", "portfolio_manager@example.com", "cco@example.com"],
+    "email": [
+      "compliance_officer@example.com",
+      "portfolio_manager@example.com",
+      "cco@example.com"
+    ],
     "webhook": ["https://api.example.com/compliance-alerts"],
     "frequency": "immediate"
   },
@@ -4571,8 +4613,8 @@ Deletes a compliance rule.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter | Type   | Description                             |
+| --------- | ------ | --------------------------------------- |
 | `rule_id` | string | The ID of the compliance rule to delete |
 
 #### Response
@@ -4662,15 +4704,15 @@ Retrieves the history of compliance rule violations.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | Filter by portfolio ID |
-| `rule_id` | string | Filter by rule ID |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `status` | string | Filter by violation status (e.g., `active`, `resolved`) |
-| `limit` | integer | Maximum number of violations to return (default: 100) |
-| `offset` | integer | Number of violations to skip (default: 0) |
+| Parameter      | Type    | Description                                             |
+| -------------- | ------- | ------------------------------------------------------- |
+| `portfolio_id` | string  | Filter by portfolio ID                                  |
+| `rule_id`      | string  | Filter by rule ID                                       |
+| `start_date`   | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)      |
+| `end_date`     | string  | End date in ISO 8601 format (e.g., `2025-06-01`)        |
+| `status`       | string  | Filter by violation status (e.g., `active`, `resolved`) |
+| `limit`        | integer | Maximum number of violations to return (default: 100)   |
+| `offset`       | integer | Number of violations to skip (default: 0)               |
 
 #### Response
 
@@ -4739,8 +4781,8 @@ Creates a resolution plan for a compliance rule violation.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter      | Type   | Description                                             |
+| -------------- | ------ | ------------------------------------------------------- |
 | `violation_id` | string | The ID of the violation to create a resolution plan for |
 
 #### Request Body
@@ -4826,10 +4868,10 @@ Updates a resolution plan for a compliance rule violation.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `violation_id` | string | The ID of the violation |
-| `plan_id` | string | The ID of the resolution plan to update |
+| Parameter      | Type   | Description                             |
+| -------------- | ------ | --------------------------------------- |
+| `violation_id` | string | The ID of the violation                 |
+| `plan_id`      | string | The ID of the resolution plan to update |
 
 #### Request Body
 
@@ -4914,11 +4956,11 @@ Retrieves a list of all restricted securities lists.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `type` | string | Filter by list type (e.g., `trading`, `research`, `confidential`) |
-| `limit` | integer | Maximum number of lists to return (default: 100) |
-| `offset` | integer | Number of lists to skip (default: 0) |
+| Parameter | Type    | Description                                                       |
+| --------- | ------- | ----------------------------------------------------------------- |
+| `type`    | string  | Filter by list type (e.g., `trading`, `research`, `confidential`) |
+| `limit`   | integer | Maximum number of lists to return (default: 100)                  |
+| `offset`  | integer | Number of lists to skip (default: 0)                              |
 
 #### Response
 
@@ -4972,8 +5014,8 @@ Retrieves a specific restricted securities list by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter | Type   | Description                               |
+| --------- | ------ | ----------------------------------------- |
 | `list_id` | string | The ID of the restricted list to retrieve |
 
 #### Response
@@ -5049,8 +5091,8 @@ Adds a security to a restricted list.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter | Type   | Description                                          |
+| --------- | ------ | ---------------------------------------------------- |
 | `list_id` | string | The ID of the restricted list to add the security to |
 
 #### Request Body
@@ -5090,10 +5132,10 @@ Removes a security from a restricted list.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `list_id` | string | The ID of the restricted list |
-| `symbol` | string | The symbol of the security to remove |
+| Parameter | Type   | Description                          |
+| --------- | ------ | ------------------------------------ |
+| `list_id` | string | The ID of the restricted list        |
+| `symbol`  | string | The symbol of the security to remove |
 
 #### Response
 
@@ -5164,8 +5206,8 @@ Retrieves the status of a compliance report.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                     |
+| ----------- | ------ | ------------------------------- |
 | `report_id` | string | The ID of the compliance report |
 
 #### Response
@@ -5203,8 +5245,8 @@ Downloads a completed compliance report.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                                 |
+| ----------- | ------ | ------------------------------------------- |
 | `report_id` | string | The ID of the compliance report to download |
 
 #### Response

@@ -1,8 +1,21 @@
-import React from 'react';
-import { Box, AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, useTheme } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { Outlet } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  useTheme,
+} from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
@@ -11,10 +24,10 @@ import {
   Settings as SettingsIcon,
   Notifications as NotificationsIcon,
   AccountCircle as AccountCircleIcon,
-  ExitToApp as ExitToAppIcon
-} from '@mui/icons-material';
-import { toggleDrawer } from '../store/slices/uiSlice';
-import NotificationPanel from '../components/common/NotificationPanel';
+  ExitToApp as ExitToAppIcon,
+} from "@mui/icons-material";
+import { toggleDrawer } from "../store/slices/uiSlice";
+import NotificationPanel from "../components/common/NotificationPanel";
 
 const MainLayout = () => {
   const theme = useTheme();
@@ -33,9 +46,12 @@ const MainLayout = () => {
   const drawerWidth = 240;
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       {/* App Bar */}
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -66,40 +82,56 @@ const MainLayout = () => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
-            backgroundColor: 'background.paper',
+            boxSizing: "border-box",
+            backgroundColor: "background.paper",
           },
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto', mt: 2 }}>
+        <Box sx={{ overflow: "auto", mt: 2 }}>
           <List>
-            <ListItem button onClick={() => handleNavigation('/')}>
+            <ListItem button onClick={() => handleNavigation("/")}>
               <ListItemIcon>
-                <DashboardIcon color={location.pathname === '/' ? 'primary' : 'inherit'} />
+                <DashboardIcon
+                  color={location.pathname === "/" ? "primary" : "inherit"}
+                />
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
-            <ListItem button onClick={() => handleNavigation('/strategies')}>
+            <ListItem button onClick={() => handleNavigation("/strategies")}>
               <ListItemIcon>
-                <TrendingUpIcon color={location.pathname.includes('/strategies') ? 'primary' : 'inherit'} />
+                <TrendingUpIcon
+                  color={
+                    location.pathname.includes("/strategies")
+                      ? "primary"
+                      : "inherit"
+                  }
+                />
               </ListItemIcon>
               <ListItemText primary="Strategies" />
             </ListItem>
-            <ListItem button onClick={() => handleNavigation('/analytics')}>
+            <ListItem button onClick={() => handleNavigation("/analytics")}>
               <ListItemIcon>
-                <AssessmentIcon color={location.pathname === '/analytics' ? 'primary' : 'inherit'} />
+                <AssessmentIcon
+                  color={
+                    location.pathname === "/analytics" ? "primary" : "inherit"
+                  }
+                />
               </ListItemIcon>
               <ListItemText primary="Analytics" />
             </ListItem>
           </List>
           <Divider />
           <List>
-            <ListItem button onClick={() => handleNavigation('/settings')}>
+            <ListItem button onClick={() => handleNavigation("/settings")}>
               <ListItemIcon>
-                <SettingsIcon color={location.pathname === '/settings' ? 'primary' : 'inherit'} />
+                <SettingsIcon
+                  color={
+                    location.pathname === "/settings" ? "primary" : "inherit"
+                  }
+                />
               </ListItemIcon>
               <ListItemText primary="Settings" />
             </ListItem>
@@ -119,9 +151,9 @@ const MainLayout = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          backgroundColor: 'background.default',
+          backgroundColor: "background.default",
           marginLeft: drawerOpen ? `${drawerWidth}px` : 0,
-          transition: theme.transitions.create('margin', {
+          transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }),

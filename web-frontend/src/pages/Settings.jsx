@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Container,
   Grid,
@@ -34,8 +34,8 @@ import {
   Slider,
   Avatar,
   Badge,
-  Fade
-} from '@mui/material';
+  Fade,
+} from "@mui/material";
 import {
   Settings,
   User,
@@ -60,26 +60,35 @@ import {
   DollarSign,
   TrendingUp,
   Activity,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 const Settings = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', action: null });
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    title: "",
+    message: "",
+    action: null,
+  });
 
   // Settings state
   const [settings, setSettings] = useState({
     // Profile settings
     profile: {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phone: '+1 (555) 123-4567',
-      timezone: 'America/New_York',
-      language: 'en',
-      avatar: null
+      firstName: "John",
+      lastName: "Doe",
+      email: "john.doe@example.com",
+      phone: "+1 (555) 123-4567",
+      timezone: "America/New_York",
+      language: "en",
+      avatar: null,
     },
     // Security settings
     security: {
@@ -87,7 +96,7 @@ const Settings = () => {
       biometricEnabled: false,
       sessionTimeout: 30,
       loginNotifications: true,
-      apiKeysEnabled: true
+      apiKeysEnabled: true,
     },
     // Notification settings
     notifications: {
@@ -96,42 +105,42 @@ const Settings = () => {
         portfolioAlerts: true,
         systemUpdates: false,
         marketNews: true,
-        weeklyReports: true
+        weeklyReports: true,
       },
       push: {
         tradeExecutions: true,
         portfolioAlerts: true,
         priceAlerts: false,
-        systemMaintenance: true
+        systemMaintenance: true,
       },
       sms: {
         criticalAlerts: true,
         loginAttempts: true,
-        largeTransactions: false
-      }
+        largeTransactions: false,
+      },
     },
     // Trading settings
     trading: {
-      defaultOrderType: 'limit',
+      defaultOrderType: "limit",
       confirmOrders: true,
-      riskLevel: 'medium',
+      riskLevel: "medium",
       maxPositionSize: 10,
       stopLossDefault: 5,
       takeProfitDefault: 15,
       autoRebalance: false,
-      paperTrading: false
+      paperTrading: false,
     },
     // Display settings
     display: {
-      theme: 'dark',
-      currency: 'USD',
-      dateFormat: 'MM/DD/YYYY',
-      timeFormat: '12h',
-      chartType: 'candlestick',
+      theme: "dark",
+      currency: "USD",
+      dateFormat: "MM/DD/YYYY",
+      timeFormat: "12h",
+      chartType: "candlestick",
       showAdvancedMetrics: true,
       compactView: false,
-      animationsEnabled: true
-    }
+      animationsEnabled: true,
+    },
   });
 
   const handleTabChange = (event, newValue) => {
@@ -139,63 +148,77 @@ const Settings = () => {
   };
 
   const handleSettingChange = (category, setting, value) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
       [category]: {
         ...prev[category],
-        [setting]: value
-      }
+        [setting]: value,
+      },
     }));
   };
 
   const handleNestedSettingChange = (category, subcategory, setting, value) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
       [category]: {
         ...prev[category],
         [subcategory]: {
           ...prev[category][subcategory],
-          [setting]: value
-        }
-      }
+          [setting]: value,
+        },
+      },
     }));
   };
 
   const handleSaveSettings = () => {
     // Simulate API call
     setTimeout(() => {
-      setSnackbar({ open: true, message: 'Settings saved successfully!', severity: 'success' });
+      setSnackbar({
+        open: true,
+        message: "Settings saved successfully!",
+        severity: "success",
+      });
     }, 500);
   };
 
   const handleResetSettings = () => {
     setConfirmDialog({
       open: true,
-      title: 'Reset Settings',
-      message: 'Are you sure you want to reset all settings to default? This action cannot be undone.',
+      title: "Reset Settings",
+      message:
+        "Are you sure you want to reset all settings to default? This action cannot be undone.",
       action: () => {
         // Reset to default settings logic here
-        setSnackbar({ open: true, message: 'Settings reset to default!', severity: 'info' });
-        setConfirmDialog({ open: false, title: '', message: '', action: null });
-      }
+        setSnackbar({
+          open: true,
+          message: "Settings reset to default!",
+          severity: "info",
+        });
+        setConfirmDialog({ open: false, title: "", message: "", action: null });
+      },
     });
   };
 
   const ProfileSettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          textAlign: 'center',
-          p: 3
-        }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            textAlign: "center",
+            p: 3,
+          }}
+        >
           <Badge
             overlap="circular"
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             badgeContent={
-              <IconButton size="small" sx={{ bgcolor: '#00d4ff', color: 'white' }}>
+              <IconButton
+                size="small"
+                sx={{ bgcolor: "#00d4ff", color: "white" }}
+              >
                 <Edit size={16} />
               </IconButton>
             }
@@ -204,17 +227,23 @@ const Settings = () => {
               sx={{
                 width: 120,
                 height: 120,
-                mx: 'auto',
+                mx: "auto",
                 mb: 2,
-                bgcolor: '#00d4ff',
-                fontSize: '2rem',
-                fontWeight: 700
+                bgcolor: "#00d4ff",
+                fontSize: "2rem",
+                fontWeight: 700,
               }}
             >
-              {settings.profile.firstName[0]}{settings.profile.lastName[0]}
+              {settings.profile.firstName[0]}
+              {settings.profile.lastName[0]}
             </Avatar>
           </Badge>
-          <Typography variant="h5" fontWeight={700} color="white" sx={{ mb: 1 }}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 1 }}
+          >
             {settings.profile.firstName} {settings.profile.lastName}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
@@ -225,9 +254,12 @@ const Settings = () => {
             fullWidth
             startIcon={<User size={16} />}
             sx={{
-              borderColor: '#00d4ff',
-              color: '#00d4ff',
-              '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
+              borderColor: "#00d4ff",
+              color: "#00d4ff",
+              "&:hover": {
+                borderColor: "#00d4ff",
+                background: "rgba(0, 212, 255, 0.1)",
+              },
             }}
           >
             Change Avatar
@@ -236,13 +268,20 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={8}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Personal Information
           </Typography>
           <Grid container spacing={3}>
@@ -251,15 +290,19 @@ const Settings = () => {
                 fullWidth
                 label="First Name"
                 value={settings.profile.firstName}
-                onChange={(e) => handleSettingChange('profile', 'firstName', e.target.value)}
+                onChange={(e) =>
+                  handleSettingChange("profile", "firstName", e.target.value)
+                }
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover fieldset': { borderColor: '#00d4ff' },
-                    '&.Mui-focused fieldset': { borderColor: '#00d4ff' },
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
+                    "&:hover fieldset": { borderColor: "#00d4ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#00d4ff" },
                   },
-                  '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
                 }}
               />
             </Grid>
@@ -268,15 +311,19 @@ const Settings = () => {
                 fullWidth
                 label="Last Name"
                 value={settings.profile.lastName}
-                onChange={(e) => handleSettingChange('profile', 'lastName', e.target.value)}
+                onChange={(e) =>
+                  handleSettingChange("profile", "lastName", e.target.value)
+                }
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover fieldset': { borderColor: '#00d4ff' },
-                    '&.Mui-focused fieldset': { borderColor: '#00d4ff' },
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
+                    "&:hover fieldset": { borderColor: "#00d4ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#00d4ff" },
                   },
-                  '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
                 }}
               />
             </Grid>
@@ -286,15 +333,19 @@ const Settings = () => {
                 label="Email Address"
                 type="email"
                 value={settings.profile.email}
-                onChange={(e) => handleSettingChange('profile', 'email', e.target.value)}
+                onChange={(e) =>
+                  handleSettingChange("profile", "email", e.target.value)
+                }
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover fieldset': { borderColor: '#00d4ff' },
-                    '&.Mui-focused fieldset': { borderColor: '#00d4ff' },
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
+                    "&:hover fieldset": { borderColor: "#00d4ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#00d4ff" },
                   },
-                  '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
                 }}
               />
             </Grid>
@@ -303,29 +354,43 @@ const Settings = () => {
                 fullWidth
                 label="Phone Number"
                 value={settings.profile.phone}
-                onChange={(e) => handleSettingChange('profile', 'phone', e.target.value)}
+                onChange={(e) =>
+                  handleSettingChange("profile", "phone", e.target.value)
+                }
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover fieldset': { borderColor: '#00d4ff' },
-                    '&.Mui-focused fieldset': { borderColor: '#00d4ff' },
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
+                    "&:hover fieldset": { borderColor: "#00d4ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#00d4ff" },
                   },
-                  '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
                 }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Timezone</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Timezone
+                </InputLabel>
                 <Select
                   value={settings.profile.timezone}
-                  onChange={(e) => handleSettingChange('profile', 'timezone', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("profile", "timezone", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="America/New_York">Eastern Time</MenuItem>
@@ -339,15 +404,25 @@ const Settings = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Language</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Language
+                </InputLabel>
                 <Select
                   value={settings.profile.language}
-                  onChange={(e) => handleSettingChange('profile', 'language', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("profile", "language", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="en">English</MenuItem>
@@ -368,13 +443,20 @@ const Settings = () => {
   const SecuritySettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Authentication
           </Typography>
           <List>
@@ -385,18 +467,24 @@ const Settings = () => {
               <ListItemText
                 primary="Two-Factor Authentication"
                 secondary="Add an extra layer of security"
-                primaryTypographyProps={{ color: 'white' }}
-                secondaryTypographyProps={{ color: 'text.secondary' }}
+                primaryTypographyProps={{ color: "white" }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               <ListItemSecondaryAction>
                 <Switch
                   checked={settings.security.twoFactorEnabled}
-                  onChange={(e) => handleSettingChange('security', 'twoFactorEnabled', e.target.checked)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "security",
+                      "twoFactorEnabled",
+                      e.target.checked,
+                    )
+                  }
                   color="primary"
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
+            <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }} />
             <ListItem>
               <ListItemIcon>
                 <Smartphone size={20} color="#00d4ff" />
@@ -404,18 +492,24 @@ const Settings = () => {
               <ListItemText
                 primary="Biometric Login"
                 secondary="Use fingerprint or face ID"
-                primaryTypographyProps={{ color: 'white' }}
-                secondaryTypographyProps={{ color: 'text.secondary' }}
+                primaryTypographyProps={{ color: "white" }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               <ListItemSecondaryAction>
                 <Switch
                   checked={settings.security.biometricEnabled}
-                  onChange={(e) => handleSettingChange('security', 'biometricEnabled', e.target.checked)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "security",
+                      "biometricEnabled",
+                      e.target.checked,
+                    )
+                  }
                   color="primary"
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
+            <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }} />
             <ListItem>
               <ListItemIcon>
                 <Bell size={20} color="#f59e0b" />
@@ -423,13 +517,19 @@ const Settings = () => {
               <ListItemText
                 primary="Login Notifications"
                 secondary="Get notified of new logins"
-                primaryTypographyProps={{ color: 'white' }}
-                secondaryTypographyProps={{ color: 'text.secondary' }}
+                primaryTypographyProps={{ color: "white" }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               <ListItemSecondaryAction>
                 <Switch
                   checked={settings.security.loginNotifications}
-                  onChange={(e) => handleSettingChange('security', 'loginNotifications', e.target.checked)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "security",
+                      "loginNotifications",
+                      e.target.checked,
+                    )
+                  }
                   color="primary"
                 />
               </ListItemSecondaryAction>
@@ -439,13 +539,20 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Session & Security
           </Typography>
           <Box sx={{ mb: 3 }}>
@@ -454,39 +561,44 @@ const Settings = () => {
             </Typography>
             <Slider
               value={settings.security.sessionTimeout}
-              onChange={(e, value) => handleSettingChange('security', 'sessionTimeout', value)}
+              onChange={(e, value) =>
+                handleSettingChange("security", "sessionTimeout", value)
+              }
               min={5}
               max={120}
               step={5}
               marks={[
-                { value: 5, label: '5m' },
-                { value: 30, label: '30m' },
-                { value: 60, label: '1h' },
-                { value: 120, label: '2h' }
+                { value: 5, label: "5m" },
+                { value: 30, label: "30m" },
+                { value: 60, label: "1h" },
+                { value: 120, label: "2h" },
               ]}
               sx={{
-                color: '#00d4ff',
-                '& .MuiSlider-thumb': {
-                  backgroundColor: '#00d4ff',
+                color: "#00d4ff",
+                "& .MuiSlider-thumb": {
+                  backgroundColor: "#00d4ff",
                 },
-                '& .MuiSlider-track': {
-                  backgroundColor: '#00d4ff',
+                "& .MuiSlider-track": {
+                  backgroundColor: "#00d4ff",
                 },
-                '& .MuiSlider-rail': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                "& .MuiSlider-rail": {
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
                 },
               }}
             />
           </Box>
-          <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)', my: 2 }} />
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.1)", my: 2 }} />
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Button
               variant="outlined"
               startIcon={<Key size={16} />}
               sx={{
-                borderColor: '#00d4ff',
-                color: '#00d4ff',
-                '&:hover': { borderColor: '#00d4ff', background: 'rgba(0, 212, 255, 0.1)' }
+                borderColor: "#00d4ff",
+                color: "#00d4ff",
+                "&:hover": {
+                  borderColor: "#00d4ff",
+                  background: "rgba(0, 212, 255, 0.1)",
+                },
               }}
             >
               Change Password
@@ -495,9 +607,12 @@ const Settings = () => {
               variant="outlined"
               startIcon={<RefreshCw size={16} />}
               sx={{
-                borderColor: '#f59e0b',
-                color: '#f59e0b',
-                '&:hover': { borderColor: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }
+                borderColor: "#f59e0b",
+                color: "#f59e0b",
+                "&:hover": {
+                  borderColor: "#f59e0b",
+                  background: "rgba(245, 158, 11, 0.1)",
+                },
               }}
             >
               Revoke All Sessions
@@ -506,9 +621,12 @@ const Settings = () => {
               variant="outlined"
               startIcon={<Trash2 size={16} />}
               sx={{
-                borderColor: '#ef4444',
-                color: '#ef4444',
-                '&:hover': { borderColor: '#ef4444', background: 'rgba(239, 68, 68, 0.1)' }
+                borderColor: "#ef4444",
+                color: "#ef4444",
+                "&:hover": {
+                  borderColor: "#ef4444",
+                  background: "rgba(239, 68, 68, 0.1)",
+                },
               }}
             >
               Delete Account
@@ -523,50 +641,78 @@ const Settings = () => {
     <Grid container spacing={3}>
       {/* Email Notifications */}
       <Grid item xs={12} md={4}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
             <Mail size={20} color="#00d4ff" />
-            <Typography variant="h6" fontWeight={700} color="white" sx={{ ml: 1 }}>
+            <Typography
+              variant="h6"
+              fontWeight={700}
+              color="white"
+              sx={{ ml: 1 }}
+            >
               Email Notifications
             </Typography>
           </Box>
           <List dense>
-            {Object.entries(settings.notifications.email).map(([key, value]) => (
-              <ListItem key={key} sx={{ px: 0 }}>
-                <ListItemText
-                  primary={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                  primaryTypographyProps={{ color: 'white', fontSize: '0.875rem' }}
-                />
-                <ListItemSecondaryAction>
-                  <Switch
-                    size="small"
-                    checked={value}
-                    onChange={(e) => handleNestedSettingChange('notifications', 'email', key, e.target.checked)}
-                    color="primary"
+            {Object.entries(settings.notifications.email).map(
+              ([key, value]) => (
+                <ListItem key={key} sx={{ px: 0 }}>
+                  <ListItemText
+                    primary={key
+                      .replace(/([A-Z])/g, " $1")
+                      .replace(/^./, (str) => str.toUpperCase())}
+                    primaryTypographyProps={{
+                      color: "white",
+                      fontSize: "0.875rem",
+                    }}
                   />
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
+                  <ListItemSecondaryAction>
+                    <Switch
+                      size="small"
+                      checked={value}
+                      onChange={(e) =>
+                        handleNestedSettingChange(
+                          "notifications",
+                          "email",
+                          key,
+                          e.target.checked,
+                        )
+                      }
+                      color="primary"
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ),
+            )}
           </List>
         </Card>
       </Grid>
 
       {/* Push Notifications */}
       <Grid item xs={12} md={4}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
             <Bell size={20} color="#10b981" />
-            <Typography variant="h6" fontWeight={700} color="white" sx={{ ml: 1 }}>
+            <Typography
+              variant="h6"
+              fontWeight={700}
+              color="white"
+              sx={{ ml: 1 }}
+            >
               Push Notifications
             </Typography>
           </Box>
@@ -574,14 +720,26 @@ const Settings = () => {
             {Object.entries(settings.notifications.push).map(([key, value]) => (
               <ListItem key={key} sx={{ px: 0 }}>
                 <ListItemText
-                  primary={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                  primaryTypographyProps={{ color: 'white', fontSize: '0.875rem' }}
+                  primary={key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                  primaryTypographyProps={{
+                    color: "white",
+                    fontSize: "0.875rem",
+                  }}
                 />
                 <ListItemSecondaryAction>
                   <Switch
                     size="small"
                     checked={value}
-                    onChange={(e) => handleNestedSettingChange('notifications', 'push', key, e.target.checked)}
+                    onChange={(e) =>
+                      handleNestedSettingChange(
+                        "notifications",
+                        "push",
+                        key,
+                        e.target.checked,
+                      )
+                    }
                     color="primary"
                   />
                 </ListItemSecondaryAction>
@@ -593,15 +751,22 @@ const Settings = () => {
 
       {/* SMS Notifications */}
       <Grid item xs={12} md={4}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
             <Smartphone size={20} color="#f59e0b" />
-            <Typography variant="h6" fontWeight={700} color="white" sx={{ ml: 1 }}>
+            <Typography
+              variant="h6"
+              fontWeight={700}
+              color="white"
+              sx={{ ml: 1 }}
+            >
               SMS Notifications
             </Typography>
           </Box>
@@ -609,14 +774,26 @@ const Settings = () => {
             {Object.entries(settings.notifications.sms).map(([key, value]) => (
               <ListItem key={key} sx={{ px: 0 }}>
                 <ListItemText
-                  primary={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                  primaryTypographyProps={{ color: 'white', fontSize: '0.875rem' }}
+                  primary={key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                  primaryTypographyProps={{
+                    color: "white",
+                    fontSize: "0.875rem",
+                  }}
                 />
                 <ListItemSecondaryAction>
                   <Switch
                     size="small"
                     checked={value}
-                    onChange={(e) => handleNestedSettingChange('notifications', 'sms', key, e.target.checked)}
+                    onChange={(e) =>
+                      handleNestedSettingChange(
+                        "notifications",
+                        "sms",
+                        key,
+                        e.target.checked,
+                      )
+                    }
                     color="primary"
                   />
                 </ListItemSecondaryAction>
@@ -631,27 +808,48 @@ const Settings = () => {
   const TradingSettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Order Defaults
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Default Order Type</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Default Order Type
+                </InputLabel>
                 <Select
                   value={settings.trading.defaultOrderType}
-                  onChange={(e) => handleSettingChange('trading', 'defaultOrderType', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "trading",
+                      "defaultOrderType",
+                      e.target.value,
+                    )
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="market">Market Order</MenuItem>
@@ -666,12 +864,18 @@ const Settings = () => {
                 control={
                   <Switch
                     checked={settings.trading.confirmOrders}
-                    onChange={(e) => handleSettingChange('trading', 'confirmOrders', e.target.checked)}
+                    onChange={(e) =>
+                      handleSettingChange(
+                        "trading",
+                        "confirmOrders",
+                        e.target.checked,
+                      )
+                    }
                     color="primary"
                   />
                 }
                 label="Confirm orders before execution"
-                sx={{ color: 'white' }}
+                sx={{ color: "white" }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -680,21 +884,25 @@ const Settings = () => {
               </Typography>
               <Slider
                 value={settings.trading.maxPositionSize}
-                onChange={(e, value) => handleSettingChange('trading', 'maxPositionSize', value)}
+                onChange={(e, value) =>
+                  handleSettingChange("trading", "maxPositionSize", value)
+                }
                 min={1}
                 max={50}
                 step={1}
                 marks={[
-                  { value: 1, label: '1%' },
-                  { value: 10, label: '10%' },
-                  { value: 25, label: '25%' },
-                  { value: 50, label: '50%' }
+                  { value: 1, label: "1%" },
+                  { value: 10, label: "10%" },
+                  { value: 25, label: "25%" },
+                  { value: 50, label: "50%" },
                 ]}
                 sx={{
-                  color: '#00d4ff',
-                  '& .MuiSlider-thumb': { backgroundColor: '#00d4ff' },
-                  '& .MuiSlider-track': { backgroundColor: '#00d4ff' },
-                  '& .MuiSlider-rail': { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
+                  color: "#00d4ff",
+                  "& .MuiSlider-thumb": { backgroundColor: "#00d4ff" },
+                  "& .MuiSlider-track": { backgroundColor: "#00d4ff" },
+                  "& .MuiSlider-rail": {
+                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                  },
                 }}
               />
             </Grid>
@@ -703,27 +911,44 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Risk Management
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Risk Level</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Risk Level
+                </InputLabel>
                 <Select
                   value={settings.trading.riskLevel}
-                  onChange={(e) => handleSettingChange('trading', 'riskLevel', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("trading", "riskLevel", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="conservative">Conservative</MenuItem>
@@ -738,16 +963,24 @@ const Settings = () => {
                 type="number"
                 label="Default Stop Loss (%)"
                 value={settings.trading.stopLossDefault}
-                onChange={(e) => handleSettingChange('trading', 'stopLossDefault', parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleSettingChange(
+                    "trading",
+                    "stopLossDefault",
+                    parseInt(e.target.value),
+                  )
+                }
                 inputProps={{ min: 1, max: 50 }}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover fieldset': { borderColor: '#00d4ff' },
-                    '&.Mui-focused fieldset': { borderColor: '#00d4ff' },
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
+                    "&:hover fieldset": { borderColor: "#00d4ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#00d4ff" },
                   },
-                  '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
                 }}
               />
             </Grid>
@@ -757,16 +990,24 @@ const Settings = () => {
                 type="number"
                 label="Default Take Profit (%)"
                 value={settings.trading.takeProfitDefault}
-                onChange={(e) => handleSettingChange('trading', 'takeProfitDefault', parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleSettingChange(
+                    "trading",
+                    "takeProfitDefault",
+                    parseInt(e.target.value),
+                  )
+                }
                 inputProps={{ min: 1, max: 100 }}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover fieldset': { borderColor: '#00d4ff' },
-                    '&.Mui-focused fieldset': { borderColor: '#00d4ff' },
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
+                    "&:hover fieldset": { borderColor: "#00d4ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#00d4ff" },
                   },
-                  '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
                 }}
               />
             </Grid>
@@ -775,12 +1016,18 @@ const Settings = () => {
                 control={
                   <Switch
                     checked={settings.trading.autoRebalance}
-                    onChange={(e) => handleSettingChange('trading', 'autoRebalance', e.target.checked)}
+                    onChange={(e) =>
+                      handleSettingChange(
+                        "trading",
+                        "autoRebalance",
+                        e.target.checked,
+                      )
+                    }
                     color="primary"
                   />
                 }
                 label="Enable automatic portfolio rebalancing"
-                sx={{ color: 'white' }}
+                sx={{ color: "white" }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -788,12 +1035,18 @@ const Settings = () => {
                 control={
                   <Switch
                     checked={settings.trading.paperTrading}
-                    onChange={(e) => handleSettingChange('trading', 'paperTrading', e.target.checked)}
+                    onChange={(e) =>
+                      handleSettingChange(
+                        "trading",
+                        "paperTrading",
+                        e.target.checked,
+                      )
+                    }
                     color="primary"
                   />
                 }
                 label="Paper trading mode"
-                sx={{ color: 'white' }}
+                sx={{ color: "white" }}
               />
             </Grid>
           </Grid>
@@ -805,27 +1058,44 @@ const Settings = () => {
   const DisplaySettings = () => (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Appearance
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Theme</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Theme
+                </InputLabel>
                 <Select
                   value={settings.display.theme}
-                  onChange={(e) => handleSettingChange('display', 'theme', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("display", "theme", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="dark">Dark</MenuItem>
@@ -836,15 +1106,25 @@ const Settings = () => {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Currency</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Currency
+                </InputLabel>
                 <Select
                   value={settings.display.currency}
-                  onChange={(e) => handleSettingChange('display', 'currency', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("display", "currency", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="USD">USD ($)</MenuItem>
@@ -857,15 +1137,25 @@ const Settings = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Date Format</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Date Format
+                </InputLabel>
                 <Select
                   value={settings.display.dateFormat}
-                  onChange={(e) => handleSettingChange('display', 'dateFormat', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("display", "dateFormat", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="MM/DD/YYYY">MM/DD/YYYY</MenuItem>
@@ -876,15 +1166,25 @@ const Settings = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Time Format</InputLabel>
+                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  Time Format
+                </InputLabel>
                 <Select
                   value={settings.display.timeFormat}
-                  onChange={(e) => handleSettingChange('display', 'timeFormat', e.target.value)}
+                  onChange={(e) =>
+                    handleSettingChange("display", "timeFormat", e.target.value)
+                  }
                   sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00d4ff' },
+                    color: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00d4ff",
+                    },
                   }}
                 >
                   <MenuItem value="12h">12 Hour</MenuItem>
@@ -897,13 +1197,20 @@ const Settings = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Card sx={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 3,
-          p: 3
-        }}>
-          <Typography variant="h6" fontWeight={700} color="white" sx={{ mb: 3 }}>
+        <Card
+          sx={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 3,
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="white"
+            sx={{ mb: 3 }}
+          >
             Interface
           </Typography>
           <List>
@@ -911,45 +1218,63 @@ const Settings = () => {
               <ListItemText
                 primary="Show Advanced Metrics"
                 secondary="Display detailed analytics and metrics"
-                primaryTypographyProps={{ color: 'white' }}
-                secondaryTypographyProps={{ color: 'text.secondary' }}
+                primaryTypographyProps={{ color: "white" }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               <ListItemSecondaryAction>
                 <Switch
                   checked={settings.display.showAdvancedMetrics}
-                  onChange={(e) => handleSettingChange('display', 'showAdvancedMetrics', e.target.checked)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "display",
+                      "showAdvancedMetrics",
+                      e.target.checked,
+                    )
+                  }
                   color="primary"
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
+            <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }} />
             <ListItem>
               <ListItemText
                 primary="Compact View"
                 secondary="Use smaller spacing and components"
-                primaryTypographyProps={{ color: 'white' }}
-                secondaryTypographyProps={{ color: 'text.secondary' }}
+                primaryTypographyProps={{ color: "white" }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               <ListItemSecondaryAction>
                 <Switch
                   checked={settings.display.compactView}
-                  onChange={(e) => handleSettingChange('display', 'compactView', e.target.checked)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "display",
+                      "compactView",
+                      e.target.checked,
+                    )
+                  }
                   color="primary"
                 />
               </ListItemSecondaryAction>
             </ListItem>
-            <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
+            <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.1)" }} />
             <ListItem>
               <ListItemText
                 primary="Enable Animations"
                 secondary="Use smooth transitions and animations"
-                primaryTypographyProps={{ color: 'white' }}
-                secondaryTypographyProps={{ color: 'text.secondary' }}
+                primaryTypographyProps={{ color: "white" }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               <ListItemSecondaryAction>
                 <Switch
                   checked={settings.display.animationsEnabled}
-                  onChange={(e) => handleSettingChange('display', 'animationsEnabled', e.target.checked)}
+                  onChange={(e) =>
+                    handleSettingChange(
+                      "display",
+                      "animationsEnabled",
+                      e.target.checked,
+                    )
+                  }
                   color="primary"
                 />
               </ListItemSecondaryAction>
@@ -961,37 +1286,50 @@ const Settings = () => {
   );
 
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
-      py: 4
-    }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+        py: 4,
+      }}
+    >
       <Container maxWidth="xl">
         {/* Header */}
         <Fade in={true} timeout={800}>
           <Box sx={{ mb: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+              }}
+            >
               <Typography
                 variant="h3"
                 fontWeight={800}
                 sx={{
-                  background: 'linear-gradient(45deg, #00d4ff, #8b5cf6)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  background: "linear-gradient(45deg, #00d4ff, #8b5cf6)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
                 }}
               >
                 Settings
               </Typography>
-              <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
                 <Button
                   variant="outlined"
                   startIcon={<RefreshCw size={20} />}
                   onClick={handleResetSettings}
                   sx={{
-                    borderColor: '#f59e0b',
-                    color: '#f59e0b',
-                    '&:hover': { borderColor: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }
+                    borderColor: "#f59e0b",
+                    color: "#f59e0b",
+                    "&:hover": {
+                      borderColor: "#f59e0b",
+                      background: "rgba(245, 158, 11, 0.1)",
+                    },
                   }}
                 >
                   Reset
@@ -1001,12 +1339,12 @@ const Settings = () => {
                   startIcon={<Save size={20} />}
                   onClick={handleSaveSettings}
                   sx={{
-                    background: 'linear-gradient(45deg, #00d4ff, #0099cc)',
-                    boxShadow: '0 4px 20px rgba(0, 212, 255, 0.3)',
-                    '&:hover': {
-                      background: 'linear-gradient(45deg, #0099cc, #0066aa)',
-                      boxShadow: '0 6px 25px rgba(0, 212, 255, 0.4)',
-                    }
+                    background: "linear-gradient(45deg, #00d4ff, #0099cc)",
+                    boxShadow: "0 4px 20px rgba(0, 212, 255, 0.3)",
+                    "&:hover": {
+                      background: "linear-gradient(45deg, #0099cc, #0066aa)",
+                      boxShadow: "0 6px 25px rgba(0, 212, 255, 0.4)",
+                    },
                   }}
                 >
                   Save Changes
@@ -1023,9 +1361,9 @@ const Settings = () => {
         <Paper
           sx={{
             mb: 4,
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: "rgba(255, 255, 255, 0.05)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
           <Tabs
@@ -1034,15 +1372,15 @@ const Settings = () => {
             variant="scrollable"
             scrollButtons="auto"
             sx={{
-              '& .MuiTab-root': {
-                color: 'rgba(255, 255, 255, 0.7)',
+              "& .MuiTab-root": {
+                color: "rgba(255, 255, 255, 0.7)",
                 fontWeight: 600,
-                '&.Mui-selected': {
-                  color: '#00d4ff',
+                "&.Mui-selected": {
+                  color: "#00d4ff",
                 },
               },
-              '& .MuiTabs-indicator': {
-                backgroundColor: '#00d4ff',
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#00d4ff",
               },
             }}
           >
@@ -1064,17 +1402,31 @@ const Settings = () => {
         {/* Confirmation Dialog */}
         <Dialog
           open={confirmDialog.open}
-          onClose={() => setConfirmDialog({ open: false, title: '', message: '', action: null })}
+          onClose={() =>
+            setConfirmDialog({
+              open: false,
+              title: "",
+              message: "",
+              action: null,
+            })
+          }
           PaperProps={{
             sx: {
-              background: 'rgba(15, 15, 35, 0.95)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 3
-            }
+              background: "rgba(15, 15, 35, 0.95)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              borderRadius: 3,
+            },
           }}
         >
-          <DialogTitle sx={{ color: 'white', display: 'flex', alignItems: 'center', gap: 1 }}>
+          <DialogTitle
+            sx={{
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
             <AlertTriangle size={20} color="#f59e0b" />
             {confirmDialog.title}
           </DialogTitle>
@@ -1085,8 +1437,15 @@ const Settings = () => {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => setConfirmDialog({ open: false, title: '', message: '', action: null })}
-              sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+              onClick={() =>
+                setConfirmDialog({
+                  open: false,
+                  title: "",
+                  message: "",
+                  action: null,
+                })
+              }
+              sx={{ color: "rgba(255, 255, 255, 0.7)" }}
             >
               Cancel
             </Button>
@@ -1094,8 +1453,8 @@ const Settings = () => {
               onClick={confirmDialog.action}
               variant="contained"
               sx={{
-                background: '#ef4444',
-                '&:hover': { background: '#dc2626' }
+                background: "#ef4444",
+                "&:hover": { background: "#dc2626" },
               }}
             >
               Confirm
@@ -1113,9 +1472,9 @@ const Settings = () => {
             severity={snackbar.severity}
             onClose={() => setSnackbar({ ...snackbar, open: false })}
             sx={{
-              background: 'rgba(0, 0, 0, 0.8)',
-              color: 'white',
-              '& .MuiAlert-icon': { color: 'inherit' }
+              background: "rgba(0, 0, 0, 0.8)",
+              color: "white",
+              "& .MuiAlert-icon": { color: "inherit" },
             }}
           >
             {snackbar.message}

@@ -136,7 +136,6 @@ For production deployments, we recommend using one of the following cloud provid
    This will start all services for local development.
 
 5. **Access the Platform**
-
    - Web Dashboard: http://localhost:3000
    - API Gateway: http://localhost:8080
    - Swagger Documentation: http://localhost:8080/api-docs

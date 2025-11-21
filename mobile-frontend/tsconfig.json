@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es6"
-    ],
+    "lib": ["dom", "dom.iterable", "es6"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -45,16 +41,6 @@
       "@/context/*": ["context/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "App.js",
-    "index.js"
-  ],
-  "exclude": [
-    "node_modules",
-    "android",
-    "ios",
-    "**/*.test.ts",
-    "**/*.test.tsx"
-  ]
+  "include": ["src/**/*", "App.js", "index.js"],
+  "exclude": ["node_modules", "android", "ios", "**/*.test.ts", "**/*.test.tsx"]
 }

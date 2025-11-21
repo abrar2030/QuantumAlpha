@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import HapticFeedback from 'react-native-haptic-feedback';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
+import HapticFeedback from "react-native-haptic-feedback";
 
-import { useTheme } from '../../context/ThemeContext';
-import Card from '../ui/Card';
-import { SPACING, COLORS } from '../../constants';
+import { useTheme } from "../../context/ThemeContext";
+import Card from "../ui/Card";
+import { SPACING, COLORS } from "../../constants";
 
 interface QuickAction {
   id: string;
@@ -29,51 +29,51 @@ const QuickActions: React.FC = () => {
 
   const quickActions: QuickAction[] = [
     {
-      id: 'trade',
-      title: 'Trade',
-      icon: 'swap-horizontal',
+      id: "trade",
+      title: "Trade",
+      icon: "swap-horizontal",
       color: COLORS.PRIMARY,
-      route: 'TradeTab',
+      route: "TradeTab",
     },
     {
-      id: 'portfolio',
-      title: 'Portfolio',
-      icon: 'chart-line',
+      id: "portfolio",
+      title: "Portfolio",
+      icon: "chart-line",
       color: COLORS.SECONDARY,
-      route: 'PortfolioTab',
+      route: "PortfolioTab",
     },
     {
-      id: 'watchlist',
-      title: 'Watchlist',
-      icon: 'eye',
+      id: "watchlist",
+      title: "Watchlist",
+      icon: "eye",
       color: COLORS.CHART.POSITIVE,
-      route: 'Watchlist',
+      route: "Watchlist",
     },
     {
-      id: 'news',
-      title: 'News',
-      icon: 'newspaper',
+      id: "news",
+      title: "News",
+      icon: "newspaper",
       color: COLORS.WARNING,
-      route: 'News',
+      route: "News",
     },
     {
-      id: 'scanner',
-      title: 'Scanner',
-      icon: 'radar',
+      id: "scanner",
+      title: "Scanner",
+      icon: "radar",
       color: COLORS.CHART.VOLUME,
-      route: 'Scanner',
+      route: "Scanner",
     },
     {
-      id: 'calculator',
-      title: 'Calculator',
-      icon: 'calculator',
+      id: "calculator",
+      title: "Calculator",
+      icon: "calculator",
       color: COLORS.INFO,
-      route: 'Calculator',
+      route: "Calculator",
     },
   ];
 
   const handleActionPress = (action: QuickAction) => {
-    HapticFeedback.trigger('impactLight');
+    HapticFeedback.trigger("impactLight");
     navigation.navigate(action.route as never, action.params as never);
   };
 
@@ -94,13 +94,21 @@ const QuickActions: React.FC = () => {
             variant="elevated"
             padding="medium"
             margin="none"
-            style={[styles.actionCard, { marginLeft: index === 0 ? SPACING.MD : SPACING.SM }]}
+            style={[
+              styles.actionCard,
+              { marginLeft: index === 0 ? SPACING.MD : SPACING.SM },
+            ]}
             onPress={() => handleActionPress(action)}
             animated
             animationType="zoomIn"
             animationDelay={index * 100}
           >
-            <View style={[styles.iconContainer, { backgroundColor: action.color + '20' }]}>
+            <View
+              style={[
+                styles.iconContainer,
+                { backgroundColor: action.color + "20" },
+              ]}
+            >
               <Icon name={action.icon} size={24} color={action.color} />
             </View>
             <Text style={[styles.actionTitle, { color: theme.text }]}>
@@ -123,13 +131,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   actionsContainer: {
     paddingRight: SPACING.MD,
   },
   actionCard: {
-    alignItems: 'center',
+    alignItems: "center",
     minWidth: 80,
     marginRight: SPACING.SM,
   },
@@ -137,14 +145,14 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: SPACING.SM,
   },
   actionTitle: {
     fontSize: 12,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
 

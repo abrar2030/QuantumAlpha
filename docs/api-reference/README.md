@@ -106,24 +106,24 @@ All error responses include a JSON body with the following structure:
 
 ### Common Error Codes
 
-| Code | Description |
-|------|-------------|
-| `AUTHENTICATION_ERROR` | Invalid or expired authentication token |
-| `AUTHORIZATION_ERROR` | Insufficient permissions to perform the requested action |
-| `VALIDATION_ERROR` | Invalid request parameters |
-| `RESOURCE_NOT_FOUND` | The requested resource does not exist |
-| `RATE_LIMIT_EXCEEDED` | Too many requests in a given time period |
-| `INTERNAL_ERROR` | An unexpected error occurred on the server |
+| Code                   | Description                                              |
+| ---------------------- | -------------------------------------------------------- |
+| `AUTHENTICATION_ERROR` | Invalid or expired authentication token                  |
+| `AUTHORIZATION_ERROR`  | Insufficient permissions to perform the requested action |
+| `VALIDATION_ERROR`     | Invalid request parameters                               |
+| `RESOURCE_NOT_FOUND`   | The requested resource does not exist                    |
+| `RATE_LIMIT_EXCEEDED`  | Too many requests in a given time period                 |
+| `INTERNAL_ERROR`       | An unexpected error occurred on the server               |
 
 ## Rate Limiting
 
 To ensure fair usage and system stability, the API implements rate limiting. The current limits are:
 
-| API | Rate Limit |
-|-----|------------|
-| Data Service | 100 requests per minute |
-| AI Engine | 50 requests per minute |
-| Risk Service | 100 requests per minute |
+| API               | Rate Limit              |
+| ----------------- | ----------------------- |
+| Data Service      | 100 requests per minute |
+| AI Engine         | 50 requests per minute  |
+| Risk Service      | 100 requests per minute |
 | Execution Service | 200 requests per minute |
 
 Rate limit information is included in the response headers:
@@ -201,14 +201,14 @@ The QuantumAlpha platform supports webhooks for real-time notifications of event
 
 ### Webhook Events
 
-| Event | Description |
-|-------|-------------|
-| `order.created` | An order has been created |
-| `order.filled` | An order has been filled |
-| `order.canceled` | An order has been canceled |
-| `model.trained` | A model has completed training |
+| Event                 | Description                    |
+| --------------------- | ------------------------------ |
+| `order.created`       | An order has been created      |
+| `order.filled`        | An order has been filled       |
+| `order.canceled`      | An order has been canceled     |
+| `model.trained`       | A model has completed training |
 | `risk.limit_breached` | A risk limit has been breached |
-| `data.new_available` | New data is available |
+| `data.new_available`  | New data is available          |
 
 ### Webhook Payload
 

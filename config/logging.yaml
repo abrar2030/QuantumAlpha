@@ -22,17 +22,17 @@ default:
       level: INFO
       formatter: standard
       filename: /var/log/quantumalpha/app.log
-      maxBytes: 10485760  # 10MB
+      maxBytes: 10485760 # 10MB
       backupCount: 10
     error_file:
       class: logging.handlers.RotatingFileHandler
       level: ERROR
       formatter: standard
       filename: /var/log/quantumalpha/error.log
-      maxBytes: 10485760  # 10MB
+      maxBytes: 10485760 # 10MB
       backupCount: 10
   loggers:
-    "":  # root logger
+    "": # root logger
       level: INFO
       handlers: [console, file, error_file]
       propagate: true
@@ -71,10 +71,10 @@ development:
       level: DEBUG
       formatter: detailed
       filename: /var/log/quantumalpha/app.log
-      maxBytes: 10485760  # 10MB
+      maxBytes: 10485760 # 10MB
       backupCount: 5
   loggers:
-    "":  # root logger
+    "": # root logger
       level: INFO
       handlers: [console, file]
       propagate: true
@@ -125,7 +125,7 @@ staging:
       interval: 1
       backupCount: 30
   loggers:
-    "":  # root logger
+    "": # root logger
       level: INFO
       handlers: [console, file, error_file]
       propagate: true
@@ -181,7 +181,7 @@ production:
       interval: 1
       backupCount: 365
   loggers:
-    "":  # root logger
+    "": # root logger
       level: WARNING
       handlers: [console, file, error_file]
       propagate: true

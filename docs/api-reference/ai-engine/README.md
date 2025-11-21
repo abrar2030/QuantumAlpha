@@ -39,12 +39,12 @@ Retrieves a list of all models.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `type` | string | Filter by model type (e.g., `temporal_fusion_transformer`, `lstm`, `reinforcement_learning`) |
-| `status` | string | Filter by model status (e.g., `training`, `ready`, `failed`) |
-| `limit` | integer | Maximum number of models to return (default: 100) |
-| `offset` | integer | Number of models to skip (default: 0) |
+| Parameter | Type    | Description                                                                                  |
+| --------- | ------- | -------------------------------------------------------------------------------------------- |
+| `type`    | string  | Filter by model type (e.g., `temporal_fusion_transformer`, `lstm`, `reinforcement_learning`) |
+| `status`  | string  | Filter by model status (e.g., `training`, `ready`, `failed`)                                 |
+| `limit`   | integer | Maximum number of models to return (default: 100)                                            |
+| `offset`  | integer | Number of models to skip (default: 0)                                                        |
 
 #### Response
 
@@ -90,8 +90,8 @@ Retrieves a specific model by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                     |
+| ---------- | ------ | ------------------------------- |
 | `model_id` | string | The ID of the model to retrieve |
 
 #### Response
@@ -194,8 +194,8 @@ Trains a model with the specified dataset and hyperparameters.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                  |
+| ---------- | ------ | ---------------------------- |
 | `model_id` | string | The ID of the model to train |
 
 #### Request Body
@@ -242,10 +242,10 @@ Retrieves the status of a training job.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_id` | string | The ID of the model |
-| `job_id` | string | The ID of the training job |
+| Parameter  | Type   | Description                |
+| ---------- | ------ | -------------------------- |
+| `model_id` | string | The ID of the model        |
+| `job_id`   | string | The ID of the training job |
 
 #### Response
 
@@ -277,8 +277,8 @@ Deletes a model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                   |
+| ---------- | ------ | ----------------------------- |
 | `model_id` | string | The ID of the model to delete |
 
 #### Response
@@ -309,25 +309,22 @@ Generates predictions using a trained model.
     "features": [
       {
         "price_open": 150.25,
-        "price_high": 152.30,
-        "price_low": 149.80,
+        "price_high": 152.3,
+        "price_low": 149.8,
         "price_close": 151.75,
         "volume": 1250000,
         "sentiment_score": 0.65
       },
       {
         "price_open": 151.75,
-        "price_high": 153.50,
-        "price_low": 151.00,
+        "price_high": 153.5,
+        "price_low": 151.0,
         "price_close": 153.25,
         "volume": 1350000,
-        "sentiment_score": 0.70
+        "sentiment_score": 0.7
       }
     ],
-    "timestamps": [
-      "2025-06-05T16:00:00Z",
-      "2025-06-06T16:00:00Z"
-    ]
+    "timestamps": ["2025-06-05T16:00:00Z", "2025-06-06T16:00:00Z"]
   }
 }
 ```
@@ -344,8 +341,8 @@ Generates predictions using a trained model.
       "timestamp": "2025-06-07T16:00:00Z",
       "value": 154.75,
       "confidence_interval": {
-        "lower": 153.50,
-        "upper": 156.00
+        "lower": 153.5,
+        "upper": 156.0
       }
     }
   ]
@@ -362,8 +359,8 @@ Retrieves a specific prediction by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                          |
+| --------------- | ------ | ------------------------------------ |
 | `prediction_id` | string | The ID of the prediction to retrieve |
 
 #### Response
@@ -378,8 +375,8 @@ Retrieves a specific prediction by ID.
       "timestamp": "2025-06-07T16:00:00Z",
       "value": 154.75,
       "confidence_interval": {
-        "lower": 153.50,
-        "upper": 156.00
+        "lower": 153.5,
+        "upper": 156.0
       }
     }
   ]
@@ -396,13 +393,13 @@ Retrieves a list of predictions.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_id` | string | Filter by model ID |
-| `start_date` | string | Filter by creation date (ISO 8601 format) |
-| `end_date` | string | Filter by creation date (ISO 8601 format) |
-| `limit` | integer | Maximum number of predictions to return (default: 100) |
-| `offset` | integer | Number of predictions to skip (default: 0) |
+| Parameter    | Type    | Description                                            |
+| ------------ | ------- | ------------------------------------------------------ |
+| `model_id`   | string  | Filter by model ID                                     |
+| `start_date` | string  | Filter by creation date (ISO 8601 format)              |
+| `end_date`   | string  | Filter by creation date (ISO 8601 format)              |
+| `limit`      | integer | Maximum number of predictions to return (default: 100) |
+| `offset`     | integer | Number of predictions to skip (default: 0)             |
 
 #### Response
 
@@ -438,11 +435,11 @@ Retrieves a list of reinforcement learning environments.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `status` | string | Filter by environment status (e.g., `active`, `inactive`) |
-| `limit` | integer | Maximum number of environments to return (default: 100) |
-| `offset` | integer | Number of environments to skip (default: 0) |
+| Parameter | Type    | Description                                               |
+| --------- | ------- | --------------------------------------------------------- |
+| `status`  | string  | Filter by environment status (e.g., `active`, `inactive`) |
+| `limit`   | integer | Maximum number of environments to return (default: 100)   |
+| `offset`  | integer | Number of environments to skip (default: 0)               |
 
 #### Response
 
@@ -489,12 +486,7 @@ Creates a new reinforcement learning environment.
     "initial_balance": 100000,
     "commission": 0.001,
     "reward_function": "sharpe_ratio",
-    "state_space": [
-      "price_history",
-      "volume_history",
-      "position",
-      "balance"
-    ],
+    "state_space": ["price_history", "volume_history", "position", "balance"],
     "action_space": "discrete"
   },
   "data_source": {
@@ -521,12 +513,7 @@ Creates a new reinforcement learning environment.
     "initial_balance": 100000,
     "commission": 0.001,
     "reward_function": "sharpe_ratio",
-    "state_space": [
-      "price_history",
-      "volume_history",
-      "position",
-      "balance"
-    ],
+    "state_space": ["price_history", "volume_history", "position", "balance"],
     "action_space": "discrete"
   },
   "data_source": {
@@ -548,8 +535,8 @@ Trains a reinforcement learning agent in the specified environment.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter        | Type   | Description               |
+| ---------------- | ------ | ------------------------- |
 | `environment_id` | string | The ID of the environment |
 
 #### Request Body
@@ -601,10 +588,10 @@ Retrieves the status of a reinforcement learning training job.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `environment_id` | string | The ID of the environment |
-| `job_id` | string | The ID of the training job |
+| Parameter        | Type   | Description                |
+| ---------------- | ------ | -------------------------- |
+| `environment_id` | string | The ID of the environment  |
+| `job_id`         | string | The ID of the training job |
 
 #### Response
 
@@ -639,10 +626,10 @@ Runs a trained reinforcement learning agent in the specified environment.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter        | Type   | Description               |
+| ---------------- | ------ | ------------------------- |
 | `environment_id` | string | The ID of the environment |
-| `agent_id` | string | The ID of the agent |
+| `agent_id`       | string | The ID of the agent       |
 
 #### Request Body
 
@@ -681,11 +668,11 @@ Retrieves the results of a reinforcement learning agent run.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter        | Type   | Description               |
+| ---------------- | ------ | ------------------------- |
 | `environment_id` | string | The ID of the environment |
-| `agent_id` | string | The ID of the agent |
-| `run_id` | string | The ID of the run |
+| `agent_id`       | string | The ID of the agent       |
+| `run_id`         | string | The ID of the run         |
 
 #### Response
 
@@ -710,15 +697,7 @@ Retrieves the results of a reinforcement learning agent run.
       "win_rate": 0.65
     },
     "episode_rewards": [
-      1200.0,
-      1500.0,
-      900.0,
-      1100.0,
-      1300.0,
-      1400.0,
-      2500.0,
-      500.0,
-      1200.0,
+      1200.0, 1500.0, 900.0, 1100.0, 1300.0, 1400.0, 2500.0, 500.0, 1200.0,
       1600.0
     ]
   }
@@ -737,11 +716,11 @@ Retrieves a list of experiments.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `status` | string | Filter by experiment status (e.g., `running`, `completed`, `failed`) |
-| `limit` | integer | Maximum number of experiments to return (default: 100) |
-| `offset` | integer | Number of experiments to skip (default: 0) |
+| Parameter | Type    | Description                                                          |
+| --------- | ------- | -------------------------------------------------------------------- |
+| `status`  | string  | Filter by experiment status (e.g., `running`, `completed`, `failed`) |
+| `limit`   | integer | Maximum number of experiments to return (default: 100)               |
+| `offset`  | integer | Number of experiments to skip (default: 0)                           |
 
 #### Response
 
@@ -891,8 +870,8 @@ Starts an experiment.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                       |
+| --------------- | ------ | --------------------------------- |
 | `experiment_id` | string | The ID of the experiment to start |
 
 #### Response
@@ -916,8 +895,8 @@ Retrieves a specific experiment by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                          |
+| --------------- | ------ | ------------------------------------ |
 | `experiment_id` | string | The ID of the experiment to retrieve |
 
 #### Response
@@ -1002,19 +981,19 @@ Retrieves the trials for a specific experiment.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description              |
+| --------------- | ------ | ------------------------ |
 | `experiment_id` | string | The ID of the experiment |
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `status` | string | Filter by trial status (e.g., `running`, `completed`, `failed`) |
-| `sort_by` | string | Sort by field (e.g., `created_at`, `val_loss`) |
-| `sort_order` | string | Sort order (`asc` or `desc`) |
-| `limit` | integer | Maximum number of trials to return (default: 100) |
-| `offset` | integer | Number of trials to skip (default: 0) |
+| Parameter    | Type    | Description                                                     |
+| ------------ | ------- | --------------------------------------------------------------- |
+| `status`     | string  | Filter by trial status (e.g., `running`, `completed`, `failed`) |
+| `sort_by`    | string  | Sort by field (e.g., `created_at`, `val_loss`)                  |
+| `sort_order` | string  | Sort order (`asc` or `desc`)                                    |
+| `limit`      | integer | Maximum number of trials to return (default: 100)               |
+| `offset`     | integer | Number of trials to skip (default: 0)                           |
 
 #### Response
 
@@ -1052,7 +1031,7 @@ Retrieves the trials for a specific experiment.
       },
       "metrics": {
         "val_loss": 0.07,
-        "val_accuracy": 0.90
+        "val_accuracy": 0.9
       }
     }
   ],
@@ -1072,8 +1051,8 @@ Stops a running experiment.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                      |
+| --------------- | ------ | -------------------------------- |
 | `experiment_id` | string | The ID of the experiment to stop |
 
 #### Response
@@ -1098,8 +1077,8 @@ Retrieves all versions of a model in the registry.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter    | Type   | Description           |
+| ------------ | ------ | --------------------- |
 | `model_name` | string | The name of the model |
 
 #### Response
@@ -1136,8 +1115,8 @@ Retrieves all versions of a model in the registry.
       "status": "archived",
       "created_at": "2025-05-01T09:00:00Z",
       "metrics": {
-        "accuracy": 0.80,
-        "mse": 0.030,
+        "accuracy": 0.8,
+        "mse": 0.03,
         "mae": 0.18
       }
     }
@@ -1155,8 +1134,8 @@ Registers a new version of a model in the registry.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter    | Type   | Description           |
+| ------------ | ------ | --------------------- |
 | `model_name` | string | The name of the model |
 
 #### Request Body
@@ -1203,10 +1182,10 @@ Updates the status of a model version in the registry.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_name` | string | The name of the model |
-| `version` | integer | The version of the model |
+| Parameter    | Type    | Description              |
+| ------------ | ------- | ------------------------ |
+| `model_name` | string  | The name of the model    |
+| `version`    | integer | The version of the model |
 
 #### Request Body
 
@@ -1240,8 +1219,8 @@ Retrieves feature importance for a specific model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description         |
+| ---------- | ------ | ------------------- |
 | `model_id` | string | The ID of the model |
 
 #### Response
@@ -1262,12 +1241,12 @@ Retrieves feature importance for a specific model.
     },
     {
       "feature": "sentiment_score",
-      "importance": 0.20,
+      "importance": 0.2,
       "rank": 3
     },
     {
       "feature": "price_high",
-      "importance": 0.10,
+      "importance": 0.1,
       "rank": 4
     },
     {
@@ -1296,8 +1275,8 @@ Calculates feature importance for a specific model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description         |
+| ---------- | ------ | ------------------- |
 | `model_id` | string | The ID of the model |
 
 #### Request Body
@@ -1333,8 +1312,8 @@ Creates a hyperparameter tuning job for a specific model.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description         |
+| ---------- | ------ | ------------------- |
 | `model_id` | string | The ID of the model |
 
 #### Request Body
@@ -1392,10 +1371,10 @@ Retrieves the status of a hyperparameter tuning job.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_id` | string | The ID of the model |
-| `job_id` | string | The ID of the hyperparameter tuning job |
+| Parameter  | Type   | Description                             |
+| ---------- | ------ | --------------------------------------- |
+| `model_id` | string | The ID of the model                     |
+| `job_id`   | string | The ID of the hyperparameter tuning job |
 
 #### Response
 
@@ -1435,10 +1414,10 @@ Retrieves the results of a completed hyperparameter tuning job.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_id` | string | The ID of the model |
-| `job_id` | string | The ID of the hyperparameter tuning job |
+| Parameter  | Type   | Description                             |
+| ---------- | ------ | --------------------------------------- |
+| `model_id` | string | The ID of the model                     |
+| `job_id`   | string | The ID of the hyperparameter tuning job |
 
 #### Response
 

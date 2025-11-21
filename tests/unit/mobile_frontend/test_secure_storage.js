@@ -1,4 +1,8 @@
-import { storeDataSecurely, retrieveDataSecurely, deleteDataSecurely } from "../../src/auth/SecureStorage";
+import {
+  storeDataSecurely,
+  retrieveDataSecurely,
+  deleteDataSecurely,
+} from "../../src/auth/SecureStorage";
 
 describe("SecureStorage", () => {
   it("should store and retrieve data securely", async () => {

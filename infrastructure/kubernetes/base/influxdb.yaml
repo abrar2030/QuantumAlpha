@@ -36,133 +36,133 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: influxdb
-        image: influxdb:2.7-alpine
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: DOCKER_INFLUXDB_INIT_MODE
-          value: "setup"
-        - name: DOCKER_INFLUXDB_INIT_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: influxdb-credentials
-              key: username
-        - name: DOCKER_INFLUXDB_INIT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: influxdb-credentials
-              key: password
-        - name: DOCKER_INFLUXDB_INIT_ORG
-          valueFrom:
-            secretKeyRef:
-              name: influxdb-credentials
-              key: org
-        - name: DOCKER_INFLUXDB_INIT_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: influxdb-credentials
-              key: bucket
-        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: influxdb-credentials
-              key: token
-        - name: INFLUXD_TLS_CERT
-          value: "/etc/ssl/certs/tls.crt"
-        - name: INFLUXD_TLS_KEY
-          value: "/etc/ssl/private/tls.key"
-        ports:
-        - containerPort: 8086
-          name: influxdb
-          protocol: TCP
-        volumeMounts:
-        - name: influxdb-storage
-          mountPath: /var/lib/influxdb2
-        - name: influxdb-config
-          mountPath: /etc/influxdb2
-          readOnly: true
-        - name: tls-certs
-          mountPath: /etc/ssl/certs
-          readOnly: true
-        - name: tls-private
-          mountPath: /etc/ssl/private
-          readOnly: true
-        - name: tmp
-          mountPath: /tmp
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8086
-            scheme: HTTPS
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8086
-            scheme: HTTPS
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
+        - name: influxdb
+          image: influxdb:2.7-alpine
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: "setup"
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: username
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: password
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: org
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: bucket
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-credentials
+                  key: token
+            - name: INFLUXD_TLS_CERT
+              value: "/etc/ssl/certs/tls.crt"
+            - name: INFLUXD_TLS_KEY
+              value: "/etc/ssl/private/tls.key"
+          ports:
+            - containerPort: 8086
+              name: influxdb
+              protocol: TCP
+          volumeMounts:
+            - name: influxdb-storage
+              mountPath: /var/lib/influxdb2
+            - name: influxdb-config
+              mountPath: /etc/influxdb2
+              readOnly: true
+            - name: tls-certs
+              mountPath: /etc/ssl/certs
+              readOnly: true
+            - name: tls-private
+              mountPath: /etc/ssl/private
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8086
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8086
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
       volumes:
-      - name: influxdb-storage
-        persistentVolumeClaim:
-          claimName: influxdb-pvc
-      - name: influxdb-config
-        configMap:
-          name: influxdb-config
-      - name: tls-certs
-        secret:
-          secretName: tls-certificates
-          items:
-          - key: tls.crt
-            path: tls.crt
-      - name: tls-private
-        secret:
-          secretName: tls-certificates
-          items:
-          - key: tls.key
-            path: tls.key
-      - name: tmp
-        emptyDir: {}
+        - name: influxdb-storage
+          persistentVolumeClaim:
+            claimName: influxdb-pvc
+        - name: influxdb-config
+          configMap:
+            name: influxdb-config
+        - name: tls-certs
+          secret:
+            secretName: tls-certificates
+            items:
+              - key: tls.crt
+                path: tls.crt
+        - name: tls-private
+          secret:
+            secretName: tls-certificates
+            items:
+              - key: tls.key
+                path: tls.key
+        - name: tmp
+          emptyDir: {}
       nodeSelector:
         security: high
       tolerations:
-      - key: "security"
-        operator: "Equal"
-        value: "high"
-        effect: "NoSchedule"
+        - key: "security"
+          operator: "Equal"
+          value: "high"
+          effect: "NoSchedule"
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - influxdb
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - influxdb
+                topologyKey: kubernetes.io/hostname
 ---
 apiVersion: v1
 kind: Service
@@ -180,10 +180,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8086
-    targetPort: 8086
-    protocol: TCP
-    name: influxdb
+    - port: 8086
+      targetPort: 8086
+      protocol: TCP
+      name: influxdb
   selector:
     app: influxdb
 ---
@@ -199,7 +199,7 @@ metadata:
     volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Gi
@@ -222,12 +222,12 @@ metadata:
   name: influxdb-role
   namespace: quantumalpha
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "list"]
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -235,9 +235,9 @@ metadata:
   name: influxdb-rolebinding
   namespace: quantumalpha
 subjects:
-- kind: ServiceAccount
-  name: influxdb-sa
-  namespace: quantumalpha
+  - kind: ServiceAccount
+    name: influxdb-sa
+    namespace: quantumalpha
 roleRef:
   kind: Role
   name: influxdb-role

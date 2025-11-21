@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
   Paper,
@@ -20,8 +20,8 @@ import {
   Avatar,
   Fade,
   Alert,
-  Snackbar
-} from '@mui/material';
+  Snackbar,
+} from "@mui/material";
 import {
   Moon,
   Sun,
@@ -36,8 +36,8 @@ import {
   Check,
   Contrast,
   Type,
-  Sparkles
-} from 'lucide-react';
+  Sparkles,
+} from "lucide-react";
 import {
   toggleDarkMode,
   setTheme,
@@ -47,35 +47,54 @@ import {
   toggleAnimations,
   toggleCompactMode,
   toggleHighContrast,
-  resetTheme
-} from '../store/slices/themeSlice';
+  resetTheme,
+} from "../store/slices/themeSlice";
 
 const ThemeCustomizer = () => {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const [anchorEl, setAnchorEl] = useState(null);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const themeOptions = [
-    { value: 'light', label: 'Light', icon: Sun, description: 'Clean and bright interface' },
-    { value: 'dark', label: 'Dark', icon: Moon, description: 'Easy on the eyes' },
-    { value: 'auto', label: 'Auto', icon: Monitor, description: 'Follows system preference' }
+    {
+      value: "light",
+      label: "Light",
+      icon: Sun,
+      description: "Clean and bright interface",
+    },
+    {
+      value: "dark",
+      label: "Dark",
+      icon: Moon,
+      description: "Easy on the eyes",
+    },
+    {
+      value: "auto",
+      label: "Auto",
+      icon: Monitor,
+      description: "Follows system preference",
+    },
   ];
 
   const colorPresets = [
-    { name: 'Quantum Blue', primary: '#00d4ff', accent: '#0099cc' },
-    { name: 'Emerald Green', primary: '#10b981', accent: '#059669' },
-    { name: 'Purple Haze', primary: '#8b5cf6', accent: '#7c3aed' },
-    { name: 'Sunset Orange', primary: '#f59e0b', accent: '#d97706' },
-    { name: 'Rose Pink', primary: '#f43f5e', accent: '#e11d48' },
-    { name: 'Indigo Night', primary: '#6366f1', accent: '#4f46e5' }
+    { name: "Quantum Blue", primary: "#00d4ff", accent: "#0099cc" },
+    { name: "Emerald Green", primary: "#10b981", accent: "#059669" },
+    { name: "Purple Haze", primary: "#8b5cf6", accent: "#7c3aed" },
+    { name: "Sunset Orange", primary: "#f59e0b", accent: "#d97706" },
+    { name: "Rose Pink", primary: "#f43f5e", accent: "#e11d48" },
+    { name: "Indigo Night", primary: "#6366f1", accent: "#4f46e5" },
   ];
 
   const fontSizes = [
-    { value: 'small', label: 'Small', size: '14px' },
-    { value: 'medium', label: 'Medium', size: '16px' },
-    { value: 'large', label: 'Large', size: '18px' }
+    { value: "small", label: "Small", size: "14px" },
+    { value: "medium", label: "Medium", size: "16px" },
+    { value: "large", label: "Large", size: "18px" },
   ];
 
   const handleThemeChange = (newTheme) => {
@@ -83,7 +102,7 @@ const ThemeCustomizer = () => {
     setSnackbar({
       open: true,
       message: `Theme changed to ${newTheme}`,
-      severity: 'success'
+      severity: "success",
     });
   };
 
@@ -93,7 +112,7 @@ const ThemeCustomizer = () => {
     setSnackbar({
       open: true,
       message: `Applied ${preset.name} color scheme`,
-      severity: 'success'
+      severity: "success",
     });
   };
 
@@ -101,42 +120,44 @@ const ThemeCustomizer = () => {
     dispatch(resetTheme());
     setSnackbar({
       open: true,
-      message: 'Theme settings reset to default',
-      severity: 'info'
+      message: "Theme settings reset to default",
+      severity: "info",
     });
   };
 
   const ThemePreview = ({ themeType }) => {
-    const isDark = themeType === 'dark';
-    const bgColor = isDark ? '#0f0f23' : '#ffffff';
-    const cardColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-    const textColor = isDark ? '#ffffff' : '#000000';
+    const isDark = themeType === "dark";
+    const bgColor = isDark ? "#0f0f23" : "#ffffff";
+    const cardColor = isDark
+      ? "rgba(255, 255, 255, 0.05)"
+      : "rgba(0, 0, 0, 0.05)";
+    const textColor = isDark ? "#ffffff" : "#000000";
 
     return (
       <Box
         sx={{
-          width: '100%',
+          width: "100%",
           height: 120,
           borderRadius: 2,
           background: bgColor,
-          border: `2px solid ${theme.theme === themeType ? theme.primaryColor : 'transparent'}`,
+          border: `2px solid ${theme.theme === themeType ? theme.primaryColor : "transparent"}`,
           p: 2,
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'scale(1.02)',
-            boxShadow: `0 4px 20px ${theme.primaryColor}30`
-          }
+          cursor: "pointer",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "scale(1.02)",
+            boxShadow: `0 4px 20px ${theme.primaryColor}30`,
+          },
         }}
         onClick={() => handleThemeChange(themeType)}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
           <Box
             sx={{
               width: 12,
               height: 12,
-              borderRadius: '50%',
-              background: theme.primaryColor
+              borderRadius: "50%",
+              background: theme.primaryColor,
             }}
           />
           <Box
@@ -144,57 +165,57 @@ const ThemeCustomizer = () => {
               width: 20,
               height: 4,
               borderRadius: 2,
-              background: cardColor
+              background: cardColor,
             }}
           />
         </Box>
         <Box
           sx={{
-            width: '100%',
+            width: "100%",
             height: 40,
             borderRadius: 1,
             background: cardColor,
             mb: 1,
-            display: 'flex',
-            alignItems: 'center',
-            px: 1
+            display: "flex",
+            alignItems: "center",
+            px: 1,
           }}
         >
           <Box
             sx={{
               width: 6,
               height: 6,
-              borderRadius: '50%',
+              borderRadius: "50%",
               background: textColor,
               opacity: 0.7,
-              mr: 1
+              mr: 1,
             }}
           />
           <Box
             sx={{
-              width: '60%',
+              width: "60%",
               height: 2,
               borderRadius: 1,
               background: textColor,
-              opacity: 0.5
+              opacity: 0.5,
             }}
           />
         </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <Box
             sx={{
-              width: '30%',
+              width: "30%",
               height: 20,
               borderRadius: 1,
-              background: cardColor
+              background: cardColor,
             }}
           />
           <Box
             sx={{
-              width: '50%',
+              width: "50%",
               height: 20,
               borderRadius: 1,
-              background: cardColor
+              background: cardColor,
             }}
           />
         </Box>
@@ -209,25 +230,25 @@ const ThemeCustomizer = () => {
         height: 60,
         borderRadius: 2,
         background: `linear-gradient(135deg, ${preset.primary}, ${preset.accent})`,
-        border: `3px solid ${isSelected ? '#ffffff' : 'transparent'}`,
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        position: 'relative',
-        '&:hover': {
-          transform: 'scale(1.1)',
-          boxShadow: `0 4px 20px ${preset.primary}50`
-        }
+        border: `3px solid ${isSelected ? "#ffffff" : "transparent"}`,
+        cursor: "pointer",
+        transition: "all 0.3s ease",
+        position: "relative",
+        "&:hover": {
+          transform: "scale(1.1)",
+          boxShadow: `0 4px 20px ${preset.primary}50`,
+        },
       }}
       onClick={() => handleColorPreset(preset)}
     >
       {isSelected && (
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            color: 'white'
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "white",
           }}
         >
           <Check size={20} />
@@ -243,15 +264,22 @@ const ThemeCustomizer = () => {
         sx={{
           p: 4,
           borderRadius: 4,
-          background: 'rgba(255, 255, 255, 0.05)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+          background: "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
         }}
       >
         {/* Header */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 4,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Palette size={32} color={theme.primaryColor} />
             <Box>
               <Typography variant="h5" fontWeight={700} color="white">
@@ -269,10 +297,10 @@ const ThemeCustomizer = () => {
             sx={{
               borderColor: theme.primaryColor,
               color: theme.primaryColor,
-              '&:hover': {
+              "&:hover": {
                 borderColor: theme.primaryColor,
                 background: `${theme.primaryColor}20`,
-              }
+              },
             }}
           >
             Reset
@@ -282,7 +310,12 @@ const ThemeCustomizer = () => {
         <Grid container spacing={4}>
           {/* Theme Selection */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" fontWeight={600} color="white" sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              color="white"
+              sx={{ mb: 3 }}
+            >
               Theme Mode
             </Typography>
             <Grid container spacing={2}>
@@ -292,31 +325,42 @@ const ThemeCustomizer = () => {
                   <Grid item xs={4} key={option.value}>
                     <Card
                       sx={{
-                        background: theme.theme === option.value
-                          ? `${theme.primaryColor}20`
-                          : 'rgba(255, 255, 255, 0.05)',
-                        border: `1px solid ${theme.theme === option.value
-                          ? theme.primaryColor
-                          : 'rgba(255, 255, 255, 0.1)'}`,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-2px)',
-                          boxShadow: `0 4px 20px ${theme.primaryColor}30`
-                        }
+                        background:
+                          theme.theme === option.value
+                            ? `${theme.primaryColor}20`
+                            : "rgba(255, 255, 255, 0.05)",
+                        border: `1px solid ${
+                          theme.theme === option.value
+                            ? theme.primaryColor
+                            : "rgba(255, 255, 255, 0.1)"
+                        }`,
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-2px)",
+                          boxShadow: `0 4px 20px ${theme.primaryColor}30`,
+                        },
                       }}
                       onClick={() => handleThemeChange(option.value)}
                     >
-                      <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                      <CardContent sx={{ textAlign: "center", p: 3 }}>
                         <Icon
                           size={32}
-                          color={theme.theme === option.value ? theme.primaryColor : '#6b7280'}
+                          color={
+                            theme.theme === option.value
+                              ? theme.primaryColor
+                              : "#6b7280"
+                          }
                           style={{ marginBottom: 8 }}
                         />
                         <Typography
                           variant="subtitle2"
                           fontWeight={600}
-                          color={theme.theme === option.value ? theme.primaryColor : 'white'}
+                          color={
+                            theme.theme === option.value
+                              ? theme.primaryColor
+                              : "white"
+                          }
                           sx={{ mb: 1 }}
                         >
                           {option.label}
@@ -332,27 +376,35 @@ const ThemeCustomizer = () => {
             </Grid>
 
             {/* Quick Toggle */}
-            <Box sx={{ mt: 3, p: 3, background: 'rgba(255, 255, 255, 0.05)', borderRadius: 2 }}>
+            <Box
+              sx={{
+                mt: 3,
+                p: 3,
+                background: "rgba(255, 255, 255, 0.05)",
+                borderRadius: 2,
+              }}
+            >
               <FormControlLabel
                 control={
                   <Switch
                     checked={theme.darkMode}
                     onChange={() => dispatch(toggleDarkMode())}
                     sx={{
-                      '& .MuiSwitch-switchBase.Mui-checked': {
+                      "& .MuiSwitch-switchBase.Mui-checked": {
                         color: theme.primaryColor,
                       },
-                      '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                        backgroundColor: theme.primaryColor,
-                      },
+                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                        {
+                          backgroundColor: theme.primaryColor,
+                        },
                     }}
                   />
                 }
                 label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {theme.darkMode ? <Moon size={20} /> : <Sun size={20} />}
                     <Typography variant="body1" color="white" fontWeight={600}>
-                      {theme.darkMode ? 'Dark Mode' : 'Light Mode'}
+                      {theme.darkMode ? "Dark Mode" : "Light Mode"}
                     </Typography>
                   </Box>
                 }
@@ -362,18 +414,27 @@ const ThemeCustomizer = () => {
 
           {/* Color Schemes */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" fontWeight={600} color="white" sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              color="white"
+              sx={{ mb: 3 }}
+            >
               Color Schemes
             </Typography>
             <Grid container spacing={2}>
               {colorPresets.map((preset) => (
                 <Grid item xs={4} key={preset.name}>
-                  <Box sx={{ textAlign: 'center' }}>
+                  <Box sx={{ textAlign: "center" }}>
                     <ColorSwatch
                       preset={preset}
                       isSelected={theme.primaryColor === preset.primary}
                     />
-                    <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ mt: 1, display: "block" }}
+                    >
                       {preset.name}
                     </Typography>
                   </Box>
@@ -382,33 +443,45 @@ const ThemeCustomizer = () => {
             </Grid>
 
             {/* Current Colors */}
-            <Box sx={{ mt: 3, p: 3, background: 'rgba(255, 255, 255, 0.05)', borderRadius: 2 }}>
-              <Typography variant="subtitle2" color="white" fontWeight={600} sx={{ mb: 2 }}>
+            <Box
+              sx={{
+                mt: 3,
+                p: 3,
+                background: "rgba(255, 255, 255, 0.05)",
+                borderRadius: 2,
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                color="white"
+                fontWeight={600}
+                sx={{ mb: 2 }}
+              >
                 Current Colors
               </Typography>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Box sx={{ textAlign: 'center' }}>
+              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                <Box sx={{ textAlign: "center" }}>
                   <Box
                     sx={{
                       width: 40,
                       height: 40,
                       borderRadius: 1,
                       background: theme.primaryColor,
-                      mb: 1
+                      mb: 1,
                     }}
                   />
                   <Typography variant="caption" color="text.secondary">
                     Primary
                   </Typography>
                 </Box>
-                <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{ textAlign: "center" }}>
                   <Box
                     sx={{
                       width: 40,
                       height: 40,
                       borderRadius: 1,
                       background: theme.accentColor,
-                      mb: 1
+                      mb: 1,
                     }}
                   />
                   <Typography variant="caption" color="text.secondary">
@@ -421,16 +494,37 @@ const ThemeCustomizer = () => {
 
           {/* Accessibility & Preferences */}
           <Grid item xs={12}>
-            <Typography variant="h6" fontWeight={600} color="white" sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              color="white"
+              sx={{ mb: 3 }}
+            >
               Accessibility & Preferences
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
-                <Card sx={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                <Card
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                  }}
+                >
                   <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        mb: 2,
+                      }}
+                    >
                       <Type size={24} color={theme.primaryColor} />
-                      <Typography variant="subtitle1" fontWeight={600} color="white">
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={600}
+                        color="white"
+                      >
                         Font Size
                       </Typography>
                     </Box>
@@ -438,16 +532,29 @@ const ThemeCustomizer = () => {
                       {fontSizes.map((size) => (
                         <Button
                           key={size.value}
-                          variant={theme.fontSize === size.value ? 'contained' : 'outlined'}
+                          variant={
+                            theme.fontSize === size.value
+                              ? "contained"
+                              : "outlined"
+                          }
                           onClick={() => dispatch(setFontSize(size.value))}
                           sx={{
                             borderColor: theme.primaryColor,
-                            color: theme.fontSize === size.value ? 'white' : theme.primaryColor,
-                            background: theme.fontSize === size.value ? theme.primaryColor : 'transparent',
-                            '&:hover': {
+                            color:
+                              theme.fontSize === size.value
+                                ? "white"
+                                : theme.primaryColor,
+                            background:
+                              theme.fontSize === size.value
+                                ? theme.primaryColor
+                                : "transparent",
+                            "&:hover": {
                               borderColor: theme.primaryColor,
-                              background: theme.fontSize === size.value ? theme.accentColor : `${theme.primaryColor}20`,
-                            }
+                              background:
+                                theme.fontSize === size.value
+                                  ? theme.accentColor
+                                  : `${theme.primaryColor}20`,
+                            },
                           }}
                         >
                           {size.label}
@@ -459,9 +566,19 @@ const ThemeCustomizer = () => {
               </Grid>
 
               <Grid item xs={12} md={8}>
-                <Card sx={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                <Card
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                  }}
+                >
                   <CardContent sx={{ p: 3 }}>
-                    <Typography variant="subtitle1" fontWeight={600} color="white" sx={{ mb: 3 }}>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight={600}
+                      color="white"
+                      sx={{ mb: 3 }}
+                    >
                       Interface Options
                     </Typography>
                     <Grid container spacing={2}>
@@ -472,17 +589,24 @@ const ThemeCustomizer = () => {
                               checked={theme.animations}
                               onChange={() => dispatch(toggleAnimations())}
                               sx={{
-                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                "& .MuiSwitch-switchBase.Mui-checked": {
                                   color: theme.primaryColor,
                                 },
-                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                                  backgroundColor: theme.primaryColor,
-                                },
+                                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                  {
+                                    backgroundColor: theme.primaryColor,
+                                  },
                               }}
                             />
                           }
                           label={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
                               <Sparkles size={18} />
                               <Typography variant="body2" color="white">
                                 Animations
@@ -498,17 +622,24 @@ const ThemeCustomizer = () => {
                               checked={theme.compactMode}
                               onChange={() => dispatch(toggleCompactMode())}
                               sx={{
-                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                "& .MuiSwitch-switchBase.Mui-checked": {
                                   color: theme.primaryColor,
                                 },
-                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                                  backgroundColor: theme.primaryColor,
-                                },
+                                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                  {
+                                    backgroundColor: theme.primaryColor,
+                                  },
                               }}
                             />
                           }
                           label={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
                               <Minimize2 size={18} />
                               <Typography variant="body2" color="white">
                                 Compact Mode
@@ -524,17 +655,24 @@ const ThemeCustomizer = () => {
                               checked={theme.highContrast}
                               onChange={() => dispatch(toggleHighContrast())}
                               sx={{
-                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                "& .MuiSwitch-switchBase.Mui-checked": {
                                   color: theme.primaryColor,
                                 },
-                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                                  backgroundColor: theme.primaryColor,
-                                },
+                                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                  {
+                                    backgroundColor: theme.primaryColor,
+                                  },
                               }}
                             />
                           }
                           label={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
                               <Contrast size={18} />
                               <Typography variant="body2" color="white">
                                 High Contrast
@@ -552,24 +690,41 @@ const ThemeCustomizer = () => {
 
           {/* Theme Preview */}
           <Grid item xs={12}>
-            <Typography variant="h6" fontWeight={600} color="white" sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              color="white"
+              sx={{ mb: 3 }}
+            >
               Preview
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
                   Light Theme
                 </Typography>
                 <ThemePreview themeType="light" />
               </Grid>
               <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
                   Dark Theme
                 </Typography>
                 <ThemePreview themeType="dark" />
               </Grid>
               <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
                   Auto (System)
                 </Typography>
                 <ThemePreview themeType="auto" />
@@ -583,16 +738,16 @@ const ThemeCustomizer = () => {
           open={snackbar.open}
           autoHideDuration={3000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
           <Alert
             onClose={() => setSnackbar({ ...snackbar, open: false })}
             severity={snackbar.severity}
             sx={{
-              background: 'rgba(0, 0, 0, 0.9)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: 'white'
+              background: "rgba(0, 0, 0, 0.9)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              color: "white",
             }}
           >
             {snackbar.message}

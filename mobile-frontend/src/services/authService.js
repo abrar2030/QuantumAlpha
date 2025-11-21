@@ -1,4 +1,4 @@
-import api from './api';
+import api from "./api";
 
 class AuthService {
   constructor() {
@@ -18,13 +18,13 @@ class AuthService {
           resolve({
             data: {
               user: {
-                id: '12345',
+                id: "12345",
                 email,
-                name: 'Demo User',
+                name: "Demo User",
                 profileImage: null,
               },
-              token: 'demo-token-12345',
-              refreshToken: 'demo-refresh-token-12345',
+              token: "demo-token-12345",
+              refreshToken: "demo-refresh-token-12345",
             },
           });
         }, 1000);
@@ -32,7 +32,7 @@ class AuthService {
 
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+      throw new Error(error.response?.data?.message || "Login failed");
     }
   }
 
@@ -45,13 +45,13 @@ class AuthService {
           resolve({
             data: {
               user: {
-                id: '12345',
+                id: "12345",
                 email: userData.email,
                 name: userData.name,
                 profileImage: null,
               },
-              token: 'demo-token-12345',
-              refreshToken: 'demo-refresh-token-12345',
+              token: "demo-token-12345",
+              refreshToken: "demo-refresh-token-12345",
             },
           });
         }, 1000);
@@ -59,7 +59,7 @@ class AuthService {
 
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
+      throw new Error(error.response?.data?.message || "Registration failed");
     }
   }
 
@@ -74,7 +74,7 @@ class AuthService {
       this.token = null;
       return true;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Logout failed');
+      throw new Error(error.response?.data?.message || "Logout failed");
     }
   }
 
@@ -87,7 +87,7 @@ class AuthService {
           resolve({
             data: {
               ...userData,
-              id: '12345',
+              id: "12345",
             },
           });
         }, 1000);
@@ -95,7 +95,7 @@ class AuthService {
 
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Profile update failed');
+      throw new Error(error.response?.data?.message || "Profile update failed");
     }
   }
 
@@ -109,7 +109,9 @@ class AuthService {
 
       return true;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Password reset request failed');
+      throw new Error(
+        error.response?.data?.message || "Password reset request failed",
+      );
     }
   }
 
@@ -123,7 +125,7 @@ class AuthService {
 
       return true;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Password reset failed');
+      throw new Error(error.response?.data?.message || "Password reset failed");
     }
   }
 
@@ -137,7 +139,9 @@ class AuthService {
 
       return true;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Email verification failed');
+      throw new Error(
+        error.response?.data?.message || "Email verification failed",
+      );
     }
   }
 }

@@ -32,7 +32,7 @@ model_registry:
     - training_date
     - author
   storage:
-    type: file_system  # Options: file_system, s3, mlflow
+    type: file_system # Options: file_system, s3, mlflow
     s3_bucket: quantumalpha-models
     s3_prefix: models/
 
@@ -84,8 +84,8 @@ models:
       training:
         train_test_split: 0.8
         validation_split: 0.1
-        time_horizon: 5  # days
-        lookback_window: 30  # days
+        time_horizon: 5 # days
+        lookback_window: 30 # days
         target: price_close_normalized
       inference:
         batch_size: 32
@@ -116,7 +116,7 @@ models:
       training:
         train_test_split: 0.8
         validation_split: 0.1
-        time_horizon: 5  # days
+        time_horizon: 5 # days
         target: price_close_normalized
       inference:
         batch_size: 1000
@@ -155,9 +155,9 @@ models:
         - covariance_matrix
       hyperparameters:
         risk_free_rate: 0.02
-        window_size: 252  # trading days
+        window_size: 252 # trading days
       training:
-        rebalance_frequency: 30  # days
+        rebalance_frequency: 30 # days
       inference:
         constraints:
           max_position_size: 0.2
@@ -173,9 +173,9 @@ models:
         - historical_returns
         - covariance_matrix
       hyperparameters:
-        window_size: 252  # trading days
+        window_size: 252 # trading days
       training:
-        rebalance_frequency: 30  # days
+        rebalance_frequency: 30 # days
       inference:
         constraints:
           max_position_size: 0.2
@@ -204,7 +204,7 @@ reinforcement_learning:
       reward_function:
         type: sharpe_ratio
         window: 20
-      episode_length: 252  # trading days
+      episode_length: 252 # trading days
 
   agents:
     - name: dqn_trader

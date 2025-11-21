@@ -36,12 +36,12 @@ QuantumAlpha is a cutting-edge AI-driven hedge fund platform that combines machi
 
 ## 🌟 Key Highlights
 
-* **Advanced AI Models**: Temporal Fusion Transformers, Deep Reinforcement Learning, and ensemble techniques
-* **Multi-source Data Pipeline**: Integration of market data, alternative data, and sentiment analysis
-* **Robust Risk Management**: Bayesian Value at Risk, stress testing, and position sizing optimization
-* **High-performance Execution**: Smart order routing and adaptive execution algorithms
-* **Microservices Architecture**: Scalable, resilient system design with containerized components
-* **Comprehensive Dashboard**: Real-time monitoring of P&L, risk metrics, and model performance
+- **Advanced AI Models**: Temporal Fusion Transformers, Deep Reinforcement Learning, and ensemble techniques
+- **Multi-source Data Pipeline**: Integration of market data, alternative data, and sentiment analysis
+- **Robust Risk Management**: Bayesian Value at Risk, stress testing, and position sizing optimization
+- **High-performance Execution**: Smart order routing and adaptive execution algorithms
+- **Microservices Architecture**: Scalable, resilient system design with containerized components
+- **Comprehensive Dashboard**: Real-time monitoring of P&L, risk metrics, and model performance
 
 ## 🔍 Overview
 
@@ -55,45 +55,45 @@ QuantumAlpha's core philosophy is to combine the best of quantitative finance wi
 
 ### AI-Driven Trading Strategies
 
-* **Machine Learning (ML) and Deep Learning Models**: Predict market movements and generate signals using time-series models such as LSTM/GRU networks and Transformer architectures
-* **Reinforcement Learning (RL)**: Train agents (e.g., Deep Q-Networks, PPO, or Actor-Critic methods) to make trade/portfolio decisions via simulated reward maximization
-* **Ensemble and Meta-learning Techniques**: Stack different models and implement online learning to improve robustness
-* **Explainable AI**: SHAP plots and feature importance bars per trade for model interpretability
+- **Machine Learning (ML) and Deep Learning Models**: Predict market movements and generate signals using time-series models such as LSTM/GRU networks and Transformer architectures
+- **Reinforcement Learning (RL)**: Train agents (e.g., Deep Q-Networks, PPO, or Actor-Critic methods) to make trade/portfolio decisions via simulated reward maximization
+- **Ensemble and Meta-learning Techniques**: Stack different models and implement online learning to improve robustness
+- **Explainable AI**: SHAP plots and feature importance bars per trade for model interpretability
 
 ### Alternative Data Processing
 
-* **News and Social Media Sentiment**: Process sentiment via NLP transformers
-* **Satellite Imagery Analysis**: Geolocation data for commodity markets
-* **Web-scraped Supply Chain Indicators**: Automated feature extraction using PCA or autoencoders
-* **Data Fusion**: Combine structured market data (prices, volumes) with unstructured "alternative" data
+- **News and Social Media Sentiment**: Process sentiment via NLP transformers
+- **Satellite Imagery Analysis**: Geolocation data for commodity markets
+- **Web-scraped Supply Chain Indicators**: Automated feature extraction using PCA or autoencoders
+- **Data Fusion**: Combine structured market data (prices, volumes) with unstructured "alternative" data
 
 ### Risk Management System
 
-* **Bayesian Value at Risk**: Probabilistic risk assessment
-* **Stress Testing Framework**: Scenario-based risk evaluation
-* **Position Sizing Optimization**: Kelly criterion and risk parity approaches
-* **Continuous Monitoring**: Real-time risk metrics and alerts
+- **Bayesian Value at Risk**: Probabilistic risk assessment
+- **Stress Testing Framework**: Scenario-based risk evaluation
+- **Position Sizing Optimization**: Kelly criterion and risk parity approaches
+- **Continuous Monitoring**: Real-time risk metrics and alerts
 
 ### Execution Engine
 
-* **Smart Order Routing**: Optimal execution across multiple venues
-* **Adaptive Execution Algorithms**: TWAP, VWAP, and ML-enhanced variants
-* **Market Impact Modeling**: Transaction cost analysis and minimization
-* **High-Frequency Capabilities**: Sub-millisecond order management
+- **Smart Order Routing**: Optimal execution across multiple venues
+- **Adaptive Execution Algorithms**: TWAP, VWAP, and ML-enhanced variants
+- **Market Impact Modeling**: Transaction cost analysis and minimization
+- **High-Frequency Capabilities**: Sub-millisecond order management
 
 ### Data Pipeline & Ingestion
 
-* **Real-time and Batch Data Pipelines**: Collect market data, fundamentals, and alternative sources
-* **Streaming Platforms**: Apache Kafka or cloud pub/sub for real-time data
-* **Historical Data Management**: Efficient storage and retrieval of time-series data
-* **Feature Engineering**: Automated feature extraction and selection
+- **Real-time and Batch Data Pipelines**: Collect market data, fundamentals, and alternative sources
+- **Streaming Platforms**: Apache Kafka or cloud pub/sub for real-time data
+- **Historical Data Management**: Efficient storage and retrieval of time-series data
+- **Feature Engineering**: Automated feature extraction and selection
 
 ### Monitoring & Dashboard
 
-* **Real-time P&L Charts**: Track performance across strategies
-* **Risk Metrics Display**: Monitor drawdowns and other KPIs
-* **Strategy Controls**: Toggle strategies and adjust parameters
-* **Audit Logs**: Comprehensive logging for compliance and debugging
+- **Real-time P&L Charts**: Track performance across strategies
+- **Risk Metrics Display**: Monitor drawdowns and other KPIs
+- **Strategy Controls**: Toggle strategies and adjust parameters
+- **Audit Logs**: Comprehensive logging for compliance and debugging
 
 ## 🏗️ Architecture
 
@@ -146,27 +146,27 @@ QuantumAlpha uses an event-driven architecture for communication between service
 
 ### Backend
 
-* **Languages**: Python, C++ (for performance-critical components)
-* **ML Frameworks**: PyTorch, TensorFlow, scikit-learn, Ray
-* **Data Processing**: Pandas, NumPy, Dask, Apache Spark
-* **Financial Libraries**: QuantLib, Backtrader/zipline, PyPortfolioOpt
-* **Streaming**: Kafka, Redis Streams
-* **Databases**: InfluxDB (time series), PostgreSQL (relational), MongoDB (document)
+- **Languages**: Python, C++ (for performance-critical components)
+- **ML Frameworks**: PyTorch, TensorFlow, scikit-learn, Ray
+- **Data Processing**: Pandas, NumPy, Dask, Apache Spark
+- **Financial Libraries**: QuantLib, Backtrader/zipline, PyPortfolioOpt
+- **Streaming**: Kafka, Redis Streams
+- **Databases**: InfluxDB (time series), PostgreSQL (relational), MongoDB (document)
 
 ### Frontend
 
-* **Web Framework**: React with TypeScript
-* **Data Visualization**: D3.js, Plotly, TradingView
-* **State Management**: Redux Toolkit
-* **UI Components**: Material-UI, Tailwind CSS
+- **Web Framework**: React with TypeScript
+- **Data Visualization**: D3.js, Plotly, TradingView
+- **State Management**: Redux Toolkit
+- **UI Components**: Material-UI, Tailwind CSS
 
 ### Infrastructure
 
-* **Containerization**: Docker, Kubernetes
-* **CI/CD**: GitHub Actions
-* **Cloud**: AWS, Google Cloud Platform
-* **Monitoring**: Prometheus, Grafana, ELK Stack
-* **MLOps**: MLflow, DVC
+- **Containerization**: Docker, Kubernetes
+- **CI/CD**: GitHub Actions
+- **Cloud**: AWS, Google Cloud Platform
+- **Monitoring**: Prometheus, Grafana, ELK Stack
+- **MLOps**: MLflow, DVC
 
 ## 🛠️ Installation and Setup
 
@@ -174,11 +174,11 @@ QuantumAlpha uses an event-driven architecture for communication between service
 
 Before setting up QuantumAlpha, ensure you have the following installed:
 
-* **Python** (v3.10+)
-* **Docker** and Docker Compose
-* **Node.js** (v16+)
-* **C++ compiler** (for QuantLib)
-* **CUDA-compatible GPU** (recommended for ML training)
+- **Python** (v3.10+)
+- **Docker** and Docker Compose
+- **Node.js** (v16+)
+- **C++ compiler** (for QuantLib)
+- **CUDA-compatible GPU** (recommended for ML training)
 
 ### Quick Setup
 
@@ -198,9 +198,9 @@ docker-compose up
 
 After running these commands, you can access:
 
-* Dashboard: http://localhost:3000
-* API Gateway: http://localhost:8080
-* Swagger Documentation: http://localhost:8080/api-docs
+- Dashboard: http://localhost:3000
+- API Gateway: http://localhost:8080
+- Swagger Documentation: http://localhost:8080/api-docs
 
 ### Manual Setup
 
@@ -298,52 +298,52 @@ The implementation of QuantumAlpha is divided into six phases:
 
 ### Phase 1 – Data & Backtesting Foundation
 
-* Establish data feeds and a basic backtester
-* Set up data ingestion pipelines (both real-time and historical)
-* Build a simple event-driven backtest framework
-* Verify correct handling of market hours, splits, and fees
+- Establish data feeds and a basic backtester
+- Set up data ingestion pipelines (both real-time and historical)
+- Build a simple event-driven backtest framework
+- Verify correct handling of market hours, splits, and fees
 
 ### Phase 2 – Model Prototyping
 
-* Develop initial ML models on historical data
-* Prototype risk models and portfolio optimization
-* Validate the end-to-end workflow: data → model → backtest → P&L
+- Develop initial ML models on historical data
+- Prototype risk models and portfolio optimization
+- Validate the end-to-end workflow: data → model → backtest → P&L
 
 ### Phase 3 – Systemization
 
-* Containerize each component
-* Deploy in a cloud environment (e.g., Kubernetes on AWS)
-* Integrate Ray for scaling model training
-* Begin paper trading selected strategies
+- Containerize each component
+- Deploy in a cloud environment (e.g., Kubernetes on AWS)
+- Integrate Ray for scaling model training
+- Begin paper trading selected strategies
 
 ### Phase 4 – Expansion & Robustness
 
-* Incorporate alternative data sources
-* Refine risk modules (add scenario analysis, stress-testing)
-* Implement Explainable AI hooks
-* Build continuous monitoring and logging
+- Incorporate alternative data sources
+- Refine risk modules (add scenario analysis, stress-testing)
+- Implement Explainable AI hooks
+- Build continuous monitoring and logging
 
 ### Phase 5 – Dashboard & Automation
 
-* Develop the UI for real-time monitoring and controls
-* Automate retraining pipelines
-* Establish CI/CD for code and data updates
+- Develop the UI for real-time monitoring and controls
+- Automate retraining pipelines
+- Establish CI/CD for code and data updates
 
 ### Phase 6 – Live Deployment
 
-* Deploy strategies with real capital (starting small)
-* Implement strict risk throttles
-* Continuously monitor performance and iterate
+- Deploy strategies with real capital (starting small)
+- Implement strict risk throttles
+- Continuously monitor performance and iterate
 
 ## 🏆 Best Practices
 
-* **Version Control**: Maintain rigorous version control for code and data using DVC and MLflow
-* **Testing**: Implement unit/integration tests for strategy logic and risk calculations
-* **Kill Switch**: Deploy "kill-switch" mechanisms to halt trading if metrics exceed thresholds
-* **Documentation**: Document all models and data sources thoroughly
-* **Model Monitoring**: Continuously review model outputs for regime shifts or degradation
-* **Open Source**: Rely on open-source standards and peer-reviewed methods where possible
-* **Code Reviews**: Engage in regular code reviews and ensure reproducibility
+- **Version Control**: Maintain rigorous version control for code and data using DVC and MLflow
+- **Testing**: Implement unit/integration tests for strategy logic and risk calculations
+- **Kill Switch**: Deploy "kill-switch" mechanisms to halt trading if metrics exceed thresholds
+- **Documentation**: Document all models and data sources thoroughly
+- **Model Monitoring**: Continuously review model outputs for regime shifts or degradation
+- **Open Source**: Rely on open-source standards and peer-reviewed methods where possible
+- **Code Reviews**: Engage in regular code reviews and ensure reproducibility
 
 ## 🧪 Testing
 
@@ -351,11 +351,11 @@ The implementation of QuantumAlpha is divided into six phases:
 
 The QuantumAlpha platform includes comprehensive testing at multiple levels:
 
-* **Unit Tests**: Individual components and functions
-* **Integration Tests**: Interactions between services
-* **System Tests**: End-to-end workflows
-* **Backtests**: Historical performance validation
-* **Stress Tests**: System behavior under extreme conditions
+- **Unit Tests**: Individual components and functions
+- **Integration Tests**: Interactions between services
+- **System Tests**: End-to-end workflows
+- **Backtests**: Historical performance validation
+- **Stress Tests**: System behavior under extreme conditions
 
 ### Running Tests
 
@@ -392,11 +392,11 @@ tests/
 
 ## 📚 Documentation
 
-* **API Reference**: Comprehensive documentation of all APIs
-* **User Guides**: Step-by-step instructions for common tasks
-* **Architecture Diagrams**: Visual representations of system components
-* **Model Documentation**: Detailed descriptions of ML/RL models
-* **Jupyter Notebooks**: Interactive examples and tutorials
+- **API Reference**: Comprehensive documentation of all APIs
+- **User Guides**: Step-by-step instructions for common tasks
+- **Architecture Diagrams**: Visual representations of system components
+- **Model Documentation**: Detailed descriptions of ML/RL models
+- **Jupyter Notebooks**: Interactive examples and tutorials
 
 Our documentation is available at: [https://abrar2030.github.io/QuantumAlpha/](https://abrar2030.github.io/QuantumAlpha/)
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,11 @@ import {
   RefreshControl,
   Animated,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
-import { strategyService } from '../../services/strategyService';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
+import { strategyService } from "../../services/strategyService";
 
 const StrategyScreen = () => {
   const navigation = useNavigation();
@@ -57,7 +57,7 @@ const StrategyScreen = () => {
       setStrategies(activeStrategies);
       setAvailableStrategies(available);
     } catch (error) {
-      console.error('Error loading strategies:', error);
+      console.error("Error loading strategies:", error);
       // In a real app, you would handle errors appropriately
     } finally {
       setLoading(false);
@@ -71,7 +71,7 @@ const StrategyScreen = () => {
   };
 
   const navigateToStrategyDetail = (strategy) => {
-    navigation.navigate('StrategyDetail', {
+    navigation.navigate("StrategyDetail", {
       id: strategy.id,
       name: strategy.name,
     });
@@ -123,7 +123,9 @@ const StrategyScreen = () => {
                 styles.performanceBadge,
                 {
                   backgroundColor:
-                    item.performance >= 0 ? theme.success + '20' : theme.error + '20',
+                    item.performance >= 0
+                      ? theme.success + "20"
+                      : theme.error + "20",
                 },
               ]}
             >
@@ -135,14 +137,14 @@ const StrategyScreen = () => {
                   },
                 ]}
               >
-                {item.performance >= 0 ? '+' : ''}
+                {item.performance >= 0 ? "+" : ""}
                 {item.performance}%
               </Text>
             </View>
           </View>
 
           <Text
-            style={[styles.strategyDescription, { color: theme.text + 'CC' }]}
+            style={[styles.strategyDescription, { color: theme.text + "CC" }]}
             numberOfLines={2}
           >
             {item.description}
@@ -150,29 +152,29 @@ const StrategyScreen = () => {
 
           <View style={styles.strategyFooter}>
             <View style={styles.strategyDetail}>
-              <Icon name="shield" size={16} color={theme.text + '99'} />
-              <Text style={[styles.detailText, { color: theme.text + '99' }]}>
+              <Icon name="shield" size={16} color={theme.text + "99"} />
+              <Text style={[styles.detailText, { color: theme.text + "99" }]}>
                 {item.risk}
               </Text>
             </View>
 
             <View style={styles.strategyDetail}>
-              <Icon name="chart-pie" size={16} color={theme.text + '99'} />
-              <Text style={[styles.detailText, { color: theme.text + '99' }]}>
+              <Icon name="chart-pie" size={16} color={theme.text + "99"} />
+              <Text style={[styles.detailText, { color: theme.text + "99" }]}>
                 {item.allocation}% Allocated
               </Text>
             </View>
 
             <View style={styles.strategyDetail}>
-              <Icon name="clock-outline" size={16} color={theme.text + '99'} />
-              <Text style={[styles.detailText, { color: theme.text + '99' }]}>
+              <Icon name="clock-outline" size={16} color={theme.text + "99"} />
+              <Text style={[styles.detailText, { color: theme.text + "99" }]}>
                 {new Date(item.lastUpdated).toLocaleDateString()}
               </Text>
             </View>
           </View>
 
           <View style={styles.arrowContainer}>
-            <Icon name="chevron-right" size={24} color={theme.text + '80'} />
+            <Icon name="chevron-right" size={24} color={theme.text + "80"} />
           </View>
         </TouchableOpacity>
       </Animated.View>
@@ -231,7 +233,7 @@ const StrategyScreen = () => {
               style={[
                 styles.newBadge,
                 {
-                  backgroundColor: theme.primary + '20',
+                  backgroundColor: theme.primary + "20",
                 },
               ]}
             >
@@ -249,7 +251,7 @@ const StrategyScreen = () => {
           </View>
 
           <Text
-            style={[styles.strategyDescription, { color: theme.text + 'CC' }]}
+            style={[styles.strategyDescription, { color: theme.text + "CC" }]}
             numberOfLines={2}
           >
             {item.description}
@@ -257,22 +259,26 @@ const StrategyScreen = () => {
 
           <View style={styles.strategyFooter}>
             <View style={styles.strategyDetail}>
-              <Icon name="shield" size={16} color={theme.text + '99'} />
-              <Text style={[styles.detailText, { color: theme.text + '99' }]}>
+              <Icon name="shield" size={16} color={theme.text + "99"} />
+              <Text style={[styles.detailText, { color: theme.text + "99" }]}>
                 {item.risk}
               </Text>
             </View>
 
             <View style={styles.strategyDetail}>
-              <Icon name="chart-line-variant" size={16} color={theme.text + '99'} />
-              <Text style={[styles.detailText, { color: theme.text + '99' }]}>
+              <Icon
+                name="chart-line-variant"
+                size={16}
+                color={theme.text + "99"}
+              />
+              <Text style={[styles.detailText, { color: theme.text + "99" }]}>
                 {item.expectedReturn}
               </Text>
             </View>
 
             <View style={styles.strategyDetail}>
-              <Icon name="cash" size={16} color={theme.text + '99'} />
-              <Text style={[styles.detailText, { color: theme.text + '99' }]}>
+              <Icon name="cash" size={16} color={theme.text + "99"} />
+              <Text style={[styles.detailText, { color: theme.text + "99" }]}>
                 ${item.minimumInvestment.toLocaleString()}
               </Text>
             </View>
@@ -294,7 +300,9 @@ const StrategyScreen = () => {
 
   if (loading && !refreshing) {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+      <View
+        style={[styles.loadingContainer, { backgroundColor: theme.background }]}
+      >
         <ActivityIndicator size="large" color={theme.primary} />
         <Text style={[styles.loadingText, { color: theme.text }]}>
           Loading strategies...
@@ -318,7 +326,7 @@ const StrategyScreen = () => {
         <Text style={[styles.headerTitle, { color: theme.text }]}>
           Trading Strategies
         </Text>
-        <Text style={[styles.headerSubtitle, { color: theme.text + 'CC' }]}>
+        <Text style={[styles.headerSubtitle, { color: theme.text + "CC" }]}>
           Manage your active and available strategies
         </Text>
       </Animated.View>
@@ -363,7 +371,7 @@ const StrategyScreen = () => {
             </Animated.View>
 
             {availableStrategies.map((item, index) =>
-              renderAvailableStrategyItem({ item, index })
+              renderAvailableStrategyItem({ item, index }),
             )}
 
             <View style={styles.footer} />
@@ -375,7 +383,7 @@ const StrategyScreen = () => {
         style={[styles.fab, { backgroundColor: theme.primary }]}
         onPress={() => {
           // In a real app, this would navigate to a strategy creation screen
-          alert('Would navigate to strategy creation');
+          alert("Would navigate to strategy creation");
         }}
       >
         <Icon name="plus" size={24} color="#FFFFFF" />
@@ -384,7 +392,7 @@ const StrategyScreen = () => {
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -392,8 +400,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingText: {
     marginTop: 10,
@@ -404,11 +412,11 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   headerSubtitle: {
     fontSize: 14,
@@ -420,7 +428,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
   },
   strategyItemContainer: {
@@ -429,27 +437,27 @@ const styles = StyleSheet.create({
   strategyItem: {
     borderRadius: 12,
     padding: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    position: 'relative',
+    position: "relative",
   },
   availableStrategyItem: {
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
+    borderColor: "rgba(0,0,0,0.1)",
   },
   strategyHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   strategyName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     flex: 1,
   },
   performanceBadge: {
@@ -460,7 +468,7 @@ const styles = StyleSheet.create({
   },
   performanceText: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   newBadge: {
     paddingHorizontal: 8,
@@ -470,20 +478,20 @@ const styles = StyleSheet.create({
   },
   newBadgeText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   strategyDescription: {
     fontSize: 14,
     marginBottom: 12,
   },
   strategyFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   strategyDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 12,
     marginBottom: 4,
   },
@@ -492,9 +500,9 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   arrowContainer: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
-    top: '50%',
+    top: "50%",
     marginTop: -12,
   },
   activateButton: {
@@ -502,27 +510,27 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 4,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   activateButtonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
+    color: "#FFFFFF",
+    fontWeight: "bold",
     fontSize: 14,
   },
   footer: {
     height: 80,
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     right: 20,
     bottom: 20,
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 6,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.27,
     shadowRadius: 4.65,

@@ -38,16 +38,16 @@ Retrieves historical price data for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `interval` | string | Data interval (`1m`, `5m`, `15m`, `30m`, `1h`, `4h`, `1d`, `1w`, `1mo`) |
-| `fields` | string | Comma-separated list of fields to include (e.g., `open,high,low,close,volume`) |
-| `timezone` | string | Timezone for timestamps (default: `UTC`) |
-| `adjust` | boolean | Whether to adjust for splits and dividends (default: `true`) |
-| `limit` | integer | Maximum number of data points to return per symbol (default: 1000) |
+| Parameter    | Type    | Description                                                                    |
+| ------------ | ------- | ------------------------------------------------------------------------------ |
+| `symbols`    | string  | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)                      |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                             |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                               |
+| `interval`   | string  | Data interval (`1m`, `5m`, `15m`, `30m`, `1h`, `4h`, `1d`, `1w`, `1mo`)        |
+| `fields`     | string  | Comma-separated list of fields to include (e.g., `open,high,low,close,volume`) |
+| `timezone`   | string  | Timezone for timestamps (default: `UTC`)                                       |
+| `adjust`     | boolean | Whether to adjust for splits and dividends (default: `true`)                   |
+| `limit`      | integer | Maximum number of data points to return per symbol (default: 1000)             |
 
 #### Response
 
@@ -58,8 +58,8 @@ Retrieves historical price data for specified symbols.
       {
         "timestamp": "2025-06-01T16:00:00Z",
         "open": 150.25,
-        "high": 152.30,
-        "low": 149.80,
+        "high": 152.3,
+        "low": 149.8,
         "close": 151.75,
         "volume": 1250000,
         "adjusted_close": 151.75
@@ -67,8 +67,8 @@ Retrieves historical price data for specified symbols.
       {
         "timestamp": "2025-05-31T16:00:00Z",
         "open": 151.75,
-        "high": 153.50,
-        "low": 151.00,
+        "high": 153.5,
+        "low": 151.0,
         "close": 153.25,
         "volume": 1350000,
         "adjusted_close": 153.25
@@ -77,21 +77,21 @@ Retrieves historical price data for specified symbols.
     "MSFT": [
       {
         "timestamp": "2025-06-01T16:00:00Z",
-        "open": 320.50,
+        "open": 320.5,
         "high": 325.75,
         "low": 319.25,
-        "close": 324.50,
+        "close": 324.5,
         "volume": 980000,
-        "adjusted_close": 324.50
+        "adjusted_close": 324.5
       },
       {
         "timestamp": "2025-05-31T16:00:00Z",
         "open": 318.25,
-        "high": 321.00,
-        "low": 317.50,
-        "close": 320.50,
+        "high": 321.0,
+        "low": 317.5,
+        "close": 320.5,
         "volume": 1050000,
-        "adjusted_close": 320.50
+        "adjusted_close": 320.5
       }
     ]
   },
@@ -117,10 +117,10 @@ Retrieves the latest quotes for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `fields` | string | Comma-separated list of fields to include (default: all fields) |
+| Parameter | Type   | Description                                                     |
+| --------- | ------ | --------------------------------------------------------------- |
+| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)       |
+| `fields`  | string | Comma-separated list of fields to include (default: all fields) |
 
 #### Response
 
@@ -129,7 +129,7 @@ Retrieves the latest quotes for specified symbols.
   "data": {
     "AAPL": {
       "timestamp": "2025-06-06T15:30:00Z",
-      "bid": 151.50,
+      "bid": 151.5,
       "ask": 151.55,
       "last": 151.52,
       "volume": 1250000,
@@ -139,7 +139,7 @@ Retrieves the latest quotes for specified symbols.
     "MSFT": {
       "timestamp": "2025-06-06T15:30:00Z",
       "bid": 324.25,
-      "ask": 324.30,
+      "ask": 324.3,
       "last": 324.28,
       "volume": 980000,
       "bid_size": 300,
@@ -164,15 +164,15 @@ Retrieves OHLCV (Open, High, Low, Close, Volume) bars for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `interval` | string | Bar interval (`1m`, `5m`, `15m`, `30m`, `1h`, `4h`, `1d`, `1w`, `1mo`) |
-| `timezone` | string | Timezone for timestamps (default: `UTC`) |
-| `adjust` | boolean | Whether to adjust for splits and dividends (default: `true`) |
-| `limit` | integer | Maximum number of bars to return per symbol (default: 1000) |
+| Parameter    | Type    | Description                                                            |
+| ------------ | ------- | ---------------------------------------------------------------------- |
+| `symbols`    | string  | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)              |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                     |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                       |
+| `interval`   | string  | Bar interval (`1m`, `5m`, `15m`, `30m`, `1h`, `4h`, `1d`, `1w`, `1mo`) |
+| `timezone`   | string  | Timezone for timestamps (default: `UTC`)                               |
+| `adjust`     | boolean | Whether to adjust for splits and dividends (default: `true`)           |
+| `limit`      | integer | Maximum number of bars to return per symbol (default: 1000)            |
 
 #### Response
 
@@ -183,16 +183,16 @@ Retrieves OHLCV (Open, High, Low, Close, Volume) bars for specified symbols.
       {
         "timestamp": "2025-06-01T16:00:00Z",
         "open": 150.25,
-        "high": 152.30,
-        "low": 149.80,
+        "high": 152.3,
+        "low": 149.8,
         "close": 151.75,
         "volume": 1250000
       },
       {
         "timestamp": "2025-05-31T16:00:00Z",
         "open": 151.75,
-        "high": 153.50,
-        "low": 151.00,
+        "high": 153.5,
+        "low": 151.0,
         "close": 153.25,
         "volume": 1350000
       }
@@ -200,18 +200,18 @@ Retrieves OHLCV (Open, High, Low, Close, Volume) bars for specified symbols.
     "MSFT": [
       {
         "timestamp": "2025-06-01T16:00:00Z",
-        "open": 320.50,
+        "open": 320.5,
         "high": 325.75,
         "low": 319.25,
-        "close": 324.50,
+        "close": 324.5,
         "volume": 980000
       },
       {
         "timestamp": "2025-05-31T16:00:00Z",
         "open": 318.25,
-        "high": 321.00,
-        "low": 317.50,
-        "close": 320.50,
+        "high": 321.0,
+        "low": 317.5,
+        "close": 320.5,
         "volume": 1050000
       }
     ]
@@ -238,10 +238,10 @@ Retrieves order book data for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbol` | string | Symbol to retrieve order book data for |
-| `limit` | integer | Maximum number of levels to return (default: 10) |
+| Parameter | Type    | Description                                      |
+| --------- | ------- | ------------------------------------------------ |
+| `symbol`  | string  | Symbol to retrieve order book data for           |
+| `limit`   | integer | Maximum number of levels to return (default: 10) |
 
 #### Response
 
@@ -252,7 +252,7 @@ Retrieves order book data for specified symbols.
     "timestamp": "2025-06-06T15:30:00Z",
     "bids": [
       {
-        "price": 151.50,
+        "price": 151.5,
         "size": 500
       },
       {
@@ -260,7 +260,7 @@ Retrieves order book data for specified symbols.
         "size": 700
       },
       {
-        "price": 151.40,
+        "price": 151.4,
         "size": 1000
       }
     ],
@@ -270,7 +270,7 @@ Retrieves order book data for specified symbols.
         "size": 600
       },
       {
-        "price": 151.60,
+        "price": 151.6,
         "size": 800
       },
       {
@@ -297,12 +297,12 @@ Retrieves recent trades for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbol` | string | Symbol to retrieve trades for |
-| `start_time` | string | Start time in ISO 8601 format |
-| `end_time` | string | End time in ISO 8601 format |
-| `limit` | integer | Maximum number of trades to return (default: 100) |
+| Parameter    | Type    | Description                                       |
+| ------------ | ------- | ------------------------------------------------- |
+| `symbol`     | string  | Symbol to retrieve trades for                     |
+| `start_time` | string  | Start time in ISO 8601 format                     |
+| `end_time`   | string  | End time in ISO 8601 format                       |
+| `limit`      | integer | Maximum number of trades to return (default: 100) |
 
 #### Response
 
@@ -356,11 +356,11 @@ Retrieves market calendar information.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter    | Type   | Description                                        |
+| ------------ | ------ | -------------------------------------------------- |
 | `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-12-31`) |
-| `exchange` | string | Exchange code (e.g., `NYSE`, `NASDAQ`) |
+| `end_date`   | string | End date in ISO 8601 format (e.g., `2025-12-31`)   |
+| `exchange`   | string | Exchange code (e.g., `NYSE`, `NASDAQ`)             |
 
 #### Response
 
@@ -415,14 +415,14 @@ Retrieves information about available symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `status` | string | Filter by status (`active`, `inactive`, `all`) |
-| `type` | string | Filter by type (`stock`, `etf`, `forex`, `crypto`, `future`, `option`) |
-| `exchange` | string | Filter by exchange (e.g., `NYSE`, `NASDAQ`) |
-| `search` | string | Search term to filter symbols by name or description |
-| `limit` | integer | Maximum number of symbols to return (default: 100) |
-| `offset` | integer | Number of symbols to skip (default: 0) |
+| Parameter  | Type    | Description                                                            |
+| ---------- | ------- | ---------------------------------------------------------------------- |
+| `status`   | string  | Filter by status (`active`, `inactive`, `all`)                         |
+| `type`     | string  | Filter by type (`stock`, `etf`, `forex`, `crypto`, `future`, `option`) |
+| `exchange` | string  | Filter by exchange (e.g., `NYSE`, `NASDAQ`)                            |
+| `search`   | string  | Search term to filter symbols by name or description                   |
+| `limit`    | integer | Maximum number of symbols to return (default: 100)                     |
+| `offset`   | integer | Number of symbols to skip (default: 0)                                 |
 
 #### Response
 
@@ -473,16 +473,16 @@ Retrieves news articles for specified symbols or topics.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `topics` | string | Comma-separated list of topics (e.g., `earnings,mergers,technology`) |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `limit` | integer | Maximum number of articles to return (default: 50) |
-| `offset` | integer | Number of articles to skip (default: 0) |
-| `sort_by` | string | Sort field (`relevance`, `date`) |
-| `sort_order` | string | Sort order (`asc`, `desc`) |
+| Parameter    | Type    | Description                                                          |
+| ------------ | ------- | -------------------------------------------------------------------- |
+| `symbols`    | string  | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)            |
+| `topics`     | string  | Comma-separated list of topics (e.g., `earnings,mergers,technology`) |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                   |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                     |
+| `limit`      | integer | Maximum number of articles to return (default: 50)                   |
+| `offset`     | integer | Number of articles to skip (default: 0)                              |
+| `sort_by`    | string  | Sort field (`relevance`, `date`)                                     |
+| `sort_order` | string  | Sort order (`asc`, `desc`)                                           |
 
 #### Response
 
@@ -565,14 +565,14 @@ Retrieves sentiment data for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `sources` | string | Comma-separated list of sources (e.g., `news,social,earnings_calls`) |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `interval` | string | Data interval (`1h`, `4h`, `1d`, `1w`) |
-| `limit` | integer | Maximum number of data points to return per symbol (default: 100) |
+| Parameter    | Type    | Description                                                          |
+| ------------ | ------- | -------------------------------------------------------------------- |
+| `symbols`    | string  | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)            |
+| `sources`    | string  | Comma-separated list of sources (e.g., `news,social,earnings_calls`) |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                   |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                     |
+| `interval`   | string  | Data interval (`1h`, `4h`, `1d`, `1w`)                               |
+| `limit`      | integer | Maximum number of data points to return per symbol (default: 100)    |
 
 #### Response
 
@@ -617,7 +617,7 @@ Retrieves sentiment data for specified symbols.
       },
       {
         "timestamp": "2025-06-04T00:00:00Z",
-        "sentiment_score": 0.80,
+        "sentiment_score": 0.8,
         "sentiment_label": "positive",
         "volume": 1200,
         "sources": {
@@ -649,15 +649,15 @@ Retrieves social media data for specified symbols.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `platforms` | string | Comma-separated list of platforms (e.g., `twitter,reddit,stocktwits`) |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `interval` | string | Data interval (`1h`, `4h`, `1d`, `1w`) |
-| `metrics` | string | Comma-separated list of metrics (e.g., `volume,sentiment,engagement`) |
-| `limit` | integer | Maximum number of data points to return per symbol (default: 100) |
+| Parameter    | Type    | Description                                                           |
+| ------------ | ------- | --------------------------------------------------------------------- |
+| `symbols`    | string  | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)             |
+| `platforms`  | string  | Comma-separated list of platforms (e.g., `twitter,reddit,stocktwits`) |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                    |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                      |
+| `interval`   | string  | Data interval (`1h`, `4h`, `1d`, `1w`)                                |
+| `metrics`    | string  | Comma-separated list of metrics (e.g., `volume,sentiment,engagement`) |
+| `limit`      | integer | Maximum number of data points to return per symbol (default: 100)     |
 
 #### Response
 
@@ -678,7 +678,7 @@ Retrieves social media data for specified symbols.
           "label": "positive",
           "twitter": 0.75,
           "reddit": 0.68,
-          "stocktwits": 0.70
+          "stocktwits": 0.7
         },
         "engagement": {
           "total": 85000,
@@ -700,7 +700,7 @@ Retrieves social media data for specified symbols.
           "label": "positive",
           "twitter": 0.65,
           "reddit": 0.58,
-          "stocktwits": 0.60
+          "stocktwits": 0.6
         },
         "engagement": {
           "total": 75000,
@@ -724,7 +724,7 @@ Retrieves social media data for specified symbols.
           "label": "positive",
           "twitter": 0.85,
           "reddit": 0.78,
-          "stocktwits": 0.80
+          "stocktwits": 0.8
         },
         "engagement": {
           "total": 65000,
@@ -744,7 +744,7 @@ Retrieves social media data for specified symbols.
         "sentiment": {
           "score": 0.78,
           "label": "positive",
-          "twitter": 0.80,
+          "twitter": 0.8,
           "reddit": 0.75,
           "stocktwits": 0.76
         },
@@ -779,13 +779,13 @@ Retrieves satellite imagery data for specified locations.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `locations` | string | Comma-separated list of location IDs |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `metrics` | string | Comma-separated list of metrics (e.g., `car_count,building_count,crop_health`) |
-| `limit` | integer | Maximum number of data points to return per location (default: 10) |
+| Parameter    | Type    | Description                                                                    |
+| ------------ | ------- | ------------------------------------------------------------------------------ |
+| `locations`  | string  | Comma-separated list of location IDs                                           |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                             |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                               |
+| `metrics`    | string  | Comma-separated list of metrics (e.g., `car_count,building_count,crop_health`) |
+| `limit`      | integer | Maximum number of data points to return per location (default: 10)             |
 
 #### Response
 
@@ -821,7 +821,7 @@ Retrieves satellite imagery data for specified locations.
           "longitude": -122.4194
         },
         "resolution": "high",
-        "cloud_cover": 0.10
+        "cloud_cover": 0.1
       }
     ],
     "loc_789012": [
@@ -831,11 +831,11 @@ Retrieves satellite imagery data for specified locations.
         "metrics": {
           "car_count": 850,
           "building_count": 30,
-          "crop_health": 0.90
+          "crop_health": 0.9
         },
         "coordinates": {
           "latitude": 40.7128,
-          "longitude": -74.0060
+          "longitude": -74.006
         },
         "resolution": "high",
         "cloud_cover": 0.15
@@ -850,10 +850,10 @@ Retrieves satellite imagery data for specified locations.
         },
         "coordinates": {
           "latitude": 40.7128,
-          "longitude": -74.0060
+          "longitude": -74.006
         },
         "resolution": "high",
-        "cloud_cover": 0.20
+        "cloud_cover": 0.2
       }
     ]
   },
@@ -877,13 +877,13 @@ Retrieves web scraped data for specified sources.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sources` | string | Comma-separated list of source IDs |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `metrics` | string | Comma-separated list of metrics |
-| `limit` | integer | Maximum number of data points to return per source (default: 100) |
+| Parameter    | Type    | Description                                                       |
+| ------------ | ------- | ----------------------------------------------------------------- |
+| `sources`    | string  | Comma-separated list of source IDs                                |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                  |
+| `metrics`    | string  | Comma-separated list of metrics                                   |
+| `limit`      | integer | Maximum number of data points to return per source (default: 100) |
 
 #### Response
 
@@ -977,12 +977,12 @@ Retrieves a list of available engineered features.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `category` | string | Filter by feature category (e.g., `technical`, `fundamental`, `sentiment`) |
-| `asset_class` | string | Filter by asset class (e.g., `equity`, `forex`, `crypto`) |
-| `limit` | integer | Maximum number of features to return (default: 100) |
-| `offset` | integer | Number of features to skip (default: 0) |
+| Parameter     | Type    | Description                                                                |
+| ------------- | ------- | -------------------------------------------------------------------------- |
+| `category`    | string  | Filter by feature category (e.g., `technical`, `fundamental`, `sentiment`) |
+| `asset_class` | string  | Filter by asset class (e.g., `equity`, `forex`, `crypto`)                  |
+| `limit`       | integer | Maximum number of features to return (default: 100)                        |
+| `offset`      | integer | Number of features to skip (default: 0)                                    |
 
 #### Response
 
@@ -1043,14 +1043,14 @@ Retrieves values for specified features.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `features` | string | Comma-separated list of feature IDs |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `interval` | string | Data interval (`1d`, `1w`, `1mo`) |
-| `limit` | integer | Maximum number of data points to return per symbol (default: 100) |
+| Parameter    | Type    | Description                                                       |
+| ------------ | ------- | ----------------------------------------------------------------- |
+| `symbols`    | string  | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`)         |
+| `features`   | string  | Comma-separated list of feature IDs                               |
+| `start_date` | string  | Start date in ISO 8601 format (e.g., `2025-01-01`)                |
+| `end_date`   | string  | End date in ISO 8601 format (e.g., `2025-06-01`)                  |
+| `interval`   | string  | Data interval (`1d`, `1w`, `1mo`)                                 |
+| `limit`      | integer | Maximum number of data points to return per symbol (default: 100) |
 
 #### Response
 
@@ -1070,7 +1070,7 @@ Retrieves values for specified features.
         "timestamp": "2025-06-04T00:00:00Z",
         "features": {
           "feature_123456": 63.2,
-          "feature_789012": 154.80,
+          "feature_789012": 154.8,
           "feature_345678": 0.65
         }
       }
@@ -1080,7 +1080,7 @@ Retrieves values for specified features.
         "timestamp": "2025-06-05T00:00:00Z",
         "features": {
           "feature_123456": 70.5,
-          "feature_789012": 325.50,
+          "feature_789012": 325.5,
           "feature_345678": 0.85
         }
       },
@@ -1088,8 +1088,8 @@ Retrieves values for specified features.
         "timestamp": "2025-06-04T00:00:00Z",
         "features": {
           "feature_123456": 68.7,
-          "feature_789012": 324.20,
-          "feature_345678": 0.80
+          "feature_789012": 324.2,
+          "feature_345678": 0.8
         }
       }
     ]
@@ -1157,13 +1157,13 @@ Retrieves correlation between features.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbols` | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
-| `features` | string | Comma-separated list of feature IDs |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
-| `method` | string | Correlation method (`pearson`, `spearman`, `kendall`) |
+| Parameter    | Type   | Description                                               |
+| ------------ | ------ | --------------------------------------------------------- |
+| `symbols`    | string | Comma-separated list of symbols (e.g., `AAPL,MSFT,GOOGL`) |
+| `features`   | string | Comma-separated list of feature IDs                       |
+| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`)        |
+| `end_date`   | string | End date in ISO 8601 format (e.g., `2025-06-01`)          |
+| `method`     | string | Correlation method (`pearson`, `spearman`, `kendall`)     |
 
 #### Response
 
@@ -1179,27 +1179,27 @@ Retrieves correlation between features.
       "feature_789012": {
         "feature_123456": 0.75,
         "feature_789012": 1.0,
-        "feature_345678": 0.30
+        "feature_345678": 0.3
       },
       "feature_345678": {
         "feature_123456": 0.45,
-        "feature_789012": 0.30,
+        "feature_789012": 0.3,
         "feature_345678": 1.0
       }
     },
     "MSFT": {
       "feature_123456": {
         "feature_123456": 1.0,
-        "feature_789012": 0.80,
-        "feature_345678": 0.50
+        "feature_789012": 0.8,
+        "feature_345678": 0.5
       },
       "feature_789012": {
-        "feature_123456": 0.80,
+        "feature_123456": 0.8,
         "feature_789012": 1.0,
         "feature_345678": 0.35
       },
       "feature_345678": {
-        "feature_123456": 0.50,
+        "feature_123456": 0.5,
         "feature_789012": 0.35,
         "feature_345678": 1.0
       }
@@ -1228,12 +1228,12 @@ Retrieves a list of available data sources.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `type` | string | Filter by source type (e.g., `market`, `alternative`, `fundamental`) |
-| `status` | string | Filter by status (`active`, `inactive`, `all`) |
-| `limit` | integer | Maximum number of sources to return (default: 100) |
-| `offset` | integer | Number of sources to skip (default: 0) |
+| Parameter | Type    | Description                                                          |
+| --------- | ------- | -------------------------------------------------------------------- |
+| `type`    | string  | Filter by source type (e.g., `market`, `alternative`, `fundamental`) |
+| `status`  | string  | Filter by status (`active`, `inactive`, `all`)                       |
+| `limit`   | integer | Maximum number of sources to return (default: 100)                   |
+| `offset`  | integer | Number of sources to skip (default: 0)                               |
 
 #### Response
 
@@ -1302,8 +1302,8 @@ Retrieves details for a specific data source.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description               |
+| ----------- | ------ | ------------------------- |
 | `source_id` | string | The ID of the data source |
 
 #### Response
@@ -1359,18 +1359,18 @@ Retrieves coverage information for a specific data source.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description               |
+| ----------- | ------ | ------------------------- |
 | `source_id` | string | The ID of the data source |
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `asset_class` | string | Filter by asset class (e.g., `equity`, `forex`, `crypto`) |
-| `market` | string | Filter by market (e.g., `US`, `Europe`, `Asia`) |
-| `limit` | integer | Maximum number of symbols to return (default: 100) |
-| `offset` | integer | Number of symbols to skip (default: 0) |
+| Parameter     | Type    | Description                                               |
+| ------------- | ------- | --------------------------------------------------------- |
+| `asset_class` | string  | Filter by asset class (e.g., `equity`, `forex`, `crypto`) |
+| `market`      | string  | Filter by market (e.g., `US`, `Europe`, `Asia`)           |
+| `limit`       | integer | Maximum number of symbols to return (default: 100)        |
+| `offset`      | integer | Number of symbols to skip (default: 0)                    |
 
 #### Response
 
@@ -1611,8 +1611,8 @@ Deletes a streaming connection.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                        |
+| --------------- | ------ | ---------------------------------- |
 | `connection_id` | string | The ID of the streaming connection |
 
 #### Response
@@ -1637,12 +1637,12 @@ Retrieves data quality metrics.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `source_id` | string | Filter by source ID |
-| `data_type` | string | Filter by data type (e.g., `market_data`, `alternative_data`) |
-| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`) |
-| `end_date` | string | End date in ISO 8601 format (e.g., `2025-06-01`) |
+| Parameter    | Type   | Description                                                   |
+| ------------ | ------ | ------------------------------------------------------------- |
+| `source_id`  | string | Filter by source ID                                           |
+| `data_type`  | string | Filter by data type (e.g., `market_data`, `alternative_data`) |
+| `start_date` | string | Start date in ISO 8601 format (e.g., `2025-01-01`)            |
+| `end_date`   | string | End date in ISO 8601 format (e.g., `2025-06-01`)              |
 
 #### Response
 
@@ -1780,8 +1780,8 @@ Retrieves the status of a data quality issue.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                      |
+| ---------- | ------ | -------------------------------- |
 | `issue_id` | string | The ID of the data quality issue |
 
 #### Response

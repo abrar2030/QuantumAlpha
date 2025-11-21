@@ -14,20 +14,20 @@ spec:
         app: kibana
     spec:
       containers:
-      - name: kibana
-        image: docker.elastic.co/kibana/kibana:7.17.0
-        ports:
-        - containerPort: 5601
-        env:
-        - name: ELASTICSEARCH_HOSTS
-          value: http://elasticsearch:9200
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:7.17.0
+          ports:
+            - containerPort: 5601
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch:9200
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
@@ -38,8 +38,8 @@ spec:
   selector:
     app: kibana
   ports:
-  - port: 5601
-    targetPort: 5601
+    - port: 5601
+      targetPort: 5601
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -52,17 +52,17 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
-  - hosts:
-    - kibana.quantumalpha.example.com
-    secretName: kibana-tls
+    - hosts:
+        - kibana.quantumalpha.example.com
+      secretName: kibana-tls
   rules:
-  - host: kibana.quantumalpha.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: kibana
-            port:
-              number: 5601
+    - host: kibana.quantumalpha.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601

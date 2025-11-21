@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   portfolioValue: 11500,
   dailyChange: 300,
   percentChange: 2.68,
   historicalData: [
-    { name: 'Jan', value: 10000 },
-    { name: 'Feb', value: 10200 },
-    { name: 'Mar', value: 10150 },
-    { name: 'Apr', value: 10400 },
-    { name: 'May', value: 10800 },
-    { name: 'Jun', value: 11200 },
-    { name: 'Jul', value: 11500 },
+    { name: "Jan", value: 10000 },
+    { name: "Feb", value: 10200 },
+    { name: "Mar", value: 10150 },
+    { name: "Apr", value: 10400 },
+    { name: "May", value: 10800 },
+    { name: "Jun", value: 11200 },
+    { name: "Jul", value: 11500 },
   ],
   assets: [],
   loading: false,
@@ -19,7 +19,7 @@ const initialState = {
 };
 
 const portfolioSlice = createSlice({
-  name: 'portfolio',
+  name: "portfolio",
   initialState,
   reducers: {
     fetchPortfolioStart: (state) => {

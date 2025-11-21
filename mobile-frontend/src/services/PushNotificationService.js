@@ -15,7 +15,9 @@ export const registerForPushNotifications = async () => {
 export const sendPushNotification = async (token, title, body) => {
   try {
     // In a real app, send notification via FCM or APNs server
-    console.log(`Sending push notification to ${token}: ${title} - ${body} (placeholder)`);
+    console.log(
+      `Sending push notification to ${token}: ${title} - ${body} (placeholder)`,
+    );
   } catch (error) {
     console.error("Error sending push notification:", error);
   }

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useTheme } from "../../context/ThemeContext";
 
 const PerformanceCard = ({ title, value, change, period }) => {
   const { theme } = useTheme();
@@ -10,7 +10,9 @@ const PerformanceCard = ({ title, value, change, period }) => {
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
         <TouchableOpacity>
-          <Text style={[styles.periodText, { color: theme.primary }]}>{period}</Text>
+          <Text style={[styles.periodText, { color: theme.primary }]}>
+            {period}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -23,7 +25,8 @@ const PerformanceCard = ({ title, value, change, period }) => {
             { color: change >= 0 ? theme.success : theme.error },
           ]}
         >
-          {change >= 0 ? '+' : ''}{change}%
+          {change >= 0 ? "+" : ""}
+          {change}%
         </Text>
       </View>
     </View>
@@ -36,16 +39,16 @@ const styles = StyleSheet.create({
     padding: 16,
     marginRight: 12,
     width: 180,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   title: {
@@ -53,20 +56,20 @@ const styles = StyleSheet.create({
   },
   periodText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   value: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   changeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   changeText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

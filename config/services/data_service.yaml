@@ -265,17 +265,17 @@ scheduler:
   enabled: true
   jobs:
     - name: update_daily_data
-      schedule: "0 18 * * 1-5"  # 6 PM on weekdays
+      schedule: "0 18 * * 1-5" # 6 PM on weekdays
       function: update_daily_market_data
       params:
         symbols: "from_database"
     - name: update_fundamentals
-      schedule: "0 20 * * 1-5"  # 8 PM on weekdays
+      schedule: "0 20 * * 1-5" # 8 PM on weekdays
       function: update_fundamentals
       params:
         symbols: "from_database"
     - name: clean_old_data
-      schedule: "0 1 * * 0"  # 1 AM on Sundays
+      schedule: "0 1 * * 0" # 1 AM on Sundays
       function: clean_old_data
       params:
         older_than_days: 90

@@ -20,7 +20,7 @@ metadata:
     pod-security.kubernetes.io/warn-version: "latest"
 spec:
   finalizers:
-  - kubernetes
+    - kubernetes
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionWebhook
@@ -39,14 +39,14 @@ spec:
       namespace: quantumalpha
       path: /validate
   rules:
-  - operations: ["CREATE", "UPDATE"]
-    apiGroups: [""]
-    apiVersions: ["v1"]
-    resources: ["pods"]
-  - operations: ["CREATE", "UPDATE"]
-    apiGroups: ["apps"]
-    apiVersions: ["v1"]
-    resources: ["deployments", "replicasets", "daemonsets", "statefulsets"]
+    - operations: ["CREATE", "UPDATE"]
+      apiGroups: [""]
+      apiVersions: ["v1"]
+      resources: ["pods"]
+    - operations: ["CREATE", "UPDATE"]
+      apiGroups: ["apps"]
+      apiVersions: ["v1"]
+      resources: ["deployments", "replicasets", "daemonsets", "statefulsets"]
   namespaceSelector:
     matchLabels:
       name: quantumalpha
@@ -171,152 +171,152 @@ spec:
   validationFailureAction: enforce
   background: true
   rules:
-  - name: require-security-context
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Security context is required for financial compliance"
-      pattern:
-        spec:
-          securityContext:
-            runAsNonRoot: true
-            seccompProfile:
-              type: RuntimeDefault
-          containers:
-          - name: "*"
+    - name: require-security-context
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Security context is required for financial compliance"
+        pattern:
+          spec:
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
               runAsNonRoot: true
-              capabilities:
-                drop:
-                - ALL
+              seccompProfile:
+                type: RuntimeDefault
+            containers:
+              - name: "*"
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  runAsNonRoot: true
+                  capabilities:
+                    drop:
+                      - ALL
 
-  - name: require-resource-limits
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Resource limits are required for financial compliance"
-      pattern:
-        spec:
-          containers:
-          - name: "*"
-            resources:
-              limits:
-                memory: "?*"
-                cpu: "?*"
-              requests:
-                memory: "?*"
-                cpu: "?*"
+    - name: require-resource-limits
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Resource limits are required for financial compliance"
+        pattern:
+          spec:
+            containers:
+              - name: "*"
+                resources:
+                  limits:
+                    memory: "?*"
+                    cpu: "?*"
+                  requests:
+                    memory: "?*"
+                    cpu: "?*"
 
-  - name: disallow-privileged-containers
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Privileged containers are not allowed"
-      pattern:
-        spec:
-          =(securityContext):
-            =(privileged): "false"
-          containers:
-          - name: "*"
+    - name: disallow-privileged-containers
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Privileged containers are not allowed"
+        pattern:
+          spec:
             =(securityContext):
               =(privileged): "false"
+            containers:
+              - name: "*"
+                =(securityContext):
+                  =(privileged): "false"
 
-  - name: require-compliance-labels
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Compliance labels are required"
-      pattern:
-        metadata:
-          labels:
-            app: "?*"
-            compliance.sox: "?*"
-            compliance.pci-dss: "?*"
-            compliance.glba: "?*"
+    - name: require-compliance-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Compliance labels are required"
+        pattern:
+          metadata:
+            labels:
+              app: "?*"
+              compliance.sox: "?*"
+              compliance.pci-dss: "?*"
+              compliance.glba: "?*"
 
-  - name: disallow-host-namespaces
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Host namespaces are not allowed"
-      pattern:
-        spec:
-          =(hostNetwork): "false"
-          =(hostPID): "false"
-          =(hostIPC): "false"
+    - name: disallow-host-namespaces
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Host namespaces are not allowed"
+        pattern:
+          spec:
+            =(hostNetwork): "false"
+            =(hostPID): "false"
+            =(hostIPC): "false"
 
-  - name: restrict-volume-types
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Only approved volume types are allowed"
-      deny:
-        conditions:
-        - key: "{{ request.object.spec.volumes[?contains(keys(@), 'hostPath')] | length(@) }}"
-          operator: GreaterThan
-          value: 0
+    - name: restrict-volume-types
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Only approved volume types are allowed"
+        deny:
+          conditions:
+            - key: "{{ request.object.spec.volumes[?contains(keys(@), 'hostPath')] | length(@) }}"
+              operator: GreaterThan
+              value: 0
 
-  - name: require-image-digest
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Container images must use digest instead of tags"
-      pattern:
-        spec:
-          containers:
-          - name: "*"
-            image: "*@sha256:*"
+    - name: require-image-digest
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Container images must use digest instead of tags"
+        pattern:
+          spec:
+            containers:
+              - name: "*"
+                image: "*@sha256:*"
 
-  - name: disallow-automount-service-account-token
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    validate:
-      message: "Automounting service account tokens is not allowed"
-      pattern:
-        spec:
-          =(automountServiceAccountToken): "false"
+    - name: disallow-automount-service-account-token
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      validate:
+        message: "Automounting service account tokens is not allowed"
+        pattern:
+          spec:
+            =(automountServiceAccountToken): "false"
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -330,35 +330,35 @@ metadata:
     policies.kyverno.io/description: "Automatically generate network policies for new applications"
 spec:
   rules:
-  - name: generate-network-policy
-    match:
-      any:
-      - resources:
-          kinds:
-          - Deployment
-          namespaces:
-          - quantumalpha
-    generate:
-      kind: NetworkPolicy
-      name: "{{ request.object.metadata.name }}-network-policy"
-      namespace: "{{ request.object.metadata.namespace }}"
-      synchronize: true
-      data:
-        spec:
-          podSelector:
-            matchLabels:
-              app: "{{ request.object.metadata.labels.app }}"
-          policyTypes:
-          - Ingress
-          - Egress
-          ingress: []
-          egress:
-          - to: []
-            ports:
-            - protocol: TCP
-              port: 53
-            - protocol: UDP
-              port: 53
+    - name: generate-network-policy
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+              namespaces:
+                - quantumalpha
+      generate:
+        kind: NetworkPolicy
+        name: "{{ request.object.metadata.name }}-network-policy"
+        namespace: "{{ request.object.metadata.namespace }}"
+        synchronize: true
+        data:
+          spec:
+            podSelector:
+              matchLabels:
+                app: "{{ request.object.metadata.labels.app }}"
+            policyTypes:
+              - Ingress
+              - Egress
+            ingress: []
+            egress:
+              - to: []
+                ports:
+                  - protocol: TCP
+                    port: 53
+                  - protocol: UDP
+                    port: 53
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -372,21 +372,21 @@ metadata:
     policies.kyverno.io/description: "Automatically add security and compliance labels"
 spec:
   rules:
-  - name: add-security-labels
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-          namespaces:
-          - quantumalpha
-    mutate:
-      patchStrategicMerge:
-        metadata:
-          labels:
-            security.level: "high"
-            audit.required: "true"
-            backup.required: "true"
-          annotations:
-            security.scan.timestamp: "{{ time_now_utc() }}"
-            compliance.last-reviewed: "{{ time_now_utc() }}"
+    - name: add-security-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - quantumalpha
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              security.level: "high"
+              audit.required: "true"
+              backup.required: "true"
+            annotations:
+              security.scan.timestamp: "{{ time_now_utc() }}"
+              compliance.last-reviewed: "{{ time_now_utc() }}"

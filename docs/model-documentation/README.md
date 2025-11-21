@@ -49,8 +49,6 @@ QuantumAlpha has a robust model governance framework to ensure the accuracy, rel
 
 Models within QuantumAlpha are broadly categorized based on their primary function. Each category includes a variety of specific models tailored to different asset classes, market conditions, and analytical needs.
 
-
-
 ### Risk Models
 
 Risk models are used to measure, analyze, and manage various types of financial risks. These models help in understanding the potential losses that may occur due to market movements, credit events, liquidity constraints, or operational failures.

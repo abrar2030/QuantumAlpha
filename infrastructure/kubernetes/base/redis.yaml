@@ -35,137 +35,137 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: redis
-        image: redis:7-alpine
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 999
-          runAsGroup: 999
-          capabilities:
-            drop:
-            - ALL
-        command:
-        - redis-server
-        - /etc/redis/redis.conf
-        env:
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: redis-credentials
-              key: password
-        ports:
-        - containerPort: 6379
-          name: redis
-          protocol: TCP
-        volumeMounts:
-        - name: redis-storage
-          mountPath: /data
-        - name: redis-config
-          mountPath: /etc/redis
-          readOnly: true
-        - name: tmp
-          mountPath: /tmp
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          exec:
-            command:
-            - redis-cli
-            - --raw
-            - incr
-            - ping
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          exec:
-            command:
-            - redis-cli
-            - ping
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-      - name: redis-exporter
-        image: oliver006/redis_exporter:v1.45.0
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          runAsGroup: 65534
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: REDIS_ADDR
-          value: "redis://localhost:6379"
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: redis-credentials
-              key: password
-        ports:
-        - containerPort: 9121
-          name: metrics
-          protocol: TCP
-        resources:
-          requests:
-            memory: "32Mi"
-            cpu: "25m"
-          limits:
-            memory: "64Mi"
-            cpu: "50m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 9121
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 9121
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: redis
+          image: redis:7-alpine
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - redis-server
+            - /etc/redis/redis.conf
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: password
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data
+            - name: redis-config
+              mountPath: /etc/redis
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - --raw
+                - incr
+                - ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+        - name: redis-exporter
+          image: oliver006/redis_exporter:v1.45.0
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: REDIS_ADDR
+              value: "redis://localhost:6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: password
+          ports:
+            - containerPort: 9121
+              name: metrics
+              protocol: TCP
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+            limits:
+              memory: "64Mi"
+              cpu: "50m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9121
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9121
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
-      - name: redis-storage
-        persistentVolumeClaim:
-          claimName: redis-pvc
-      - name: redis-config
-        configMap:
-          name: redis-config
-      - name: tmp
-        emptyDir: {}
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
+        - name: redis-config
+          configMap:
+            name: redis-config
+        - name: tmp
+          emptyDir: {}
       nodeSelector:
         security: high
       tolerations:
-      - key: "security"
-        operator: "Equal"
-        value: "high"
-        effect: "NoSchedule"
+        - key: "security"
+          operator: "Equal"
+          value: "high"
+          effect: "NoSchedule"
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - redis
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - redis
+                topologyKey: kubernetes.io/hostname
 ---
 apiVersion: v1
 kind: Service
@@ -180,10 +180,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 6379
-    targetPort: 6379
-    protocol: TCP
-    name: redis
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+      name: redis
   selector:
     app: redis
 ---
@@ -199,7 +199,7 @@ metadata:
     volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi
@@ -222,12 +222,12 @@ metadata:
   name: redis-role
   namespace: quantumalpha
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "list"]
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -235,9 +235,9 @@ metadata:
   name: redis-rolebinding
   namespace: quantumalpha
 subjects:
-- kind: ServiceAccount
-  name: redis-sa
-  namespace: quantumalpha
+  - kind: ServiceAccount
+    name: redis-sa
+    namespace: quantumalpha
 roleRef:
   kind: Role
   name: redis-role

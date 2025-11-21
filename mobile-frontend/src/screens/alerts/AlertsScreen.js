@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,12 +10,12 @@ import {
   Animated,
   TextInput,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
-import { useAlert } from '../../context/AlertContext';
-import { alertService } from '../../services/alertService';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
+import { useAlert } from "../../context/AlertContext";
+import { alertService } from "../../services/alertService";
 
 const AlertsScreen = () => {
   const navigation = useNavigation();
@@ -26,8 +26,8 @@ const AlertsScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [filteredAlerts, setFilteredAlerts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
 
   // Animation values
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
@@ -77,7 +77,7 @@ const AlertsScreen = () => {
       const response = await alertService.getAllAlerts();
       setAlerts(response.alerts);
     } catch (error) {
-      console.error('Error loading alerts:', error);
+      console.error("Error loading alerts:", error);
       // In a real app, you would handle errors appropriately
     } finally {
       setLoading(false);
@@ -98,12 +98,12 @@ const AlertsScreen = () => {
       filtered = filtered.filter(
         (alert) =>
           alert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          alert.message.toLowerCase().includes(searchQuery.toLowerCase())
+          alert.message.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
     // Apply type filter
-    if (activeFilter !== 'all') {
+    if (activeFilter !== "all") {
       filtered = filtered.filter((alert) => alert.type === activeFilter);
     }
 
@@ -117,11 +117,11 @@ const AlertsScreen = () => {
       // Update local state
       setAlerts((prev) =>
         prev.map((alert) =>
-          alert.id === alertId ? { ...alert, read: true } : alert
-        )
+          alert.id === alertId ? { ...alert, read: true } : alert,
+        ),
       );
     } catch (error) {
-      console.error('Error marking alert as read:', error);
+      console.error("Error marking alert as read:", error);
     }
   };
 
@@ -135,7 +135,7 @@ const AlertsScreen = () => {
       // Update context
       markAllAsRead();
     } catch (error) {
-      console.error('Error marking all alerts as read:', error);
+      console.error("Error marking all alerts as read:", error);
     }
   };
 
@@ -146,7 +146,7 @@ const AlertsScreen = () => {
       // Update local state
       setAlerts((prev) => prev.filter((alert) => alert.id !== alertId));
     } catch (error) {
-      console.error('Error deleting alert:', error);
+      console.error("Error deleting alert:", error);
     }
   };
 
@@ -174,11 +174,11 @@ const AlertsScreen = () => {
 
     const getPriorityColor = () => {
       switch (item.priority) {
-        case 'high':
+        case "high":
           return theme.error;
-        case 'medium':
+        case "medium":
           return theme.warning;
-        case 'low':
+        case "low":
         default:
           return theme.info;
       }
@@ -186,20 +186,20 @@ const AlertsScreen = () => {
 
     const getTypeIcon = () => {
       switch (item.type) {
-        case 'TRADE_SIGNAL':
-          return 'signal';
-        case 'RISK_WARNING':
-          return 'alert';
-        case 'MARKET_UPDATE':
-          return 'chart-line';
-        case 'TRADE_EXECUTED':
-          return 'check-circle';
-        case 'SYSTEM_UPDATE':
-          return 'cog';
-        case 'PERFORMANCE_UPDATE':
-          return 'trending-up';
+        case "TRADE_SIGNAL":
+          return "signal";
+        case "RISK_WARNING":
+          return "alert";
+        case "MARKET_UPDATE":
+          return "chart-line";
+        case "TRADE_EXECUTED":
+          return "check-circle";
+        case "SYSTEM_UPDATE":
+          return "cog";
+        case "PERFORMANCE_UPDATE":
+          return "trending-up";
         default:
-          return 'bell';
+          return "bell";
       }
     };
 
@@ -239,7 +239,7 @@ const AlertsScreen = () => {
               style={[
                 styles.alertIcon,
                 {
-                  backgroundColor: getPriorityColor() + '20',
+                  backgroundColor: getPriorityColor() + "20",
                 },
               ]}
             >
@@ -254,7 +254,7 @@ const AlertsScreen = () => {
                   styles.alertTitle,
                   {
                     color: theme.text,
-                    fontWeight: item.read ? 'normal' : 'bold',
+                    fontWeight: item.read ? "normal" : "bold",
                   },
                 ]}
               >
@@ -267,17 +267,17 @@ const AlertsScreen = () => {
               )}
             </View>
 
-            <Text style={[styles.alertMessage, { color: theme.text + 'CC' }]}>
+            <Text style={[styles.alertMessage, { color: theme.text + "CC" }]}>
               {item.message}
             </Text>
 
             <View style={styles.alertFooter}>
-              <Text style={[styles.alertTime, { color: theme.text + '99' }]}>
+              <Text style={[styles.alertTime, { color: theme.text + "99" }]}>
                 {new Date(item.timestamp).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}
-                {' · '}
+                {" · "}
                 {new Date(item.timestamp).toLocaleDateString()}
               </Text>
 
@@ -285,7 +285,11 @@ const AlertsScreen = () => {
                 style={styles.deleteButton}
                 onPress={() => handleDeleteAlert(item.id)}
               >
-                <Icon name="delete-outline" size={18} color={theme.text + '99'} />
+                <Icon
+                  name="delete-outline"
+                  size={18}
+                  color={theme.text + "99"}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -311,13 +315,13 @@ const AlertsScreen = () => {
         <Icon
           name={iconName}
           size={16}
-          color={isActive ? '#FFFFFF' : theme.text}
+          color={isActive ? "#FFFFFF" : theme.text}
         />
         <Text
           style={[
             styles.filterButtonText,
             {
-              color: isActive ? '#FFFFFF' : theme.text,
+              color: isActive ? "#FFFFFF" : theme.text,
             },
           ]}
         >
@@ -329,7 +333,9 @@ const AlertsScreen = () => {
 
   if (loading && !refreshing) {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+      <View
+        style={[styles.loadingContainer, { backgroundColor: theme.background }]}
+      >
         <ActivityIndicator size="large" color={theme.primary} />
         <Text style={[styles.loadingText, { color: theme.text }]}>
           Loading alerts...
@@ -351,34 +357,35 @@ const AlertsScreen = () => {
         ]}
       >
         <View style={styles.searchContainer}>
-          <Icon name="magnify" size={20} color={theme.text + '99'} />
+          <Icon name="magnify" size={20} color={theme.text + "99"} />
           <TextInput
             style={[styles.searchInput, { color: theme.text }]}
             placeholder="Search alerts..."
-            placeholderTextColor={theme.text + '99'}
+            placeholderTextColor={theme.text + "99"}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
           {searchQuery ? (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Icon name="close" size={20} color={theme.text + '99'} />
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Icon name="close" size={20} color={theme.text + "99"} />
             </TouchableOpacity>
           ) : null}
         </View>
 
         <View style={styles.filterContainer}>
-          {renderFilterButton('all', 'All', 'bell')}
-          {renderFilterButton('TRADE_SIGNAL', 'Signals', 'signal')}
-          {renderFilterButton('RISK_WARNING', 'Warnings', 'alert')}
-          {renderFilterButton('MARKET_UPDATE', 'Market', 'chart-line')}
-          {renderFilterButton('TRADE_EXECUTED', 'Trades', 'check-circle')}
+          {renderFilterButton("all", "All", "bell")}
+          {renderFilterButton("TRADE_SIGNAL", "Signals", "signal")}
+          {renderFilterButton("RISK_WARNING", "Warnings", "alert")}
+          {renderFilterButton("MARKET_UPDATE", "Market", "chart-line")}
+          {renderFilterButton("TRADE_EXECUTED", "Trades", "check-circle")}
         </View>
       </Animated.View>
 
       <View style={styles.listContainer}>
         <View style={styles.listHeader}>
           <Text style={[styles.listTitle, { color: theme.text }]}>
-            {filteredAlerts.length} {filteredAlerts.length === 1 ? 'Alert' : 'Alerts'}
+            {filteredAlerts.length}{" "}
+            {filteredAlerts.length === 1 ? "Alert" : "Alerts"}
           </Text>
 
           <TouchableOpacity
@@ -407,14 +414,14 @@ const AlertsScreen = () => {
           }
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Icon name="bell-off" size={60} color={theme.text + '60'} />
+              <Icon name="bell-off" size={60} color={theme.text + "60"} />
               <Text style={[styles.emptyText, { color: theme.text }]}>
                 No alerts found
               </Text>
-              <Text style={[styles.emptySubtext, { color: theme.text + '99' }]}>
-                {searchQuery || activeFilter !== 'all'
-                  ? 'Try changing your filters'
-                  : 'New alerts will appear here'}
+              <Text style={[styles.emptySubtext, { color: theme.text + "99" }]}>
+                {searchQuery || activeFilter !== "all"
+                  ? "Try changing your filters"
+                  : "New alerts will appear here"}
               </Text>
             </View>
           }
@@ -430,8 +437,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingText: {
     marginTop: 10,
@@ -440,12 +447,12 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.05)",
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 40,
@@ -456,13 +463,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   filterContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 12,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   filterButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
@@ -472,26 +479,26 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 4,
   },
   listContainer: {
     flex: 1,
   },
   listHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   listTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   markAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   markAllText: {
     fontSize: 14,
@@ -506,9 +513,9 @@ const styles = StyleSheet.create({
   },
   alertItem: {
     borderRadius: 12,
-    overflow: 'hidden',
-    flexDirection: 'row',
-    shadowColor: '#000',
+    overflow: "hidden",
+    flexDirection: "row",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -516,19 +523,19 @@ const styles = StyleSheet.create({
   },
   priorityIndicator: {
     width: 4,
-    height: '100%',
+    height: "100%",
   },
   alertIconContainer: {
     padding: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   alertIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   alertContent: {
     flex: 1,
@@ -536,9 +543,9 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   alertHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   alertTitle: {
     fontSize: 16,
@@ -555,9 +562,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   alertFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 8,
   },
   alertTime: {
@@ -567,19 +574,19 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 40,
   },
   emptyText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 16,
   },
   emptySubtext: {
     fontSize: 14,
     marginTop: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

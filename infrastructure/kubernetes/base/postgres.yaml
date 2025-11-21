@@ -37,169 +37,169 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: postgres
-        image: postgres:14-alpine
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 999
-          runAsGroup: 999
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: database
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: password
-        - name: POSTGRES_INITDB_ARGS
-          value: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        ports:
-        - containerPort: 5432
-          name: postgres
-          protocol: TCP
-        volumeMounts:
-        - name: postgres-storage
-          mountPath: /var/lib/postgresql/data
-        - name: postgres-config
-          mountPath: /etc/postgresql/postgresql.conf
-          subPath: postgresql.conf
-          readOnly: true
-        - name: postgres-init
-          mountPath: /docker-entrypoint-initdb.d
-          readOnly: true
-        - name: tmp
-          mountPath: /tmp
-        - name: var-run
-          mountPath: /var/run/postgresql
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-        livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -c
-            - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 6
-        readinessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -c
-            - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 6
-      - name: postgres-exporter
-        image: prometheuscommunity/postgres-exporter:v0.12.0
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          runAsGroup: 65534
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: DATA_SOURCE_NAME
-          value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:5432/$(POSTGRES_DB)?sslmode=require"
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: password
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: database
-        ports:
-        - containerPort: 9187
-          name: metrics
-          protocol: TCP
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "50m"
-          limits:
-            memory: "128Mi"
-            cpu: "100m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 9187
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 9187
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: postgres
+          image: postgres:14-alpine
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: database
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+            - name: POSTGRES_INITDB_ARGS
+              value: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+              name: postgres
+              protocol: TCP
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+            - name: postgres-config
+              mountPath: /etc/postgresql/postgresql.conf
+              subPath: postgresql.conf
+              readOnly: true
+            - name: postgres-init
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+            - name: var-run
+              mountPath: /var/run/postgresql
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" -h 127.0.0.1 -p 5432
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+        - name: postgres-exporter
+          image: prometheuscommunity/postgres-exporter:v0.12.0
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: DATA_SOURCE_NAME
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:5432/$(POSTGRES_DB)?sslmode=require"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: database
+          ports:
+            - containerPort: 9187
+              name: metrics
+              protocol: TCP
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9187
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9187
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
-      - name: postgres-storage
-        persistentVolumeClaim:
-          claimName: postgres-pvc
-      - name: postgres-config
-        configMap:
-          name: postgres-config
-      - name: postgres-init
-        configMap:
-          name: postgres-init
-      - name: tmp
-        emptyDir: {}
-      - name: var-run
-        emptyDir: {}
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+        - name: postgres-config
+          configMap:
+            name: postgres-config
+        - name: postgres-init
+          configMap:
+            name: postgres-init
+        - name: tmp
+          emptyDir: {}
+        - name: var-run
+          emptyDir: {}
       nodeSelector:
         security: high
       tolerations:
-      - key: "security"
-        operator: "Equal"
-        value: "high"
-        effect: "NoSchedule"
+        - key: "security"
+          operator: "Equal"
+          value: "high"
+          effect: "NoSchedule"
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - postgres
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - postgres
+                topologyKey: kubernetes.io/hostname
 ---
 apiVersion: v1
 kind: Service
@@ -215,10 +215,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 5432
-    targetPort: 5432
-    protocol: TCP
-    name: postgres
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+      name: postgres
   selector:
     app: postgres
 ---
@@ -234,7 +234,7 @@ metadata:
     volume.beta.kubernetes.io/storage-class: "gp3-encrypted"
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Gi
@@ -257,12 +257,12 @@ metadata:
   name: postgres-role
   namespace: quantumalpha
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "list"]
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -270,9 +270,9 @@ metadata:
   name: postgres-rolebinding
   namespace: quantumalpha
 subjects:
-- kind: ServiceAccount
-  name: postgres-sa
-  namespace: quantumalpha
+  - kind: ServiceAccount
+    name: postgres-sa
+    namespace: quantumalpha
 roleRef:
   kind: Role
   name: postgres-role

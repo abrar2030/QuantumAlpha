@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import NetInfo from '@react-native-community/netinfo';
+import { useState, useEffect, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import NetInfo from "@react-native-community/netinfo";
 
 // Custom hook for API calls with React Query
 export const useApiQuery = (
   key: string | string[],
   queryFn: () => Promise<any>,
-  options?: any
+  options?: any,
 ) => {
   return useQuery(key, queryFn, {
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -20,7 +20,7 @@ export const useApiQuery = (
 // Custom hook for mutations
 export const useApiMutation = (
   mutationFn: (variables: any) => Promise<any>,
-  options?: any
+  options?: any,
 ) => {
   const queryClient = useQueryClient();
 
@@ -39,7 +39,7 @@ export const useNetworkStatus = () => {
   const [connectionType, setConnectionType] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
       setConnectionType(state.type);
     });
@@ -72,15 +72,19 @@ export const useAsyncStorage = (key: string, initialValue?: any) => {
   const [storedValue, setStoredValue] = useState(initialValue);
   const [loading, setLoading] = useState(true);
 
-  const setValue = useCallback(async (value: any) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      await AsyncStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.error(`Error setting ${key} in AsyncStorage:`, error);
-    }
-  }, [key, storedValue]);
+  const setValue = useCallback(
+    async (value: any) => {
+      try {
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        await AsyncStorage.setItem(key, JSON.stringify(valueToStore));
+      } catch (error) {
+        console.error(`Error setting ${key} in AsyncStorage:`, error);
+      }
+    },
+    [key, storedValue],
+  );
 
   const getValue = useCallback(async () => {
     try {
@@ -122,38 +126,47 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  const validateField = useCallback((name: string, value: any) => {
-    const rule = validationRules[name];
-    if (!rule) return '';
+  const validateField = useCallback(
+    (name: string, value: any) => {
+      const rule = validationRules[name];
+      if (!rule) return "";
 
-    if (rule.required && (!value || value.toString().trim() === '')) {
-      return rule.requiredMessage || `${name} is required`;
-    }
+      if (rule.required && (!value || value.toString().trim() === "")) {
+        return rule.requiredMessage || `${name} is required`;
+      }
 
-    if (rule.minLength && value.length < rule.minLength) {
-      return rule.minLengthMessage || `${name} must be at least ${rule.minLength} characters`;
-    }
+      if (rule.minLength && value.length < rule.minLength) {
+        return (
+          rule.minLengthMessage ||
+          `${name} must be at least ${rule.minLength} characters`
+        );
+      }
 
-    if (rule.maxLength && value.length > rule.maxLength) {
-      return rule.maxLengthMessage || `${name} must be no more than ${rule.maxLength} characters`;
-    }
+      if (rule.maxLength && value.length > rule.maxLength) {
+        return (
+          rule.maxLengthMessage ||
+          `${name} must be no more than ${rule.maxLength} characters`
+        );
+      }
 
-    if (rule.pattern && !rule.pattern.test(value)) {
-      return rule.patternMessage || `${name} format is invalid`;
-    }
+      if (rule.pattern && !rule.pattern.test(value)) {
+        return rule.patternMessage || `${name} format is invalid`;
+      }
 
-    if (rule.custom && typeof rule.custom === 'function') {
-      return rule.custom(value) || '';
-    }
+      if (rule.custom && typeof rule.custom === "function") {
+        return rule.custom(value) || "";
+      }
 
-    return '';
-  }, [validationRules]);
+      return "";
+    },
+    [validationRules],
+  );
 
   const validateForm = useCallback(() => {
     const newErrors: any = {};
     let isValid = true;
 
-    Object.keys(validationRules).forEach(field => {
+    Object.keys(validationRules).forEach((field) => {
       const error = validateField(field, values[field]);
       if (error) {
         newErrors[field] = error;
@@ -165,20 +178,26 @@ export const useFormValidation = (initialValues: any, validationRules: any) => {
     return isValid;
   }, [values, validateField, validationRules]);
 
-  const handleChange = useCallback((name: string, value: any) => {
-    setValues((prev: any) => ({ ...prev, [name]: value }));
+  const handleChange = useCallback(
+    (name: string, value: any) => {
+      setValues((prev: any) => ({ ...prev, [name]: value }));
 
-    if (touched[name]) {
-      const error = validateField(name, value);
+      if (touched[name]) {
+        const error = validateField(name, value);
+        setErrors((prev: any) => ({ ...prev, [name]: error }));
+      }
+    },
+    [touched, validateField],
+  );
+
+  const handleBlur = useCallback(
+    (name: string) => {
+      setTouched((prev: any) => ({ ...prev, [name]: true }));
+      const error = validateField(name, values[name]);
       setErrors((prev: any) => ({ ...prev, [name]: error }));
-    }
-  }, [touched, validateField]);
-
-  const handleBlur = useCallback((name: string) => {
-    setTouched((prev: any) => ({ ...prev, [name]: true }));
-    const error = validateField(name, values[name]);
-    setErrors((prev: any) => ({ ...prev, [name]: error }));
-  }, [values, validateField]);
+    },
+    [values, validateField],
+  );
 
   const reset = useCallback(() => {
     setValues(initialValues);
@@ -207,11 +226,14 @@ export const usePagination = (data: any[], itemsPerPage: number = 10) => {
   const endIndex = startIndex + itemsPerPage;
   const currentData = data.slice(startIndex, endIndex);
 
-  const goToPage = useCallback((page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  }, [totalPages]);
+  const goToPage = useCallback(
+    (page: number) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    },
+    [totalPages],
+  );
 
   const nextPage = useCallback(() => {
     goToPage(currentPage + 1);

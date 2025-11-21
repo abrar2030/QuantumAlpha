@@ -104,12 +104,14 @@ Install the following software:
 ### Repository Setup
 
 1. **Clone the Repository**:
+
    ```bash
    git clone https://github.com/quantumalpha/quantumalpha-platform.git
    cd quantumalpha-platform
    ```
 
 2. **Initialize Submodules**:
+
    ```bash
    git submodule update --init --recursive
    ```
@@ -123,6 +125,7 @@ Install the following software:
 ### Development Environment Setup
 
 1. **Using Docker Compose** (recommended):
+
    ```bash
    docker-compose -f docker-compose.dev.yml up -d
    ```
@@ -146,11 +149,13 @@ Install the following software:
 ### Local Development Workflow
 
 1. **Start Required Services**:
+
    ```bash
    ./scripts/start-dev-env.sh
    ```
 
 2. **Run Specific Service**:
+
    ```bash
    cd services/[service-name]
    ./scripts/run-local.sh
@@ -502,6 +507,7 @@ Guidelines for developing the QuantumAlpha web and desktop interfaces.
 ### Application Structure
 
 1. **Directory Organization**:
+
    ```
    src/
    ├── assets/          # Static assets
@@ -625,6 +631,7 @@ Guidelines for developing QuantumAlpha's backend services.
    - High cohesion
 
 2. **Service Template**:
+
    ```
    service-name/
    ├── src/                  # Source code

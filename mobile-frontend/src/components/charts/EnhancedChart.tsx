@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,16 +6,16 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
+} from "react-native";
 import {
   LineChart,
   BarChart,
   PieChart,
   AreaChart,
   ContributionGraph,
-} from 'react-native-chart-kit';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
+} from "react-native-chart-kit";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
 
 interface ChartData {
   labels: string[];
@@ -35,14 +35,14 @@ interface PieChartData {
 }
 
 interface EnhancedChartProps {
-  type: 'line' | 'bar' | 'pie' | 'area' | 'contribution';
+  type: "line" | "bar" | "pie" | "area" | "contribution";
   data: ChartData | PieChartData[] | any;
   title?: string;
   subtitle?: string;
   height?: number;
   showLegend?: boolean;
   interactive?: boolean;
-  timeframe?: '1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL';
+  timeframe?: "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL";
   onTimeframeChange?: (timeframe: string) => void;
   style?: any;
 }
@@ -55,15 +55,15 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
   height = 220,
   showLegend = false,
   interactive = false,
-  timeframe = '1D',
+  timeframe = "1D",
   onTimeframeChange,
   style,
 }) => {
   const { theme, isDarkMode } = useTheme();
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
   const [selectedPoint, setSelectedPoint] = useState<any>(null);
 
-  const timeframes = ['1D', '1W', '1M', '3M', '1Y', 'ALL'];
+  const timeframes = ["1D", "1W", "1M", "3M", "1Y", "ALL"];
 
   const chartConfig = {
     backgroundColor: theme.chartBackground,
@@ -72,18 +72,18 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
     decimalPlaces: 2,
     color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
     labelColor: (opacity = 1) =>
-      `rgba(${isDarkMode ? '255, 255, 255' : '0, 0, 0'}, ${opacity})`,
+      `rgba(${isDarkMode ? "255, 255, 255" : "0, 0, 0"}, ${opacity})`,
     style: {
       borderRadius: 16,
     },
     propsForDots: {
-      r: '4',
-      strokeWidth: '2',
+      r: "4",
+      strokeWidth: "2",
       stroke: theme.primary,
     },
     propsForBackgroundLines: {
-      strokeDasharray: '',
-      stroke: isDarkMode ? '#333' : '#e0e0e0',
+      strokeDasharray: "",
+      stroke: isDarkMode ? "#333" : "#e0e0e0",
       strokeWidth: 1,
     },
     fillShadowGradient: theme.primary,
@@ -94,7 +94,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
     const chartWidth = screenWidth - 40;
 
     switch (type) {
-      case 'line':
+      case "line":
         return (
           <LineChart
             data={data as ChartData}
@@ -113,7 +113,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
           />
         );
 
-      case 'area':
+      case "area":
         return (
           <AreaChart
             data={data as ChartData}
@@ -128,7 +128,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
           />
         );
 
-      case 'bar':
+      case "bar":
         return (
           <BarChart
             data={data as ChartData}
@@ -144,7 +144,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
           />
         );
 
-      case 'pie':
+      case "pie":
         return (
           <PieChart
             data={data as PieChartData[]}
@@ -159,7 +159,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
           />
         );
 
-      case 'contribution':
+      case "contribution":
         return (
           <ContributionGraph
             values={data}
@@ -193,7 +193,8 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
             style={[
               styles.timeframeButton,
               {
-                backgroundColor: tf === timeframe ? theme.primary : 'transparent',
+                backgroundColor:
+                  tf === timeframe ? theme.primary : "transparent",
                 borderColor: theme.primary,
               },
             ]}
@@ -203,7 +204,7 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
               style={[
                 styles.timeframeText,
                 {
-                  color: tf === timeframe ? '#ffffff' : theme.primary,
+                  color: tf === timeframe ? "#ffffff" : theme.primary,
                 },
               ]}
             >
@@ -219,7 +220,9 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
     if (!selectedPoint || !interactive) return null;
 
     return (
-      <View style={[styles.selectedPointContainer, { backgroundColor: theme.card }]}>
+      <View
+        style={[styles.selectedPointContainer, { backgroundColor: theme.card }]}
+      >
         <Text style={[styles.selectedPointText, { color: theme.text }]}>
           Value: {selectedPoint.value}
         </Text>
@@ -238,28 +241,25 @@ const EnhancedChart: React.FC<EnhancedChartProps> = ({
             <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
           )}
           {subtitle && (
-            <Text style={[styles.subtitle, { color: theme.text }]}>{subtitle}</Text>
+            <Text style={[styles.subtitle, { color: theme.text }]}>
+              {subtitle}
+            </Text>
           )}
         </View>
       )}
 
       {renderTimeframeSelector()}
 
-      <View style={styles.chartContainer}>
-        {renderChart()}
-      </View>
+      <View style={styles.chartContainer}>{renderChart()}</View>
 
       {renderSelectedPoint()}
 
-      {showLegend && type === 'pie' && (
+      {showLegend && type === "pie" && (
         <View style={styles.legendContainer}>
           {(data as PieChartData[]).map((item, index) => (
             <View key={index} style={styles.legendItem}>
               <View
-                style={[
-                  styles.legendColor,
-                  { backgroundColor: item.color },
-                ]}
+                style={[styles.legendColor, { backgroundColor: item.color }]}
               />
               <Text style={[styles.legendText, { color: theme.text }]}>
                 {item.name}
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 14,
@@ -304,10 +304,10 @@ const styles = StyleSheet.create({
   },
   timeframeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   chartContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   chart: {
     borderRadius: 16,
@@ -316,21 +316,21 @@ const styles = StyleSheet.create({
     margin: 20,
     padding: 10,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   selectedPointText: {
     fontSize: 14,
   },
   legendContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
     paddingHorizontal: 20,
     marginTop: 10,
   },
   legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 15,
     marginBottom: 5,
   },

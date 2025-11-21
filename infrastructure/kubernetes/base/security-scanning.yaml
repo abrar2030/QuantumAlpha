@@ -43,85 +43,85 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: trivy-operator
-        image: aquasec/trivy-operator:0.15.1
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          runAsGroup: 65534
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: OPERATOR_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: OPERATOR_TARGET_NAMESPACES
-          value: "quantumalpha,monitoring"
-        - name: OPERATOR_LOG_DEV_MODE
-          value: "false"
-        - name: OPERATOR_SCAN_JOB_TIMEOUT
-          value: "5m"
-        - name: OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT
-          value: "10"
-        - name: OPERATOR_SCAN_JOB_RETRY_AFTER
-          value: "30s"
-        - name: OPERATOR_BATCH_DELETE_LIMIT
-          value: "10"
-        - name: OPERATOR_BATCH_DELETE_DELAY
-          value: "10s"
-        - name: OPERATOR_METRICS_BIND_ADDRESS
-          value: ":8080"
-        - name: OPERATOR_HEALTH_PROBE_BIND_ADDRESS
-          value: ":9090"
-        - name: OPERATOR_CIS_KUBERNETES_BENCHMARK_ENABLED
-          value: "true"
-        - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
-          value: "true"
-        - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
-          value: "true"
-        - name: OPERATOR_RBAC_ASSESSMENT_SCANNER_ENABLED
-          value: "true"
-        - name: OPERATOR_INFRA_ASSESSMENT_SCANNER_ENABLED
-          value: "true"
-        - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
-          value: "true"
-        ports:
-        - containerPort: 8080
-          name: metrics
-          protocol: TCP
-        - containerPort: 9090
-          name: health
-          protocol: TCP
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 9090
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 9090
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: trivy-operator
+          image: aquasec/trivy-operator:0.15.1
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_TARGET_NAMESPACES
+              value: "quantumalpha,monitoring"
+            - name: OPERATOR_LOG_DEV_MODE
+              value: "false"
+            - name: OPERATOR_SCAN_JOB_TIMEOUT
+              value: "5m"
+            - name: OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT
+              value: "10"
+            - name: OPERATOR_SCAN_JOB_RETRY_AFTER
+              value: "30s"
+            - name: OPERATOR_BATCH_DELETE_LIMIT
+              value: "10"
+            - name: OPERATOR_BATCH_DELETE_DELAY
+              value: "10s"
+            - name: OPERATOR_METRICS_BIND_ADDRESS
+              value: ":8080"
+            - name: OPERATOR_HEALTH_PROBE_BIND_ADDRESS
+              value: ":9090"
+            - name: OPERATOR_CIS_KUBERNETES_BENCHMARK_ENABLED
+              value: "true"
+            - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_RBAC_ASSESSMENT_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_INFRA_ASSESSMENT_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
+              value: "true"
+          ports:
+            - containerPort: 8080
+              name: metrics
+              protocol: TCP
+            - containerPort: 9090
+              name: health
+              protocol: TCP
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
-      - name: tmp
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}
       nodeSelector:
         security: high
 ---
@@ -143,30 +143,52 @@ metadata:
   labels:
     app: trivy-operator
 rules:
-- apiGroups: [""]
-  resources: ["pods", "pods/log", "replicationcontrollers", "services", "nodes", "limitranges", "resourcequotas", "persistentvolumes", "persistentvolumeclaims", "configmaps", "secrets", "serviceaccounts"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apps"]
-  resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["batch"]
-  resources: ["jobs", "cronjobs"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: ["networking.k8s.io"]
-  resources: ["networkpolicies", "ingresses"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["policy"]
-  resources: ["podsecuritypolicies"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["rbac.authorization.k8s.io"]
-  resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apiextensions.k8s.io"]
-  resources: ["customresourcedefinitions"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["aquasecurity.github.io"]
-  resources: ["vulnerabilityreports", "configauditreports", "clusterconfigauditreports", "rbacassessmentreports", "infraassessmentreports", "clustercompliancereports"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources:
+      [
+        "pods",
+        "pods/log",
+        "replicationcontrollers",
+        "services",
+        "nodes",
+        "limitranges",
+        "resourcequotas",
+        "persistentvolumes",
+        "persistentvolumeclaims",
+        "configmaps",
+        "secrets",
+        "serviceaccounts",
+      ]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["networkpolicies", "ingresses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["policy"]
+    resources: ["podsecuritypolicies"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["aquasecurity.github.io"]
+    resources:
+      [
+        "vulnerabilityreports",
+        "configauditreports",
+        "clusterconfigauditreports",
+        "rbacassessmentreports",
+        "infraassessmentreports",
+        "clustercompliancereports",
+      ]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -179,9 +201,9 @@ roleRef:
   kind: ClusterRole
   name: trivy-operator
 subjects:
-- kind: ServiceAccount
-  name: trivy-operator
-  namespace: security-scanning
+  - kind: ServiceAccount
+    name: trivy-operator
+    namespace: security-scanning
 ---
 apiVersion: v1
 kind: Service
@@ -197,10 +219,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8080
-    targetPort: 8080
-    protocol: TCP
-    name: metrics
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: metrics
   selector:
     app: trivy-operator
 ---
@@ -217,7 +239,7 @@ metadata:
   annotations:
     kubernetes.io/description: "Automated compliance scanning job"
 spec:
-  schedule: "0 2 * * *"  # Daily at 2 AM
+  schedule: "0 2 * * *" # Daily at 2 AM
   jobTemplate:
     spec:
       template:
@@ -235,69 +257,69 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           containers:
-          - name: compliance-scanner
-            image: aquasec/trivy:0.44.1
-            imagePullPolicy: Always
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              runAsNonRoot: true
-              runAsUser: 65534
-              runAsGroup: 65534
-              capabilities:
-                drop:
-                - ALL
-            command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Starting compliance scan..."
+            - name: compliance-scanner
+              image: aquasec/trivy:0.44.1
+              imagePullPolicy: Always
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 65534
+                runAsGroup: 65534
+                capabilities:
+                  drop:
+                    - ALL
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Starting compliance scan..."
 
-              # Scan for vulnerabilities
-              trivy k8s --report summary --format json --output /tmp/vulnerability-report.json cluster
+                  # Scan for vulnerabilities
+                  trivy k8s --report summary --format json --output /tmp/vulnerability-report.json cluster
 
-              # Scan for misconfigurations
-              trivy k8s --report summary --format json --output /tmp/config-audit-report.json --scanners misconfig cluster
+                  # Scan for misconfigurations
+                  trivy k8s --report summary --format json --output /tmp/config-audit-report.json --scanners misconfig cluster
 
-              # Generate compliance report
-              echo "Generating compliance report..."
-              cat > /tmp/compliance-report.json << EOF
-              {
-                "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-                "cluster": "quantumalpha",
-                "environment": "production",
-                "compliance_frameworks": ["SOX", "PCI-DSS", "GLBA"],
-                "scan_results": {
-                  "vulnerabilities": "$(cat /tmp/vulnerability-report.json)",
-                  "misconfigurations": "$(cat /tmp/config-audit-report.json)"
-                },
-                "compliance_status": {
-                  "sox_compliant": true,
-                  "pci_dss_compliant": true,
-                  "glba_compliant": true,
-                  "encryption_enabled": true,
-                  "access_controls_enabled": true,
-                  "audit_logging_enabled": true,
-                  "backup_enabled": true,
-                  "monitoring_enabled": true
-                }
-              }
-              EOF
+                  # Generate compliance report
+                  echo "Generating compliance report..."
+                  cat > /tmp/compliance-report.json << EOF
+                  {
+                    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+                    "cluster": "quantumalpha",
+                    "environment": "production",
+                    "compliance_frameworks": ["SOX", "PCI-DSS", "GLBA"],
+                    "scan_results": {
+                      "vulnerabilities": "$(cat /tmp/vulnerability-report.json)",
+                      "misconfigurations": "$(cat /tmp/config-audit-report.json)"
+                    },
+                    "compliance_status": {
+                      "sox_compliant": true,
+                      "pci_dss_compliant": true,
+                      "glba_compliant": true,
+                      "encryption_enabled": true,
+                      "access_controls_enabled": true,
+                      "audit_logging_enabled": true,
+                      "backup_enabled": true,
+                      "monitoring_enabled": true
+                    }
+                  }
+                  EOF
 
-              echo "Compliance scan completed successfully"
-            volumeMounts:
-            - name: tmp
-              mountPath: /tmp
-            resources:
-              requests:
-                memory: "256Mi"
-                cpu: "100m"
-              limits:
-                memory: "512Mi"
-                cpu: "500m"
+                  echo "Compliance scan completed successfully"
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "500m"
           volumes:
-          - name: tmp
-            emptyDir: {}
+            - name: tmp
+              emptyDir: {}
           restartPolicy: OnFailure
           nodeSelector:
             security: high
@@ -320,21 +342,21 @@ metadata:
   labels:
     app: compliance-scanner
 rules:
-- apiGroups: [""]
-  resources: ["*"]
-  verbs: ["get", "list"]
-- apiGroups: ["apps"]
-  resources: ["*"]
-  verbs: ["get", "list"]
-- apiGroups: ["networking.k8s.io"]
-  resources: ["*"]
-  verbs: ["get", "list"]
-- apiGroups: ["policy"]
-  resources: ["*"]
-  verbs: ["get", "list"]
-- apiGroups: ["rbac.authorization.k8s.io"]
-  resources: ["*"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["*"]
+    verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources: ["*"]
+    verbs: ["get", "list"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["*"]
+    verbs: ["get", "list"]
+  - apiGroups: ["policy"]
+    resources: ["*"]
+    verbs: ["get", "list"]
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["*"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -347,9 +369,9 @@ roleRef:
   kind: ClusterRole
   name: compliance-scanner
 subjects:
-- kind: ServiceAccount
-  name: compliance-scanner
-  namespace: security-scanning
+  - kind: ServiceAccount
+    name: compliance-scanner
+    namespace: security-scanning
 ---
 apiVersion: v1
 kind: ConfigMap

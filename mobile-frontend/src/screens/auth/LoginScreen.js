@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,22 +10,22 @@ import {
   Platform,
   Animated,
   Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const { login } = useAuth();
   const { theme } = useTheme();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Animation values
   const logoAnim = new Animated.Value(0);
@@ -49,33 +49,33 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Email and password are required');
+      setError("Email and password are required");
       return;
     }
 
     try {
       setLoading(true);
-      setError('');
+      setError("");
       await login(email, password);
       // Navigation will be handled by the AuthContext
     } catch (err) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      setError(err.message || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
   };
 
   const navigateToRegister = () => {
-    navigation.navigate('Register');
+    navigation.navigate("Register");
   };
 
   const navigateToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate("ForgotPassword");
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={[styles.container, { backgroundColor: theme.background }]}
     >
       <Animated.View
@@ -95,11 +95,13 @@ const LoginScreen = () => {
         ]}
       >
         <Image
-          source={require('../../assets/logo.png')}
+          source={require("../../assets/logo.png")}
           style={styles.logo}
           resizeMode="contain"
         />
-        <Text style={[styles.appName, { color: theme.text }]}>QuantumAlpha</Text>
+        <Text style={[styles.appName, { color: theme.text }]}>
+          QuantumAlpha
+        </Text>
         <Text style={[styles.tagline, { color: theme.text }]}>
           Advanced Algorithmic Trading
         </Text>
@@ -127,16 +129,26 @@ const LoginScreen = () => {
         {error ? (
           <View style={styles.errorContainer}>
             <Icon name="alert-circle" size={20} color={theme.error} />
-            <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
+            <Text style={[styles.errorText, { color: theme.error }]}>
+              {error}
+            </Text>
           </View>
         ) : null}
 
         <View style={styles.inputGroup}>
-          <Icon name="email" size={20} color={theme.text} style={styles.inputIcon} />
+          <Icon
+            name="email"
+            size={20}
+            color={theme.text}
+            style={styles.inputIcon}
+          />
           <TextInput
-            style={[styles.input, { color: theme.text, borderColor: theme.border }]}
+            style={[
+              styles.input,
+              { color: theme.text, borderColor: theme.border },
+            ]}
             placeholder="Email"
-            placeholderTextColor={theme.text + '80'}
+            placeholderTextColor={theme.text + "80"}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -145,11 +157,19 @@ const LoginScreen = () => {
         </View>
 
         <View style={styles.inputGroup}>
-          <Icon name="lock" size={20} color={theme.text} style={styles.inputIcon} />
+          <Icon
+            name="lock"
+            size={20}
+            color={theme.text}
+            style={styles.inputIcon}
+          />
           <TextInput
-            style={[styles.input, { color: theme.text, borderColor: theme.border }]}
+            style={[
+              styles.input,
+              { color: theme.text, borderColor: theme.border },
+            ]}
             placeholder="Password"
-            placeholderTextColor={theme.text + '80'}
+            placeholderTextColor={theme.text + "80"}
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
@@ -159,7 +179,7 @@ const LoginScreen = () => {
             onPress={() => setShowPassword(!showPassword)}
           >
             <Icon
-              name={showPassword ? 'eye-off' : 'eye'}
+              name={showPassword ? "eye-off" : "eye"}
               size={20}
               color={theme.text}
             />
@@ -188,9 +208,13 @@ const LoginScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.divider}>
-          <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+          <View
+            style={[styles.dividerLine, { backgroundColor: theme.border }]}
+          />
           <Text style={[styles.dividerText, { color: theme.text }]}>OR</Text>
-          <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+          <View
+            style={[styles.dividerLine, { backgroundColor: theme.border }]}
+          />
         </View>
 
         <TouchableOpacity
@@ -206,17 +230,17 @@ const LoginScreen = () => {
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 40,
   },
   logo: {
@@ -226,7 +250,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   tagline: {
@@ -234,11 +258,11 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   formContainer: {
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
     borderRadius: 10,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -246,14 +270,14 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 0, 0, 0.1)",
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,
@@ -263,13 +287,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 15,
-    position: 'relative',
+    position: "relative",
   },
   inputIcon: {
-    position: 'absolute',
+    position: "absolute",
     left: 15,
     zIndex: 1,
   },
@@ -282,24 +306,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   passwordToggle: {
-    position: 'absolute',
+    position: "absolute",
     right: 15,
     zIndex: 1,
   },
   loginButton: {
     height: 50,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   loginButtonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   forgotPasswordButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 15,
     padding: 5,
   },
@@ -307,8 +331,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 20,
   },
   dividerLine: {
@@ -323,12 +347,12 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 8,
     borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   registerButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

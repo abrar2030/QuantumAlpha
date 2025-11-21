@@ -11,8 +11,8 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -30,40 +30,40 @@ spec:
     matchLabels:
       app: postgres
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: data-service
-    - podSelector:
-        matchLabels:
-          app: risk-service
-    ports:
-    - protocol: TCP
-      port: 5432
-  - from:
-    - podSelector:
-        matchLabels:
-          app: postgres-exporter
-    ports:
-    - protocol: TCP
-      port: 9187
+    - from:
+        - podSelector:
+            matchLabels:
+              app: data-service
+        - podSelector:
+            matchLabels:
+              app: risk-service
+      ports:
+        - protocol: TCP
+          port: 5432
+    - from:
+        - podSelector:
+            matchLabels:
+              app: postgres-exporter
+      ports:
+        - protocol: TCP
+          port: 9187
   egress:
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres-exporter
-    ports:
-    - protocol: TCP
-      port: 9187
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres-exporter
+      ports:
+        - protocol: TCP
+          port: 9187
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -80,30 +80,30 @@ spec:
     matchLabels:
       app: redis
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: ai-engine
-    ports:
-    - protocol: TCP
-      port: 6379
-  - from:
-    - podSelector:
-        matchLabels:
-          app: redis-exporter
-    ports:
-    - protocol: TCP
-      port: 9121
+    - from:
+        - podSelector:
+            matchLabels:
+              app: ai-engine
+      ports:
+        - protocol: TCP
+          port: 6379
+    - from:
+        - podSelector:
+            matchLabels:
+              app: redis-exporter
+      ports:
+        - protocol: TCP
+          port: 9121
   egress:
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -120,40 +120,40 @@ spec:
     matchLabels:
       app: kafka
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: data-service
-    - podSelector:
-        matchLabels:
-          app: execution-service
-    ports:
-    - protocol: TCP
-      port: 9092
-  - from:
-    - podSelector:
-        matchLabels:
-          app: zookeeper
-    ports:
-    - protocol: TCP
-      port: 2181
+    - from:
+        - podSelector:
+            matchLabels:
+              app: data-service
+        - podSelector:
+            matchLabels:
+              app: execution-service
+      ports:
+        - protocol: TCP
+          port: 9092
+    - from:
+        - podSelector:
+            matchLabels:
+              app: zookeeper
+      ports:
+        - protocol: TCP
+          port: 2181
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: zookeeper
-    ports:
-    - protocol: TCP
-      port: 2181
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app: zookeeper
+      ports:
+        - protocol: TCP
+          port: 2181
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -170,30 +170,30 @@ spec:
     matchLabels:
       app: zookeeper
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: kafka
-    ports:
-    - protocol: TCP
-      port: 2181
+    - from:
+        - podSelector:
+            matchLabels:
+              app: kafka
+      ports:
+        - protocol: TCP
+          port: 2181
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: kafka
-    ports:
-    - protocol: TCP
-      port: 9092
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kafka
+      ports:
+        - protocol: TCP
+          port: 9092
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -212,59 +212,59 @@ spec:
     matchLabels:
       app: data-service
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: ai-engine
-    - podSelector:
-        matchLabels:
-          app: web-frontend
-    - podSelector:
-        matchLabels:
-          app: nginx
-    ports:
-    - protocol: TCP
-      port: 8080
-  - from:
-    - podSelector:
-        matchLabels:
-          app: prometheus
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: ai-engine
+        - podSelector:
+            matchLabels:
+              app: web-frontend
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: prometheus
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: influxdb
-    ports:
-    - protocol: TCP
-      port: 8086
-  - to:
-    - podSelector:
-        matchLabels:
-          app: kafka
-    ports:
-    - protocol: TCP
-      port: 9092
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: influxdb
+      ports:
+        - protocol: TCP
+          port: 8086
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kafka
+      ports:
+        - protocol: TCP
+          port: 9092
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -281,52 +281,52 @@ spec:
     matchLabels:
       app: ai-engine
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: risk-service
-    - podSelector:
-        matchLabels:
-          app: web-frontend
-    - podSelector:
-        matchLabels:
-          app: nginx
-    ports:
-    - protocol: TCP
-      port: 8080
-  - from:
-    - podSelector:
-        matchLabels:
-          app: prometheus
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: risk-service
+        - podSelector:
+            matchLabels:
+              app: web-frontend
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: prometheus
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: data-service
-    ports:
-    - protocol: TCP
-      port: 8080
-  - to:
-    - podSelector:
-        matchLabels:
-          app: redis
-    ports:
-    - protocol: TCP
-      port: 6379
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              app: data-service
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -344,52 +344,52 @@ spec:
     matchLabels:
       app: risk-service
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: execution-service
-    - podSelector:
-        matchLabels:
-          app: web-frontend
-    - podSelector:
-        matchLabels:
-          app: nginx
-    ports:
-    - protocol: TCP
-      port: 8080
-  - from:
-    - podSelector:
-        matchLabels:
-          app: prometheus
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: execution-service
+        - podSelector:
+            matchLabels:
+              app: web-frontend
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: prometheus
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - podSelector:
-        matchLabels:
-          app: ai-engine
-    ports:
-    - protocol: TCP
-      port: 8080
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: ai-engine
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -407,49 +407,49 @@ spec:
     matchLabels:
       app: execution-service
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: web-frontend
-    - podSelector:
-        matchLabels:
-          app: nginx
-    ports:
-    - protocol: TCP
-      port: 8080
-  - from:
-    - podSelector:
-        matchLabels:
-          app: prometheus
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: web-frontend
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: prometheus
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: risk-service
-    ports:
-    - protocol: TCP
-      port: 8080
-  - to:
-    - podSelector:
-        matchLabels:
-          app: kafka
-    ports:
-    - protocol: TCP
-      port: 9092
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              app: risk-service
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kafka
+      ports:
+        - protocol: TCP
+          port: 9092
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -466,45 +466,45 @@ spec:
     matchLabels:
       app: web-frontend
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: nginx
-    ports:
-    - protocol: TCP
-      port: 80
-  - from: []
-    ports:
-    - protocol: TCP
-      port: 80
+    - from:
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+    - from: []
+      ports:
+        - protocol: TCP
+          port: 80
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: data-service
-    - podSelector:
-        matchLabels:
-          app: ai-engine
-    - podSelector:
-        matchLabels:
-          app: risk-service
-    - podSelector:
-        matchLabels:
-          app: execution-service
-    ports:
-    - protocol: TCP
-      port: 8080
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-    - protocol: TCP
-      port: 443
+    - to:
+        - podSelector:
+            matchLabels:
+              app: data-service
+        - podSelector:
+            matchLabels:
+              app: ai-engine
+        - podSelector:
+            matchLabels:
+              app: risk-service
+        - podSelector:
+            matchLabels:
+              app: execution-service
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -521,45 +521,45 @@ spec:
     matchLabels:
       app: nginx
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from: []
-    ports:
-    - protocol: TCP
-      port: 80
-    - protocol: TCP
-      port: 443
+    - from: []
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: web-frontend
-    ports:
-    - protocol: TCP
-      port: 80
-  - to:
-    - podSelector:
-        matchLabels:
-          app: data-service
-    - podSelector:
-        matchLabels:
-          app: ai-engine
-    - podSelector:
-        matchLabels:
-          app: risk-service
-    - podSelector:
-        matchLabels:
-          app: execution-service
-    ports:
-    - protocol: TCP
-      port: 8080
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+    - to:
+        - podSelector:
+            matchLabels:
+              app: web-frontend
+      ports:
+        - protocol: TCP
+          port: 80
+    - to:
+        - podSelector:
+            matchLabels:
+              app: data-service
+        - podSelector:
+            matchLabels:
+              app: ai-engine
+        - podSelector:
+            matchLabels:
+              app: risk-service
+        - podSelector:
+            matchLabels:
+              app: execution-service
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -576,35 +576,35 @@ spec:
     matchLabels:
       app: prometheus
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: grafana
-    ports:
-    - protocol: TCP
-      port: 9090
-  - from: []
-    ports:
-    - protocol: TCP
-      port: 9090
+    - from:
+        - podSelector:
+            matchLabels:
+              app: grafana
+      ports:
+        - protocol: TCP
+          port: 9090
+    - from: []
+      ports:
+        - protocol: TCP
+          port: 9090
   egress:
-  - to:
-    - podSelector: {}
-    ports:
-    - protocol: TCP
-      port: 9090
-    - protocol: TCP
-      port: 9121
-    - protocol: TCP
-      port: 9187
-    - protocol: TCP
-      port: 8080
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
+    - to:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 9090
+        - protocol: TCP
+          port: 9121
+        - protocol: TCP
+          port: 9187
+        - protocol: TCP
+          port: 8080
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53

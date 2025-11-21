@@ -1,22 +1,17 @@
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import { useTheme } from '../../context/ThemeContext';
+import React from "react";
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import * as Animatable from "react-native-animatable";
+import { useTheme } from "../../context/ThemeContext";
 
 interface CardProps {
   children: React.ReactNode;
   style?: ViewStyle;
   onPress?: () => void;
-  variant?: 'default' | 'elevated' | 'outlined' | 'filled';
-  padding?: 'none' | 'small' | 'medium' | 'large';
-  margin?: 'none' | 'small' | 'medium' | 'large';
+  variant?: "default" | "elevated" | "outlined" | "filled";
+  padding?: "none" | "small" | "medium" | "large";
+  margin?: "none" | "small" | "medium" | "large";
   animated?: boolean;
-  animationType?: 'fadeIn' | 'slideInUp' | 'slideInDown' | 'zoomIn';
+  animationType?: "fadeIn" | "slideInUp" | "slideInDown" | "zoomIn";
   animationDelay?: number;
 }
 
@@ -24,11 +19,11 @@ const Card: React.FC<CardProps> = ({
   children,
   style,
   onPress,
-  variant = 'default',
-  padding = 'medium',
-  margin = 'none',
+  variant = "default",
+  padding = "medium",
+  margin = "none",
   animated = false,
-  animationType = 'fadeIn',
+  animationType = "fadeIn",
   animationDelay = 0,
 }) => {
   const { theme, isDarkMode } = useTheme();
@@ -40,19 +35,19 @@ const Card: React.FC<CardProps> = ({
     };
 
     switch (variant) {
-      case 'elevated':
+      case "elevated":
         return {
           ...baseStyle,
           ...styles.elevated,
-          shadowColor: isDarkMode ? '#000' : '#000',
+          shadowColor: isDarkMode ? "#000" : "#000",
         };
-      case 'outlined':
+      case "outlined":
         return {
           ...baseStyle,
           ...styles.outlined,
           borderColor: theme.border,
         };
-      case 'filled':
+      case "filled":
         return {
           ...baseStyle,
           backgroundColor: theme.background,
@@ -64,13 +59,13 @@ const Card: React.FC<CardProps> = ({
 
   const getPaddingStyle = () => {
     switch (padding) {
-      case 'none':
+      case "none":
         return {};
-      case 'small':
+      case "small":
         return styles.paddingSmall;
-      case 'medium':
+      case "medium":
         return styles.paddingMedium;
-      case 'large':
+      case "large":
         return styles.paddingLarge;
       default:
         return styles.paddingMedium;
@@ -79,13 +74,13 @@ const Card: React.FC<CardProps> = ({
 
   const getMarginStyle = () => {
     switch (margin) {
-      case 'none':
+      case "none":
         return {};
-      case 'small':
+      case "small":
         return styles.marginSmall;
-      case 'medium':
+      case "medium":
         return styles.marginMedium;
-      case 'large':
+      case "large":
         return styles.marginLarge;
       default:
         return {};
@@ -130,7 +125,7 @@ const Card: React.FC<CardProps> = ({
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   elevated: {
     shadowOffset: {

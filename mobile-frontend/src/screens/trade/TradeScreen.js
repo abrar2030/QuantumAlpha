@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,22 +10,22 @@ import {
   Animated,
   Dimensions,
   FlatList,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "../../context/ThemeContext";
 
 const TradeScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
 
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [orderType, setOrderType] = useState('market');
-  const [orderSide, setOrderSide] = useState('buy');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [orderType, setOrderType] = useState("market");
+  const [orderSide, setOrderSide] = useState("buy");
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
   // Animation values
@@ -34,12 +34,12 @@ const TradeScreen = () => {
 
   // Mock data for popular assets
   const popularAssets = [
-    { symbol: 'AAPL', name: 'Apple Inc.', price: 320.45, change: 1.2 },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', price: 350.20, change: 0.8 },
-    { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 1200.75, change: -0.5 },
-    { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 2000.10, change: 1.5 },
-    { symbol: 'TSLA', name: 'Tesla Inc.', price: 780.65, change: 2.3 },
-    { symbol: 'META', name: 'Meta Platforms Inc.', price: 320.30, change: -0.3 },
+    { symbol: "AAPL", name: "Apple Inc.", price: 320.45, change: 1.2 },
+    { symbol: "MSFT", name: "Microsoft Corp.", price: 350.2, change: 0.8 },
+    { symbol: "GOOGL", name: "Alphabet Inc.", price: 1200.75, change: -0.5 },
+    { symbol: "AMZN", name: "Amazon.com Inc.", price: 2000.1, change: 1.5 },
+    { symbol: "TSLA", name: "Tesla Inc.", price: 780.65, change: 2.3 },
+    { symbol: "META", name: "Meta Platforms Inc.", price: 320.3, change: -0.3 },
   ];
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const TradeScreen = () => {
       const results = popularAssets.filter(
         (asset) =>
           asset.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          asset.name.toLowerCase().includes(searchQuery.toLowerCase())
+          asset.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setSearchResults(results);
     } else {
@@ -74,13 +74,13 @@ const TradeScreen = () => {
 
   const handleAssetSelect = (asset) => {
     setSelectedAsset(asset);
-    setSearchQuery('');
+    setSearchQuery("");
     setSearchResults([]);
   };
 
   const handlePlaceOrder = () => {
     if (!selectedAsset || !quantity) {
-      alert('Please select an asset and enter quantity');
+      alert("Please select an asset and enter quantity");
       return;
     }
 
@@ -89,12 +89,14 @@ const TradeScreen = () => {
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
-      alert(`Order placed: ${orderSide.toUpperCase()} ${quantity} ${selectedAsset.symbol} at ${orderType === 'market' ? 'market price' : '$' + price}`);
+      alert(
+        `Order placed: ${orderSide.toUpperCase()} ${quantity} ${selectedAsset.symbol} at ${orderType === "market" ? "market price" : "$" + price}`,
+      );
 
       // Reset form
       setSelectedAsset(null);
-      setQuantity('');
-      setPrice('');
+      setQuantity("");
+      setPrice("");
     }, 1500);
   };
 
@@ -105,8 +107,10 @@ const TradeScreen = () => {
         onPress={() => handleAssetSelect(item)}
       >
         <View style={styles.assetInfo}>
-          <Text style={[styles.assetSymbol, { color: theme.text }]}>{item.symbol}</Text>
-          <Text style={[styles.assetName, { color: theme.text + 'CC' }]}>
+          <Text style={[styles.assetSymbol, { color: theme.text }]}>
+            {item.symbol}
+          </Text>
+          <Text style={[styles.assetName, { color: theme.text + "CC" }]}>
             {item.name}
           </Text>
         </View>
@@ -122,7 +126,7 @@ const TradeScreen = () => {
               },
             ]}
           >
-            {item.change >= 0 ? '+' : ''}
+            {item.change >= 0 ? "+" : ""}
             {item.change}%
           </Text>
         </View>
@@ -152,25 +156,37 @@ const TradeScreen = () => {
             transform: [{ translateY }],
           }}
         >
-          <View style={[styles.searchContainer, { backgroundColor: theme.card }]}>
-            <View style={[styles.searchInputContainer, { backgroundColor: theme.background }]}>
-              <Icon name="magnify" size={20} color={theme.text + '99'} />
+          <View
+            style={[styles.searchContainer, { backgroundColor: theme.card }]}
+          >
+            <View
+              style={[
+                styles.searchInputContainer,
+                { backgroundColor: theme.background },
+              ]}
+            >
+              <Icon name="magnify" size={20} color={theme.text + "99"} />
               <TextInput
                 style={[styles.searchInput, { color: theme.text }]}
                 placeholder="Search assets..."
-                placeholderTextColor={theme.text + '99'}
+                placeholderTextColor={theme.text + "99"}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
               {searchQuery ? (
-                <TouchableOpacity onPress={() => setSearchQuery('')}>
-                  <Icon name="close" size={20} color={theme.text + '99'} />
+                <TouchableOpacity onPress={() => setSearchQuery("")}>
+                  <Icon name="close" size={20} color={theme.text + "99"} />
                 </TouchableOpacity>
               ) : null}
             </View>
 
             {searchResults.length > 0 && (
-              <View style={[styles.searchResults, { backgroundColor: theme.background }]}>
+              <View
+                style={[
+                  styles.searchResults,
+                  { backgroundColor: theme.background },
+                ]}
+              >
                 <FlatList
                   data={searchResults}
                   renderItem={renderAssetItem}
@@ -182,7 +198,12 @@ const TradeScreen = () => {
           </View>
 
           {!selectedAsset ? (
-            <View style={[styles.popularAssetsContainer, { backgroundColor: theme.card }]}>
+            <View
+              style={[
+                styles.popularAssetsContainer,
+                { backgroundColor: theme.card },
+              ]}
+            >
               <Text style={[styles.sectionTitle, { color: theme.text }]}>
                 Popular Assets
               </Text>
@@ -199,7 +220,9 @@ const TradeScreen = () => {
                     <Text style={[styles.assetSymbol, { color: theme.text }]}>
                       {asset.symbol}
                     </Text>
-                    <Text style={[styles.assetName, { color: theme.text + 'CC' }]}>
+                    <Text
+                      style={[styles.assetName, { color: theme.text + "CC" }]}
+                    >
                       {asset.name}
                     </Text>
                   </View>
@@ -211,11 +234,12 @@ const TradeScreen = () => {
                       style={[
                         styles.changeText,
                         {
-                          color: asset.change >= 0 ? theme.success : theme.error,
+                          color:
+                            asset.change >= 0 ? theme.success : theme.error,
                         },
                       ]}
                     >
-                      {asset.change >= 0 ? '+' : ''}
+                      {asset.change >= 0 ? "+" : ""}
                       {asset.change}%
                     </Text>
                   </View>
@@ -223,13 +247,20 @@ const TradeScreen = () => {
               ))}
             </View>
           ) : (
-            <View style={[styles.orderFormContainer, { backgroundColor: theme.card }]}>
+            <View
+              style={[
+                styles.orderFormContainer,
+                { backgroundColor: theme.card },
+              ]}
+            >
               <View style={styles.selectedAssetHeader}>
                 <View style={styles.assetInfo}>
                   <Text style={[styles.assetSymbol, { color: theme.text }]}>
                     {selectedAsset.symbol}
                   </Text>
-                  <Text style={[styles.assetName, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[styles.assetName, { color: theme.text + "CC" }]}
+                  >
                     {selectedAsset.name}
                   </Text>
                 </View>
@@ -237,7 +268,9 @@ const TradeScreen = () => {
                   style={styles.changeAssetButton}
                   onPress={() => setSelectedAsset(null)}
                 >
-                  <Text style={[styles.changeAssetText, { color: theme.primary }]}>
+                  <Text
+                    style={[styles.changeAssetText, { color: theme.primary }]}
+                  >
                     Change
                   </Text>
                 </TouchableOpacity>
@@ -256,7 +289,7 @@ const TradeScreen = () => {
                     },
                   ]}
                 >
-                  {selectedAsset.change >= 0 ? '+' : ''}
+                  {selectedAsset.change >= 0 ? "+" : ""}
                   {selectedAsset.change}%
                 </Text>
               </View>
@@ -269,19 +302,19 @@ const TradeScreen = () => {
                   <TouchableOpacity
                     style={[
                       styles.segmentButton,
-                      orderType === 'market' && [
+                      orderType === "market" && [
                         styles.activeSegment,
                         { backgroundColor: theme.primary },
                       ],
                     ]}
-                    onPress={() => setOrderType('market')}
+                    onPress={() => setOrderType("market")}
                   >
                     <Text
                       style={[
                         styles.segmentText,
                         {
                           color:
-                            orderType === 'market' ? '#FFFFFF' : theme.text,
+                            orderType === "market" ? "#FFFFFF" : theme.text,
                         },
                       ]}
                     >
@@ -291,19 +324,18 @@ const TradeScreen = () => {
                   <TouchableOpacity
                     style={[
                       styles.segmentButton,
-                      orderType === 'limit' && [
+                      orderType === "limit" && [
                         styles.activeSegment,
                         { backgroundColor: theme.primary },
                       ],
                     ]}
-                    onPress={() => setOrderType('limit')}
+                    onPress={() => setOrderType("limit")}
                   >
                     <Text
                       style={[
                         styles.segmentText,
                         {
-                          color:
-                            orderType === 'limit' ? '#FFFFFF' : theme.text,
+                          color: orderType === "limit" ? "#FFFFFF" : theme.text,
                         },
                       ]}
                     >
@@ -321,18 +353,18 @@ const TradeScreen = () => {
                   <TouchableOpacity
                     style={[
                       styles.segmentButton,
-                      orderSide === 'buy' && [
+                      orderSide === "buy" && [
                         styles.activeSegment,
                         { backgroundColor: theme.success },
                       ],
                     ]}
-                    onPress={() => setOrderSide('buy')}
+                    onPress={() => setOrderSide("buy")}
                   >
                     <Text
                       style={[
                         styles.segmentText,
                         {
-                          color: orderSide === 'buy' ? '#FFFFFF' : theme.text,
+                          color: orderSide === "buy" ? "#FFFFFF" : theme.text,
                         },
                       ]}
                     >
@@ -342,18 +374,18 @@ const TradeScreen = () => {
                   <TouchableOpacity
                     style={[
                       styles.segmentButton,
-                      orderSide === 'sell' && [
+                      orderSide === "sell" && [
                         styles.activeSegment,
                         { backgroundColor: theme.error },
                       ],
                     ]}
-                    onPress={() => setOrderSide('sell')}
+                    onPress={() => setOrderSide("sell")}
                   >
                     <Text
                       style={[
                         styles.segmentText,
                         {
-                          color: orderSide === 'sell' ? '#FFFFFF' : theme.text,
+                          color: orderSide === "sell" ? "#FFFFFF" : theme.text,
                         },
                       ]}
                     >
@@ -373,14 +405,14 @@ const TradeScreen = () => {
                     { color: theme.text, borderColor: theme.border },
                   ]}
                   placeholder="Enter quantity"
-                  placeholderTextColor={theme.text + '99'}
+                  placeholderTextColor={theme.text + "99"}
                   value={quantity}
                   onChangeText={setQuantity}
                   keyboardType="numeric"
                 />
               </View>
 
-              {orderType === 'limit' && (
+              {orderType === "limit" && (
                 <View style={styles.inputContainer}>
                   <Text style={[styles.formLabel, { color: theme.text }]}>
                     Limit Price
@@ -391,7 +423,7 @@ const TradeScreen = () => {
                       { color: theme.text, borderColor: theme.border },
                     ]}
                     placeholder="Enter price"
-                    placeholderTextColor={theme.text + '99'}
+                    placeholderTextColor={theme.text + "99"}
                     value={price}
                     onChangeText={setPrice}
                     keyboardType="numeric"
@@ -404,7 +436,9 @@ const TradeScreen = () => {
                   Order Summary
                 </Text>
                 <View style={styles.summaryRow}>
-                  <Text style={[styles.summaryLabel, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[styles.summaryLabel, { color: theme.text + "CC" }]}
+                  >
                     Asset
                   </Text>
                   <Text style={[styles.summaryValue, { color: theme.text }]}>
@@ -412,7 +446,9 @@ const TradeScreen = () => {
                   </Text>
                 </View>
                 <View style={styles.summaryRow}>
-                  <Text style={[styles.summaryLabel, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[styles.summaryLabel, { color: theme.text + "CC" }]}
+                  >
                     Type
                   </Text>
                   <Text style={[styles.summaryValue, { color: theme.text }]}>
@@ -420,15 +456,18 @@ const TradeScreen = () => {
                   </Text>
                 </View>
                 <View style={styles.summaryRow}>
-                  <Text style={[styles.summaryLabel, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[styles.summaryLabel, { color: theme.text + "CC" }]}
+                  >
                     Side
                   </Text>
                   <Text
                     style={[
                       styles.summaryValue,
                       {
-                        color: orderSide === 'buy' ? theme.success : theme.error,
-                        fontWeight: 'bold',
+                        color:
+                          orderSide === "buy" ? theme.success : theme.error,
+                        fontWeight: "bold",
                       },
                     ]}
                   >
@@ -436,32 +475,46 @@ const TradeScreen = () => {
                   </Text>
                 </View>
                 <View style={styles.summaryRow}>
-                  <Text style={[styles.summaryLabel, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[styles.summaryLabel, { color: theme.text + "CC" }]}
+                  >
                     Quantity
                   </Text>
                   <Text style={[styles.summaryValue, { color: theme.text }]}>
-                    {quantity || '0'}
+                    {quantity || "0"}
                   </Text>
                 </View>
-                {orderType === 'limit' && (
+                {orderType === "limit" && (
                   <View style={styles.summaryRow}>
-                    <Text style={[styles.summaryLabel, { color: theme.text + 'CC' }]}>
+                    <Text
+                      style={[
+                        styles.summaryLabel,
+                        { color: theme.text + "CC" },
+                      ]}
+                    >
                       Price
                     </Text>
                     <Text style={[styles.summaryValue, { color: theme.text }]}>
-                      ${price || '0'}
+                      ${price || "0"}
                     </Text>
                   </View>
                 )}
                 <View style={styles.summaryRow}>
-                  <Text style={[styles.summaryLabel, { color: theme.text + 'CC' }]}>
+                  <Text
+                    style={[styles.summaryLabel, { color: theme.text + "CC" }]}
+                  >
                     Estimated Total
                   </Text>
-                  <Text style={[styles.summaryValue, { color: theme.text, fontWeight: 'bold' }]}>
+                  <Text
+                    style={[
+                      styles.summaryValue,
+                      { color: theme.text, fontWeight: "bold" },
+                    ]}
+                  >
                     $
                     {quantity && selectedAsset.price
                       ? (parseFloat(quantity) * selectedAsset.price).toFixed(2)
-                      : '0.00'}
+                      : "0.00"}
                   </Text>
                 </View>
               </View>
@@ -471,7 +524,7 @@ const TradeScreen = () => {
                   styles.placeOrderButton,
                   {
                     backgroundColor:
-                      orderSide === 'buy' ? theme.success : theme.error,
+                      orderSide === "buy" ? theme.success : theme.error,
                   },
                 ]}
                 onPress={handlePlaceOrder}
@@ -481,7 +534,8 @@ const TradeScreen = () => {
                   <ActivityIndicator color="#FFFFFF" size="small" />
                 ) : (
                   <Text style={styles.placeOrderText}>
-                    {orderSide === 'buy' ? 'Buy' : 'Sell'} {selectedAsset.symbol}
+                    {orderSide === "buy" ? "Buy" : "Sell"}{" "}
+                    {selectedAsset.symbol}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -510,11 +564,11 @@ const styles = StyleSheet.create({
   header: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   scrollContent: {
     padding: 16,
@@ -524,17 +578,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    position: 'relative',
+    position: "relative",
     zIndex: 10,
   },
   searchInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 40,
@@ -545,13 +599,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   searchResults: {
-    position: 'absolute',
+    position: "absolute",
     top: 70,
     left: 0,
     right: 0,
     borderRadius: 12,
     maxHeight: 300,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -565,7 +619,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -573,18 +627,18 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   popularAssetItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
   },
   assetItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
@@ -594,18 +648,18 @@ const styles = StyleSheet.create({
   },
   assetSymbol: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   assetName: {
     fontSize: 12,
     marginTop: 2,
   },
   assetPrice: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   priceText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   changeText: {
     fontSize: 12,
@@ -615,16 +669,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   selectedAssetHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   changeAssetButton: {
@@ -632,21 +686,21 @@ const styles = StyleSheet.create({
   },
   changeAssetText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
     marginBottom: 20,
   },
   currentPrice: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginRight: 8,
   },
   priceChange: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   orderTypeContainer: {
     marginBottom: 16,
@@ -656,18 +710,18 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   segmentedControl: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   segmentButton: {
     flex: 1,
     paddingVertical: 10,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.05)",
   },
   activeSegment: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.5,
@@ -675,7 +729,7 @@ const styles = StyleSheet.create({
   },
   segmentText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   orderSideContainer: {
     marginBottom: 16,
@@ -695,16 +749,16 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: "rgba(0,0,0,0.05)",
   },
   summaryTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 12,
   },
   summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 8,
   },
   summaryLabel: {
@@ -716,25 +770,25 @@ const styles = StyleSheet.create({
   placeOrderButton: {
     height: 50,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 12,
   },
   placeOrderText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   cancelButton: {
     height: 50,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
   },
   cancelButtonText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });
 

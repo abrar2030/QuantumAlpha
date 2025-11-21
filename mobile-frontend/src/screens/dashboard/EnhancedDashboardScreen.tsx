@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -8,35 +8,38 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import * as Animatable from 'react-native-animatable';
-import HapticFeedback from 'react-native-haptic-feedback';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
+import * as Animatable from "react-native-animatable";
+import HapticFeedback from "react-native-haptic-feedback";
 
-import { useTheme } from '../../context/ThemeContext';
-import { useAlert } from '../../context/AlertContext';
-import { useApiQuery } from '../../hooks';
-import { portfolioService } from '../../services/portfolioService';
-import { strategyService } from '../../services/strategyService';
-import { alertService } from '../../services/alertService';
-import { marketService } from '../../services/marketService';
+import { useTheme } from "../../context/ThemeContext";
+import { useAlert } from "../../context/AlertContext";
+import { useApiQuery } from "../../hooks";
+import { portfolioService } from "../../services/portfolioService";
+import { strategyService } from "../../services/strategyService";
+import { alertService } from "../../services/alertService";
+import { marketService } from "../../services/marketService";
 
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
-import { LoadingSpinner, SkeletonLoader } from '../../components/ui/LoadingSpinner';
-import EnhancedChart from '../../components/charts/EnhancedChart';
-import PerformanceCard from '../../components/dashboard/PerformanceCard';
-import StrategyCard from '../../components/dashboard/StrategyCard';
-import AlertItem from '../../components/alerts/AlertItem';
-import MarketOverview from '../../components/dashboard/MarketOverview';
-import QuickActions from '../../components/dashboard/QuickActions';
-import NewsWidget from '../../components/dashboard/NewsWidget';
-import WatchlistWidget from '../../components/dashboard/WatchlistWidget';
+import Card from "../../components/ui/Card";
+import Button from "../../components/ui/Button";
+import {
+  LoadingSpinner,
+  SkeletonLoader,
+} from "../../components/ui/LoadingSpinner";
+import EnhancedChart from "../../components/charts/EnhancedChart";
+import PerformanceCard from "../../components/dashboard/PerformanceCard";
+import StrategyCard from "../../components/dashboard/StrategyCard";
+import AlertItem from "../../components/alerts/AlertItem";
+import MarketOverview from "../../components/dashboard/MarketOverview";
+import QuickActions from "../../components/dashboard/QuickActions";
+import NewsWidget from "../../components/dashboard/NewsWidget";
+import WatchlistWidget from "../../components/dashboard/WatchlistWidget";
 
-import { formatCurrency, formatPercentage } from '../../utils';
-import { COLORS, SPACING } from '../../constants';
-import { Portfolio, Strategy, Alert, NewsArticle } from '../../types';
+import { formatCurrency, formatPercentage } from "../../utils";
+import { COLORS, SPACING } from "../../constants";
+import { Portfolio, Strategy, Alert, NewsArticle } from "../../types";
 
 const DashboardScreen = () => {
   const navigation = useNavigation();
@@ -44,9 +47,9 @@ const DashboardScreen = () => {
   const { addAlert } = useAlert();
 
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('1D');
+  const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
 
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
 
   // API Queries with React Query
   const {
@@ -54,73 +57,58 @@ const DashboardScreen = () => {
     isLoading: portfolioLoading,
     refetch: refetchPortfolio,
   } = useApiQuery(
-    ['portfolio', 'summary'],
+    ["portfolio", "summary"],
     () => portfolioService.getPortfolioSummary(),
     {
       refetchInterval: 30000, // Refetch every 30 seconds
-    }
+    },
   );
 
-  const {
-    data: performanceData,
-    isLoading: performanceLoading,
-  } = useApiQuery(
-    ['portfolio', 'performance', selectedTimeframe],
+  const { data: performanceData, isLoading: performanceLoading } = useApiQuery(
+    ["portfolio", "performance", selectedTimeframe],
     () => portfolioService.getPerformanceHistory(selectedTimeframe),
     {
       refetchInterval: 60000, // Refetch every minute
-    }
+    },
   );
 
-  const {
-    data: strategies,
-    isLoading: strategiesLoading,
-  } = useApiQuery(
-    ['strategies', 'active'],
+  const { data: strategies, isLoading: strategiesLoading } = useApiQuery(
+    ["strategies", "active"],
     () => strategyService.getActiveStrategies(),
     {
       refetchInterval: 300000, // Refetch every 5 minutes
-    }
+    },
   );
 
-  const {
-    data: recentAlerts,
-    isLoading: alertsLoading,
-  } = useApiQuery(
-    ['alerts', 'recent'],
+  const { data: recentAlerts, isLoading: alertsLoading } = useApiQuery(
+    ["alerts", "recent"],
     () => alertService.getRecentAlerts(5),
     {
       refetchInterval: 60000, // Refetch every minute
-    }
+    },
   );
 
-  const {
-    data: marketOverview,
-    isLoading: marketLoading,
-  } = useApiQuery(
-    ['market', 'overview'],
+  const { data: marketOverview, isLoading: marketLoading } = useApiQuery(
+    ["market", "overview"],
     () => marketService.getMarketOverview(),
     {
       refetchInterval: 30000, // Refetch every 30 seconds
-    }
+    },
   );
 
-  const {
-    data: newsData,
-    isLoading: newsLoading,
-  } = useApiQuery(
-    ['news', 'latest'],
+  const { data: newsData, isLoading: newsLoading } = useApiQuery(
+    ["news", "latest"],
     () => marketService.getLatestNews(5),
     {
       refetchInterval: 300000, // Refetch every 5 minutes
-    }
+    },
   );
 
   useEffect(() => {
     // Set up real-time alert listener
     const alertListener = alertService.subscribeToAlerts((newAlert: Alert) => {
       addAlert(newAlert);
-      HapticFeedback.trigger('notificationSuccess');
+      HapticFeedback.trigger("notificationSuccess");
     });
 
     return () => {
@@ -130,7 +118,7 @@ const DashboardScreen = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    HapticFeedback.trigger('impactLight');
+    HapticFeedback.trigger("impactLight");
 
     try {
       await Promise.all([
@@ -138,41 +126,53 @@ const DashboardScreen = () => {
         // Add other refetch calls here
       ]);
     } catch (error) {
-      console.error('Error refreshing dashboard:', error);
+      console.error("Error refreshing dashboard:", error);
     } finally {
       setRefreshing(false);
     }
   }, [refetchPortfolio]);
 
-  const navigateToStrategy = useCallback((strategy: Strategy) => {
-    HapticFeedback.trigger('impactLight');
-    navigation.navigate('StrategyDetail', {
-      id: strategy.id,
-      name: strategy.name
-    });
-  }, [navigation]);
+  const navigateToStrategy = useCallback(
+    (strategy: Strategy) => {
+      HapticFeedback.trigger("impactLight");
+      navigation.navigate("StrategyDetail", {
+        id: strategy.id,
+        name: strategy.name,
+      });
+    },
+    [navigation],
+  );
 
   const navigateToAlerts = useCallback(() => {
-    HapticFeedback.trigger('impactLight');
-    navigation.navigate('AlertsTab');
+    HapticFeedback.trigger("impactLight");
+    navigation.navigate("AlertsTab");
   }, [navigation]);
 
   const navigateToNotifications = useCallback(() => {
-    HapticFeedback.trigger('impactLight');
-    navigation.navigate('Notifications');
+    HapticFeedback.trigger("impactLight");
+    navigation.navigate("Notifications");
   }, [navigation]);
 
   const handleTimeframeChange = useCallback((timeframe: string) => {
     setSelectedTimeframe(timeframe);
-    HapticFeedback.trigger('impactLight');
+    HapticFeedback.trigger("impactLight");
   }, []);
 
   const renderHeader = () => (
-    <Card variant="elevated" padding="medium" margin="none" style={styles.header}>
+    <Card
+      variant="elevated"
+      padding="medium"
+      margin="none"
+      style={styles.header}
+    >
       <View style={styles.headerContent}>
         <View>
-          <Text style={[styles.title, { color: theme.text }]}>QuantumAlpha</Text>
-          <Text style={[styles.subtitle, { color: theme.text }]}>Portfolio Dashboard</Text>
+          <Text style={[styles.title, { color: theme.text }]}>
+            QuantumAlpha
+          </Text>
+          <Text style={[styles.subtitle, { color: theme.text }]}>
+            Portfolio Dashboard
+          </Text>
         </View>
         <View style={styles.headerIcons}>
           <TouchableOpacity
@@ -183,7 +183,7 @@ const DashboardScreen = () => {
             {recentAlerts && recentAlerts.length > 0 && (
               <View style={[styles.badge, { backgroundColor: theme.error }]}>
                 <Text style={styles.badgeText}>
-                  {recentAlerts.length > 9 ? '9+' : recentAlerts.length}
+                  {recentAlerts.length > 9 ? "9+" : recentAlerts.length}
                 </Text>
               </View>
             )}
@@ -232,15 +232,18 @@ const DashboardScreen = () => {
               style={[
                 styles.changeText,
                 {
-                  color: isPositive ? COLORS.CHART.POSITIVE : COLORS.CHART.NEGATIVE,
+                  color: isPositive
+                    ? COLORS.CHART.POSITIVE
+                    : COLORS.CHART.NEGATIVE,
                   marginLeft: SPACING.XS,
-                }
+                },
               ]}
             >
-              {formatCurrency(portfolioData.dailyChange)} ({formatPercentage(portfolioData.dailyChangePercent)})
+              {formatCurrency(portfolioData.dailyChange)} (
+              {formatPercentage(portfolioData.dailyChangePercent)})
             </Text>
           </View>
-          <Text style={[styles.changeLabel, { color: theme.text + '80' }]}>
+          <Text style={[styles.changeLabel, { color: theme.text + "80" }]}>
             Today's Change
           </Text>
         </Card>
@@ -285,7 +288,13 @@ const DashboardScreen = () => {
 
   const renderStrategies = () => {
     if (strategiesLoading) {
-      return <SkeletonLoader type="list" count={3} style={styles.strategiesContainer} />;
+      return (
+        <SkeletonLoader
+          type="list"
+          count={3}
+          style={styles.strategiesContainer}
+        />
+      );
     }
 
     return (
@@ -295,7 +304,9 @@ const DashboardScreen = () => {
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Active Strategies
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('StrategyTab')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("StrategyTab")}
+            >
               <Text style={[styles.seeAllText, { color: theme.primary }]}>
                 See All
               </Text>
@@ -318,13 +329,13 @@ const DashboardScreen = () => {
           ) : (
             <Card variant="outlined" padding="large" margin="small">
               <View style={styles.emptyState}>
-                <Icon name="strategy" size={40} color={theme.text + '60'} />
+                <Icon name="strategy" size={40} color={theme.text + "60"} />
                 <Text style={[styles.emptyStateText, { color: theme.text }]}>
                   No active strategies
                 </Text>
                 <Button
                   title="Explore Strategies"
-                  onPress={() => navigation.navigate('StrategyTab')}
+                  onPress={() => navigation.navigate("StrategyTab")}
                   variant="outline"
                   size="small"
                   style={{ marginTop: SPACING.MD }}
@@ -351,7 +362,9 @@ const DashboardScreen = () => {
 
   const renderAlerts = () => {
     if (alertsLoading) {
-      return <SkeletonLoader type="list" count={3} style={styles.alertsContainer} />;
+      return (
+        <SkeletonLoader type="list" count={3} style={styles.alertsContainer} />
+      );
     }
 
     return (
@@ -381,13 +394,13 @@ const DashboardScreen = () => {
           ) : (
             <Card variant="outlined" padding="large" margin="small">
               <View style={styles.emptyState}>
-                <Icon name="bell-off" size={40} color={theme.text + '60'} />
+                <Icon name="bell-off" size={40} color={theme.text + "60"} />
                 <Text style={[styles.emptyStateText, { color: theme.text }]}>
                   No recent alerts
                 </Text>
                 <Button
                   title="Create Alert"
-                  onPress={() => navigation.navigate('AlertsTab')}
+                  onPress={() => navigation.navigate("AlertsTab")}
                   variant="outline"
                   size="small"
                   style={{ marginTop: SPACING.MD }}
@@ -402,14 +415,18 @@ const DashboardScreen = () => {
 
   if (portfolioLoading && !portfolioData) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.background }]}
+      >
         <LoadingSpinner size="large" />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.background }]}
+    >
       {renderHeader()}
 
       <ScrollView
@@ -446,13 +463,13 @@ const styles = StyleSheet.create({
     marginTop: SPACING.SM,
   },
   headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 16,
@@ -460,33 +477,33 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   headerIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   iconButton: {
     padding: SPACING.SM,
     marginLeft: SPACING.SM,
-    position: 'relative',
+    position: "relative",
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     top: 0,
     minWidth: 18,
     height: 18,
     borderRadius: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   badgeText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   scrollContent: {
     paddingBottom: SPACING.XXL,
   },
   portfolioSummary: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   portfolioLabel: {
     fontSize: 14,
@@ -495,17 +512,17 @@ const styles = StyleSheet.create({
   },
   portfolioValue: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: SPACING.SM,
   },
   changeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: SPACING.XS,
   },
   changeText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   changeLabel: {
     fontSize: 12,
@@ -515,19 +532,19 @@ const styles = StyleSheet.create({
     marginTop: SPACING.MD,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: SPACING.MD,
     paddingHorizontal: SPACING.MD,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   seeAllText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   strategiesContainer: {
     marginTop: SPACING.MD,
@@ -536,14 +553,14 @@ const styles = StyleSheet.create({
     marginTop: SPACING.MD,
   },
   emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: SPACING.LG,
   },
   emptyStateText: {
     marginTop: SPACING.SM,
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

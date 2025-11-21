@@ -72,7 +72,7 @@ data:
   # Compliance configuration
   AUDIT_ENABLED: "true"
   AUDIT_LOG_LEVEL: "INFO"
-  AUDIT_RETENTION_DAYS: "2555"  # 7 years for SOX compliance
+  AUDIT_RETENTION_DAYS: "2555" # 7 years for SOX compliance
 
   # Encryption configuration
   ENCRYPTION_ALGORITHM: "AES-256-GCM"
@@ -80,7 +80,7 @@ data:
 
   # Backup configuration
   BACKUP_ENABLED: "true"
-  BACKUP_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+  BACKUP_SCHEDULE: "0 2 * * *" # Daily at 2 AM
   BACKUP_RETENTION_DAYS: "90"
 ---
 apiVersion: v1

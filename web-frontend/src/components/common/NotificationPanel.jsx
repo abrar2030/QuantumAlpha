@@ -1,7 +1,7 @@
-import React from 'react';
-import { Snackbar, Alert, Slide } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { removeNotification } from '../../store/slices/uiSlice';
+import React from "react";
+import { Snackbar, Alert, Slide } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { removeNotification } from "../../store/slices/uiSlice";
 
 const NotificationPanel = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const NotificationPanel = () => {
         <Snackbar
           key={notification.id}
           open={true}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           TransitionComponent={Slide}
           autoHideDuration={notification.duration || 6000}
           onClose={() => handleClose(notification.id)}
@@ -25,10 +25,10 @@ const NotificationPanel = () => {
         >
           <Alert
             onClose={() => handleClose(notification.id)}
-            severity={notification.type || 'info'}
+            severity={notification.type || "info"}
             variant="filled"
             elevation={6}
-            sx={{ width: '100%' }}
+            sx={{ width: "100%" }}
           >
             {notification.message}
           </Alert>

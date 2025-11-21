@@ -14,7 +14,7 @@ metadata:
     security.alpha.kubernetes.io/sysctls: "net.core.somaxconn=65535"
 spec:
   finalizers:
-  - kubernetes
+    - kubernetes
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -40,20 +40,20 @@ metadata:
   namespace: quantumalpha
 spec:
   limits:
-  - default:
-      cpu: "1"
-      memory: "1Gi"
-    defaultRequest:
-      cpu: "100m"
-      memory: "128Mi"
-    type: Container
-  - max:
-      cpu: "4"
-      memory: "8Gi"
-    min:
-      cpu: "50m"
-      memory: "64Mi"
-    type: Container
-  - max:
-      storage: "100Gi"
-    type: PersistentVolumeClaim
+    - default:
+        cpu: "1"
+        memory: "1Gi"
+      defaultRequest:
+        cpu: "100m"
+        memory: "128Mi"
+      type: Container
+    - max:
+        cpu: "4"
+        memory: "8Gi"
+      min:
+        cpu: "50m"
+        memory: "64Mi"
+      type: Container
+    - max:
+        storage: "100Gi"
+      type: PersistentVolumeClaim

@@ -34,34 +34,38 @@ To run all linters on all parts of the project:
 
 The script supports the following options:
 
-| Option | Description |
-|--------|-------------|
-| `-h, --help` | Show help message |
-| `-b, --backend` | Run only backend linting |
-| `-w, --web` | Run only web frontend linting |
-| `-m, --mobile` | Run only mobile frontend linting |
-| `-f, --fix` | Attempt to fix issues automatically |
-| `-v, --verbose` | Show detailed output |
-| `-r, --report` | Generate HTML reports |
+| Option          | Description                         |
+| --------------- | ----------------------------------- |
+| `-h, --help`    | Show help message                   |
+| `-b, --backend` | Run only backend linting            |
+| `-w, --web`     | Run only web frontend linting       |
+| `-m, --mobile`  | Run only mobile frontend linting    |
+| `-f, --fix`     | Attempt to fix issues automatically |
+| `-v, --verbose` | Show detailed output                |
+| `-r, --report`  | Generate HTML reports               |
 
 ### Examples
 
 Run only backend linters:
+
 ```bash
 ./lint.sh --backend
 ```
 
 Run web and mobile linters with auto-fix:
+
 ```bash
 ./lint.sh -w -m -f
 ```
 
 Generate HTML reports for all components:
+
 ```bash
 ./lint.sh --report
 ```
 
 Run with verbose output:
+
 ```bash
 ./lint.sh --verbose
 ```

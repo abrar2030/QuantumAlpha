@@ -1,5 +1,5 @@
-import React from 'react';
-import { Alert, AlertTitle } from '@mui/material';
+import React from "react";
+import { Alert, AlertTitle } from "@mui/material";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     // Log the error to an error reporting service
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
     this.setState({ errorInfo });
   }
 
@@ -28,16 +28,19 @@ class ErrorBoundary extends React.Component {
           sx={{
             my: 2,
             boxShadow: 3,
-            '& .MuiAlert-message': {
-              width: '100%'
-            }
+            "& .MuiAlert-message": {
+              width: "100%",
+            },
           }}
         >
           <AlertTitle>Something went wrong</AlertTitle>
           <p>We're sorry, but there was an error loading this component.</p>
-          <p>Please try refreshing the page or contact support if the issue persists.</p>
-          {process.env.NODE_ENV === 'development' && (
-            <details style={{ whiteSpace: 'pre-wrap', marginTop: '10px' }}>
+          <p>
+            Please try refreshing the page or contact support if the issue
+            persists.
+          </p>
+          {process.env.NODE_ENV === "development" && (
+            <details style={{ whiteSpace: "pre-wrap", marginTop: "10px" }}>
               {this.state.error && this.state.error.toString()}
               <br />
               {this.state.errorInfo && this.state.errorInfo.componentStack}

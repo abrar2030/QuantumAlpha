@@ -89,8 +89,8 @@ order_execution:
       enabled: true
       description: "Limit order execution"
       params:
-        price_improvement: 0.001  # 0.1% price improvement
-        max_wait_time: 60  # seconds
+        price_improvement: 0.001 # 0.1% price improvement
+        max_wait_time: 60 # seconds
         aggressive_after_wait: true
 
     - name: twap
@@ -98,8 +98,8 @@ order_execution:
       description: "Time-Weighted Average Price execution"
       params:
         num_slices: 5
-        interval: 60  # seconds
-        price_limit_buffer: 0.005  # 0.5% buffer
+        interval: 60 # seconds
+        price_limit_buffer: 0.005 # 0.5% buffer
 
     - name: vwap
       enabled: true
@@ -116,7 +116,7 @@ order_execution:
       params:
         display_size: 100
         price_limit: "best_bid_ask"
-        price_improvement: 0.0005  # 0.05% price improvement
+        price_improvement: 0.0005 # 0.05% price improvement
 
     - name: smart_router
       enabled: true
@@ -140,7 +140,7 @@ order_management:
       - duplicate_orders
 
   order_tracking:
-    update_frequency: 1  # seconds
+    update_frequency: 1 # seconds
     status_change_notifications: true
     execution_details_logging: true
 
@@ -177,26 +177,26 @@ trading_parameters:
     - Friday
 
   holidays:
-    - "2023-01-02"  # New Year's Day (observed)
-    - "2023-01-16"  # Martin Luther King Jr. Day
-    - "2023-02-20"  # Presidents' Day
-    - "2023-04-07"  # Good Friday
-    - "2023-05-29"  # Memorial Day
-    - "2023-06-19"  # Juneteenth
-    - "2023-07-04"  # Independence Day
-    - "2023-09-04"  # Labor Day
-    - "2023-11-23"  # Thanksgiving Day
-    - "2023-12-25"  # Christmas Day
+    - "2023-01-02" # New Year's Day (observed)
+    - "2023-01-16" # Martin Luther King Jr. Day
+    - "2023-02-20" # Presidents' Day
+    - "2023-04-07" # Good Friday
+    - "2023-05-29" # Memorial Day
+    - "2023-06-19" # Juneteenth
+    - "2023-07-04" # Independence Day
+    - "2023-09-04" # Labor Day
+    - "2023-11-23" # Thanksgiving Day
+    - "2023-12-25" # Christmas Day
 
   circuit_breakers:
     level_1:
-      decline: 0.07  # 7% decline
+      decline: 0.07 # 7% decline
       action: pause_15min
     level_2:
-      decline: 0.13  # 13% decline
+      decline: 0.13 # 13% decline
       action: pause_15min
     level_3:
-      decline: 0.20  # 20% decline
+      decline: 0.20 # 20% decline
       action: halt_trading
 
 # Transaction Cost Analysis
@@ -227,13 +227,13 @@ event_processing:
     topics:
       - name: order_events
         partitions: 3
-        retention_ms: 604800000  # 7 days
+        retention_ms: 604800000 # 7 days
       - name: execution_events
         partitions: 3
-        retention_ms: 604800000  # 7 days
+        retention_ms: 604800000 # 7 days
       - name: position_updates
         partitions: 3
-        retention_ms: 604800000  # 7 days
+        retention_ms: 604800000 # 7 days
 
     consumer_groups:
       - name: execution-service
@@ -276,6 +276,6 @@ monitoring:
         - email
         - slack
       thresholds:
-        high_rejection_rate: 0.1  # 10% rejection rate
-        high_slippage: 0.005  # 0.5% slippage
-        high_latency: 1000  # 1000ms latency
+        high_rejection_rate: 0.1 # 10% rejection rate
+        high_slippage: 0.005 # 0.5% slippage
+        high_latency: 1000 # 1000ms latency

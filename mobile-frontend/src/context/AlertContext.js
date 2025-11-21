@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from "react";
 
 const AlertContext = createContext();
 
@@ -23,14 +23,14 @@ export const AlertProvider = ({ children }) => {
   const markAsRead = (id) => {
     setAlerts((prevAlerts) =>
       prevAlerts.map((alert) =>
-        alert.id === id ? { ...alert, read: true } : alert
-      )
+        alert.id === id ? { ...alert, read: true } : alert,
+      ),
     );
   };
 
   const markAllAsRead = () => {
     setAlerts((prevAlerts) =>
-      prevAlerts.map((alert) => ({ ...alert, read: true }))
+      prevAlerts.map((alert) => ({ ...alert, read: true })),
     );
   };
 

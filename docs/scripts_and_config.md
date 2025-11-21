@@ -40,6 +40,7 @@ These files contain environment variables for different environments, including 
 To use these files:
 
 1. Copy the appropriate file to `config/.env` based on your environment:
+
    ```bash
    cp config/.env.dev config/.env
    ```
@@ -80,15 +81,18 @@ The logging configuration file is located at `config/logging.yaml`. It contains 
 The `scripts/setup_env.sh` script sets up the development environment for the QuantumAlpha platform.
 
 Usage:
+
 ```bash
 ./scripts/setup_env.sh [options]
 ```
 
 Options:
+
 - `-e, --env ENV`: Set environment (dev, staging, prod). Default: dev
 - `-h, --help`: Show help message
 
 This script:
+
 1. Checks system requirements
 2. Creates and activates a Python virtual environment
 3. Installs Python dependencies
@@ -102,17 +106,20 @@ This script:
 The `scripts/setup_db.py` script initializes the database schema and seeds initial data.
 
 Usage:
+
 ```bash
 python scripts/setup_db.py [options]
 ```
 
 Options:
+
 - `--env {dev,staging,prod}`: Environment (dev, staging, prod). Default: dev
 - `--postgres-only`: Set up PostgreSQL only
 - `--influxdb-only`: Set up InfluxDB only
 - `--no-seed`: Skip seeding initial data
 
 This script:
+
 1. Creates databases if they don't exist
 2. Executes schema creation scripts
 3. Seeds initial data
@@ -122,11 +129,13 @@ This script:
 The `scripts/start_dev.sh` script starts all services for local development.
 
 Usage:
+
 ```bash
 ./scripts/start_dev.sh [options]
 ```
 
 Options:
+
 - `--no-infrastructure`: Don't start infrastructure services
 - `--no-backend`: Don't start backend services
 - `--no-frontend`: Don't start frontend services
@@ -135,6 +144,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Starts infrastructure services (PostgreSQL, InfluxDB, Redis, Kafka)
 2. Starts backend services (data-service, ai-engine, risk-service, execution-service)
 3. Starts frontend services (web-frontend)
@@ -144,17 +154,20 @@ This script:
 The `scripts/stop_services.sh` script stops all running services.
 
 Usage:
+
 ```bash
 ./scripts/stop_services.sh [options]
 ```
 
 Options:
+
 - `--no-infrastructure`: Don't stop infrastructure services
 - `--no-backend`: Don't stop backend services
 - `--no-frontend`: Don't stop frontend services
 - `-h, --help`: Show help message
 
 This script:
+
 1. Stops backend services
 2. Stops frontend services
 3. Stops infrastructure services
@@ -164,11 +177,13 @@ This script:
 The `scripts/start_service.sh` script starts an individual service.
 
 Usage:
+
 ```bash
 ./scripts/start_service.sh [options]
 ```
 
 Options:
+
 - `-s, --service SERVICE`: Service to start (data-service, ai-engine, risk-service, execution-service, web-frontend)
 - `-e, --env ENV`: Environment (dev, staging, prod). Default: dev
 - `-d, --debug`: Start service in debug mode
@@ -177,6 +192,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Loads environment variables
 2. Starts the specified service
 3. Logs output to a file if running in detached mode
@@ -188,11 +204,13 @@ This script:
 The `scripts/run_tests.sh` script runs tests for the QuantumAlpha platform.
 
 Usage:
+
 ```bash
 ./scripts/run_tests.sh [options] [test_path]
 ```
 
 Options:
+
 - `--unit-only`: Run only unit tests
 - `--integration-only`: Run only integration tests
 - `--system-only`: Run only system tests
@@ -204,9 +222,11 @@ Options:
 - `-h, --help`: Show help message
 
 Arguments:
+
 - `test_path`: Path to specific test file or directory
 
 This script:
+
 1. Runs unit tests
 2. Runs integration tests
 3. Runs system tests (if specified)
@@ -219,11 +239,13 @@ This script:
 The `scripts/deploy.sh` script handles building, tagging, and deploying Docker images.
 
 Usage:
+
 ```bash
 ./scripts/deploy.sh [options]
 ```
 
 Options:
+
 - `-e, --env ENV`: Environment to deploy to (dev, staging, prod). Default: dev
 - `-s, --services SERVICES`: Services to deploy (all, data-service, ai-engine, risk-service, execution-service, web-frontend)
 - `--no-build`: Skip building Docker images
@@ -236,6 +258,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Builds Docker images
 2. Pushes Docker images to registry
 3. Deploys to Kubernetes
@@ -245,11 +268,13 @@ This script:
 The `scripts/k8s_deploy.sh` script handles Kubernetes-specific deployment tasks.
 
 Usage:
+
 ```bash
 ./scripts/k8s_deploy.sh [options]
 ```
 
 Options:
+
 - `-e, --env ENV`: Environment (dev, staging, prod). Default: dev
 - `-a, --action ACTION`: Action to perform (apply, delete). Default: apply
 - `-c, --components COMP`: Components to deploy (all, infrastructure, services, monitoring)
@@ -260,6 +285,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Creates namespace if it doesn't exist
 2. Deploys infrastructure components
 3. Deploys service components
@@ -273,11 +299,13 @@ This script:
 The `scripts/monitor_setup.sh` script sets up monitoring and logging.
 
 Usage:
+
 ```bash
 ./scripts/monitor_setup.sh [options]
 ```
 
 Options:
+
 - `-e, --env ENV`: Environment (dev, staging, prod). Default: dev
 - `-c, --components COMP`: Components to set up (all, metrics, logging, dashboards)
 - `-n, --namespace NS`: Kubernetes namespace. If not specified, uses environment-based namespace
@@ -287,6 +315,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Sets up Prometheus and Grafana for metrics monitoring
 2. Sets up Elasticsearch, Fluentd, and Kibana for logging
 3. Sets up dashboards for monitoring
@@ -296,11 +325,13 @@ This script:
 The `scripts/backup.sh` script performs backups of databases and configurations.
 
 Usage:
+
 ```bash
 ./scripts/backup.sh [options]
 ```
 
 Options:
+
 - `-e, --env ENV`: Environment (dev, staging, prod). Default: dev
 - `-c, --components COMP`: Components to backup (all, postgres, influxdb, config)
 - `-d, --backup-dir DIR`: Local backup directory. Default: ./backups
@@ -310,6 +341,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Backs up PostgreSQL database
 2. Backs up InfluxDB
 3. Backs up configuration files
@@ -321,11 +353,13 @@ This script:
 The `scripts/restore.sh` script restores databases and configurations from backups.
 
 Usage:
+
 ```bash
 ./scripts/restore.sh [options]
 ```
 
 Options:
+
 - `-e, --env ENV`: Environment (dev, staging, prod). Default: dev
 - `-c, --components COMP`: Components to restore (all, postgres, influxdb, config)
 - `-f, --backup-file FILE`: Path to backup file (.tar.gz)
@@ -338,6 +372,7 @@ Options:
 - `-h, --help`: Show help message
 
 This script:
+
 1. Downloads backup from S3 (if specified)
 2. Extracts backup
 3. Restores PostgreSQL database

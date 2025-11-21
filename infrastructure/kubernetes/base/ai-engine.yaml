@@ -14,36 +14,36 @@ spec:
         app: ai-engine
     spec:
       containers:
-      - name: ai-engine
-        image: ${ECR_REGISTRY}/quantumalpha/ai-engine:${IMAGE_TAG}
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DATA_SERVICE_URL
-          value: "http://data-service:8080"
-        - name: REDIS_HOST
-          value: "redis"
-        - name: REDIS_PORT
-          value: "6379"
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 15
+        - name: ai-engine
+          image: ${ECR_REGISTRY}/quantumalpha/ai-engine:${IMAGE_TAG}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATA_SERVICE_URL
+              value: "http://data-service:8080"
+            - name: REDIS_HOST
+              value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
@@ -54,6 +54,6 @@ spec:
   selector:
     app: ai-engine
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
   type: ClusterIP

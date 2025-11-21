@@ -7,11 +7,13 @@ This repository contains a comprehensively enhanced infrastructure directory for
 ## 🔒 Security & Compliance Features
 
 ### Financial Compliance Standards
+
 - **SOX (Sarbanes-Oxley Act)**: 7-year audit log retention, change management controls, segregation of duties
 - **PCI DSS (Payment Card Industry Data Security Standard)**: Network segmentation, encryption, access controls
 - **GLBA (Gramm-Leach-Bliley Act)**: Customer data protection, privacy controls, safeguards rule compliance
 
 ### Security Enhancements
+
 - **Encryption**: End-to-end encryption with AWS KMS key rotation
 - **Network Security**: Network policies, security groups, VPC endpoints
 - **Access Controls**: RBAC with least privilege, service accounts
@@ -65,6 +67,7 @@ enhanced_infrastructure/
 ## 🚀 Key Enhancements
 
 ### 1. CI/CD Pipeline Security
+
 - **Security Scanning**: Integrated Trivy, SAST, and dependency scanning
 - **Compliance Checks**: Automated SOX, PCI DSS, and GLBA compliance validation
 - **Secrets Management**: Secure handling of credentials and API keys
@@ -72,6 +75,7 @@ enhanced_infrastructure/
 - **Audit Logging**: Comprehensive deployment audit trails
 
 ### 2. Container Orchestration
+
 - **Pod Security Standards**: Restricted security policies with admission control
 - **Network Policies**: Microsegmentation with default-deny rules
 - **Resource Management**: CPU/memory limits and quotas
@@ -79,6 +83,7 @@ enhanced_infrastructure/
 - **RBAC**: Fine-grained role-based access control
 
 ### 3. Database Security
+
 - **Encryption**: AES-256 encryption at rest and TLS in transit
 - **Access Controls**: Database-level authentication and authorization
 - **Audit Logging**: Complete SQL statement logging for compliance
@@ -86,6 +91,7 @@ enhanced_infrastructure/
 - **Performance Monitoring**: Enhanced monitoring with Performance Insights
 
 ### 4. Network Security
+
 - **VPC Flow Logs**: Complete network traffic monitoring
 - **Network ACLs**: Additional layer of network security
 - **VPC Endpoints**: Secure AWS service access without internet
@@ -93,6 +99,7 @@ enhanced_infrastructure/
 - **TLS Everywhere**: End-to-end encryption for all communications
 
 ### 5. Monitoring & Alerting
+
 - **Prometheus Stack**: Comprehensive metrics collection
 - **Grafana Dashboards**: Financial compliance dashboards
 - **Alert Manager**: Real-time security and compliance alerts
@@ -100,6 +107,7 @@ enhanced_infrastructure/
 - **Compliance Reporting**: Automated compliance status reports
 
 ### 6. Secrets Management
+
 - **AWS Secrets Manager**: Centralized credential storage
 - **KMS Integration**: Hardware security module encryption
 - **Rotation Policies**: Automatic credential rotation
@@ -109,6 +117,7 @@ enhanced_infrastructure/
 ## 🛠️ Deployment Instructions
 
 ### Prerequisites
+
 - Kubernetes cluster (v1.24+)
 - kubectl configured
 - Helm 3.x
@@ -116,6 +125,7 @@ enhanced_infrastructure/
 - AWS CLI configured
 
 ### 1. Deploy Infrastructure
+
 ```bash
 # Deploy Terraform modules
 cd terraform/modules/vpc
@@ -126,6 +136,7 @@ terraform init && terraform plan && terraform apply
 ```
 
 ### 2. Deploy Kubernetes Resources
+
 ```bash
 # Apply base configuration
 kubectl apply -k kubernetes/base/
@@ -137,6 +148,7 @@ kubectl get pods -n security-scanning
 ```
 
 ### 3. Configure Monitoring
+
 ```bash
 # Access Grafana dashboard
 kubectl port-forward -n monitoring svc/grafana 3000:3000
@@ -146,6 +158,7 @@ kubectl port-forward -n monitoring svc/prometheus 9090:9090
 ```
 
 ### 4. Run Security Scans
+
 ```bash
 # Trigger compliance scan
 kubectl create job --from=cronjob/compliance-scanner compliance-scan-$(date +%s) -n security-scanning
@@ -166,6 +179,7 @@ The infrastructure includes pre-configured Grafana dashboards for compliance mon
 ## 🔧 Configuration Management
 
 ### Environment Variables
+
 All sensitive configuration is managed through Kubernetes secrets and ConfigMaps:
 
 ```yaml
@@ -181,6 +195,7 @@ data:
 ```
 
 ### Security Policies
+
 Pod Security Standards are enforced at the namespace level:
 
 ```yaml
@@ -194,6 +209,7 @@ metadata:
 ## 🚨 Security Considerations
 
 ### Production Deployment
+
 1. **Change Default Passwords**: Update all default credentials in secrets/
 2. **Certificate Management**: Deploy proper TLS certificates
 3. **Network Configuration**: Configure firewall rules and VPN access
@@ -201,6 +217,7 @@ metadata:
 5. **Incident Response**: Set up alerting and response procedures
 
 ### Compliance Requirements
+
 1. **Audit Logging**: Ensure all audit logs are properly configured
 2. **Data Retention**: Verify 7-year retention for SOX compliance
 3. **Access Reviews**: Implement regular access control reviews
@@ -210,12 +227,14 @@ metadata:
 ## 📈 Performance Optimization
 
 ### Resource Allocation
+
 - **CPU Limits**: Configured based on workload requirements
 - **Memory Limits**: Optimized for financial data processing
 - **Storage**: High-performance encrypted storage
 - **Network**: Optimized for low-latency trading operations
 
 ### Scaling Configuration
+
 - **Horizontal Pod Autoscaler**: Automatic scaling based on metrics
 - **Vertical Pod Autoscaler**: Resource optimization
 - **Cluster Autoscaler**: Node-level scaling
@@ -224,6 +243,7 @@ metadata:
 ## 🔍 Troubleshooting
 
 ### Common Issues
+
 1. **Pod Security Violations**: Check security context configurations
 2. **Network Policy Blocks**: Verify network policy rules
 3. **Certificate Errors**: Ensure TLS certificates are valid
@@ -231,6 +251,7 @@ metadata:
 5. **Storage Issues**: Verify PVC and storage class configuration
 
 ### Debugging Commands
+
 ```bash
 # Check pod security violations
 kubectl get events --field-selector reason=FailedCreate

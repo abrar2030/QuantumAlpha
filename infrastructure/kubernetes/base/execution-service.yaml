@@ -14,34 +14,34 @@ spec:
         app: execution-service
     spec:
       containers:
-      - name: execution-service
-        image: ${ECR_REGISTRY}/quantumalpha/execution-service:${IMAGE_TAG}
-        ports:
-        - containerPort: 8080
-        env:
-        - name: RISK_SERVICE_URL
-          value: "http://risk-service:8080"
-        - name: KAFKA_BOOTSTRAP_SERVERS
-          value: "kafka:29092"
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 15
+        - name: execution-service
+          image: ${ECR_REGISTRY}/quantumalpha/execution-service:${IMAGE_TAG}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: RISK_SERVICE_URL
+              value: "http://risk-service:8080"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:29092"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
@@ -52,6 +52,6 @@ spec:
   selector:
     app: execution-service
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
   type: ClusterIP

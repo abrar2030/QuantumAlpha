@@ -27,21 +27,21 @@ metadata:
   labels:
     app: prometheus
 rules:
-- apiGroups: [""]
-  resources:
-  - nodes
-  - nodes/proxy
-  - services
-  - endpoints
-  - pods
-  verbs: ["get", "list", "watch"]
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs: ["get", "list", "watch"]
-- nonResourceURLs: ["/metrics"]
-  verbs: ["get"]
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs: ["get", "list", "watch"]
+  - nonResourceURLs: ["/metrics"]
+    verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -54,9 +54,9 @@ roleRef:
   kind: ClusterRole
   name: prometheus
 subjects:
-- kind: ServiceAccount
-  name: prometheus
-  namespace: monitoring
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: monitoring
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -316,65 +316,65 @@ spec:
         runAsGroup: 65534
         fsGroup: 65534
       containers:
-      - name: prometheus
-        image: prom/prometheus:v2.45.0
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          runAsGroup: 65534
-          capabilities:
-            drop:
-            - ALL
-        args:
-        - '--config.file=/etc/prometheus/prometheus.yml'
-        - '--storage.tsdb.path=/prometheus/'
-        - '--web.console.libraries=/etc/prometheus/console_libraries'
-        - '--web.console.templates=/etc/prometheus/consoles'
-        - '--storage.tsdb.retention.time=30d'
-        - '--web.enable-lifecycle'
-        - '--web.enable-admin-api'
-        - '--storage.tsdb.wal-compression'
-        ports:
-        - containerPort: 9090
-          name: prometheus
-        volumeMounts:
-        - name: prometheus-config
-          mountPath: /etc/prometheus
-        - name: prometheus-storage
-          mountPath: /prometheus
-        - name: tmp
-          mountPath: /tmp
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-        livenessProbe:
-          httpGet:
-            path: /-/healthy
-            port: 9090
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /-/ready
-            port: 9090
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: prometheus
+          image: prom/prometheus:v2.45.0
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+            - "--web.console.libraries=/etc/prometheus/console_libraries"
+            - "--web.console.templates=/etc/prometheus/consoles"
+            - "--storage.tsdb.retention.time=30d"
+            - "--web.enable-lifecycle"
+            - "--web.enable-admin-api"
+            - "--storage.tsdb.wal-compression"
+          ports:
+            - containerPort: 9090
+              name: prometheus
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus
+            - name: prometheus-storage
+              mountPath: /prometheus
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
-      - name: prometheus-config
-        configMap:
-          name: prometheus-config
-      - name: prometheus-storage
-        persistentVolumeClaim:
-          claimName: prometheus-pvc
-      - name: tmp
-        emptyDir: {}
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+        - name: prometheus-storage
+          persistentVolumeClaim:
+            claimName: prometheus-pvc
+        - name: tmp
+          emptyDir: {}
       nodeSelector:
         security: high
 ---
@@ -391,10 +391,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 9090
-    targetPort: 9090
-    protocol: TCP
-    name: prometheus
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+      name: prometheus
   selector:
     app: prometheus
 ---
@@ -407,7 +407,7 @@ metadata:
     app: prometheus
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 50Gi
@@ -438,94 +438,94 @@ spec:
         runAsGroup: 472
         fsGroup: 472
       containers:
-      - name: grafana
-        image: grafana/grafana:10.0.0
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 472
-          runAsGroup: 472
-          capabilities:
-            drop:
-            - ALL
-        env:
-        - name: GF_SECURITY_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: grafana-credentials
-              key: admin-password
-        - name: GF_SECURITY_ADMIN_USER
-          value: "admin"
-        - name: GF_SECURITY_DISABLE_GRAVATAR
-          value: "true"
-        - name: GF_SECURITY_COOKIE_SECURE
-          value: "true"
-        - name: GF_SECURITY_COOKIE_SAMESITE
-          value: "strict"
-        - name: GF_SECURITY_STRICT_TRANSPORT_SECURITY
-          value: "true"
-        - name: GF_SECURITY_X_CONTENT_TYPE_OPTIONS
-          value: "true"
-        - name: GF_SECURITY_X_XSS_PROTECTION
-          value: "true"
-        - name: GF_USERS_ALLOW_SIGN_UP
-          value: "false"
-        - name: GF_USERS_ALLOW_ORG_CREATE
-          value: "false"
-        - name: GF_USERS_AUTO_ASSIGN_ORG
-          value: "true"
-        - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
-          value: "Viewer"
-        - name: GF_AUTH_ANONYMOUS_ENABLED
-          value: "false"
-        - name: GF_LOG_MODE
-          value: "console"
-        - name: GF_LOG_LEVEL
-          value: "info"
-        - name: GF_ALERTING_ENABLED
-          value: "true"
-        - name: GF_UNIFIED_ALERTING_ENABLED
-          value: "true"
-        ports:
-        - containerPort: 3000
-          name: grafana
-        volumeMounts:
-        - name: grafana-storage
-          mountPath: /var/lib/grafana
-        - name: grafana-config
-          mountPath: /etc/grafana/provisioning
-        - name: tmp
-          mountPath: /tmp
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /api/health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /api/health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: grafana
+          image: grafana/grafana:10.0.0
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 472
+            runAsGroup: 472
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-credentials
+                  key: admin-password
+            - name: GF_SECURITY_ADMIN_USER
+              value: "admin"
+            - name: GF_SECURITY_DISABLE_GRAVATAR
+              value: "true"
+            - name: GF_SECURITY_COOKIE_SECURE
+              value: "true"
+            - name: GF_SECURITY_COOKIE_SAMESITE
+              value: "strict"
+            - name: GF_SECURITY_STRICT_TRANSPORT_SECURITY
+              value: "true"
+            - name: GF_SECURITY_X_CONTENT_TYPE_OPTIONS
+              value: "true"
+            - name: GF_SECURITY_X_XSS_PROTECTION
+              value: "true"
+            - name: GF_USERS_ALLOW_SIGN_UP
+              value: "false"
+            - name: GF_USERS_ALLOW_ORG_CREATE
+              value: "false"
+            - name: GF_USERS_AUTO_ASSIGN_ORG
+              value: "true"
+            - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
+              value: "Viewer"
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "false"
+            - name: GF_LOG_MODE
+              value: "console"
+            - name: GF_LOG_LEVEL
+              value: "info"
+            - name: GF_ALERTING_ENABLED
+              value: "true"
+            - name: GF_UNIFIED_ALERTING_ENABLED
+              value: "true"
+          ports:
+            - containerPort: 3000
+              name: grafana
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+            - name: grafana-config
+              mountPath: /etc/grafana/provisioning
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
-      - name: grafana-storage
-        persistentVolumeClaim:
-          claimName: grafana-pvc
-      - name: grafana-config
-        configMap:
-          name: grafana-config
-      - name: tmp
-        emptyDir: {}
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-pvc
+        - name: grafana-config
+          configMap:
+            name: grafana-config
+        - name: tmp
+          emptyDir: {}
       nodeSelector:
         security: high
 ---
@@ -539,10 +539,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 3000
-    targetPort: 3000
-    protocol: TCP
-    name: grafana
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: grafana
   selector:
     app: grafana
 ---
@@ -555,7 +555,7 @@ metadata:
     app: grafana
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi
@@ -570,7 +570,7 @@ metadata:
     app: grafana
 type: Opaque
 data:
-  admin-password: Y2hhbmdlbWVfZ3JhZmFuYV9wYXNzd29yZF9pbl9wcm9kdWN0aW9u  # changeme_grafana_password_in_production
+  admin-password: Y2hhbmdlbWVfZ3JhZmFuYV9wYXNzd29yZF9pbl9wcm9kdWN0aW9u # changeme_grafana_password_in_production
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -109,6 +109,7 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 ```
 
 Types include:
+
 - `feat`: A new feature
 - `fix`: A bug fix
 - `docs`: Documentation changes
@@ -121,6 +122,7 @@ Types include:
 - `chore`: Other changes
 
 Examples:
+
 ```
 feat(ai-engine): add support for transformer models
 fix(data-service): resolve connection timeout with external APIs

@@ -1,22 +1,29 @@
-import React from 'react';
-import { Box, Card, CardContent, Grid, Typography, useTheme } from '@mui/material';
+import React from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
 const RecentTradesList = ({ trades }) => {
   const theme = useTheme();
 
   return (
-    <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
+    <Box sx={{ overflowY: "auto", maxHeight: 300 }}>
       {trades.map((trade) => (
         <Card
           key={trade.id}
           sx={{
             mb: 2,
-            backgroundColor: 'background.paper',
-            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            '&:hover': {
-              transform: 'translateY(-2px)',
-              boxShadow: '0 6px 12px rgba(0,0,0,0.2)'
-            }
+            backgroundColor: "background.paper",
+            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            "&:hover": {
+              transform: "translateY(-2px)",
+              boxShadow: "0 6px 12px rgba(0,0,0,0.2)",
+            },
           }}
         >
           <CardContent sx={{ py: 1.5 }}>
@@ -29,10 +36,10 @@ const RecentTradesList = ({ trades }) => {
                   {trade.timestamp}
                 </Typography>
               </Grid>
-              <Grid item xs={4} sx={{ textAlign: 'right' }}>
+              <Grid item xs={4} sx={{ textAlign: "right" }}>
                 <Typography
                   variant="body1"
-                  color={trade.type === 'BUY' ? 'primary' : 'error'}
+                  color={trade.type === "BUY" ? "primary" : "error"}
                   fontWeight="bold"
                 >
                   {trade.type}

@@ -1,16 +1,18 @@
 // This file would contain a placeholder for a new modular component.
 // Example: src/components/common/Header.jsx
 
-import React from 'react';
+import React from "react";
 
 const Header = ({ title }) => {
   return (
-    <header style={{
-      padding: '20px',
-      backgroundColor: '#f0f0f0',
-      borderBottom: '1px solid #ccc',
-      textAlign: 'center'
-    }}>
+    <header
+      style={{
+        padding: "20px",
+        backgroundColor: "#f0f0f0",
+        borderBottom: "1px solid #ccc",
+        textAlign: "center",
+      }}
+    >
       <h1>{title}</h1>
     </header>
   );

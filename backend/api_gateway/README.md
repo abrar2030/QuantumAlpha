@@ -3,6 +3,7 @@
 This directory would contain the API Gateway responsible for routing requests to various microservices, handling authentication (OAuth 2.0), and performing initial input validation.
 
 ## Key Responsibilities:
+
 - **Authentication & Authorization:** Enforce OAuth 2.0 (Auth Code + PKCE) with HTTPS for all endpoints. Use short-lived access tokens and refresh tokens. Validate JWT scopes.
 - **Input Validation & Sanitization:** Implement server-side validation and sanitization for all incoming requests to prevent common vulnerabilities like SQL injection and XSS.
 - **Rate Limiting:** Implement rate limiting to prevent abuse and ensure fair usage of the API.
@@ -10,6 +11,7 @@ This directory would contain the API Gateway responsible for routing requests to
 - **Security Headers:** Add appropriate security headers to all API responses.
 
 ## Example (Conceptual) - `auth_middleware.py`
+
 ```python
 # This is a conceptual example and would require a proper OAuth 2.0 library and implementation.
 

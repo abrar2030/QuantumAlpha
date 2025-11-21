@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,24 +9,27 @@ import {
   RefreshControl,
   ActivityIndicator,
   Dimensions,
-} from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+} from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
-import { useTheme } from '../../context/ThemeContext';
-import { useAlert } from '../../context/AlertContext';
-import { portfolioService } from '../../services/portfolioService';
-import { strategyService } from '../../services/strategyService';
-import { alertService } from '../../services/alertService';
-import { authenticateWithBiometrics } from '../../auth/BiometricAuth';
-import { retrieveDataSecurely } from '../../auth/SecureStorage';
-import { registerForPushNotifications, sendPushNotification } from '../../services/PushNotificationService';
+import { useTheme } from "../../context/ThemeContext";
+import { useAlert } from "../../context/AlertContext";
+import { portfolioService } from "../../services/portfolioService";
+import { strategyService } from "../../services/strategyService";
+import { alertService } from "../../services/alertService";
+import { authenticateWithBiometrics } from "../../auth/BiometricAuth";
+import { retrieveDataSecurely } from "../../auth/SecureStorage";
+import {
+  registerForPushNotifications,
+  sendPushNotification,
+} from "../../services/PushNotificationService";
 
-import PerformanceCard from '../../components/dashboard/PerformanceCard';
-import StrategyCard from '../../components/dashboard/StrategyCard';
-import AlertItem from '../../components/alerts/AlertItem';
-import MarketOverview from '../../components/dashboard/MarketOverview';
+import PerformanceCard from "../../components/dashboard/PerformanceCard";
+import StrategyCard from "../../components/dashboard/StrategyCard";
+import AlertItem from "../../components/alerts/AlertItem";
+import MarketOverview from "../../components/dashboard/MarketOverview";
 
 const DashboardScreen = () => {
   const navigation = useNavigation();
@@ -47,7 +50,7 @@ const DashboardScreen = () => {
   const [strategies, setStrategies] = useState([]);
   const [recentAlerts, setRecentAlerts] = useState([]);
 
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
 
   useEffect(() => {
     const initApp = async () => {
@@ -89,7 +92,8 @@ const DashboardScreen = () => {
 
       // In a real app, these would be API calls to the backend services
       const portfolioResponse = await portfolioService.getPortfolioSummary();
-      const performanceResponse = await portfolioService.getPerformanceHistory();
+      const performanceResponse =
+        await portfolioService.getPerformanceHistory();
       const strategiesResponse = await strategyService.getActiveStrategies();
       const alertsResponse = await alertService.getRecentAlerts(5);
 
@@ -107,7 +111,7 @@ const DashboardScreen = () => {
       setStrategies(strategiesResponse);
       setRecentAlerts(alertsResponse);
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
+      console.error("Error loading dashboard data:", error);
       // In a real app, you would handle errors appropriately
     } finally {
       setLoading(false);
@@ -121,23 +125,25 @@ const DashboardScreen = () => {
   };
 
   const navigateToStrategy = (strategy) => {
-    navigation.navigate('StrategyDetail', {
+    navigation.navigate("StrategyDetail", {
       id: strategy.id,
-      name: strategy.name
+      name: strategy.name,
     });
   };
 
   const navigateToAlerts = () => {
-    navigation.navigate('AlertsTab');
+    navigation.navigate("AlertsTab");
   };
 
   const navigateToNotifications = () => {
-    navigation.navigate('Notifications');
+    navigation.navigate("Notifications");
   };
 
   if (loading && !refreshing) {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+      <View
+        style={[styles.loadingContainer, { backgroundColor: theme.background }]}
+      >
         <ActivityIndicator size="large" color={theme.primary} />
         <Text style={[styles.loadingText, { color: theme.text }]}>
           Loading dashboard...
@@ -147,10 +153,14 @@ const DashboardScreen = () => {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.background }]}
+    >
       <View style={[styles.header, { backgroundColor: theme.card }]}>
         <View style={styles.headerContent}>
-          <Text style={[styles.title, { color: theme.text }]}>QuantumAlpha</Text>
+          <Text style={[styles.title, { color: theme.text }]}>
+            QuantumAlpha
+          </Text>
           <View style={styles.headerIcons}>
             <TouchableOpacity
               style={styles.iconButton}
@@ -158,9 +168,14 @@ const DashboardScreen = () => {
             >
               <Icon name="bell" size={24} color={theme.text} />
               {recentAlerts.length > 0 && (
-                <View style={[styles.badge, { backgroundColor: theme.notification }]}>
+                <View
+                  style={[
+                    styles.badge,
+                    { backgroundColor: theme.notification },
+                  ]}
+                >
                   <Text style={styles.badgeText}>
-                    {recentAlerts.length > 9 ? '9+' : recentAlerts.length}
+                    {recentAlerts.length > 9 ? "9+" : recentAlerts.length}
                   </Text>
                 </View>
               )}
@@ -173,7 +188,9 @@ const DashboardScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <Text style={[styles.subtitle, { color: theme.text }]}>Portfolio Dashboard</Text>
+        <Text style={[styles.subtitle, { color: theme.text }]}>
+          Portfolio Dashboard
+        </Text>
       </View>
 
       <ScrollView
@@ -187,7 +204,9 @@ const DashboardScreen = () => {
           />
         }
       >
-        <View style={[styles.portfolioSummary, { backgroundColor: theme.card }]}>
+        <View
+          style={[styles.portfolioSummary, { backgroundColor: theme.card }]}
+        >
           <Text style={[styles.portfolioValue, { color: theme.text }]}>
             ${portfolioData.value.toLocaleString()}
           </Text>
@@ -199,7 +218,7 @@ const DashboardScreen = () => {
                   : [styles.negativeChange, { color: theme.error }],
               ]}
             >
-              {portfolioData.dailyChange >= 0 ? '+' : ''}
+              {portfolioData.dailyChange >= 0 ? "+" : ""}
               {portfolioData.dailyChange.toLocaleString()} (
               {portfolioData.percentChange}%)
             </Text>
@@ -207,7 +226,9 @@ const DashboardScreen = () => {
         </View>
 
         <View style={styles.chartContainer}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Performance</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>
+            Performance
+          </Text>
           <LineChart
             data={performanceData}
             width={screenWidth - 40}
@@ -218,13 +239,14 @@ const DashboardScreen = () => {
               backgroundGradientTo: theme.chartBackgroundGradientTo,
               decimalPlaces: 0,
               color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(${theme.isDarkMode ? '255, 255, 255' : '0, 0, 0'}, ${opacity})`,
+              labelColor: (opacity = 1) =>
+                `rgba(${theme.isDarkMode ? "255, 255, 255" : "0, 0, 0"}, ${opacity})`,
               style: {
                 borderRadius: 16,
               },
               propsForDots: {
-                r: '6',
-                strokeWidth: '2',
+                r: "6",
+                strokeWidth: "2",
                 stroke: theme.primary,
               },
             }}
@@ -240,7 +262,9 @@ const DashboardScreen = () => {
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Active Strategies
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('StrategyTab')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("StrategyTab")}
+            >
               <Text style={[styles.seeAllText, { color: theme.primary }]}>
                 See All
               </Text>
@@ -292,8 +316,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingText: {
     marginTop: 10,
@@ -303,17 +327,17 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: 0,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 16,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 16,
@@ -321,27 +345,27 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   headerIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   iconButton: {
     padding: 8,
     marginLeft: 8,
-    position: 'relative',
+    position: "relative",
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     top: 0,
     minWidth: 18,
     height: 18,
     borderRadius: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   badgeText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   scrollContent: {
     paddingBottom: 30,
@@ -351,7 +375,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 20,
     marginTop: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -359,7 +383,7 @@ const styles = StyleSheet.create({
   },
   portfolioValue: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   changeContainer: {
     marginTop: 10,
@@ -375,18 +399,18 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   seeAllText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   chart: {
     borderRadius: 16,
@@ -404,8 +428,8 @@ const styles = StyleSheet.create({
   emptyState: {
     padding: 30,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   emptyStateText: {
     marginTop: 10,

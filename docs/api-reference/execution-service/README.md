@@ -50,16 +50,16 @@ Retrieves a list of orders based on specified filters.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `portfolio_id` | string | Filter by portfolio ID |
-| `status` | string | Filter by order status (e.g., `new`, `open`, `filled`, `canceled`) |
-| `symbol` | string | Filter by symbol |
-| `side` | string | Filter by side (`buy` or `sell`) |
-| `start_date` | string | Filter by start date (ISO 8601 format) |
-| `end_date` | string | Filter by end date (ISO 8601 format) |
-| `limit` | integer | Maximum number of orders to return (default: 100) |
-| `offset` | integer | Number of orders to skip (default: 0) |
+| Parameter      | Type    | Description                                                        |
+| -------------- | ------- | ------------------------------------------------------------------ |
+| `portfolio_id` | string  | Filter by portfolio ID                                             |
+| `status`       | string  | Filter by order status (e.g., `new`, `open`, `filled`, `canceled`) |
+| `symbol`       | string  | Filter by symbol                                                   |
+| `side`         | string  | Filter by side (`buy` or `sell`)                                   |
+| `start_date`   | string  | Filter by start date (ISO 8601 format)                             |
+| `end_date`     | string  | Filter by end date (ISO 8601 format)                               |
+| `limit`        | integer | Maximum number of orders to return (default: 100)                  |
+| `offset`       | integer | Number of orders to skip (default: 0)                              |
 
 #### Response
 
@@ -74,7 +74,7 @@ Retrieves a list of orders based on specified filters.
       "side": "buy",
       "order_type": "limit",
       "quantity": 1000,
-      "price": 200.00,
+      "price": 200.0,
       "time_in_force": "day",
       "status": "open",
       "filled_quantity": 500,
@@ -114,8 +114,8 @@ Retrieves a specific order by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                     |
+| ---------- | ------ | ------------------------------- |
 | `order_id` | string | The ID of the order to retrieve |
 
 #### Response
@@ -129,7 +129,7 @@ Retrieves a specific order by ID.
   "side": "buy",
   "order_type": "limit",
   "quantity": 1000,
-  "price": 200.00,
+  "price": 200.0,
   "time_in_force": "day",
   "status": "open",
   "filled_quantity": 500,
@@ -141,14 +141,14 @@ Retrieves a specific order by ID.
     {
       "id": "execution_123456",
       "quantity": 300,
-      "price": 199.90,
+      "price": 199.9,
       "timestamp": "2025-06-06T09:45:00Z",
       "venue": "NASDAQ"
     },
     {
       "id": "execution_789012",
       "quantity": 200,
-      "price": 200.00,
+      "price": 200.0,
       "timestamp": "2025-06-06T10:15:00Z",
       "venue": "NYSE"
     }
@@ -189,7 +189,7 @@ Creates a new order.
   "side": "buy",
   "order_type": "limit",
   "quantity": 200,
-  "price": 150.00,
+  "price": 150.0,
   "time_in_force": "day",
   "routing": {
     "destination": "smart",
@@ -219,7 +219,7 @@ Creates a new order.
   "side": "buy",
   "order_type": "limit",
   "quantity": 200,
-  "price": 150.00,
+  "price": 150.0,
   "time_in_force": "day",
   "status": "new",
   "filled_quantity": 0,
@@ -254,8 +254,8 @@ Updates an existing order.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                   |
+| ---------- | ------ | ----------------------------- |
 | `order_id` | string | The ID of the order to update |
 
 #### Request Body
@@ -263,7 +263,7 @@ Updates an existing order.
 ```json
 {
   "quantity": 300,
-  "price": 155.00,
+  "price": 155.0,
   "additional_parameters": {
     "display_quantity": 100,
     "min_quantity": 100
@@ -282,7 +282,7 @@ Updates an existing order.
   "side": "buy",
   "order_type": "limit",
   "quantity": 300,
-  "price": 155.00,
+  "price": 155.0,
   "time_in_force": "day",
   "status": "open",
   "filled_quantity": 0,
@@ -317,8 +317,8 @@ Cancels an existing order.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type   | Description                   |
+| ---------- | ------ | ----------------------------- |
 | `order_id` | string | The ID of the order to cancel |
 
 #### Response
@@ -354,7 +354,7 @@ Creates a basket of orders.
       "side": "buy",
       "order_type": "limit",
       "quantity": 1000,
-      "price": 200.00,
+      "price": 200.0,
       "time_in_force": "day"
     },
     {
@@ -363,7 +363,7 @@ Creates a basket of orders.
       "side": "buy",
       "order_type": "limit",
       "quantity": 500,
-      "price": 350.00,
+      "price": 350.0,
       "time_in_force": "day"
     },
     {
@@ -372,13 +372,13 @@ Creates a basket of orders.
       "side": "buy",
       "order_type": "limit",
       "quantity": 200,
-      "price": 150.00,
+      "price": 150.0,
       "time_in_force": "day"
     }
   ],
   "execution_strategy": "sequential",
   "additional_parameters": {
-    "max_notional": 1000000.00,
+    "max_notional": 1000000.0,
     "max_percentage": 0.1
   }
 }
@@ -399,7 +399,7 @@ Creates a basket of orders.
       "side": "buy",
       "order_type": "limit",
       "quantity": 1000,
-      "price": 200.00,
+      "price": 200.0,
       "time_in_force": "day",
       "status": "new"
     },
@@ -410,7 +410,7 @@ Creates a basket of orders.
       "side": "buy",
       "order_type": "limit",
       "quantity": 500,
-      "price": 350.00,
+      "price": 350.0,
       "time_in_force": "day",
       "status": "new"
     },
@@ -421,14 +421,14 @@ Creates a basket of orders.
       "side": "buy",
       "order_type": "limit",
       "quantity": 200,
-      "price": 150.00,
+      "price": 150.0,
       "time_in_force": "day",
       "status": "new"
     }
   ],
   "execution_strategy": "sequential",
   "additional_parameters": {
-    "max_notional": 1000000.00,
+    "max_notional": 1000000.0,
     "max_percentage": 0.1
   },
   "created_at": "2025-06-06T12:00:00Z",
@@ -446,8 +446,8 @@ Retrieves a specific basket order by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                            |
+| ----------- | ------ | -------------------------------------- |
 | `basket_id` | string | The ID of the basket order to retrieve |
 
 #### Response
@@ -465,7 +465,7 @@ Retrieves a specific basket order by ID.
       "side": "buy",
       "order_type": "limit",
       "quantity": 1000,
-      "price": 200.00,
+      "price": 200.0,
       "time_in_force": "day",
       "status": "filled",
       "filled_quantity": 1000,
@@ -478,11 +478,11 @@ Retrieves a specific basket order by ID.
       "side": "buy",
       "order_type": "limit",
       "quantity": 500,
-      "price": 350.00,
+      "price": 350.0,
       "time_in_force": "day",
       "status": "filled",
       "filled_quantity": 500,
-      "average_fill_price": 349.90
+      "average_fill_price": 349.9
     },
     {
       "id": "order_901236",
@@ -491,7 +491,7 @@ Retrieves a specific basket order by ID.
       "side": "buy",
       "order_type": "limit",
       "quantity": 200,
-      "price": 150.00,
+      "price": 150.0,
       "time_in_force": "day",
       "status": "filled",
       "filled_quantity": 200,
@@ -500,7 +500,7 @@ Retrieves a specific basket order by ID.
   ],
   "execution_strategy": "sequential",
   "additional_parameters": {
-    "max_notional": 1000000.00,
+    "max_notional": 1000000.0,
     "max_percentage": 0.1
   },
   "summary": {
@@ -508,7 +508,7 @@ Retrieves a specific basket order by ID.
     "filled_orders": 3,
     "partial_fills": 0,
     "unfilled_orders": 0,
-    "total_notional": 399950.00
+    "total_notional": 399950.0
   },
   "created_at": "2025-06-06T12:00:00Z",
   "updated_at": "2025-06-06T12:15:00Z"
@@ -525,8 +525,8 @@ Cancels a basket order.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                          |
+| ----------- | ------ | ------------------------------------ |
 | `basket_id` | string | The ID of the basket order to cancel |
 
 #### Response
@@ -574,16 +574,16 @@ Retrieves a list of executions based on specified filters.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `order_id` | string | Filter by order ID |
-| `portfolio_id` | string | Filter by portfolio ID |
-| `symbol` | string | Filter by symbol |
-| `side` | string | Filter by side (`buy` or `sell`) |
-| `start_date` | string | Filter by start date (ISO 8601 format) |
-| `end_date` | string | Filter by end date (ISO 8601 format) |
-| `limit` | integer | Maximum number of executions to return (default: 100) |
-| `offset` | integer | Number of executions to skip (default: 0) |
+| Parameter      | Type    | Description                                           |
+| -------------- | ------- | ----------------------------------------------------- |
+| `order_id`     | string  | Filter by order ID                                    |
+| `portfolio_id` | string  | Filter by portfolio ID                                |
+| `symbol`       | string  | Filter by symbol                                      |
+| `side`         | string  | Filter by side (`buy` or `sell`)                      |
+| `start_date`   | string  | Filter by start date (ISO 8601 format)                |
+| `end_date`     | string  | Filter by end date (ISO 8601 format)                  |
+| `limit`        | integer | Maximum number of executions to return (default: 100) |
+| `offset`       | integer | Number of executions to skip (default: 0)             |
 
 #### Response
 
@@ -597,7 +597,7 @@ Retrieves a list of executions based on specified filters.
       "symbol": "AAPL",
       "side": "buy",
       "quantity": 300,
-      "price": 199.90,
+      "price": 199.9,
       "venue": "NASDAQ",
       "timestamp": "2025-06-06T09:45:00Z"
     },
@@ -608,7 +608,7 @@ Retrieves a list of executions based on specified filters.
       "symbol": "AAPL",
       "side": "buy",
       "quantity": 200,
-      "price": 200.00,
+      "price": 200.0,
       "venue": "NYSE",
       "timestamp": "2025-06-06T10:15:00Z"
     }
@@ -629,8 +629,8 @@ Retrieves a specific execution by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter      | Type   | Description                         |
+| -------------- | ------ | ----------------------------------- |
 | `execution_id` | string | The ID of the execution to retrieve |
 
 #### Response
@@ -644,12 +644,12 @@ Retrieves a specific execution by ID.
   "symbol": "AAPL",
   "side": "buy",
   "quantity": 300,
-  "price": 199.90,
+  "price": 199.9,
   "venue": "NASDAQ",
   "timestamp": "2025-06-06T09:45:00Z",
   "fees": {
     "commission": 2.99,
-    "sec_fee": 0.10,
+    "sec_fee": 0.1,
     "exchange_fee": 0.25,
     "clearing_fee": 0.05,
     "total_fees": 3.39
@@ -679,16 +679,16 @@ Retrieves a list of allocations based on specified filters.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `execution_id` | string | Filter by execution ID |
-| `portfolio_id` | string | Filter by portfolio ID |
-| `account_id` | string | Filter by account ID |
-| `symbol` | string | Filter by symbol |
-| `start_date` | string | Filter by start date (ISO 8601 format) |
-| `end_date` | string | Filter by end date (ISO 8601 format) |
-| `limit` | integer | Maximum number of allocations to return (default: 100) |
-| `offset` | integer | Number of allocations to skip (default: 0) |
+| Parameter      | Type    | Description                                            |
+| -------------- | ------- | ------------------------------------------------------ |
+| `execution_id` | string  | Filter by execution ID                                 |
+| `portfolio_id` | string  | Filter by portfolio ID                                 |
+| `account_id`   | string  | Filter by account ID                                   |
+| `symbol`       | string  | Filter by symbol                                       |
+| `start_date`   | string  | Filter by start date (ISO 8601 format)                 |
+| `end_date`     | string  | Filter by end date (ISO 8601 format)                   |
+| `limit`        | integer | Maximum number of allocations to return (default: 100) |
+| `offset`       | integer | Number of allocations to skip (default: 0)             |
 
 #### Response
 
@@ -703,7 +703,7 @@ Retrieves a list of allocations based on specified filters.
       "symbol": "AAPL",
       "side": "buy",
       "quantity": 150,
-      "price": 199.90,
+      "price": 199.9,
       "timestamp": "2025-06-06T09:50:00Z",
       "status": "confirmed"
     },
@@ -715,7 +715,7 @@ Retrieves a list of allocations based on specified filters.
       "symbol": "AAPL",
       "side": "buy",
       "quantity": 150,
-      "price": 199.90,
+      "price": 199.9,
       "timestamp": "2025-06-06T09:50:00Z",
       "status": "confirmed"
     }
@@ -736,8 +736,8 @@ Retrieves a specific allocation by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                          |
+| --------------- | ------ | ------------------------------------ |
 | `allocation_id` | string | The ID of the allocation to retrieve |
 
 #### Response
@@ -753,10 +753,10 @@ Retrieves a specific allocation by ID.
   "symbol": "AAPL",
   "side": "buy",
   "quantity": 150,
-  "price": 199.90,
-  "amount": 29985.00,
+  "price": 199.9,
+  "amount": 29985.0,
   "fees": {
-    "commission": 1.50,
+    "commission": 1.5,
     "sec_fee": 0.05,
     "exchange_fee": 0.13,
     "clearing_fee": 0.03,
@@ -791,7 +791,7 @@ Creates a new allocation.
       "account_id": "account_123456",
       "quantity": 100,
       "fees": {
-        "commission": 1.00,
+        "commission": 1.0,
         "sec_fee": 0.03,
         "exchange_fee": 0.08,
         "clearing_fee": 0.02
@@ -801,7 +801,7 @@ Creates a new allocation.
       "account_id": "account_789012",
       "quantity": 100,
       "fees": {
-        "commission": 1.00,
+        "commission": 1.0,
         "sec_fee": 0.03,
         "exchange_fee": 0.08,
         "clearing_fee": 0.02
@@ -821,10 +821,10 @@ Creates a new allocation.
       "id": "allocation_345678",
       "account_id": "account_123456",
       "quantity": 100,
-      "price": 200.00,
-      "amount": 20000.00,
+      "price": 200.0,
+      "amount": 20000.0,
       "fees": {
-        "commission": 1.00,
+        "commission": 1.0,
         "sec_fee": 0.03,
         "exchange_fee": 0.08,
         "clearing_fee": 0.02,
@@ -836,10 +836,10 @@ Creates a new allocation.
       "id": "allocation_901234",
       "account_id": "account_789012",
       "quantity": 100,
-      "price": 200.00,
-      "amount": 20000.00,
+      "price": 200.0,
+      "amount": 20000.0,
       "fees": {
-        "commission": 1.00,
+        "commission": 1.0,
         "sec_fee": 0.03,
         "exchange_fee": 0.08,
         "clearing_fee": 0.02,
@@ -862,8 +862,8 @@ Updates an existing allocation.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                        |
+| --------------- | ------ | ---------------------------------- |
 | `allocation_id` | string | The ID of the allocation to update |
 
 #### Request Body
@@ -872,9 +872,9 @@ Updates an existing allocation.
 {
   "quantity": 120,
   "fees": {
-    "commission": 1.20,
+    "commission": 1.2,
     "sec_fee": 0.04,
-    "exchange_fee": 0.10,
+    "exchange_fee": 0.1,
     "clearing_fee": 0.02
   }
 }
@@ -893,12 +893,12 @@ Updates an existing allocation.
   "symbol": "AAPL",
   "side": "buy",
   "quantity": 120,
-  "price": 200.00,
-  "amount": 24000.00,
+  "price": 200.0,
+  "amount": 24000.0,
   "fees": {
-    "commission": 1.20,
+    "commission": 1.2,
     "sec_fee": 0.04,
-    "exchange_fee": 0.10,
+    "exchange_fee": 0.1,
     "clearing_fee": 0.02,
     "total_fees": 1.36
   },
@@ -923,8 +923,8 @@ Confirms an allocation.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                         |
+| --------------- | ------ | ----------------------------------- |
 | `allocation_id` | string | The ID of the allocation to confirm |
 
 #### Response
@@ -949,18 +949,18 @@ Retrieves a list of settlements based on specified filters.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `allocation_id` | string | Filter by allocation ID |
-| `portfolio_id` | string | Filter by portfolio ID |
-| `account_id` | string | Filter by account ID |
-| `symbol` | string | Filter by symbol |
-| `status` | string | Filter by status (e.g., `pending`, `settled`, `failed`) |
-| `settlement_date` | string | Filter by settlement date (ISO 8601 format) |
-| `start_date` | string | Filter by start date (ISO 8601 format) |
-| `end_date` | string | Filter by end date (ISO 8601 format) |
-| `limit` | integer | Maximum number of settlements to return (default: 100) |
-| `offset` | integer | Number of settlements to skip (default: 0) |
+| Parameter         | Type    | Description                                             |
+| ----------------- | ------- | ------------------------------------------------------- |
+| `allocation_id`   | string  | Filter by allocation ID                                 |
+| `portfolio_id`    | string  | Filter by portfolio ID                                  |
+| `account_id`      | string  | Filter by account ID                                    |
+| `symbol`          | string  | Filter by symbol                                        |
+| `status`          | string  | Filter by status (e.g., `pending`, `settled`, `failed`) |
+| `settlement_date` | string  | Filter by settlement date (ISO 8601 format)             |
+| `start_date`      | string  | Filter by start date (ISO 8601 format)                  |
+| `end_date`        | string  | Filter by end date (ISO 8601 format)                    |
+| `limit`           | integer | Maximum number of settlements to return (default: 100)  |
+| `offset`          | integer | Number of settlements to skip (default: 0)              |
 
 #### Response
 
@@ -975,8 +975,8 @@ Retrieves a list of settlements based on specified filters.
       "symbol": "AAPL",
       "side": "buy",
       "quantity": 150,
-      "price": 199.90,
-      "amount": 29985.00,
+      "price": 199.9,
+      "amount": 29985.0,
       "settlement_date": "2025-06-08",
       "status": "settled",
       "settled_at": "2025-06-08T16:00:00Z"
@@ -989,8 +989,8 @@ Retrieves a list of settlements based on specified filters.
       "symbol": "AAPL",
       "side": "buy",
       "quantity": 150,
-      "price": 199.90,
-      "amount": 29985.00,
+      "price": 199.9,
+      "amount": 29985.0,
       "settlement_date": "2025-06-08",
       "status": "pending"
     }
@@ -1011,8 +1011,8 @@ Retrieves a specific settlement by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                          |
+| --------------- | ------ | ------------------------------------ |
 | `settlement_id` | string | The ID of the settlement to retrieve |
 
 #### Response
@@ -1029,10 +1029,10 @@ Retrieves a specific settlement by ID.
   "symbol": "AAPL",
   "side": "buy",
   "quantity": 150,
-  "price": 199.90,
-  "amount": 29985.00,
+  "price": 199.9,
+  "amount": 29985.0,
   "fees": {
-    "commission": 1.50,
+    "commission": 1.5,
     "sec_fee": 0.05,
     "exchange_fee": 0.13,
     "clearing_fee": 0.03,
@@ -1063,8 +1063,8 @@ Updates an existing settlement.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                        |
+| --------------- | ------ | ---------------------------------- |
 | `settlement_id` | string | The ID of the settlement to update |
 
 #### Request Body
@@ -1090,8 +1090,8 @@ Updates an existing settlement.
   "symbol": "AAPL",
   "side": "buy",
   "quantity": 150,
-  "price": 199.90,
-  "amount": 29985.00,
+  "price": 199.9,
+  "amount": 29985.0,
   "settlement_date": "2025-06-08",
   "status": "settled",
   "settled_at": "2025-06-08T16:30:00Z",
@@ -1118,8 +1118,8 @@ Marks a settlement as failed.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter       | Type   | Description                                |
+| --------------- | ------ | ------------------------------------------ |
 | `settlement_id` | string | The ID of the settlement to mark as failed |
 
 #### Request Body
@@ -1155,11 +1155,11 @@ Retrieves a list of broker connections.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `status` | string | Filter by status (e.g., `active`, `inactive`) |
-| `limit` | integer | Maximum number of broker connections to return (default: 100) |
-| `offset` | integer | Number of broker connections to skip (default: 0) |
+| Parameter | Type    | Description                                                   |
+| --------- | ------- | ------------------------------------------------------------- |
+| `status`  | string  | Filter by status (e.g., `active`, `inactive`)                 |
+| `limit`   | integer | Maximum number of broker connections to return (default: 100) |
+| `offset`  | integer | Number of broker connections to skip (default: 0)             |
 
 #### Response
 
@@ -1203,8 +1203,8 @@ Retrieves a specific broker connection by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                                 |
+| ----------- | ------ | ------------------------------------------- |
 | `broker_id` | string | The ID of the broker connection to retrieve |
 
 #### Response
@@ -1339,8 +1339,8 @@ Updates an existing broker connection.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                               |
+| ----------- | ------ | ----------------------------------------- |
 | `broker_id` | string | The ID of the broker connection to update |
 
 #### Request Body
@@ -1411,8 +1411,8 @@ Deletes a broker connection.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                               |
+| ----------- | ------ | ----------------------------------------- |
 | `broker_id` | string | The ID of the broker connection to delete |
 
 #### Response
@@ -1434,8 +1434,8 @@ Tests a broker connection.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                             |
+| ----------- | ------ | --------------------------------------- |
 | `broker_id` | string | The ID of the broker connection to test |
 
 #### Response
@@ -1467,15 +1467,15 @@ Retrieves market data for a specific symbol.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbol` | string | The symbol to retrieve market data for |
+| Parameter | Type   | Description                            |
+| --------- | ------ | -------------------------------------- |
+| `symbol`  | string | The symbol to retrieve market data for |
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `level` | string | Market data level (`1`, `2`) (default: `1`) |
+| Parameter | Type   | Description                                 |
+| --------- | ------ | ------------------------------------------- |
+| `level`   | string | Market data level (`1`, `2`) (default: `1`) |
 
 #### Response
 
@@ -1484,7 +1484,7 @@ Retrieves market data for a specific symbol.
   "symbol": "AAPL",
   "timestamp": "2025-06-06T13:45:00Z",
   "exchange": "NASDAQ",
-  "last_price": 200.50,
+  "last_price": 200.5,
   "last_size": 100,
   "last_trade_time": "2025-06-06T13:44:55Z",
   "bid": 200.45,
@@ -1492,11 +1492,11 @@ Retrieves market data for a specific symbol.
   "ask": 200.55,
   "ask_size": 300,
   "volume": 5000000,
-  "open": 199.00,
-  "high": 201.00,
-  "low": 198.50,
+  "open": 199.0,
+  "high": 201.0,
+  "low": 198.5,
   "close": null,
-  "change": 1.50,
+  "change": 1.5,
   "change_percent": 0.75,
   "level2": {
     "bids": [
@@ -1506,7 +1506,7 @@ Retrieves market data for a specific symbol.
         "exchange": "NASDAQ"
       },
       {
-        "price": 200.40,
+        "price": 200.4,
         "size": 800,
         "exchange": "NYSE"
       },
@@ -1523,7 +1523,7 @@ Retrieves market data for a specific symbol.
         "exchange": "NASDAQ"
       },
       {
-        "price": 200.60,
+        "price": 200.6,
         "size": 600,
         "exchange": "NYSE"
       },
@@ -1547,18 +1547,18 @@ Retrieves historical market data for a specific symbol.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `symbol` | string | The symbol to retrieve historical market data for |
+| Parameter | Type   | Description                                       |
+| --------- | ------ | ------------------------------------------------- |
+| `symbol`  | string | The symbol to retrieve historical market data for |
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `interval` | string | Data interval (`1m`, `5m`, `15m`, `30m`, `1h`, `1d`, `1w`, `1mo`) |
-| `start_date` | string | Start date in ISO 8601 format |
-| `end_date` | string | End date in ISO 8601 format |
-| `limit` | integer | Maximum number of data points to return (default: 100) |
+| Parameter    | Type    | Description                                                       |
+| ------------ | ------- | ----------------------------------------------------------------- |
+| `interval`   | string  | Data interval (`1m`, `5m`, `15m`, `30m`, `1h`, `1d`, `1w`, `1mo`) |
+| `start_date` | string  | Start date in ISO 8601 format                                     |
+| `end_date`   | string  | End date in ISO 8601 format                                       |
+| `limit`      | integer | Maximum number of data points to return (default: 100)            |
 
 #### Response
 
@@ -1569,26 +1569,26 @@ Retrieves historical market data for a specific symbol.
   "data": [
     {
       "timestamp": "2025-06-06T00:00:00Z",
-      "open": 199.00,
-      "high": 201.00,
-      "low": 198.50,
-      "close": 200.50,
+      "open": 199.0,
+      "high": 201.0,
+      "low": 198.5,
+      "close": 200.5,
       "volume": 5000000
     },
     {
       "timestamp": "2025-06-05T00:00:00Z",
-      "open": 198.00,
-      "high": 200.00,
-      "low": 197.50,
-      "close": 199.00,
+      "open": 198.0,
+      "high": 200.0,
+      "low": 197.5,
+      "close": 199.0,
       "volume": 4800000
     },
     {
       "timestamp": "2025-06-04T00:00:00Z",
-      "open": 197.50,
-      "high": 199.50,
-      "low": 197.00,
-      "close": 198.00,
+      "open": 197.5,
+      "high": 199.5,
+      "low": 197.0,
+      "close": 198.0,
       "volume": 4600000
     }
   ],
@@ -1614,12 +1614,12 @@ Retrieves a list of available trading algorithms.
 
 #### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `broker_id` | string | Filter by broker ID |
-| `asset_class` | string | Filter by asset class |
-| `limit` | integer | Maximum number of algorithms to return (default: 100) |
-| `offset` | integer | Number of algorithms to skip (default: 0) |
+| Parameter     | Type    | Description                                           |
+| ------------- | ------- | ----------------------------------------------------- |
+| `broker_id`   | string  | Filter by broker ID                                   |
+| `asset_class` | string  | Filter by asset class                                 |
+| `limit`       | integer | Maximum number of algorithms to return (default: 100) |
+| `offset`      | integer | Number of algorithms to skip (default: 0)             |
 
 #### Response
 
@@ -1705,8 +1705,8 @@ Retrieves a specific algorithm by ID.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter      | Type   | Description                         |
+| -------------- | ------ | ----------------------------------- |
 | `algorithm_id` | string | The ID of the algorithm to retrieve |
 
 #### Response
@@ -1793,8 +1793,8 @@ Retrieves transaction cost analysis for a specific execution.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter      | Type   | Description                        |
+| -------------- | ------ | ---------------------------------- |
 | `execution_id` | string | The ID of the execution to analyze |
 
 #### Response
@@ -1806,61 +1806,61 @@ Retrieves transaction cost analysis for a specific execution.
   "symbol": "AAPL",
   "side": "buy",
   "quantity": 300,
-  "price": 199.90,
+  "price": 199.9,
   "execution_time": "2025-06-06T09:45:00Z",
   "market_conditions": {
-    "arrival_price": 199.80,
+    "arrival_price": 199.8,
     "vwap": 199.85,
     "twap": 199.83,
-    "open": 199.00,
-    "high": 200.00,
-    "low": 198.90,
-    "close": 200.50,
+    "open": 199.0,
+    "high": 200.0,
+    "low": 198.9,
+    "close": 200.5,
     "volume": 5000000
   },
   "metrics": {
     "implementation_shortfall": {
-      "value": 0.10,
+      "value": 0.1,
       "percentage": 0.05,
-      "amount": 30.00
+      "amount": 30.0
     },
     "arrival_price_slippage": {
-      "value": 0.10,
+      "value": 0.1,
       "percentage": 0.05,
-      "amount": 30.00
+      "amount": 30.0
     },
     "vwap_slippage": {
       "value": 0.05,
       "percentage": 0.025,
-      "amount": 15.00
+      "amount": 15.0
     },
     "market_impact": {
       "value": 0.08,
       "percentage": 0.04,
-      "amount": 24.00
+      "amount": 24.0
     },
     "timing_cost": {
       "value": 0.02,
       "percentage": 0.01,
-      "amount": 6.00
+      "amount": 6.0
     },
     "opportunity_cost": {
-      "value": 0.60,
-      "percentage": 0.30,
-      "amount": 180.00
+      "value": 0.6,
+      "percentage": 0.3,
+      "amount": 180.0
     },
     "total_cost": {
-      "value": 0.70,
+      "value": 0.7,
       "percentage": 0.35,
-      "amount": 210.00
+      "amount": 210.0
     }
   },
   "peer_comparison": {
     "percentile": 25,
-    "average_cost": 0.90,
-    "median_cost": 0.80,
-    "min_cost": 0.40,
-    "max_cost": 1.50
+    "average_cost": 0.9,
+    "median_cost": 0.8,
+    "min_cost": 0.4,
+    "max_cost": 1.5
   },
   "created_at": "2025-06-06T10:00:00Z"
 }
@@ -1896,13 +1896,13 @@ Retrieves aggregate transaction cost analysis for multiple executions.
   "overall_metrics": {
     "total_executions": 2,
     "total_volume": 500,
-    "total_notional": 99950.00,
+    "total_notional": 99950.0,
     "average_implementation_shortfall": 0.08,
     "average_arrival_price_slippage": 0.08,
     "average_vwap_slippage": 0.04,
     "average_market_impact": 0.07,
     "average_timing_cost": 0.01,
-    "average_opportunity_cost": 0.50,
+    "average_opportunity_cost": 0.5,
     "average_total_cost": 0.58
   },
   "breakdowns": {
@@ -1911,13 +1911,13 @@ Retrieves aggregate transaction cost analysis for multiple executions.
         "broker": "Example Broker 1",
         "executions": 2,
         "volume": 500,
-        "notional": 99950.00,
+        "notional": 99950.0,
         "implementation_shortfall": 0.08,
         "arrival_price_slippage": 0.08,
         "vwap_slippage": 0.04,
         "market_impact": 0.07,
         "timing_cost": 0.01,
-        "opportunity_cost": 0.50,
+        "opportunity_cost": 0.5,
         "total_cost": 0.58
       }
     ],
@@ -1926,27 +1926,27 @@ Retrieves aggregate transaction cost analysis for multiple executions.
         "algorithm": "VWAP",
         "executions": 1,
         "volume": 300,
-        "notional": 59970.00,
-        "implementation_shortfall": 0.10,
-        "arrival_price_slippage": 0.10,
+        "notional": 59970.0,
+        "implementation_shortfall": 0.1,
+        "arrival_price_slippage": 0.1,
         "vwap_slippage": 0.05,
         "market_impact": 0.08,
         "timing_cost": 0.02,
-        "opportunity_cost": 0.60,
-        "total_cost": 0.70
+        "opportunity_cost": 0.6,
+        "total_cost": 0.7
       },
       {
         "algorithm": "Market",
         "executions": 1,
         "volume": 200,
-        "notional": 39980.00,
+        "notional": 39980.0,
         "implementation_shortfall": 0.05,
         "arrival_price_slippage": 0.05,
         "vwap_slippage": 0.02,
         "market_impact": 0.05,
-        "timing_cost": 0.00,
+        "timing_cost": 0.0,
         "opportunity_cost": 0.35,
-        "total_cost": 0.40
+        "total_cost": 0.4
       }
     ],
     "by_symbol": [
@@ -1954,13 +1954,13 @@ Retrieves aggregate transaction cost analysis for multiple executions.
         "symbol": "AAPL",
         "executions": 2,
         "volume": 500,
-        "notional": 99950.00,
+        "notional": 99950.0,
         "implementation_shortfall": 0.08,
         "arrival_price_slippage": 0.08,
         "vwap_slippage": 0.04,
         "market_impact": 0.07,
         "timing_cost": 0.01,
-        "opportunity_cost": 0.50,
+        "opportunity_cost": 0.5,
         "total_cost": 0.58
       }
     ]
@@ -2012,8 +2012,8 @@ Retrieves the status of a report.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                      |
+| ----------- | ------ | -------------------------------- |
 | `report_id` | string | The ID of the report to retrieve |
 
 #### Response
@@ -2039,8 +2039,8 @@ Downloads a completed report.
 
 #### Path Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type   | Description                      |
+| ----------- | ------ | -------------------------------- |
 | `report_id` | string | The ID of the report to download |
 
 #### Response

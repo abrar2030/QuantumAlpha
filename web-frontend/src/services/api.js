@@ -1,94 +1,94 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // Define our single API slice
 export const api = createApi({
-  reducerPath: 'api',
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({
-   baseUrl: 'https://8080-i7kscfnrcqq64pgef857g-ea3b3cda.manusvm.computer/api',
+    baseUrl: "https://8080-i7kscfnrcqq64pgef857g-ea3b3cda.manusvm.computer/api",
     prepareHeaders: (headers, { getState }) => {
       // Get the token from auth state
       const token = getState().auth.token;
 
       // If we have a token, add it to the headers
       if (token) {
-        headers.set('authorization', `Bearer ${token}`);
+        headers.set("authorization", `Bearer ${token}`);
       }
 
       return headers;
     },
   }),
-  tagTypes: ['Portfolio', 'Strategy', 'Trade', 'User'],
+  tagTypes: ["Portfolio", "Strategy", "Trade", "User"],
   endpoints: (builder) => ({
     // Auth endpoints
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/auth/login',
-        method: 'POST',
+        url: "/auth/login",
+        method: "POST",
         body: credentials,
       }),
     }),
     register: builder.mutation({
       query: (userData) => ({
-        url: '/auth/register',
-        method: 'POST',
+        url: "/auth/register",
+        method: "POST",
         body: userData,
       }),
     }),
     getUser: builder.query({
-      query: () => '/auth/user',
-      providesTags: ['User'],
+      query: () => "/auth/user",
+      providesTags: ["User"],
     }),
 
     // Portfolio endpoints
     getPortfolio: builder.query({
-      query: () => '/portfolio',
-      providesTags: ['Portfolio'],
+      query: () => "/portfolio",
+      providesTags: ["Portfolio"],
     }),
     getPortfolioHistory: builder.query({
       query: (timeframe) => `/portfolio/history?timeframe=${timeframe}`,
-      providesTags: ['Portfolio'],
+      providesTags: ["Portfolio"],
     }),
 
     // Strategy endpoints
     getStrategies: builder.query({
-      query: () => '/strategies',
-      providesTags: ['Strategy'],
+      query: () => "/strategies",
+      providesTags: ["Strategy"],
     }),
     getStrategy: builder.query({
       query: (id) => `/strategies/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Strategy', id }],
+      providesTags: (result, error, id) => [{ type: "Strategy", id }],
     }),
     createStrategy: builder.mutation({
       query: (strategy) => ({
-        url: '/strategies',
-        method: 'POST',
+        url: "/strategies",
+        method: "POST",
         body: strategy,
       }),
-      invalidatesTags: ['Strategy'],
+      invalidatesTags: ["Strategy"],
     }),
     updateStrategy: builder.mutation({
       query: ({ id, ...patch }) => ({
         url: `/strategies/${id}`,
-        method: 'PATCH',
+        method: "PATCH",
         body: patch,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Strategy', id }],
+      invalidatesTags: (result, error, { id }) => [{ type: "Strategy", id }],
     }),
     deleteStrategy: builder.mutation({
       query: (id) => ({
         url: `/strategies/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Strategy'],
+      invalidatesTags: ["Strategy"],
     }),
 
     // Trade endpoints
     getTrades: builder.query({
       query: (params) => ({
-        url: '/trades',
+        url: "/trades",
         params,
       }),
-      providesTags: ['Trade'],
+      providesTags: ["Trade"],
     }),
 
     // Market data endpoints

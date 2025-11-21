@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   TouchableOpacity,
   Text,
@@ -6,36 +6,36 @@ import {
   ActivityIndicator,
   ViewStyle,
   TextStyle,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from '../../context/ThemeContext';
+} from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+import { useTheme } from "../../context/ThemeContext";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'small' | 'medium' | 'large';
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  size?: "small" | "medium" | "large";
   loading?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
   icon?: React.ReactNode;
-  iconPosition?: 'left' | 'right';
+  iconPosition?: "left" | "right";
 }
 
 const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   loading = false,
   disabled = false,
   fullWidth = false,
   style,
   textStyle,
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
 }) => {
   const { theme } = useTheme();
 
@@ -47,29 +47,29 @@ const Button: React.FC<ButtonProps> = ({
     };
 
     switch (variant) {
-      case 'primary':
+      case "primary":
         return {
           ...baseStyle,
           backgroundColor: theme.primary,
         };
-      case 'secondary':
+      case "secondary":
         return {
           ...baseStyle,
           backgroundColor: theme.secondary,
         };
-      case 'outline':
+      case "outline":
         return {
           ...baseStyle,
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           borderWidth: 1,
           borderColor: theme.primary,
         };
-      case 'ghost':
+      case "ghost":
         return {
           ...baseStyle,
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
         };
-      case 'danger':
+      case "danger":
         return {
           ...baseStyle,
           backgroundColor: theme.error,
@@ -86,8 +86,8 @@ const Button: React.FC<ButtonProps> = ({
     };
 
     switch (variant) {
-      case 'outline':
-      case 'ghost':
+      case "outline":
+      case "ghost":
         return {
           ...baseTextStyle,
           color: theme.primary,
@@ -95,7 +95,7 @@ const Button: React.FC<ButtonProps> = ({
       default:
         return {
           ...baseTextStyle,
-          color: '#ffffff',
+          color: "#ffffff",
         };
     }
   };
@@ -105,20 +105,24 @@ const Button: React.FC<ButtonProps> = ({
 
   const renderContent = () => (
     <>
-      {icon && iconPosition === 'left' && icon}
+      {icon && iconPosition === "left" && icon}
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'outline' || variant === 'ghost' ? theme.primary : '#ffffff'}
+          color={
+            variant === "outline" || variant === "ghost"
+              ? theme.primary
+              : "#ffffff"
+          }
         />
       ) : (
         <Text style={[finalTextStyle, textStyle]}>{title}</Text>
       )}
-      {icon && iconPosition === 'right' && icon}
+      {icon && iconPosition === "right" && icon}
     </>
   );
 
-  if (variant === 'primary' && !disabled) {
+  if (variant === "primary" && !disabled) {
     return (
       <TouchableOpacity
         style={[buttonStyle, style, disabled && styles.disabled]}
@@ -153,16 +157,16 @@ const Button: React.FC<ButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   gradient: {
     flex: 1,
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -182,14 +186,14 @@ const styles = StyleSheet.create({
     minHeight: 52,
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   disabled: {
     opacity: 0.5,
   },
   text: {
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   smallText: {
     fontSize: 14,
