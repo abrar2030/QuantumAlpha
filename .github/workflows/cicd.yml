@@ -1,4 +1,4 @@
-name: CI Check
+name: CI Formatting Check
 
 on:
   push:
@@ -8,19 +8,85 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_check:
+  formatting_check:
     runs-on: ubuntu-latest
+
+    env:
+      BACKEND_DIR: backend
+      WEB_FRONTEND_DIR: web-frontend
+      MOBILE_FRONTEND_DIR: mobile-frontend
+
     steps:
+      # -------------------------------
+      # Checkout
+      # -------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run Basic Health Check
-        run: echo "Repository checkout complete. Starting basic checks."
+      # -------------------------------
+      # Python Setup + Formatting
+      # -------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-      - name: Validate Configuration Files
+      - name: Install Python Formatters
         run: |
-          echo "No configuration files to validate. Proceeding."
-          # A real step would be: find . -name "*.yml" | xargs yamllint
+          pip install autoflake black
 
+      - name: Run Python Formatting Checks
+        working-directory: ${{ env.BACKEND_DIR }}
+        run: |
+          echo "=== Running autoflake (diff mode) ==="
+          cp -r . /tmp/python_copy
+
+          autoflake \
+            --remove-all-unused-imports \
+            --remove-unused-variables \
+            --recursive \
+            --ignore-init-module-imports \
+            --in-place \
+            /tmp/python_copy
+
+          echo "Comparing files..."
+          diff -r . /tmp/python_copy > /dev/null || {
+            echo "autoflake found issues."
+            exit 1
+          }
+
+          echo "=== Running black ==="
+          black . --check
+
+      # -------------------------------
+      # Node + Prettier Setup
+      # -------------------------------
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Install Node dependencies (root)
+      - name: Install Node Dependencies
+        working-directory: .
+        run: npm ci
+
+      # Prettier: web-frontend
+      - name: Run Prettier Checks (web-frontend)
+        working-directory: .
+        run: |
+          echo "=== Running Prettier (web-frontend) ==="
+          ./node_modules/.bin/prettier --check "web-frontend/**/*.{js,jsx,ts,tsx,json,html,css,md}"
+
+      # Prettier: mobile-frontend
+      - name: Run Prettier Checks (mobile-frontend)
+        working-directory: .
+        run: |
+          echo "=== Running Prettier (mobile-frontend) ==="
+          ./node_modules/.bin/prettier --check "mobile-frontend/**/*.{js,jsx,ts,tsx,json,html,css,md}"
+
+      # -------------------------------
+      # Done
+      # -------------------------------
       - name: Finalize Check
-        run: echo "Basic CI check finished."
+        run: echo "All formatting checks completed successfully."
