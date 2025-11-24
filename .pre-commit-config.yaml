@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1  # valid / released version :contentReference[oaicite:0]{index=0}
+    rev: 6.0.1 # valid / released version :contentReference[oaicite:0]{index=0}
     hooks:
       - id: isort
         name: Sort imports
@@ -14,7 +14,7 @@ repos:
         language_version: python3
 
   - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0  # or another valid tag / release
+    rev: 6.0.0 # or another valid tag / release
     hooks:
       - id: flake8
         name: Check Python style with Flake8
