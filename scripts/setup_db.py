@@ -16,6 +16,10 @@ import yaml
 from dotenv import load_dotenv
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+from core.logging import get_logger
+
+logger = get_logger(__name__)
+
 # Add project root to path
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, ".."))
@@ -31,7 +35,7 @@ NC = "\033[0m"  # No Color
 
 def print_colored(message, color=NC):
     """Print colored message to console."""
-    print(f"{color}{message}{NC}")
+    logger.info(f"{color}{message}{NC}")
 
 
 def load_config(env):

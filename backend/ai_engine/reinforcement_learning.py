@@ -25,6 +25,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
+from core.logging import get_logger
+
+logger = get_logger(__name__)
+
 # Configure logging
 logger = setup_logger("reinforcement_learning", logging.INFO)
 
@@ -212,15 +216,15 @@ class TradingEnvironment(gym.Env):
             )
 
             # Print step information
-            print(f"Step: {step['step']}")
-            print(f"Action: {step['action']}")
-            print(f"Price: {step['price']}")
-            print(f"Balance: {step['balance']}")
-            print(f"Position: {step['position']}")
-            print(f"Position Value: {step['position_value']}")
-            print(f"Portfolio Value: {step['portfolio_value']}")
-            print(f"Reward: {step['reward']}")
-            print("---")
+            logger.info(f"Step: {step['step']}")
+            logger.info(f"Action: {step['action']}")
+            logger.info(f"Price: {step['price']}")
+            logger.info(f"Balance: {step['balance']}")
+            logger.info(f"Position: {step['position']}")
+            logger.info(f"Position Value: {step['position_value']}")
+            logger.info(f"Portfolio Value: {step['portfolio_value']}")
+            logger.info(f"Reward: {step['reward']}")
+            logger.info("---")
 
 
 class ReinforcementLearning:
