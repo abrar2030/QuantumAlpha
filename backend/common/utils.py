@@ -11,14 +11,12 @@ import time
 from datetime import datetime, timedelta
 from typing import Any, Optional, Tuple
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 
-# Password utilities
 def hash_password(password: str) -> str:
     """Hash a password
 
@@ -52,7 +50,6 @@ def verify_password(stored_password: str, provided_password: str) -> bool:
     return pwdhash == stored_hash
 
 
-# Date and time utilities
 def parse_timeframe(timeframe: str) -> Tuple[int, str]:
     """Parse a timeframe string
 
@@ -67,26 +64,19 @@ def parse_timeframe(timeframe: str) -> Tuple[int, str]:
     """
     if not timeframe:
         raise ValueError("Timeframe cannot be empty")
-
-    # Extract numeric value and unit
     value = ""
     unit = ""
-
     for char in timeframe:
         if char.isdigit():
             value += char
         else:
             unit += char
-
     if not value or not unit:
         raise ValueError(f"Invalid timeframe format: {timeframe}")
-
     value = int(value)
-
     if unit not in ["m", "h", "d", "wk", "mo"]:
         raise ValueError(f"Invalid timeframe unit: {unit}")
-
-    return value, unit
+    return (value, unit)
 
 
 def timeframe_to_seconds(timeframe: str) -> int:
@@ -102,7 +92,6 @@ def timeframe_to_seconds(timeframe: str) -> int:
         ValueError: If timeframe is invalid
     """
     value, unit = parse_timeframe(timeframe)
-
     if unit == "m":
         return value * 60
     elif unit == "h":
@@ -147,9 +136,7 @@ def parse_period(period: str) -> datetime:
     """
     if not period:
         raise ValueError("Period cannot be empty")
-
     now = datetime.utcnow()
-
     if period == "1d":
         return now - timedelta(days=1)
     elif period == "1wk":
@@ -170,7 +157,6 @@ def parse_period(period: str) -> datetime:
         raise ValueError(f"Invalid period: {period}")
 
 
-# Data conversion utilities
 def to_json_serializable(obj: Any) -> Any:
     """Convert an object to a JSON serializable format
 
@@ -192,7 +178,6 @@ def to_json_serializable(obj: Any) -> Any:
         return obj
 
 
-# File utilities
 def ensure_directory(directory: str) -> None:
     """Ensure a directory exists
 
@@ -204,7 +189,6 @@ def ensure_directory(directory: str) -> None:
         logger.info(f"Created directory: {directory}")
 
 
-# API key utilities
 def generate_api_key() -> Tuple[str, str]:
     """Generate an API key and secret
 
@@ -213,14 +197,13 @@ def generate_api_key() -> Tuple[str, str]:
     """
     key = secrets.token_hex(16)
     secret = secrets.token_hex(32)
-    return key, secret
+    return (key, secret)
 
 
-# Throttling utilities
 class RateLimiter:
     """Rate limiter for API calls"""
 
-    def __init__(self, calls_per_second: float):
+    def __init__(self, calls_per_second: float) -> Any:
         """Initialize rate limiter
 
         Args:
@@ -234,19 +217,16 @@ class RateLimiter:
         """Wait if necessary to respect rate limit"""
         current_time = time.time()
         elapsed = current_time - self.last_call_time
-
         if elapsed < self.min_interval:
             sleep_time = self.min_interval - elapsed
             time.sleep(sleep_time)
-
         self.last_call_time = time.time()
 
 
-# Caching utilities
 class SimpleCache:
     """Simple in-memory cache"""
 
-    def __init__(self, max_size: int = 1000, ttl: int = 300):
+    def __init__(self, max_size: int = 1000, ttl: int = 300) -> Any:
         """Initialize cache
 
         Args:
@@ -269,13 +249,10 @@ class SimpleCache:
         """
         if key not in self.cache:
             return None
-
-        # Check if expired
         timestamp = self.timestamps.get(key, 0)
         if time.time() - timestamp > self.ttl:
             self.delete(key)
             return None
-
         return self.cache[key]
 
     def set(self, key: str, value: Any) -> None:
@@ -285,11 +262,9 @@ class SimpleCache:
             key: Cache key
             value: Value to cache
         """
-        # Evict oldest item if cache is full
         if len(self.cache) >= self.max_size and key not in self.cache:
             oldest_key = min(self.timestamps, key=self.timestamps.get)
             self.delete(oldest_key)
-
         self.cache[key] = value
         self.timestamps[key] = time.time()
 
@@ -301,7 +276,6 @@ class SimpleCache:
         """
         if key in self.cache:
             del self.cache[key]
-
         if key in self.timestamps:
             del self.timestamps[key]
 

@@ -7,11 +7,9 @@ import json
 import logging
 import os
 from typing import Any, Dict, Optional
-
 import yaml
 from dotenv import load_dotenv
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
@@ -23,7 +21,7 @@ class ConfigManager:
 
     def __init__(
         self, env_file: Optional[str] = None, config_file: Optional[str] = None
-    ):
+    ) -> Any:
         """Initialize configuration manager
 
         Args:
@@ -31,23 +29,16 @@ class ConfigManager:
             config_file: Path to config file (YAML or JSON)
         """
         self.config = {}
-
-        # Load environment variables
         if env_file and os.path.exists(env_file):
             load_dotenv(env_file)
             logger.info(f"Loaded environment variables from {env_file}")
         else:
             load_dotenv()
             logger.info("Loaded environment variables from default locations")
-
-        # Load configuration file
         if config_file and os.path.exists(config_file):
             self._load_config_file(config_file)
             logger.info(f"Loaded configuration from {config_file}")
-
-        # Load configuration from environment variables
         self._load_from_env()
-
         logger.info("Configuration manager initialized")
 
     def _load_config_file(self, config_file: str) -> None:
@@ -57,7 +48,6 @@ class ConfigManager:
             config_file: Path to config file (YAML or JSON)
         """
         _, ext = os.path.splitext(config_file)
-
         try:
             with open(config_file, "r") as f:
                 if ext.lower() in [".yaml", ".yml"]:
@@ -71,7 +61,6 @@ class ConfigManager:
 
     def _load_from_env(self) -> None:
         """Load configuration from environment variables"""
-        # Database configuration
         self.config["postgres"] = {
             "host": os.getenv("DB_HOST", "localhost"),
             "port": int(os.getenv("DB_PORT", "5432")),
@@ -79,21 +68,18 @@ class ConfigManager:
             "password": os.getenv("DB_PASSWORD", "postgres"),
             "database": os.getenv("DB_NAME", "quantumalpha"),
         }
-
         self.config["redis"] = {
             "host": os.getenv("REDIS_HOST", "localhost"),
             "port": int(os.getenv("REDIS_PORT", "6379")),
             "password": os.getenv("REDIS_PASSWORD", None),
             "db": int(os.getenv("REDIS_DB", "0")),
         }
-
         self.config["influxdb"] = {
             "url": os.getenv("INFLUXDB_URL", "http://localhost:8086"),
             "token": os.getenv("INFLUXDB_TOKEN", ""),
             "org": os.getenv("INFLUXDB_ORG", "quantumalpha"),
             "bucket": os.getenv("INFLUXDB_BUCKET", "market_data"),
         }
-
         self.config["mongodb"] = {
             "host": os.getenv("MONGODB_HOST", "localhost"),
             "port": int(os.getenv("MONGODB_PORT", "27017")),
@@ -101,15 +87,11 @@ class ConfigManager:
             "password": os.getenv("MONGODB_PASSWORD", ""),
             "database": os.getenv("MONGODB_DATABASE", "quantumalpha"),
         }
-
-        # API keys
         self.config["api_keys"] = {
             "alpha_vantage": os.getenv("ALPHA_VANTAGE_API_KEY", ""),
             "polygon": os.getenv("POLYGON_API_KEY", ""),
             "news_api": os.getenv("NEWS_API_KEY", ""),
         }
-
-        # Broker configuration
         self.config["brokers"] = {
             "alpaca": {
                 "api_key": os.getenv("ALPACA_API_KEY", ""),
@@ -119,15 +101,11 @@ class ConfigManager:
                 ),
             }
         }
-
-        # ML configuration
         self.config["ml"] = {
             "model_registry_path": os.getenv(
                 "MODEL_REGISTRY_PATH", "/path/to/model/registry"
             )
         }
-
-        # Service configuration
         self.config["services"] = {
             "data_service": {
                 "host": os.getenv("DATA_SERVICE_HOST", "localhost"),
@@ -146,8 +124,6 @@ class ConfigManager:
                 "port": int(os.getenv("EXECUTION_SERVICE_PORT", "8084")),
             },
         }
-
-        # Kafka configuration
         self.config["kafka"] = {
             "bootstrap_servers": os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"),
             "topics": {
@@ -169,13 +145,11 @@ class ConfigManager:
         """
         keys = key.split(".")
         value = self.config
-
         for k in keys:
             if isinstance(value, dict) and k in value:
                 value = value[k]
             else:
                 return default
-
         return value
 
     def get_all(self) -> Dict[str, Any]:
@@ -187,7 +161,6 @@ class ConfigManager:
         return self.config
 
 
-# Singleton instance
 _config_manager: Optional[ConfigManager] = None
 
 
@@ -206,5 +179,4 @@ def get_config_manager(
     global _config_manager
     if _config_manager is None:
         _config_manager = ConfigManager(env_file, config_file)
-
     return _config_manager

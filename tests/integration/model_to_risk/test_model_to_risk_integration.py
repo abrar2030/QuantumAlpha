@@ -7,22 +7,18 @@ import sys
 import unittest
 from datetime import datetime
 from unittest.mock import MagicMock, patch
-
 import requests
 
-# Add project root to path
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
-
-# Import modules to test
 try:
     from backend.ai_engine.model_manager import ModelManager
     from backend.ai_engine.prediction_service import PredictionService
     from backend.common.exceptions import ServiceError, ValidationError
     from backend.risk_service.risk_calculator import RiskCalculator
 except ImportError:
-    # Mock the classes for testing when imports fail
+
     class ModelManager:
         pass
 
@@ -42,9 +38,8 @@ except ImportError:
 class TestModelToRiskIntegration(unittest.TestCase):
     """Integration tests for AI engine to risk service integration."""
 
-    def setUp(self):
+    def setUp(self) -> Any:
         """Set up test fixtures."""
-        # Create mock config manager
         self.config_manager = MagicMock()
         self.config_manager.get_config.return_value = {
             "ai_engine": {
@@ -62,11 +57,7 @@ class TestModelToRiskIntegration(unittest.TestCase):
                 "risk_service": {"host": "localhost", "port": 8083},
             },
         }
-
-        # Create mock database manager
         self.db_manager = MagicMock()
-
-        # Create sample prediction data
         self.prediction_data = {
             "symbol": "AAPL",
             "model_id": "model_1234567890",
@@ -107,8 +98,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                 },
             ],
         }
-
-        # Create sample portfolio
         self.sample_portfolio = [
             {
                 "symbol": "AAPL",
@@ -123,22 +112,15 @@ class TestModelToRiskIntegration(unittest.TestCase):
                 "current_price": 260.0,
             },
         ]
-
-        # Create model manager
         self.model_manager = ModelManager(self.config_manager, self.db_manager)
-
-        # Create prediction service
         self.prediction_service = PredictionService(
             self.config_manager, self.db_manager, self.model_manager
         )
-
-        # Create risk calculator
         self.risk_calculator = RiskCalculator(self.config_manager, self.db_manager)
 
     @patch("requests.post")
-    def test_prediction_to_risk_calculation(self, mock_post):
+    def test_prediction_to_risk_calculation(self, mock_post: Any) -> Any:
         """Test prediction to risk calculation flow."""
-        # Mock risk service API response
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -157,12 +139,8 @@ class TestModelToRiskIntegration(unittest.TestCase):
             "timestamp": datetime.utcnow().isoformat(),
         }
         mock_post.return_value = mock_response
-
-        # Mock model manager predict method
         with patch.object(self.model_manager, "predict") as mock_predict:
             mock_predict.return_value = self.prediction_data
-
-            # Get prediction from model
             prediction = self.model_manager.predict(
                 "model_1234567890",
                 {
@@ -172,14 +150,10 @@ class TestModelToRiskIntegration(unittest.TestCase):
                     "data": [],
                 },
             )
-
-            # Check prediction
             self.assertEqual(prediction["symbol"], "AAPL")
             self.assertEqual(prediction["model_id"], "model_1234567890")
             self.assertIn("prediction", prediction)
             self.assertIn("predictions", prediction)
-
-            # Mock risk calculator calculate_position_risk method
             with patch.object(
                 self.risk_calculator, "calculate_position_risk"
             ) as mock_risk:
@@ -198,8 +172,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                     "risk_level": "medium",
                     "timestamp": datetime.utcnow().isoformat(),
                 }
-
-                # Calculate risk based on prediction
                 risk = self.risk_calculator.calculate_position_risk(
                     symbol="AAPL",
                     quantity=100,
@@ -214,8 +186,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                         "max_drawdown",
                     ],
                 )
-
-                # Check risk calculation
                 self.assertEqual(risk["symbol"], "AAPL")
                 self.assertEqual(risk["quantity"], 100)
                 self.assertEqual(risk["entry_price"], 150.0)
@@ -231,15 +201,14 @@ class TestModelToRiskIntegration(unittest.TestCase):
 
     @patch("requests.get")
     @patch("requests.post")
-    def test_ai_engine_to_risk_service_api_integration(self, mock_post, mock_get):
+    def test_ai_engine_to_risk_service_api_integration(
+        self, mock_post: Any, mock_get: Any
+    ) -> Any:
         """Test AI engine to risk service API integration."""
-        # Mock AI engine API response
         mock_get_response = MagicMock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = self.prediction_data
         mock_get.return_value = mock_get_response
-
-        # Mock risk service API response
         mock_post_response = MagicMock()
         mock_post_response.status_code = 200
         mock_post_response.json.return_value = {
@@ -258,17 +227,12 @@ class TestModelToRiskIntegration(unittest.TestCase):
             "timestamp": datetime.utcnow().isoformat(),
         }
         mock_post.return_value = mock_post_response
-
-        # Get prediction from AI engine
         ai_engine_url = "http://localhost:8082/api/predict/model_1234567890/AAPL"
         response = requests.get(ai_engine_url)
         self.assertEqual(response.status_code, 200)
-
         prediction = response.json()
         self.assertEqual(prediction["symbol"], "AAPL")
         self.assertEqual(prediction["model_id"], "model_1234567890")
-
-        # Send prediction to risk service
         risk_service_url = "http://localhost:8083/api/risk/position"
         response = requests.post(
             risk_service_url,
@@ -288,7 +252,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-
         risk = response.json()
         self.assertEqual(risk["symbol"], "AAPL")
         self.assertEqual(risk["quantity"], 100)
@@ -303,24 +266,17 @@ class TestModelToRiskIntegration(unittest.TestCase):
         self.assertIn("risk_score", risk)
         self.assertIn("risk_level", risk)
 
-    def test_prediction_service_to_risk_calculator_direct_integration(self):
+    def test_prediction_service_to_risk_calculator_direct_integration(self) -> Any:
         """Test direct integration between prediction service and risk calculator."""
-        # Mock prediction service get_prediction method
         with patch.object(self.prediction_service, "get_prediction") as mock_predict:
             mock_predict.return_value = self.prediction_data
-
-            # Get prediction from prediction service
             prediction = self.prediction_service.get_prediction(
                 model_id="model_1234567890", symbol="AAPL", timeframe="1d"
             )
-
-            # Check prediction
             self.assertEqual(prediction["symbol"], "AAPL")
             self.assertEqual(prediction["model_id"], "model_1234567890")
             self.assertIn("prediction", prediction)
             self.assertIn("predictions", prediction)
-
-            # Mock risk calculator calculate_position_risk method
             with patch.object(
                 self.risk_calculator, "calculate_position_risk"
             ) as mock_risk:
@@ -339,8 +295,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                     "risk_level": "medium",
                     "timestamp": datetime.utcnow().isoformat(),
                 }
-
-                # Calculate risk based on prediction
                 risk = self.risk_calculator.calculate_position_risk(
                     symbol="AAPL",
                     quantity=100,
@@ -355,8 +309,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                         "max_drawdown",
                     ],
                 )
-
-                # Check risk calculation
                 self.assertEqual(risk["symbol"], "AAPL")
                 self.assertEqual(risk["quantity"], 100)
                 self.assertEqual(risk["entry_price"], 150.0)
@@ -370,22 +322,15 @@ class TestModelToRiskIntegration(unittest.TestCase):
                 self.assertIn("risk_score", risk)
                 self.assertIn("risk_level", risk)
 
-    def test_monte_carlo_simulation_integration(self):
+    def test_monte_carlo_simulation_integration(self) -> Any:
         """Test Monte Carlo simulation integration between prediction and risk services."""
-        # Mock prediction service get_prediction method
         with patch.object(self.prediction_service, "get_prediction") as mock_predict:
             mock_predict.return_value = self.prediction_data
-
-            # Get prediction from prediction service
             prediction = self.prediction_service.get_prediction(
                 model_id="model_1234567890", symbol="AAPL", timeframe="1d"
             )
-
-            # Extract prediction values and confidence levels
             prediction_values = [p["value"] for p in prediction["predictions"]]
             confidence_levels = [p["confidence"] for p in prediction["predictions"]]
-
-            # Mock risk calculator run_monte_carlo_simulation method
             with patch.object(
                 self.risk_calculator, "run_monte_carlo_simulation"
             ) as mock_monte_carlo:
@@ -413,8 +358,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                         "95": 120.0,
                     },
                 }
-
-                # Run Monte Carlo simulation based on prediction
                 simulation = self.risk_calculator.run_monte_carlo_simulation(
                     symbol="AAPL",
                     initial_price=155.0,
@@ -423,8 +366,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                     simulations=1000,
                     days=5,
                 )
-
-                # Check simulation results
                 self.assertEqual(simulation["symbol"], "AAPL")
                 self.assertEqual(simulation["initial_price"], 155.0)
                 self.assertEqual(simulation["simulations"], 1000)
@@ -435,9 +376,8 @@ class TestModelToRiskIntegration(unittest.TestCase):
                 self.assertIn("probability_profit", simulation["results"])
                 self.assertIn("percentiles", simulation)
 
-    def test_portfolio_risk_with_predictions(self):
+    def test_portfolio_risk_with_predictions(self) -> Any:
         """Test portfolio risk calculation with predictions."""
-        # Mock prediction service get_predictions method
         with patch.object(self.prediction_service, "get_predictions") as mock_predict:
             mock_predict.return_value = {
                 "AAPL": {
@@ -467,19 +407,13 @@ class TestModelToRiskIntegration(unittest.TestCase):
                     },
                 },
             }
-
-            # Get predictions for portfolio symbols
             symbols = [position["symbol"] for position in self.sample_portfolio]
             predictions = self.prediction_service.get_predictions(
                 model_id="model_1234567890", symbols=symbols, timeframe="1d"
             )
-
-            # Check predictions
             self.assertEqual(len(predictions), 2)
             self.assertIn("AAPL", predictions)
             self.assertIn("MSFT", predictions)
-
-            # Mock risk calculator calculate_portfolio_risk method
             with patch.object(
                 self.risk_calculator, "calculate_portfolio_risk"
             ) as mock_risk:
@@ -496,8 +430,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                     "risk_level": "medium",
                     "timestamp": datetime.utcnow().isoformat(),
                 }
-
-                # Update portfolio with predicted prices
                 portfolio_with_predictions = []
                 for position in self.sample_portfolio:
                     symbol = position["symbol"]
@@ -509,8 +441,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                         portfolio_with_predictions.append(position_with_prediction)
                     else:
                         portfolio_with_predictions.append(position)
-
-                # Calculate portfolio risk with predictions
                 risk = self.risk_calculator.calculate_portfolio_risk(
                     portfolio_id="portfolio_1234567890",
                     portfolio=portfolio_with_predictions,
@@ -522,8 +452,6 @@ class TestModelToRiskIntegration(unittest.TestCase):
                         "max_drawdown",
                     ],
                 )
-
-                # Check risk calculation
                 self.assertEqual(risk["portfolio_id"], "portfolio_1234567890")
                 self.assertIn("total_value", risk)
                 self.assertIn("predicted_value", risk)

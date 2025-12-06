@@ -5,8 +5,6 @@ Handles real-time compliance monitoring and violation detection.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 import threading
 import time
@@ -17,10 +15,8 @@ from queue import Empty, Queue
 from typing import Any, Callable, Dict, List, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import ServiceError, setup_logger
 
-# Configure logging
 logger = setup_logger("compliance_monitoring", logging.INFO)
 
 
@@ -67,7 +63,7 @@ class ComplianceRule:
     rule_type: ViolationType
     severity: ViolationSeverity
     threshold: float
-    operator: str  # '>', '<', '>=', '<=', '==', '!='
+    operator: str
     measurement_field: str
     jurisdiction: str
     regulation: str
@@ -99,7 +95,7 @@ class ComplianceViolation:
 class ComplianceMonitor:
     """Real-time compliance monitoring system"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize compliance monitor
 
         Args:
@@ -108,27 +104,15 @@ class ComplianceMonitor:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Compliance rules
         self.rules = {}
         self.rule_groups = {}
-
-        # Violation tracking
         self.active_violations = {}
         self.violation_history = []
-
-        # Monitoring state
         self.monitoring_active = False
         self.monitoring_thread = None
-        self.check_interval = 60  # seconds
-
-        # Event queue for real-time processing
+        self.check_interval = 60
         self.event_queue = Queue(maxsize=10000)
-
-        # Callbacks for violations
         self.violation_callbacks = []
-
-        # Performance metrics
         self.metrics = {
             "rules_checked": 0,
             "violations_detected": 0,
@@ -136,10 +120,7 @@ class ComplianceMonitor:
             "last_check": None,
             "check_duration_ms": 0,
         }
-
-        # Initialize default rules
         self._initialize_default_rules()
-
         logger.info("Compliance monitor initialized")
 
     def start_monitoring(self) -> None:
@@ -148,15 +129,12 @@ class ComplianceMonitor:
             if self.monitoring_active:
                 logger.warning("Compliance monitoring is already active")
                 return
-
             self.monitoring_active = True
             self.monitoring_thread = threading.Thread(
                 target=self._monitoring_loop, daemon=True
             )
             self.monitoring_thread.start()
-
             logger.info("Compliance monitoring started")
-
         except Exception as e:
             logger.error(f"Error starting compliance monitoring: {e}")
             raise ServiceError(f"Error starting compliance monitoring: {str(e)}")
@@ -165,12 +143,9 @@ class ComplianceMonitor:
         """Stop real-time compliance monitoring"""
         try:
             self.monitoring_active = False
-
             if self.monitoring_thread and self.monitoring_thread.is_alive():
                 self.monitoring_thread.join(timeout=5)
-
             logger.info("Compliance monitoring stopped")
-
         except Exception as e:
             logger.error(f"Error stopping compliance monitoring: {e}")
 
@@ -231,21 +206,16 @@ class ComplianceMonitor:
         """
         try:
             start_time = time.time()
-
             violations = []
             warnings = []
             compliant_rules = []
-
-            # Check each enabled rule
             for rule_id, rule in self.rules.items():
                 if not rule.enabled:
                     continue
-
                 try:
                     result = self._check_rule(
                         rule, portfolio_data, position_data, market_data
                     )
-
                     if result["status"] == "violation":
                         violation = self._create_violation(rule, result, portfolio_data)
                         violations.append(violation)
@@ -262,13 +232,9 @@ class ComplianceMonitor:
                         )
                     else:
                         compliant_rules.append(rule_id)
-
                     self.metrics["rules_checked"] += 1
-
                 except Exception as e:
                     logger.error(f"Error checking rule {rule_id}: {e}")
-
-            # Determine overall compliance status
             if violations:
                 critical_violations = [
                     v for v in violations if v.severity == ViolationSeverity.CRITICAL
@@ -281,13 +247,10 @@ class ComplianceMonitor:
                 overall_status = ComplianceStatus.WARNING
             else:
                 overall_status = ComplianceStatus.COMPLIANT
-
-            # Update metrics
             check_duration = (time.time() - start_time) * 1000
             self.metrics["check_duration_ms"] = check_duration
             self.metrics["last_check"] = datetime.utcnow().isoformat()
             self.metrics["violations_detected"] += len(violations)
-
             return {
                 "overall_status": overall_status.value,
                 "violations": [self._violation_to_dict(v) for v in violations],
@@ -299,7 +262,6 @@ class ComplianceMonitor:
                 "check_duration_ms": check_duration,
                 "checked_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error checking compliance: {e}")
             raise ServiceError(f"Error checking compliance: {str(e)}")
@@ -325,11 +287,8 @@ class ComplianceMonitor:
             violation.status = "resolved"
             violation.additional_data = violation.additional_data or {}
             violation.additional_data["resolution_note"] = resolution_note
-
-            # Move to history
             self.violation_history.append(violation)
             del self.active_violations[violation_id]
-
             logger.info(f"Resolved violation: {violation_id}")
 
     def add_violation_callback(
@@ -361,16 +320,11 @@ class ComplianceMonitor:
         """Main monitoring loop"""
         while self.monitoring_active:
             try:
-                # Process events from queue
                 self._process_events()
-
-                # Periodic compliance check would go here
-                # For now, we'll just sleep
                 time.sleep(self.check_interval)
-
             except Exception as e:
                 logger.error(f"Error in monitoring loop: {e}")
-                time.sleep(5)  # Brief pause before retrying
+                time.sleep(5)
 
     def _process_events(self) -> None:
         """Process events from the event queue"""
@@ -393,24 +347,17 @@ class ComplianceMonitor:
         """
         try:
             event_type = event.get("type")
-
             if event_type == "portfolio_update":
-                # Check compliance for portfolio update
                 portfolio_data = event.get("portfolio_data", {})
                 position_data = event.get("position_data", [])
                 self.check_compliance(portfolio_data, position_data)
-
             elif event_type == "position_change":
-                # Check position-specific rules
                 position_data = event.get("position_data", {})
                 portfolio_data = event.get("portfolio_data", {})
                 self._check_position_rules(position_data, portfolio_data)
-
             elif event_type == "market_data_update":
-                # Check market-sensitive rules
                 market_data = event.get("market_data", {})
                 self._check_market_sensitive_rules(market_data)
-
         except Exception as e:
             logger.error(f"Error processing event: {e}")
 
@@ -433,24 +380,18 @@ class ComplianceMonitor:
             Rule check result
         """
         try:
-            # Get current value based on measurement field
             current_value = self._get_measurement_value(
                 rule.measurement_field, portfolio_data, position_data, market_data
             )
-
             if current_value is None:
                 return {
                     "status": "error",
                     "message": f"Could not calculate {rule.measurement_field}",
                 }
-
-            # Check against threshold
             violation = self._evaluate_threshold(
                 current_value, rule.threshold, rule.operator
             )
-
             if violation:
-                # Check if this is within grace period
                 if self._is_within_grace_period(rule):
                     return {
                         "status": "warning",
@@ -472,7 +413,6 @@ class ComplianceMonitor:
                     "threshold": rule.threshold,
                     "message": f"Rule {rule.name} compliant",
                 }
-
         except Exception as e:
             logger.error(f"Error checking rule {rule.rule_id}: {e}")
             return {"status": "error", "message": f"Error checking rule: {str(e)}"}
@@ -498,38 +438,34 @@ class ComplianceMonitor:
         try:
             if measurement_field == "total_portfolio_value":
                 return portfolio_data.get("total_value", 0)
-
             elif measurement_field == "leverage_ratio":
                 total_value = portfolio_data.get("total_value", 0)
                 gross_exposure = portfolio_data.get("gross_exposure", 0)
                 return gross_exposure / total_value if total_value > 0 else 0
-
             elif measurement_field == "cash_ratio":
                 total_value = portfolio_data.get("total_value", 0)
                 cash_value = portfolio_data.get("cash_value", 0)
                 return cash_value / total_value if total_value > 0 else 0
-
             elif measurement_field == "var_percentage":
                 total_value = portfolio_data.get("total_value", 0)
                 var_amount = portfolio_data.get("var_amount", 0)
                 return var_amount / total_value if total_value > 0 else 0
-
             elif measurement_field == "single_position_concentration":
                 if not position_data:
                     return 0
                 total_value = portfolio_data.get("total_value", 0)
                 if total_value == 0:
                     return 0
-                max_position = max(pos.get("market_value", 0) for pos in position_data)
+                max_position = max(
+                    (pos.get("market_value", 0) for pos in position_data)
+                )
                 return max_position / total_value
-
             elif measurement_field == "sector_concentration":
                 if not position_data:
                     return 0
                 return self._calculate_max_sector_concentration(
                     position_data, portfolio_data
                 )
-
             elif measurement_field == "liquidity_ratio":
                 if not position_data:
                     return 0
@@ -537,21 +473,23 @@ class ComplianceMonitor:
                 if total_value == 0:
                     return 0
                 liquid_value = sum(
-                    pos.get("market_value", 0)
-                    for pos in position_data
-                    if pos.get("liquidity_category") in ["daily", "weekly"]
+                    (
+                        pos.get("market_value", 0)
+                        for pos in position_data
+                        if pos.get("liquidity_category") in ["daily", "weekly"]
+                    )
                 )
                 return liquid_value / total_value
-
             elif measurement_field == "derivative_exposure":
                 if not position_data:
                     return 0
                 return sum(
-                    pos.get("notional_value", 0)
-                    for pos in position_data
-                    if pos.get("asset_type") == "derivative"
+                    (
+                        pos.get("notional_value", 0)
+                        for pos in position_data
+                        if pos.get("asset_type") == "derivative"
+                    )
                 )
-
             elif measurement_field == "foreign_exposure":
                 if not position_data:
                     return 0
@@ -559,16 +497,15 @@ class ComplianceMonitor:
                 if total_value == 0:
                     return 0
                 foreign_value = sum(
-                    pos.get("market_value", 0)
-                    for pos in position_data
-                    if pos.get("country") != "US"
+                    (
+                        pos.get("market_value", 0)
+                        for pos in position_data
+                        if pos.get("country") != "US"
+                    )
                 )
                 return foreign_value / total_value
-
             else:
-                # Try to get from portfolio data directly
                 return portfolio_data.get(measurement_field)
-
         except Exception as e:
             logger.error(f"Error calculating {measurement_field}: {e}")
             return None
@@ -588,17 +525,14 @@ class ComplianceMonitor:
         total_value = portfolio_data.get("total_value", 0)
         if total_value == 0:
             return 0
-
         sectors = {}
         for pos in position_data:
             sector = pos.get("sector", "unknown")
             if sector not in sectors:
                 sectors[sector] = 0
             sectors[sector] += pos.get("market_value", 0)
-
         if not sectors:
             return 0
-
         max_sector_value = max(sectors.values())
         return max_sector_value / total_value
 
@@ -642,15 +576,13 @@ class ComplianceMonitor:
         """
         if rule.grace_period_minutes == 0:
             return False
-
-        # Check if there's an existing violation for this rule
         for violation in self.active_violations.values():
             if violation.rule_id == rule.rule_id:
                 time_since_detection = datetime.utcnow() - violation.detected_at
-                return time_since_detection.total_seconds() < (
-                    rule.grace_period_minutes * 60
+                return (
+                    time_since_detection.total_seconds()
+                    < rule.grace_period_minutes * 60
                 )
-
         return True
 
     def _create_violation(
@@ -670,7 +602,6 @@ class ComplianceMonitor:
             Compliance violation
         """
         violation_id = f"violation_{int(time.time() * 1000)}"
-
         return ComplianceViolation(
             violation_id=violation_id,
             rule_id=rule.rule_id,
@@ -696,17 +627,12 @@ class ComplianceMonitor:
         Args:
             violation: Compliance violation
         """
-        # Add to active violations
         self.active_violations[violation.violation_id] = violation
-
-        # Trigger callbacks
         for callback in self.violation_callbacks:
             try:
                 callback(violation)
             except Exception as e:
                 logger.error(f"Error in violation callback: {e}")
-
-        # Log violation
         logger.warning(
             f"Compliance violation detected: {violation.rule_name} - {violation.description}"
         )
@@ -748,8 +674,6 @@ class ComplianceMonitor:
             position_data: Position data
             portfolio_data: Portfolio data
         """
-        # This would check rules specific to individual positions
-        # For now, we'll just log the check
         logger.debug(
             f"Checking position rules for {position_data.get('symbol', 'unknown')}"
         )
@@ -760,14 +684,10 @@ class ComplianceMonitor:
         Args:
             market_data: Market data
         """
-        # This would check rules that depend on market conditions
-        # For now, we'll just log the check
         logger.debug("Checking market-sensitive compliance rules")
 
     def _initialize_default_rules(self) -> None:
         """Initialize default compliance rules"""
-
-        # Position concentration limit
         self.add_rule(
             ComplianceRule(
                 rule_id="single_position_limit",
@@ -775,7 +695,7 @@ class ComplianceMonitor:
                 description="No single position should exceed 10% of portfolio value",
                 rule_type=ViolationType.CONCENTRATION_LIMIT,
                 severity=ViolationSeverity.HIGH,
-                threshold=0.10,
+                threshold=0.1,
                 operator=">",
                 measurement_field="single_position_concentration",
                 jurisdiction="US",
@@ -783,8 +703,6 @@ class ComplianceMonitor:
                 grace_period_minutes=30,
             )
         )
-
-        # Leverage limit
         self.add_rule(
             ComplianceRule(
                 rule_id="leverage_limit",
@@ -800,8 +718,6 @@ class ComplianceMonitor:
                 grace_period_minutes=0,
             )
         )
-
-        # Liquidity requirement
         self.add_rule(
             ComplianceRule(
                 rule_id="liquidity_requirement",
@@ -809,7 +725,7 @@ class ComplianceMonitor:
                 description="At least 20% of portfolio must be in liquid assets",
                 rule_type=ViolationType.LIQUIDITY_REQUIREMENT,
                 severity=ViolationSeverity.MEDIUM,
-                threshold=0.20,
+                threshold=0.2,
                 operator="<",
                 measurement_field="liquidity_ratio",
                 jurisdiction="US",
@@ -817,8 +733,6 @@ class ComplianceMonitor:
                 grace_period_minutes=60,
             )
         )
-
-        # VaR limit
         self.add_rule(
             ComplianceRule(
                 rule_id="var_limit",
@@ -834,8 +748,6 @@ class ComplianceMonitor:
                 grace_period_minutes=15,
             )
         )
-
-        # Sector concentration limit
         self.add_rule(
             ComplianceRule(
                 rule_id="sector_concentration_limit",
@@ -851,8 +763,6 @@ class ComplianceMonitor:
                 grace_period_minutes=120,
             )
         )
-
-        # Cash minimum requirement
         self.add_rule(
             ComplianceRule(
                 rule_id="cash_minimum",
@@ -868,8 +778,6 @@ class ComplianceMonitor:
                 grace_period_minutes=240,
             )
         )
-
-        # Foreign exposure limit
         self.add_rule(
             ComplianceRule(
                 rule_id="foreign_exposure_limit",
@@ -877,7 +785,7 @@ class ComplianceMonitor:
                 description="Foreign investments should not exceed 30% of portfolio",
                 rule_type=ViolationType.INVESTMENT_RESTRICTION,
                 severity=ViolationSeverity.MEDIUM,
-                threshold=0.30,
+                threshold=0.3,
                 operator=">",
                 measurement_field="foreign_exposure",
                 jurisdiction="US",
@@ -885,14 +793,13 @@ class ComplianceMonitor:
                 grace_period_minutes=180,
             )
         )
-
         logger.info(f"Initialized {len(self.rules)} default compliance rules")
 
 
 class ComplianceReporter:
     """Compliance reporting and analytics"""
 
-    def __init__(self, compliance_monitor: ComplianceMonitor):
+    def __init__(self, compliance_monitor: ComplianceMonitor) -> Any:
         """Initialize compliance reporter
 
         Args:
@@ -912,42 +819,32 @@ class ComplianceReporter:
         Returns:
             Compliance report
         """
-        # Filter violations by date range
         period_violations = [
             v
             for v in self.compliance_monitor.violation_history
             if start_date <= v.detected_at <= end_date
         ]
-
-        # Calculate statistics
         total_violations = len(period_violations)
         violations_by_type = {}
         violations_by_severity = {}
-
         for violation in period_violations:
-            # By type
             vtype = violation.violation_type.value
             if vtype not in violations_by_type:
                 violations_by_type[vtype] = 0
             violations_by_type[vtype] += 1
-
-            # By severity
             severity = violation.severity.value
             if severity not in violations_by_severity:
                 violations_by_severity[severity] = 0
             violations_by_severity[severity] += 1
-
-        # Calculate resolution times
         resolved_violations = [v for v in period_violations if v.resolved_at]
         if resolved_violations:
             resolution_times = [
-                (v.resolved_at - v.detected_at).total_seconds() / 3600  # hours
+                (v.resolved_at - v.detected_at).total_seconds() / 3600
                 for v in resolved_violations
             ]
             avg_resolution_time = sum(resolution_times) / len(resolution_times)
         else:
             avg_resolution_time = 0
-
         return {
             "report_period": {
                 "start_date": start_date.isoformat(),

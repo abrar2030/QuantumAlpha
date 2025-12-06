@@ -11,13 +11,10 @@ import logging
 import os
 import sys
 import traceback
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-# Add parent directory to path to import common modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import (
     ServiceError,
     ValidationError,
@@ -29,28 +26,17 @@ from common import (
 from common.validation import CancelOrderRequest, OrderRequest
 from execution_service.broker_integration import BrokerIntegration
 from execution_service.execution_strategy import ExecutionStrategy
-
-# Import service modules
 from execution_service.order_manager import OrderManager
 
-# Configure logging
 logger = setup_logger("execution_service", logging.INFO)
-
-# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
-
-# Load configuration
 config_manager = get_config_manager(
     env_file=os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config", ".env"
     )
 )
-
-# Initialize database manager
 db_manager = get_db_manager(config_manager.get_all())
-
-# Initialize services
 broker_integration = BrokerIntegration(config_manager, db_manager)
 execution_strategy = ExecutionStrategy(config_manager, db_manager)
 order_manager = OrderManager(
@@ -58,16 +44,13 @@ order_manager = OrderManager(
 )
 
 
-# Error handler
 @app.errorhandler(Exception)
-def handle_error(error):
+def handle_error(error: Any) -> Any:
     """Handle errors"""
     if isinstance(error, ServiceError):
-        return jsonify(error.to_dict()), error.status_code
-
+        return (jsonify(error.to_dict()), error.status_code)
     logger.error(f"Unhandled error: {error}")
     logger.error(traceback.format_exc())
-
     return (
         jsonify(
             {
@@ -80,30 +63,23 @@ def handle_error(error):
     )
 
 
-# Health check endpoint
 @app.route("/health", methods=["GET"])
-def health_check():
+def health_check() -> Any:
     """Health check endpoint"""
     return jsonify({"status": "ok", "service": "execution_service"})
 
 
-# Order management endpoints
 @app.route("/api/orders", methods=["GET"])
-def get_orders():
+def get_orders() -> Any:
     """Get all orders"""
     try:
-        # Get query parameters
         portfolio_id = request.args.get("portfolio_id")
         status = request.args.get("status")
         symbol = request.args.get("symbol")
-
-        # Get orders
         orders = order_manager.get_orders(
             portfolio_id=portfolio_id, status=status, symbol=symbol
         )
-
         return jsonify({"orders": orders})
-
     except Exception as e:
         logger.error(f"Error getting orders: {e}")
         if isinstance(e, ServiceError):
@@ -113,14 +89,11 @@ def get_orders():
 
 
 @app.route("/api/orders/<order_id>", methods=["GET"])
-def get_order(order_id):
+def get_order(order_id: Any) -> Any:
     """Get a specific order"""
     try:
-        # Get order
         order = order_manager.get_order(order_id)
-
         return jsonify(order)
-
     except Exception as e:
         logger.error(f"Error getting order: {e}")
         if isinstance(e, ServiceError):
@@ -130,20 +103,13 @@ def get_order(order_id):
 
 
 @app.route("/api/orders", methods=["POST"])
-def create_order():
+def create_order() -> Any:
     """Create a new order"""
     try:
-        # Get request data
         data = request.json
-
-        # Validate data
         validated_data = validate_schema(data, OrderRequest)
-
-        # Create order
         order = order_manager.create_order(validated_data)
-
         return jsonify(order)
-
     except Exception as e:
         logger.error(f"Error creating order: {e}")
         if isinstance(e, ServiceError):
@@ -153,23 +119,14 @@ def create_order():
 
 
 @app.route("/api/orders/<order_id>/cancel", methods=["POST"])
-def cancel_order(order_id):
+def cancel_order(order_id: Any) -> Any:
     """Cancel an order"""
     try:
-        # Get request data
         data = request.json or {}
-
-        # Add order ID to data
         data["order_id"] = order_id
-
-        # Validate data
         validated_data = validate_schema(data, CancelOrderRequest)
-
-        # Cancel order
         result = order_manager.cancel_order(validated_data["order_id"])
-
         return jsonify(result)
-
     except Exception as e:
         logger.error(f"Error canceling order: {e}")
         if isinstance(e, ServiceError):
@@ -178,16 +135,12 @@ def cancel_order(order_id):
             raise ServiceError(str(e))
 
 
-# Execution strategy endpoints
 @app.route("/api/execution-strategies", methods=["GET"])
-def get_execution_strategies():
+def get_execution_strategies() -> Any:
     """Get all execution strategies"""
     try:
-        # Get execution strategies
         strategies = execution_strategy.get_strategies()
-
         return jsonify({"strategies": strategies})
-
     except Exception as e:
         logger.error(f"Error getting execution strategies: {e}")
         if isinstance(e, ServiceError):
@@ -197,14 +150,11 @@ def get_execution_strategies():
 
 
 @app.route("/api/execution-strategies/<strategy_id>", methods=["GET"])
-def get_execution_strategy(strategy_id):
+def get_execution_strategy(strategy_id: Any) -> Any:
     """Get a specific execution strategy"""
     try:
-        # Get execution strategy
         strategy = execution_strategy.get_strategy(strategy_id)
-
         return jsonify(strategy)
-
     except Exception as e:
         logger.error(f"Error getting execution strategy: {e}")
         if isinstance(e, ServiceError):
@@ -213,16 +163,12 @@ def get_execution_strategy(strategy_id):
             raise ServiceError(str(e))
 
 
-# Broker integration endpoints
 @app.route("/api/brokers", methods=["GET"])
-def get_brokers():
+def get_brokers() -> Any:
     """Get all brokers"""
     try:
-        # Get brokers
         brokers = broker_integration.get_brokers()
-
         return jsonify({"brokers": brokers})
-
     except Exception as e:
         logger.error(f"Error getting brokers: {e}")
         if isinstance(e, ServiceError):
@@ -232,14 +178,11 @@ def get_brokers():
 
 
 @app.route("/api/brokers/<broker_id>", methods=["GET"])
-def get_broker(broker_id):
+def get_broker(broker_id: Any) -> Any:
     """Get a specific broker"""
     try:
-        # Get broker
         broker = broker_integration.get_broker(broker_id)
-
         return jsonify(broker)
-
     except Exception as e:
         logger.error(f"Error getting broker: {e}")
         if isinstance(e, ServiceError):
@@ -249,14 +192,11 @@ def get_broker(broker_id):
 
 
 @app.route("/api/brokers/<broker_id>/accounts", methods=["GET"])
-def get_broker_accounts(broker_id):
+def get_broker_accounts(broker_id: Any) -> Any:
     """Get accounts for a broker"""
     try:
-        # Get accounts
         accounts = broker_integration.get_accounts(broker_id)
-
         return jsonify({"accounts": accounts})
-
     except Exception as e:
         logger.error(f"Error getting broker accounts: {e}")
         if isinstance(e, ServiceError):
@@ -266,20 +206,14 @@ def get_broker_accounts(broker_id):
 
 
 @app.route("/api/brokers/<broker_id>/positions", methods=["GET"])
-def get_broker_positions(broker_id):
+def get_broker_positions(broker_id: Any) -> Any:
     """Get positions for a broker"""
     try:
-        # Get account ID
         account_id = request.args.get("account_id")
-
         if not account_id:
             raise ValidationError("Account ID is required")
-
-        # Get positions
         positions = broker_integration.get_positions(broker_id, account_id)
-
         return jsonify({"positions": positions})
-
     except Exception as e:
         logger.error(f"Error getting broker positions: {e}")
         if isinstance(e, ServiceError):

@@ -5,14 +5,11 @@ Provides comprehensive factor analysis and risk decomposition tools.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
-
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
@@ -22,10 +19,8 @@ from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import ServiceError, ValidationError, setup_logger
 
-# Configure logging
 logger = setup_logger("factor_analysis", logging.INFO)
 
 
@@ -94,7 +89,7 @@ class FactorAnalysisResult:
 class FactorAnalysisEngine:
     """Comprehensive factor analysis engine"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize factor analysis engine
 
         Args:
@@ -103,22 +98,13 @@ class FactorAnalysisEngine:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Factor data
         self.factor_data = {}
         self.factor_models = {}
-
-        # Analysis settings
-        self.default_lookback_days = 252  # 1 year
+        self.default_lookback_days = 252
         self.min_observations = 60
         self.confidence_level = 0.95
-
-        # Initialize factor models
         self._initialize_factor_models()
-
-        # Load factor data
         self._load_factor_data()
-
         logger.info("Factor analysis engine initialized")
 
     def analyze_portfolio_factors(
@@ -145,12 +131,8 @@ class FactorAnalysisEngine:
         """
         try:
             logger.info(f"Analyzing portfolio factors using {factor_model} model")
-
-            # Validate inputs
             if portfolio_returns.empty:
                 raise ValidationError("Portfolio returns data is empty")
-
-            # Filter by date range
             if start_date or end_date:
                 portfolio_returns = self._filter_series_by_date(
                     portfolio_returns, start_date, end_date
@@ -159,34 +141,21 @@ class FactorAnalysisEngine:
                     benchmark_returns = self._filter_series_by_date(
                         benchmark_returns, start_date, end_date
                     )
-
-            # Check minimum observations
             if len(portfolio_returns) < self.min_observations:
                 raise ValidationError(
                     f"Insufficient data: {len(portfolio_returns)} observations, minimum {self.min_observations} required"
                 )
-
-            # Get factor data
             factor_data = self._get_factor_data(factor_model, portfolio_returns.index)
-
             if factor_data.empty:
                 raise ValidationError(f"No factor data available for {factor_model}")
-
-            # Align data
             aligned_data = self._align_data(
                 portfolio_returns, factor_data, benchmark_returns
             )
-
-            # Perform factor analysis
             if factor_model == FactorModel.STATISTICAL_PCA.value:
                 result = self._perform_pca_analysis(aligned_data)
             else:
                 result = self._perform_regression_analysis(aligned_data, factor_model)
-
-            # Calculate additional metrics
             result = self._calculate_additional_metrics(result, aligned_data)
-
-            # Add metadata
             result["analysis_period"] = {
                 "start": aligned_data["portfolio_returns"].index[0].isoformat(),
                 "end": aligned_data["portfolio_returns"].index[-1].isoformat(),
@@ -195,9 +164,7 @@ class FactorAnalysisEngine:
             result["factor_model"] = factor_model
             result["frequency"] = frequency
             result["analyzed_at"] = datetime.utcnow().isoformat()
-
             return result
-
         except Exception as e:
             logger.error(f"Error analyzing portfolio factors: {e}")
             raise ServiceError(f"Error analyzing portfolio factors: {str(e)}")
@@ -222,25 +189,19 @@ class FactorAnalysisEngine:
         """
         try:
             logger.info(f"Analyzing factors for {len(security_returns)} securities")
-
             security_results = {}
-
             for security_id, returns in security_returns.items():
                 try:
                     result = self.analyze_portfolio_factors(
                         returns, factor_model, None, start_date, end_date
                     )
                     security_results[security_id] = result
-
                 except Exception as e:
                     logger.warning(f"Error analyzing factors for {security_id}: {e}")
                     security_results[security_id] = {"error": str(e)}
-
-            # Calculate cross-sectional statistics
             cross_sectional_stats = self._calculate_cross_sectional_stats(
                 security_results
             )
-
             return {
                 "security_results": security_results,
                 "cross_sectional_statistics": cross_sectional_stats,
@@ -251,7 +212,6 @@ class FactorAnalysisEngine:
                 ),
                 "analyzed_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error analyzing security factors: {e}")
             raise ServiceError(f"Error analyzing security factors: {str(e)}")
@@ -276,11 +236,8 @@ class FactorAnalysisEngine:
         """
         try:
             logger.info("Calculating factor risk decomposition")
-
-            # Build portfolio factor exposure vector
             factors = factor_covariance_matrix.index.tolist()
             portfolio_exposures = {}
-
             for factor in factors:
                 exposure = 0
                 for security, weight in portfolio_weights.items():
@@ -289,33 +246,21 @@ class FactorAnalysisEngine:
                             factor, 0
                         )
                 portfolio_exposures[factor] = exposure
-
-            # Convert to array for matrix operations
             exposure_vector = np.array([portfolio_exposures[f] for f in factors])
-
-            # Calculate systematic risk
             systematic_variance = np.dot(
                 exposure_vector,
                 np.dot(factor_covariance_matrix.values, exposure_vector),
             )
             systematic_risk = np.sqrt(systematic_variance)
-
-            # Calculate specific risk
             specific_variance = 0
             for security, weight in portfolio_weights.items():
                 if security in specific_risks:
-                    specific_variance += (weight**2) * (specific_risks[security] ** 2)
-
+                    specific_variance += weight**2 * specific_risks[security] ** 2
             specific_risk = np.sqrt(specific_variance)
-
-            # Total risk
             total_variance = systematic_variance + specific_variance
             total_risk = np.sqrt(total_variance)
-
-            # Factor contributions to risk
             factor_contributions = {}
             for i, factor in enumerate(factors):
-                # Marginal contribution to risk
                 marginal_contrib = 0
                 for j, other_factor in enumerate(factors):
                     marginal_contrib += (
@@ -323,7 +268,6 @@ class FactorAnalysisEngine:
                         * factor_covariance_matrix.iloc[i, j]
                         * exposure_vector[j]
                     )
-
                 factor_contributions[factor] = {
                     "exposure": float(exposure_vector[i]),
                     "marginal_contribution": float(marginal_contrib),
@@ -333,7 +277,6 @@ class FactorAnalysisEngine:
                         else 0
                     ),
                 }
-
             return {
                 "portfolio_factor_exposures": portfolio_exposures,
                 "risk_decomposition": {
@@ -354,7 +297,6 @@ class FactorAnalysisEngine:
                 "factor_contributions": factor_contributions,
                 "calculated_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error calculating risk decomposition: {e}")
             raise ServiceError(f"Error calculating risk decomposition: {str(e)}")
@@ -377,57 +319,35 @@ class FactorAnalysisEngine:
         """
         try:
             logger.info("Performing factor timing analysis")
-
-            # Align data
             common_index = portfolio_returns.index.intersection(factor_returns.index)
             port_ret = portfolio_returns.loc[common_index]
             fact_ret = factor_returns.loc[common_index]
-
             if len(common_index) < rolling_window + 10:
                 raise ValidationError("Insufficient data for rolling analysis")
-
-            # Rolling factor exposures
             rolling_exposures = {}
             rolling_r_squared = []
-
             for factor in fact_ret.columns:
                 rolling_exposures[factor] = []
-
-            # Perform rolling regressions
             for i in range(rolling_window, len(common_index)):
                 window_start = i - rolling_window
                 window_end = i
-
                 y = port_ret.iloc[window_start:window_end]
                 X = fact_ret.iloc[window_start:window_end]
-
-                # Add constant for alpha
                 np.column_stack([np.ones(len(X)), X.values])
-
                 try:
-                    # Regression
                     reg = LinearRegression().fit(X.values, y.values)
-
-                    # Store exposures
                     for j, factor in enumerate(fact_ret.columns):
                         rolling_exposures[factor].append(reg.coef_[j])
-
-                    # R-squared
                     r_squared = reg.score(X.values, y.values)
                     rolling_r_squared.append(r_squared)
-
                 except Exception as e:
                     logger.warning(f"Error in rolling regression at window {i}: {e}")
                     for factor in fact_ret.columns:
                         rolling_exposures[factor].append(np.nan)
                     rolling_r_squared.append(np.nan)
-
-            # Convert to DataFrames
             exposure_dates = common_index[rolling_window:]
             exposure_df = pd.DataFrame(rolling_exposures, index=exposure_dates)
             r_squared_series = pd.Series(rolling_r_squared, index=exposure_dates)
-
-            # Calculate timing statistics
             timing_stats = {}
             for factor in fact_ret.columns:
                 exposures = exposure_df[factor].dropna()
@@ -444,12 +364,9 @@ class FactorAnalysisEngine:
                             else 0
                         ),
                     }
-
-            # Factor timing effectiveness
             timing_effectiveness = self._calculate_timing_effectiveness(
                 exposure_df, fact_ret.loc[exposure_dates]
             )
-
             return {
                 "rolling_exposures": exposure_df.to_dict("index"),
                 "rolling_r_squared": r_squared_series.to_dict(),
@@ -463,7 +380,6 @@ class FactorAnalysisEngine:
                 },
                 "analyzed_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error performing factor timing analysis: {e}")
             raise ServiceError(f"Error performing factor timing analysis: {str(e)}")
@@ -488,19 +404,14 @@ class FactorAnalysisEngine:
         """
         try:
             logger.info("Calculating factor attribution")
-
-            # Align data
             common_index = portfolio_returns.index.intersection(factor_returns.index)
             port_ret = portfolio_returns.loc[common_index]
             fact_ret = factor_returns.loc[common_index]
-
-            # Calculate factor contributions
             factor_contributions = {}
             total_factor_return = 0
-
             for factor, exposure in factor_exposures.items():
                 if factor in fact_ret.columns:
-                    factor_return = fact_ret[factor].mean()  # Average factor return
+                    factor_return = fact_ret[factor].mean()
                     contribution = exposure * factor_return
                     factor_contributions[factor] = {
                         "exposure": float(exposure),
@@ -508,12 +419,8 @@ class FactorAnalysisEngine:
                         "contribution": float(contribution),
                     }
                     total_factor_return += contribution
-
-            # Calculate alpha (unexplained return)
             portfolio_return = port_ret.mean()
             alpha = portfolio_return - total_factor_return
-
-            # Active attribution vs benchmark
             active_attribution = {}
             if benchmark_exposures:
                 for factor in factor_exposures:
@@ -523,7 +430,6 @@ class FactorAnalysisEngine:
                         )
                         factor_return = fact_ret[factor].mean()
                         active_contribution = active_exposure * factor_return
-
                         active_attribution[factor] = {
                             "portfolio_exposure": float(factor_exposures[factor]),
                             "benchmark_exposure": float(benchmark_exposures[factor]),
@@ -531,7 +437,6 @@ class FactorAnalysisEngine:
                             "factor_return": float(factor_return),
                             "active_contribution": float(active_contribution),
                         }
-
             return {
                 "portfolio_return": float(portfolio_return),
                 "total_factor_return": float(total_factor_return),
@@ -549,7 +454,6 @@ class FactorAnalysisEngine:
                 },
                 "calculated_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error calculating factor attribution: {e}")
             raise ServiceError(f"Error calculating factor attribution: {str(e)}")
@@ -561,61 +465,36 @@ class FactorAnalysisEngine:
         try:
             portfolio_returns = aligned_data["portfolio_returns"]
             factor_data = aligned_data["factor_data"]
-
-            # Prepare regression data
             y = portfolio_returns.values
             X = factor_data.values
-
-            # Add constant for alpha
             X_with_const = np.column_stack([np.ones(len(X)), X])
-
-            # Perform regression
             reg = LinearRegression().fit(X, y)
-
-            # Calculate statistics
             y_pred = reg.predict(X)
             residuals = y - y_pred
-
-            # R-squared
             r_squared = r2_score(y, y_pred)
             n = len(y)
             k = X.shape[1]
             adjusted_r_squared = 1 - (1 - r_squared) * (n - 1) / (n - k - 1)
-
-            # Alpha calculation
             alpha = np.mean(residuals)
-
-            # Standard errors and t-statistics
             mse = np.mean(residuals**2)
             X_with_const_T_X_inv = np.linalg.inv(X_with_const.T @ X_with_const)
             var_coef = mse * np.diag(X_with_const_T_X_inv)
             std_errors = np.sqrt(var_coef)
-
-            # Alpha statistics
             alpha_std_error = std_errors[0]
             alpha_t_stat = alpha / alpha_std_error if alpha_std_error > 0 else 0
             alpha_p_value = 2 * (1 - stats.t.cdf(abs(alpha_t_stat), n - k - 1))
-
-            # Factor exposures
             factor_exposures = []
             for i, factor_name in enumerate(factor_data.columns):
                 coef = reg.coef_[i]
-                std_error = std_errors[i + 1]  # +1 because first is alpha
+                std_error = std_errors[i + 1]
                 t_stat = coef / std_error if std_error > 0 else 0
                 p_value = 2 * (1 - stats.t.cdf(abs(t_stat), n - k - 1))
-
-                # Confidence interval
                 t_critical = stats.t.ppf((1 + self.confidence_level) / 2, n - k - 1)
                 ci_lower = coef - t_critical * std_error
                 ci_upper = coef + t_critical * std_error
-
-                # Contribution to return
                 factor_returns = factor_data[factor_name]
                 contribution_to_return = coef * factor_returns.mean()
-
-                # Contribution to risk (simplified)
-                contribution_to_risk = (coef**2) * (factor_returns.var())
-
+                contribution_to_risk = coef**2 * factor_returns.var()
                 factor_exposure = FactorExposure(
                     factor_name=factor_name,
                     factor_type=self._get_factor_type(factor_name),
@@ -626,14 +505,10 @@ class FactorAnalysisEngine:
                     contribution_to_return=float(contribution_to_return),
                     contribution_to_risk=float(contribution_to_risk),
                 )
-
                 factor_exposures.append(factor_exposure)
-
-            # Risk decomposition
             systematic_variance = np.var(y_pred)
             residual_variance = np.var(residuals)
             total_variance = np.var(y)
-
             return FactorAnalysisResult(
                 model_type=FactorModel(factor_model),
                 r_squared=float(r_squared),
@@ -652,7 +527,6 @@ class FactorAnalysisEngine:
                     else 0
                 ),
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in regression analysis: {e}")
             raise
@@ -664,40 +538,24 @@ class FactorAnalysisEngine:
         try:
             portfolio_returns = aligned_data["portfolio_returns"]
             factor_data = aligned_data["factor_data"]
-
-            # Standardize the data
             scaler = StandardScaler()
             X_scaled = scaler.fit_transform(factor_data.values)
-
-            # Perform PCA
             pca = PCA()
             pca.fit(X_scaled)
-
-            # Transform portfolio returns
             y = portfolio_returns.values
-
-            # Project portfolio onto principal components
             portfolio_pca = pca.transform(scaler.transform(factor_data.values))
-
-            # Regression on principal components
             reg = LinearRegression().fit(portfolio_pca, y)
-
-            # Calculate explained variance
             explained_variance_ratio = pca.explained_variance_ratio_
             np.cumsum(explained_variance_ratio)
-
-            # Factor loadings
             pca.components_
-
-            # Create factor exposures for principal components
             factor_exposures = []
             for i in range(len(pca.components_)):
                 if i < len(reg.coef_):
                     factor_exposure = FactorExposure(
-                        factor_name=f"PC{i+1}",
-                        factor_type=RiskFactorType.MARKET,  # Generic type for PCA
+                        factor_name=f"PC{i + 1}",
+                        factor_type=RiskFactorType.MARKET,
                         exposure=float(reg.coef_[i]),
-                        t_statistic=0,  # Not calculated for PCA
+                        t_statistic=0,
                         p_value=1,
                         confidence_interval=(0, 0),
                         contribution_to_return=float(
@@ -706,15 +564,12 @@ class FactorAnalysisEngine:
                         contribution_to_risk=float(explained_variance_ratio[i]),
                     )
                     factor_exposures.append(factor_exposure)
-
-            # Calculate R-squared
             y_pred = reg.predict(portfolio_pca)
             r_squared = r2_score(y, y_pred)
-
             return FactorAnalysisResult(
                 model_type=FactorModel.STATISTICAL_PCA,
                 r_squared=float(r_squared),
-                adjusted_r_squared=float(r_squared),  # Simplified for PCA
+                adjusted_r_squared=float(r_squared),
                 factor_exposures=factor_exposures,
                 residual_risk=float(np.sqrt(np.var(y - y_pred))),
                 systematic_risk=float(np.sqrt(np.var(y_pred))),
@@ -725,7 +580,6 @@ class FactorAnalysisEngine:
                 tracking_error=float(np.sqrt(np.var(y - y_pred))),
                 information_ratio=0,
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in PCA analysis: {e}")
             raise
@@ -736,24 +590,16 @@ class FactorAnalysisEngine:
         """Calculate additional factor analysis metrics"""
         try:
             portfolio_returns = aligned_data["portfolio_returns"]
-
-            # Add time-varying analysis
             result["time_varying_analysis"] = self._calculate_time_varying_exposures(
                 portfolio_returns, aligned_data["factor_data"]
             )
-
-            # Add factor correlation analysis
             result["factor_correlations"] = self._calculate_factor_correlations(
                 aligned_data["factor_data"]
             )
-
-            # Add regime analysis
             result["regime_analysis"] = self._calculate_regime_analysis(
                 portfolio_returns, aligned_data["factor_data"]
             )
-
             return result
-
         except Exception as e:
             logger.warning(f"Error calculating additional metrics: {e}")
             return result
@@ -765,34 +611,24 @@ class FactorAnalysisEngine:
         try:
             if len(portfolio_returns) < window * 2:
                 return {"error": "Insufficient data for time-varying analysis"}
-
             rolling_exposures = {}
             for factor in factor_data.columns:
                 rolling_exposures[factor] = []
-
             dates = []
-
             for i in range(window, len(portfolio_returns)):
                 window_start = i - window
                 window_end = i
-
                 y = portfolio_returns.iloc[window_start:window_end]
                 X = factor_data.iloc[window_start:window_end]
-
                 try:
                     reg = LinearRegression().fit(X.values, y.values)
-
                     for j, factor in enumerate(factor_data.columns):
                         rolling_exposures[factor].append(reg.coef_[j])
-
                     dates.append(portfolio_returns.index[i])
-
                 except Exception:
                     for factor in factor_data.columns:
                         rolling_exposures[factor].append(np.nan)
                     dates.append(portfolio_returns.index[i])
-
-            # Calculate statistics
             exposure_stats = {}
             for factor, exposures in rolling_exposures.items():
                 clean_exposures = [e for e in exposures if not np.isnan(e)]
@@ -803,14 +639,12 @@ class FactorAnalysisEngine:
                         "min": float(np.min(clean_exposures)),
                         "max": float(np.max(clean_exposures)),
                     }
-
             return {
                 "rolling_exposures": rolling_exposures,
                 "dates": [d.isoformat() for d in dates],
                 "exposure_statistics": exposure_stats,
                 "window_size": window,
             }
-
         except Exception as e:
             logger.error(f"Error calculating time-varying exposures: {e}")
             return {"error": str(e)}
@@ -821,7 +655,6 @@ class FactorAnalysisEngine:
         """Calculate factor correlation matrix"""
         try:
             correlation_matrix = factor_data.corr()
-
             return {
                 "correlation_matrix": correlation_matrix.to_dict(),
                 "average_correlation": float(
@@ -840,7 +673,6 @@ class FactorAnalysisEngine:
                     ].min()
                 ),
             }
-
         except Exception as e:
             logger.error(f"Error calculating factor correlations: {e}")
             return {"error": str(e)}
@@ -850,29 +682,22 @@ class FactorAnalysisEngine:
     ) -> Dict[str, Any]:
         """Calculate regime-based factor analysis"""
         try:
-            # Simple regime identification based on market volatility
             market_vol = portfolio_returns.rolling(20).std()
             high_vol_threshold = market_vol.quantile(0.75)
             low_vol_threshold = market_vol.quantile(0.25)
-
-            # Define regimes
             high_vol_periods = market_vol > high_vol_threshold
             low_vol_periods = market_vol < low_vol_threshold
             normal_periods = ~(high_vol_periods | low_vol_periods)
-
             regimes = {
                 "high_volatility": high_vol_periods,
                 "low_volatility": low_vol_periods,
                 "normal": normal_periods,
             }
-
             regime_results = {}
-
             for regime_name, regime_mask in regimes.items():
-                if regime_mask.sum() > 30:  # Minimum observations
+                if regime_mask.sum() > 30:
                     regime_returns = portfolio_returns[regime_mask]
                     regime_factors = factor_data[regime_mask]
-
                     try:
                         reg = LinearRegression().fit(
                             regime_factors.values, regime_returns.values
@@ -880,7 +705,6 @@ class FactorAnalysisEngine:
                         r_squared = reg.score(
                             regime_factors.values, regime_returns.values
                         )
-
                         regime_results[regime_name] = {
                             "observations": int(regime_mask.sum()),
                             "r_squared": float(r_squared),
@@ -893,12 +717,9 @@ class FactorAnalysisEngine:
                             "average_return": float(regime_returns.mean()),
                             "volatility": float(regime_returns.std()),
                         }
-
                     except Exception as e:
                         regime_results[regime_name] = {"error": str(e)}
-
             return regime_results
-
         except Exception as e:
             logger.error(f"Error calculating regime analysis: {e}")
             return {"error": str(e)}
@@ -909,37 +730,28 @@ class FactorAnalysisEngine:
         """Calculate factor timing effectiveness"""
         try:
             timing_effectiveness = {}
-
             for factor in exposure_df.columns:
                 if factor in factor_returns.columns:
                     exposures = exposure_df[factor].dropna()
                     returns = factor_returns[factor].loc[exposures.index]
-
                     if len(exposures) > 10:
-                        # Calculate correlation between lagged exposure and factor return
                         lagged_exposures = exposures.shift(1).dropna()
                         aligned_returns = returns.loc[lagged_exposures.index]
-
                         if len(lagged_exposures) > 5:
                             correlation = np.corrcoef(
                                 lagged_exposures, aligned_returns
                             )[0, 1]
-
-                            # Calculate timing value
                             timing_value = (
                                 correlation
                                 * np.std(aligned_returns)
                                 * np.std(lagged_exposures)
                             )
-
                             timing_effectiveness[factor] = {
                                 "timing_correlation": float(correlation),
                                 "timing_value": float(timing_value),
                                 "observations": len(lagged_exposures),
                             }
-
             return timing_effectiveness
-
         except Exception as e:
             logger.error(f"Error calculating timing effectiveness: {e}")
             return {"error": str(e)}
@@ -952,15 +764,10 @@ class FactorAnalysisEngine:
             valid_results = {
                 k: v for k, v in security_results.items() if "error" not in v
             }
-
             if not valid_results:
                 return {"error": "No valid results for cross-sectional analysis"}
-
-            # Extract metrics
             r_squareds = [r.get("r_squared", 0) for r in valid_results.values()]
             alphas = [r.get("alpha", 0) for r in valid_results.values()]
-
-            # Factor exposure statistics
             factor_exposures = {}
             for result in valid_results.values():
                 for exposure in result.get("factor_exposures", []):
@@ -968,7 +775,6 @@ class FactorAnalysisEngine:
                     if factor_name not in factor_exposures:
                         factor_exposures[factor_name] = []
                     factor_exposures[factor_name].append(exposure["exposure"])
-
             factor_stats = {}
             for factor, exposures in factor_exposures.items():
                 factor_stats[factor] = {
@@ -978,7 +784,6 @@ class FactorAnalysisEngine:
                     "min_exposure": float(np.min(exposures)),
                     "max_exposure": float(np.max(exposures)),
                 }
-
             return {
                 "summary_statistics": {
                     "mean_r_squared": float(np.mean(r_squareds)),
@@ -993,7 +798,6 @@ class FactorAnalysisEngine:
                 "valid_securities": len(valid_results),
                 "total_securities": len(security_results),
             }
-
         except Exception as e:
             logger.error(f"Error calculating cross-sectional stats: {e}")
             return {"error": str(e)}
@@ -1020,13 +824,7 @@ class FactorAnalysisEngine:
 
     def _load_factor_data(self) -> None:
         """Load factor data (mock implementation)"""
-        # In a real implementation, this would load actual factor data
-        # from databases or external sources
-
-        # Generate mock factor data for demonstration
         dates = pd.date_range("2020-01-01", "2024-01-01", freq="D")
-
-        # Fama-French 3-factor mock data
         np.random.seed(42)
         self.factor_data["fama_french_3"] = pd.DataFrame(
             {
@@ -1036,8 +834,6 @@ class FactorAnalysisEngine:
             },
             index=dates,
         )
-
-        # Fama-French 5-factor mock data
         self.factor_data["fama_french_5"] = pd.DataFrame(
             {
                 "market_excess": np.random.normal(0.0005, 0.01, len(dates)),
@@ -1048,8 +844,6 @@ class FactorAnalysisEngine:
             },
             index=dates,
         )
-
-        # Carhart 4-factor mock data
         self.factor_data["carhart_4"] = pd.DataFrame(
             {
                 "market_excess": np.random.normal(0.0005, 0.01, len(dates)),
@@ -1059,7 +853,6 @@ class FactorAnalysisEngine:
             },
             index=dates,
         )
-
         logger.info(f"Loaded factor data for {len(self.factor_data)} models")
 
     def _get_factor_data(
@@ -1068,10 +861,7 @@ class FactorAnalysisEngine:
         """Get factor data for specified model and dates"""
         if factor_model not in self.factor_data:
             return pd.DataFrame()
-
         factor_df = self.factor_data[factor_model]
-
-        # Filter by available dates
         common_dates = factor_df.index.intersection(date_index)
         return factor_df.loc[common_dates]
 
@@ -1082,21 +872,15 @@ class FactorAnalysisEngine:
         benchmark_returns: Optional[pd.Series] = None,
     ) -> Dict[str, pd.Series]:
         """Align portfolio, factor, and benchmark data"""
-        # Find common dates
         common_index = portfolio_returns.index.intersection(factor_data.index)
-
         if benchmark_returns is not None:
             common_index = common_index.intersection(benchmark_returns.index)
-
-        # Align data
         aligned_data = {
             "portfolio_returns": portfolio_returns.loc[common_index],
             "factor_data": factor_data.loc[common_index],
         }
-
         if benchmark_returns is not None:
             aligned_data["benchmark_returns"] = benchmark_returns.loc[common_index]
-
         return aligned_data
 
     def _filter_series_by_date(
@@ -1108,16 +892,13 @@ class FactorAnalysisEngine:
         """Filter series by date range"""
         if start_date:
             series = series[series.index >= start_date]
-
         if end_date:
             series = series[series.index <= end_date]
-
         return series
 
     def _get_factor_type(self, factor_name: str) -> RiskFactorType:
         """Get factor type from factor name"""
         factor_name_lower = factor_name.lower()
-
         if "market" in factor_name_lower:
             return RiskFactorType.MARKET
         elif "smb" in factor_name_lower or "size" in factor_name_lower:
@@ -1131,4 +912,4 @@ class FactorAnalysisEngine:
         elif "cma" in factor_name_lower or "investment" in factor_name_lower:
             return RiskFactorType.INVESTMENT
         else:
-            return RiskFactorType.MARKET  # Default
+            return RiskFactorType.MARKET

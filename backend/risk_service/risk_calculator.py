@@ -5,28 +5,23 @@ Handles portfolio risk calculation and risk monitoring.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 from datetime import datetime
 from typing import Any, Dict, List, Optional
-
 import numpy as np
 from data_service.market_data import MarketDataService
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import NotFoundError, ServiceError, ValidationError, setup_logger
 from common.models import Portfolio, Position
 
-# Configure logging
 logger = setup_logger("risk_calculator", logging.INFO)
 
 
 class RiskCalculator:
     """Risk calculator"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize risk calculator
 
         Args:
@@ -35,12 +30,9 @@ class RiskCalculator:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Initialize data service URL
         data_host = config_manager.get("services.data_service.host", "localhost")
         data_port = config_manager.get("services.data_service.port", "8001")
         self.data_service_url = f"http://{data_host}:{data_port}"
-
         logger.info("Risk calculator initialized")
 
     def calculate_risk_metrics(
@@ -66,89 +58,62 @@ class RiskCalculator:
         """
         try:
             logger.info("Calculating risk metrics")
-
-            # Validate parameters
             if not portfolio:
                 raise ValidationError("Portfolio is required")
-
             if not risk_metrics:
                 raise ValidationError("Risk metrics are required")
-
-            # Calculate portfolio value
             portfolio_value = sum(
-                position["quantity"] * position["entry_price"] for position in portfolio
+                (
+                    position["quantity"] * position["entry_price"]
+                    for position in portfolio
+                )
             )
-
-            # Get historical returns for each position
             position_returns = {}
-
             for position in portfolio:
                 symbol = position["symbol"]
-
-                # Get historical data from data service
                 historical_data = self._get_historical_data(symbol, lookback_period)
-
-                # Calculate returns
                 returns = self._calculate_returns(historical_data)
-
-                # Store returns
                 position_returns[symbol] = returns
-
-            # Calculate portfolio returns
             portfolio_returns = self._calculate_portfolio_returns(
                 portfolio, position_returns
             )
-
-            # Calculate risk metrics
             metrics = {}
-
             for metric in risk_metrics:
                 if metric == "var":
                     metrics["var"] = self._calculate_var(
                         portfolio_returns, confidence_level
                     )
                     metrics["var_percent"] = metrics["var"] / portfolio_value
-
                 elif metric == "cvar":
                     metrics["cvar"] = self._calculate_cvar(
                         portfolio_returns, confidence_level
                     )
                     metrics["cvar_percent"] = metrics["cvar"] / portfolio_value
-
                 elif metric == "sharpe":
                     metrics["sharpe"] = self._calculate_sharpe_ratio(portfolio_returns)
-
                 elif metric == "sortino":
                     metrics["sortino"] = self._calculate_sortino_ratio(
                         portfolio_returns
                     )
-
                 elif metric == "max_drawdown":
                     metrics["max_drawdown"] = self._calculate_max_drawdown(
                         portfolio_returns
                     )
-
                 elif metric == "es":
                     metrics["es"] = self._calculate_expected_shortfall(
                         portfolio_returns, confidence_level
                     )
                     metrics["es_percent"] = metrics["es"] / portfolio_value
-
                 else:
                     logger.warning(f"Unsupported risk metric: {metric}")
-
-            # Create response
             response = {
                 "portfolio_value": portfolio_value,
                 "risk_metrics": metrics,
                 "calculated_at": datetime.utcnow().isoformat(),
             }
-
             return response
-
         except ValidationError:
             raise
-
         except Exception as e:
             logger.error(f"Error calculating risk metrics: {e}")
             raise ServiceError(f"Error calculating risk metrics: {str(e)}")
@@ -167,26 +132,17 @@ class RiskCalculator:
         """
         try:
             logger.info(f"Getting risk metrics for portfolio {portfolio_id}")
-
-            # Get database session
             session = self.db_manager.get_postgres_session()
-
-            # Get portfolio
             portfolio = (
                 session.query(Portfolio).filter(Portfolio.id == portfolio_id).first()
             )
-
             if not portfolio:
                 raise NotFoundError(f"Portfolio not found: {portfolio_id}")
-
-            # Get positions
             positions = (
                 session.query(Position)
                 .filter(Position.portfolio_id == portfolio_id)
                 .all()
             )
-
-            # Convert positions to list of dictionaries
             position_dicts = [
                 {
                     "symbol": position.symbol,
@@ -195,24 +151,18 @@ class RiskCalculator:
                 }
                 for position in positions
             ]
-
-            # Calculate risk metrics
             risk_metrics = self.calculate_risk_metrics(
                 portfolio=position_dicts,
                 risk_metrics=["var", "cvar", "sharpe", "sortino", "max_drawdown"],
                 confidence_level=0.95,
                 lookback_period=252,
             )
-
             return risk_metrics
-
         except NotFoundError:
             raise
-
         except Exception as e:
             logger.error(f"Error getting portfolio risk: {e}")
             raise ServiceError(f"Error getting portfolio risk: {str(e)}")
-
         finally:
             session.close()
 
@@ -229,34 +179,22 @@ class RiskCalculator:
         """
         try:
             logger.info("Getting risk alerts")
-
-            # Get database session
             session = self.db_manager.get_postgres_session()
-
-            # Get portfolios
             if portfolio_id:
                 portfolios = (
                     session.query(Portfolio).filter(Portfolio.id == portfolio_id).all()
                 )
             else:
                 portfolios = session.query(Portfolio).all()
-
-            # Generate alerts
             alerts = []
-
             for portfolio in portfolios:
-                # Get positions
                 positions = (
                     session.query(Position)
                     .filter(Position.portfolio_id == portfolio.id)
                     .all()
                 )
-
-                # Skip if no positions
                 if not positions:
                     continue
-
-                # Convert positions to list of dictionaries
                 position_dicts = [
                     {
                         "symbol": position.symbol,
@@ -265,16 +203,12 @@ class RiskCalculator:
                     }
                     for position in positions
                 ]
-
-                # Calculate risk metrics
                 risk_metrics = self.calculate_risk_metrics(
                     portfolio=position_dicts,
                     risk_metrics=["var", "cvar", "sharpe", "sortino", "max_drawdown"],
                     confidence_level=0.95,
                     lookback_period=252,
                 )
-
-                # Check for alerts
                 if risk_metrics["risk_metrics"].get("var_percent", 0) > 0.05:
                     var_percent = risk_metrics["risk_metrics"]["var_percent"]
                     alerts.append(
@@ -287,7 +221,6 @@ class RiskCalculator:
                             "timestamp": datetime.utcnow().isoformat(),
                         }
                     )
-
                 if risk_metrics["risk_metrics"].get("max_drawdown", 0) > 0.1:
                     max_drawdown = risk_metrics["risk_metrics"]["max_drawdown"]
                     alerts.append(
@@ -300,7 +233,6 @@ class RiskCalculator:
                             "timestamp": datetime.utcnow().isoformat(),
                         }
                     )
-
                 if risk_metrics["risk_metrics"].get("sharpe", 0) < 0.5:
                     sharpe_ratio = risk_metrics["risk_metrics"]["sharpe"]
                     alerts.append(
@@ -313,13 +245,10 @@ class RiskCalculator:
                             "timestamp": datetime.utcnow().isoformat(),
                         }
                     )
-
             return alerts
-
         except Exception as e:
             logger.error(f"Error getting risk alerts: {e}")
             raise ServiceError(f"Error getting risk alerts: {str(e)}")
-
         finally:
             session.close()
 
@@ -346,7 +275,6 @@ class RiskCalculator:
                 symbol=symbol, timeframe="1d", period=f"{lookback_period}d"
             )
             return data["data"]
-
         except Exception as e:
             logger.error(f"Error getting historical data: {e}")
             raise ServiceError(f"Error getting historical data: {str(e)}")
@@ -360,12 +288,8 @@ class RiskCalculator:
         Returns:
             Returns
         """
-        # Extract close prices
         prices = np.array([d["close"] for d in data])
-
-        # Calculate returns
         returns = np.diff(prices) / prices[:-1]
-
         return returns
 
     def _calculate_portfolio_returns(
@@ -380,30 +304,18 @@ class RiskCalculator:
         Returns:
             Portfolio returns
         """
-        # Calculate portfolio value
         portfolio_value = sum(
-            position["quantity"] * position["entry_price"] for position in portfolio
+            (position["quantity"] * position["entry_price"] for position in portfolio)
         )
-
-        # Calculate position weights
         weights = {}
-
         for position in portfolio:
             symbol = position["symbol"]
             weight = position["quantity"] * position["entry_price"] / portfolio_value
             weights[symbol] = weight
-
-        # Calculate portfolio returns
-        # Find the shortest return series
-        min_length = min(len(returns) for returns in position_returns.values())
-
-        # Initialize portfolio returns
+        min_length = min((len(returns) for returns in position_returns.values()))
         portfolio_returns = np.zeros(min_length)
-
-        # Calculate weighted returns
         for symbol, returns in position_returns.items():
             portfolio_returns += weights[symbol] * returns[:min_length]
-
         return portfolio_returns
 
     def _calculate_var(self, returns: np.ndarray, confidence_level: float) -> float:
@@ -416,15 +328,9 @@ class RiskCalculator:
         Returns:
             Value at Risk
         """
-        # Sort returns
         sorted_returns = np.sort(returns)
-
-        # Calculate index
         index = int(len(sorted_returns) * (1 - confidence_level))
-
-        # Get VaR
         var = -sorted_returns[index]
-
         return float(var)
 
     def _calculate_cvar(self, returns: np.ndarray, confidence_level: float) -> float:
@@ -437,15 +343,9 @@ class RiskCalculator:
         Returns:
             Conditional Value at Risk
         """
-        # Sort returns
         sorted_returns = np.sort(returns)
-
-        # Calculate index
         index = int(len(sorted_returns) * (1 - confidence_level))
-
-        # Get CVaR
         cvar = -np.mean(sorted_returns[:index])
-
         return float(cvar)
 
     def _calculate_sharpe_ratio(
@@ -460,12 +360,8 @@ class RiskCalculator:
         Returns:
             Sharpe ratio
         """
-        # Calculate excess returns
         excess_returns = returns - risk_free_rate
-
-        # Calculate Sharpe ratio
         sharpe = np.mean(excess_returns) / np.std(excess_returns)
-
         return float(sharpe)
 
     def _calculate_sortino_ratio(
@@ -480,18 +376,12 @@ class RiskCalculator:
         Returns:
             Sortino ratio
         """
-        # Calculate excess returns
         excess_returns = returns - risk_free_rate
-
-        # Calculate downside deviation
         downside_returns = excess_returns[excess_returns < 0]
         downside_deviation = (
             np.std(downside_returns) if len(downside_returns) > 0 else 0.0001
         )
-
-        # Calculate Sortino ratio
         sortino = np.mean(excess_returns) / downside_deviation
-
         return float(sortino)
 
     def _calculate_max_drawdown(self, returns: np.ndarray) -> float:
@@ -503,18 +393,10 @@ class RiskCalculator:
         Returns:
             Maximum drawdown
         """
-        # Calculate cumulative returns
         cum_returns = np.cumprod(1 + returns)
-
-        # Calculate running maximum
         running_max = np.maximum.accumulate(cum_returns)
-
-        # Calculate drawdown
         drawdown = (running_max - cum_returns) / running_max
-
-        # Get maximum drawdown
         max_drawdown = np.max(drawdown)
-
         return float(max_drawdown)
 
     def _calculate_expected_shortfall(
@@ -529,18 +411,10 @@ class RiskCalculator:
         Returns:
             Expected Shortfall
         """
-        # Sort returns
         sorted_returns = np.sort(returns)
-
-        # Calculate index for VaR
         var_index = int(len(sorted_returns) * (1 - confidence_level))
-
-        # Get returns beyond VaR
         tail_returns = sorted_returns[:var_index]
-
-        # Calculate ES (average of returns in the tail)
         es = -np.mean(tail_returns)
-
         return float(es)
 
     def implement_tail_risk_hedging(
@@ -558,28 +432,21 @@ class RiskCalculator:
             A dictionary indicating hedging actions taken.
         """
         logger.info("Implementing tail risk hedging.")
-
-        # Calculate current VaR
         current_risk_metrics = self.calculate_risk_metrics(
             portfolio=portfolio, risk_metrics=["var"], confidence_level=0.95
         )
         current_var_percent = current_risk_metrics["risk_metrics"].get("var_percent", 0)
-
         hedging_actions = {
             "status": "no_action_needed",
             "current_var_percent": current_var_percent,
             "risk_tolerance": risk_tolerance,
             "recommendations": [],
         }
-
         if current_var_percent > risk_tolerance:
             logger.warning(
                 f"Current VaR ({current_var_percent:.2%}) exceeds risk tolerance ({risk_tolerance:.2%}). Recommending hedging actions."
             )
             hedging_actions["status"] = "hedging_recommended"
-
-            # Simplified hedging recommendation: reduce equity exposure or buy protective puts
-            # In a real system, this would involve complex optimization and instrument selection
             hedging_actions["recommendations"].append(
                 "Consider reducing exposure to high-beta equities or purchasing out-of-the-money put options on relevant indices/ETFs."
             )
@@ -590,5 +457,4 @@ class RiskCalculator:
             logger.info(
                 f"Current VaR ({current_var_percent:.2%}) is within risk tolerance ({risk_tolerance:.2%}). No hedging action needed."
             )
-
         return hedging_actions

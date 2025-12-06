@@ -5,27 +5,22 @@ Handles predictions and signal generation.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 from datetime import datetime
 from typing import Any, Dict, List, Optional
-
 import pandas as pd
 import requests
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
-# Configure logging
 logger = setup_logger("prediction_service", logging.INFO)
 
 
 class PredictionService:
     """Prediction service"""
 
-    def __init__(self, config_manager, db_manager, model_manager):
+    def __init__(self, config_manager: Any, db_manager: Any, model_manager: Any) -> Any:
         """Initialize prediction service
 
         Args:
@@ -36,10 +31,7 @@ class PredictionService:
         self.config_manager = config_manager
         self.db_manager = db_manager
         self.model_manager = model_manager
-
-        # Initialize data service URL
         self.data_service_url = f"http://{config_manager.get('services.data_service.host')}:{config_manager.get('services.data_service.port')}"
-
         logger.info("Prediction service initialized")
 
     def generate_prediction(
@@ -69,50 +61,31 @@ class PredictionService:
         """
         try:
             logger.info(f"Generating prediction for {symbol} using model {model_id}")
-
-            # Validate parameters
             if not model_id:
                 raise ValidationError("Model ID is required")
-
             if not symbol:
                 raise ValidationError("Symbol is required")
-
-            # Get prediction from model manager
             prediction = self.model_manager.predict(
                 model_id=model_id,
                 data={"symbol": symbol, "timeframe": timeframe, "period": period},
             )
-
-            # Get latest predictions
             latest_predictions = prediction["predictions"][-horizon:]
-
-            # Get latest market data
             market_data = self._get_market_data(
                 symbol=symbol, timeframe=timeframe, period="1d"
             )
-
-            # Get latest price
             latest_price = market_data[-1]["close"]
-
-            # Calculate prediction metrics
             prediction_values = [p["value"] for p in latest_predictions]
             avg_prediction = sum(prediction_values) / len(prediction_values)
             min_prediction = min(prediction_values)
             max_prediction = max(prediction_values)
-
-            # Calculate change
             change = avg_prediction - latest_price
-            change_percent = (change / latest_price) * 100
-
-            # Determine direction
+            change_percent = change / latest_price * 100
             if change_percent > 1:
                 direction = "bullish"
             elif change_percent < -1:
                 direction = "bearish"
             else:
                 direction = "neutral"
-
-            # Create response
             response = {
                 "symbol": symbol,
                 "model_id": model_id,
@@ -130,12 +103,9 @@ class PredictionService:
                 "predictions": latest_predictions,
                 "generated_at": datetime.utcnow().isoformat(),
             }
-
             return response
-
         except (NotFoundError, ValidationError):
             raise
-
         except Exception as e:
             logger.error(f"Error generating prediction: {e}")
             raise ServiceError(f"Error generating prediction: {str(e)}")
@@ -166,12 +136,8 @@ class PredictionService:
         """
         try:
             logger.info(f"Generating signals for {len(symbols)} symbols")
-
-            # Validate parameters
             if not symbols:
                 raise ValidationError("Symbols are required")
-
-            # Generate signals based on strategy
             if strategy == "prediction":
                 return self._generate_prediction_signals(
                     symbols, model_id, timeframe, period
@@ -184,10 +150,8 @@ class PredictionService:
                 )
             else:
                 raise ValidationError(f"Unsupported strategy: {strategy}")
-
         except ValidationError:
             raise
-
         except Exception as e:
             logger.error(f"Error generating signals: {e}")
             raise ServiceError(f"Error generating signals: {str(e)}")
@@ -209,23 +173,15 @@ class PredictionService:
         Raises:
             ValidationError: If parameters are invalid
         """
-        # Validate model ID
         if not model_id:
             raise ValidationError("Model ID is required for prediction signals")
-
-        # Generate signals for each symbol
         signals = []
-
         for symbol in symbols:
             try:
-                # Generate prediction
                 prediction = self.generate_prediction(
                     model_id=model_id, symbol=symbol, timeframe=timeframe, period=period
                 )
-
-                # Determine signal strength based on change percent
                 change_percent = prediction["prediction"]["change_percent"]
-
                 if change_percent > 5:
                     strength = 1.0
                 elif change_percent > 3:
@@ -240,16 +196,12 @@ class PredictionService:
                     strength = 0.0
                 else:
                     strength = 0.0
-
-                # Determine signal type
                 if change_percent > 1:
                     signal_type = "buy"
                 elif change_percent < -1:
                     signal_type = "sell"
                 else:
                     signal_type = "hold"
-
-                # Create signal
                 signal = {
                     "symbol": symbol,
                     "type": signal_type,
@@ -260,14 +212,10 @@ class PredictionService:
                     "strategy": "prediction",
                     "generated_at": datetime.utcnow().isoformat(),
                 }
-
                 signals.append(signal)
-
             except Exception as e:
                 logger.error(f"Error generating signal for {symbol}: {e}")
                 continue
-
-        # Create response
         response = {
             "signals": signals,
             "count": len(signals),
@@ -275,7 +223,6 @@ class PredictionService:
             "model_id": model_id,
             "generated_at": datetime.utcnow().isoformat(),
         }
-
         return response
 
     def _generate_technical_signals(
@@ -291,32 +238,18 @@ class PredictionService:
         Returns:
             Trading signals
         """
-        # Generate signals for each symbol
         signals = []
-
         for symbol in symbols:
             try:
-                # Get market data
                 market_data = self._get_market_data(
                     symbol=symbol, timeframe=timeframe, period=period
                 )
-
-                # Convert to DataFrame
                 df = pd.DataFrame(market_data)
-
-                # Get data processor from data service
                 from data_service.data_processor import DataProcessor
 
-                # Initialize data processor
                 data_processor = DataProcessor(self.config_manager, self.db_manager)
-
-                # Generate signals
                 df = data_processor.generate_signals(df, strategy="sma_crossover")
-
-                # Get latest signal
                 latest_signal = df["signal"].iloc[-1]
-
-                # Determine signal type
                 if latest_signal > 0:
                     signal_type = "buy"
                     strength = 0.8
@@ -326,8 +259,6 @@ class PredictionService:
                 else:
                     signal_type = "hold"
                     strength = 0.0
-
-                # Create signal
                 signal = {
                     "symbol": symbol,
                     "type": signal_type,
@@ -336,21 +267,16 @@ class PredictionService:
                     "strategy": "technical",
                     "generated_at": datetime.utcnow().isoformat(),
                 }
-
                 signals.append(signal)
-
             except Exception as e:
                 logger.error(f"Error generating signal for {symbol}: {e}")
                 continue
-
-        # Create response
         response = {
             "signals": signals,
             "count": len(signals),
             "strategy": "technical",
             "generated_at": datetime.utcnow().isoformat(),
         }
-
         return response
 
     def _generate_ensemble_signals(
@@ -370,39 +296,26 @@ class PredictionService:
         Raises:
             ValidationError: If parameters are invalid
         """
-        # Validate model ID
         if not model_id:
             raise ValidationError("Model ID is required for ensemble signals")
-
-        # Generate prediction signals
         prediction_signals = self._generate_prediction_signals(
             symbols=symbols, model_id=model_id, timeframe=timeframe, period=period
         )
-
-        # Generate technical signals
         technical_signals = self._generate_technical_signals(
             symbols=symbols, timeframe=timeframe, period=period
         )
-
-        # Combine signals
         signals = []
-
         for symbol in symbols:
             try:
-                # Find prediction signal
                 prediction_signal = next(
                     (s for s in prediction_signals["signals"] if s["symbol"] == symbol),
                     None,
                 )
-
-                # Find technical signal
                 technical_signal = next(
                     (s for s in technical_signals["signals"] if s["symbol"] == symbol),
                     None,
                 )
-
                 if prediction_signal and technical_signal:
-                    # Determine signal type
                     if prediction_signal["type"] == technical_signal["type"] == "buy":
                         signal_type = "buy"
                         strength = (
@@ -430,8 +343,6 @@ class PredictionService:
                     else:
                         signal_type = "hold"
                         strength = 0.0
-
-                    # Create signal
                     signal = {
                         "symbol": symbol,
                         "type": signal_type,
@@ -442,14 +353,10 @@ class PredictionService:
                         "strategy": "ensemble",
                         "generated_at": datetime.utcnow().isoformat(),
                     }
-
                     signals.append(signal)
-
             except Exception as e:
                 logger.error(f"Error generating ensemble signal for {symbol}: {e}")
                 continue
-
-        # Create response
         response = {
             "signals": signals,
             "count": len(signals),
@@ -457,7 +364,6 @@ class PredictionService:
             "model_id": model_id,
             "generated_at": datetime.utcnow().isoformat(),
         }
-
         return response
 
     def _get_market_data(
@@ -477,20 +383,14 @@ class PredictionService:
             ServiceError: If there is an error getting market data
         """
         try:
-            # Get market data from data service
             response = requests.get(
                 f"{self.data_service_url}/api/market-data/{symbol}",
                 params={"timeframe": timeframe, "period": period},
             )
-
             if response.status_code != 200:
                 raise ServiceError(f"Error getting market data: {response.text}")
-
-            # Parse response
             data = response.json()
-
             return data["data"]
-
         except Exception as e:
             logger.error(f"Error getting market data: {e}")
             raise ServiceError(f"Error getting market data: {str(e)}")
@@ -522,42 +422,22 @@ class PredictionService:
             logger.info(
                 f"Getting prediction history for {symbol} using model {model_id}"
             )
-
-            # Validate parameters
             if not model_id:
                 raise ValidationError("Model ID is required")
-
             if not symbol:
                 raise ValidationError("Symbol is required")
-
-            # Get database session
             session = self.db_manager.get_postgres_session()
-
-            # Build query
-            query = """
-                SELECT *
-                FROM prediction_history
-                WHERE model_id = %s AND symbol = %s
-            """
-
+            query = "\n                SELECT *\n                FROM prediction_history\n                WHERE model_id = %s AND symbol = %s\n            "
             params = [model_id, symbol]
-
             if start_date:
                 query += " AND timestamp >= %s"
                 params.append(start_date)
-
             if end_date:
                 query += " AND timestamp <= %s"
                 params.append(end_date)
-
             query += " ORDER BY timestamp ASC"
-
-            # Execute query
             result = session.execute(query, params)
-
-            # Convert to list of dictionaries
             predictions = []
-
             for row in result:
                 predictions.append(
                     {
@@ -570,24 +450,18 @@ class PredictionService:
                         "error": row["error"],
                     }
                 )
-
-            # Create response
             response = {
                 "model_id": model_id,
                 "symbol": symbol,
                 "predictions": predictions,
                 "count": len(predictions),
             }
-
             return response
-
         except (NotFoundError, ValidationError):
             raise
-
         except Exception as e:
             logger.error(f"Error getting prediction history: {e}")
             raise ServiceError(f"Error getting prediction history: {str(e)}")
-
         finally:
             session.close()
 
@@ -617,45 +491,22 @@ class PredictionService:
         """
         try:
             logger.info(f"Saving prediction for {symbol} using model {model_id}")
-
-            # Validate parameters
             if not model_id:
                 raise ValidationError("Model ID is required")
-
             if not symbol:
                 raise ValidationError("Symbol is required")
-
             if not timestamp:
                 raise ValidationError("Timestamp is required")
-
-            # Calculate error if actual value is provided
             error = None
-
             if actual is not None:
                 error = actual - prediction
-
-            # Get database session
             session = self.db_manager.get_postgres_session()
-
-            # Insert prediction
-            query = """
-                INSERT INTO prediction_history
-                (model_id, symbol, timestamp, prediction, actual, error)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                RETURNING id
-            """
-
+            query = "\n                INSERT INTO prediction_history\n                (model_id, symbol, timestamp, prediction, actual, error)\n                VALUES (%s, %s, %s, %s, %s, %s)\n                RETURNING id\n            "
             result = session.execute(
                 query, [model_id, symbol, timestamp, prediction, actual, error]
             )
-
-            # Get inserted ID
             prediction_id = result.fetchone()[0]
-
-            # Commit changes
             session.commit()
-
-            # Create response
             response = {
                 "id": prediction_id,
                 "model_id": model_id,
@@ -665,16 +516,12 @@ class PredictionService:
                 "actual": actual,
                 "error": error,
             }
-
             return response
-
         except ValidationError:
             raise
-
         except Exception as e:
             logger.error(f"Error saving prediction: {e}")
             raise ServiceError(f"Error saving prediction: {str(e)}")
-
         finally:
             session.close()
 
@@ -695,43 +542,18 @@ class PredictionService:
         """
         try:
             logger.info(f"Updating prediction {prediction_id}")
-
-            # Validate parameters
             if not prediction_id:
                 raise ValidationError("Prediction ID is required")
-
-            # Get database session
             session = self.db_manager.get_postgres_session()
-
-            # Get prediction
-            query = """
-                SELECT *
-                FROM prediction_history
-                WHERE id = %s
-            """
-
+            query = "\n                SELECT *\n                FROM prediction_history\n                WHERE id = %s\n            "
             result = session.execute(query, [prediction_id])
             row = result.fetchone()
-
             if not row:
                 raise NotFoundError(f"Prediction not found: {prediction_id}")
-
-            # Calculate error
             error = actual - row["prediction"]
-
-            # Update prediction
-            query = """
-                UPDATE prediction_history
-                SET actual = %s, error = %s
-                WHERE id = %s
-            """
-
+            query = "\n                UPDATE prediction_history\n                SET actual = %s, error = %s\n                WHERE id = %s\n            "
             session.execute(query, [actual, error, prediction_id])
-
-            # Commit changes
             session.commit()
-
-            # Create response
             response = {
                 "id": prediction_id,
                 "model_id": row["model_id"],
@@ -741,16 +563,12 @@ class PredictionService:
                 "actual": actual,
                 "error": error,
             }
-
             return response
-
         except (NotFoundError, ValidationError):
             raise
-
         except Exception as e:
             logger.error(f"Error updating prediction: {e}")
             raise ServiceError(f"Error updating prediction: {str(e)}")
-
         finally:
             session.close()
 
@@ -779,54 +597,26 @@ class PredictionService:
         """
         try:
             logger.info(f"Getting performance metrics for model {model_id}")
-
-            # Validate parameters
             if not model_id:
                 raise ValidationError("Model ID is required")
-
-            # Get database session
             session = self.db_manager.get_postgres_session()
-
-            # Build query
-            query = """
-                SELECT
-                    model_id,
-                    symbol,
-                    COUNT(*) as count,
-                    AVG(error) as avg_error,
-                    AVG(ABS(error)) as avg_abs_error,
-                    STDDEV(error) as std_error,
-                    MIN(error) as min_error,
-                    MAX(error) as max_error
-                FROM prediction_history
-                WHERE model_id = %s AND actual IS NOT NULL
-            """
-
+            query = "\n                SELECT\n                    model_id,\n                    symbol,\n                    COUNT(*) as count,\n                    AVG(error) as avg_error,\n                    AVG(ABS(error)) as avg_abs_error,\n                    STDDEV(error) as std_error,\n                    MIN(error) as min_error,\n                    MAX(error) as max_error\n                FROM prediction_history\n                WHERE model_id = %s AND actual IS NOT NULL\n            "
             params = [model_id]
-
             if symbol:
                 query += " AND symbol = %s"
                 params.append(symbol)
-
             if start_date:
                 query += " AND timestamp >= %s"
                 params.append(start_date)
-
             if end_date:
                 query += " AND timestamp <= %s"
                 params.append(end_date)
-
             if symbol:
                 query += " GROUP BY model_id, symbol"
             else:
                 query += " GROUP BY model_id"
-
-            # Execute query
             result = session.execute(query, params)
-
-            # Convert to list of dictionaries
             metrics = []
-
             for row in result:
                 metrics.append(
                     {
@@ -852,22 +642,16 @@ class PredictionService:
                         ),
                     }
                 )
-
-            # Create response
             response = {
                 "model_id": model_id,
                 "symbol": symbol,
                 "metrics": metrics[0] if metrics else None,
             }
-
             return response
-
         except (NotFoundError, ValidationError):
             raise
-
         except Exception as e:
             logger.error(f"Error getting model performance: {e}")
             raise ServiceError(f"Error getting model performance: {str(e)}")
-
         finally:
             session.close()

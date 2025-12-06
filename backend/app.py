@@ -8,36 +8,29 @@ import os
 import random
 import traceback
 from datetime import datetime, timedelta
-
 from common.logging_config import setup_logging
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
 from config import Config
 
-# Configure logging
 setup_logging(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, origins=app.config["CORS_ORIGINS"])  # Allow all origins for development
-
-# Mock data for demonstration
+CORS(app, origins=app.config["CORS_ORIGINS"])
 MOCK_MARKET_DATA = {
     "AAPL": {
         "symbol": "AAPL",
-        "price": 175.50,
-        "change": 2.30,
+        "price": 175.5,
+        "change": 2.3,
         "change_percent": 1.33,
         "volume": 45000000,
         "market_cap": 2800000000000,
     },
     "GOOGL": {
         "symbol": "GOOGL",
-        "price": 142.80,
-        "change": -1.20,
+        "price": 142.8,
+        "change": -1.2,
         "change_percent": -0.83,
         "volume": 28000000,
         "market_cap": 1800000000000,
@@ -53,14 +46,13 @@ MOCK_MARKET_DATA = {
 }
 
 
-def generate_historical_data(symbol, days=30):
+def generate_historical_data(symbol: Any, days: Any = 30) -> Any:
     """Generate mock historical data"""
     base_price = MOCK_MARKET_DATA.get(symbol, {}).get("price", 100)
     data = []
-
     for i in range(days):
         date = datetime.now() - timedelta(days=days - i)
-        price = base_price + (random.random() - 0.5) * 20  # Simple random walk
+        price = base_price + (random.random() - 0.5) * 20
         data.append(
             {
                 "date": date.strftime("%Y-%m-%d"),
@@ -71,17 +63,14 @@ def generate_historical_data(symbol, days=30):
                 "volume": int(random.random() * 40000000) + 10000000,
             }
         )
-
     return data
 
 
-# Error handler
 @app.errorhandler(Exception)
-def handle_error(error):
+def handle_error(error: Any) -> Any:
     """Handle errors"""
     logger.error("Unhandled error: %s", error)
     logger.error(traceback.format_exc())
-
     return (
         jsonify(
             {
@@ -94,9 +83,8 @@ def handle_error(error):
     )
 
 
-# Health check endpoint
 @app.route("/health", methods=["GET"])
-def health_check():
+def health_check() -> Any:
     """Health check endpoint"""
     return jsonify(
         {
@@ -107,25 +95,18 @@ def health_check():
     )
 
 
-# Market data endpoints
 @app.route("/api/market-data/<symbol>", methods=["GET"])
-def get_market_data(symbol):
+def get_market_data(symbol: Any) -> Any:
     """Get market data for a symbol"""
     try:
         symbol = symbol.upper()
-
-        # Get query parameters
         timeframe = request.args.get("timeframe", "1d")
         period = request.args.get("period", "30d")
-
         if symbol in MOCK_MARKET_DATA:
             data = MOCK_MARKET_DATA[symbol].copy()
-
-            # Add historical data if requested
             if timeframe == "1d" and period:
                 days = int(period.replace("d", "")) if "d" in period else 30
                 data["historical"] = generate_historical_data(symbol, days)
-
             return jsonify(
                 {"success": True, "data": data, "timestamp": datetime.now().isoformat()}
             )
@@ -140,51 +121,49 @@ def get_market_data(symbol):
                 ),
                 404,
             )
-
     except Exception as e:
         logger.error("Error getting market data: %s", e)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return (jsonify({"success": False, "error": str(e)}), 500)
 
 
 @app.route("/api/portfolio", methods=["GET"])
-def get_portfolio():
+def get_portfolio() -> Any:
     """Get portfolio data"""
     try:
         portfolio = {
-            "total_value": 1250000.00,
-            "daily_change": 15750.00,
+            "total_value": 1250000.0,
+            "daily_change": 15750.0,
             "daily_change_percent": 1.28,
             "positions": [
                 {
                     "symbol": "AAPL",
                     "shares": 1000,
-                    "avg_cost": 165.00,
-                    "current_price": 175.50,
-                    "market_value": 175500.00,
-                    "unrealized_pnl": 10500.00,
+                    "avg_cost": 165.0,
+                    "current_price": 175.5,
+                    "market_value": 175500.0,
+                    "unrealized_pnl": 10500.0,
                     "weight": 14.04,
                 },
                 {
                     "symbol": "GOOGL",
                     "shares": 500,
-                    "avg_cost": 145.00,
-                    "current_price": 142.80,
-                    "market_value": 71400.00,
-                    "unrealized_pnl": -1100.00,
+                    "avg_cost": 145.0,
+                    "current_price": 142.8,
+                    "market_value": 71400.0,
+                    "unrealized_pnl": -1100.0,
                     "weight": 5.71,
                 },
                 {
                     "symbol": "MSFT",
                     "shares": 800,
-                    "avg_cost": 410.00,
+                    "avg_cost": 410.0,
                     "current_price": 420.15,
-                    "market_value": 336120.00,
-                    "unrealized_pnl": 8120.00,
+                    "market_value": 336120.0,
+                    "unrealized_pnl": 8120.0,
                     "weight": 26.89,
                 },
             ],
         }
-
         return jsonify(
             {
                 "success": True,
@@ -192,14 +171,13 @@ def get_portfolio():
                 "timestamp": datetime.now().isoformat(),
             }
         )
-
     except Exception as e:
         logger.error("Error getting portfolio: %s", e)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return (jsonify({"success": False, "error": str(e)}), 500)
 
 
 @app.route("/api/strategies", methods=["GET"])
-def get_strategies():
+def get_strategies() -> Any:
     """Get trading strategies"""
     try:
         strategies = [
@@ -234,7 +212,6 @@ def get_strategies():
                 "positions": 12,
             },
         ]
-
         return jsonify(
             {
                 "success": True,
@@ -242,21 +219,18 @@ def get_strategies():
                 "timestamp": datetime.now().isoformat(),
             }
         )
-
     except Exception as e:
         logger.error("Error getting strategies: %s", e)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return (jsonify({"success": False, "error": str(e)}), 500)
 
 
 @app.route("/api/auth/login", methods=["POST"])
-def login():
+def login() -> Any:
     """Mock login endpoint"""
     try:
         data = request.json
         email = data.get("email")
         password = data.get("password")
-
-        # Mock authentication - accept any email/password for demo
         if email and password:
             return jsonify(
                 {
@@ -278,14 +252,13 @@ def login():
                 jsonify({"success": False, "error": "Email and password required"}),
                 400,
             )
-
     except Exception as e:
         logger.error("Error during login: %s", e)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return (jsonify({"success": False, "error": str(e)}), 500)
 
 
 @app.route("/api/auth/user", methods=["GET"])
-def get_user():
+def get_user() -> Any:
     """Get current user info"""
     try:
         return jsonify(
@@ -300,10 +273,9 @@ def get_user():
                 "timestamp": datetime.now().isoformat(),
             }
         )
-
     except Exception as e:
         logger.error("Error getting user: %s", e)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return (jsonify({"success": False, "error": str(e)}), 500)
 
 
 if __name__ == "__main__":

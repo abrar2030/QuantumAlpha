@@ -5,27 +5,22 @@ Handles stress testing and scenario analysis.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 from datetime import datetime
 from typing import Any, Dict, List
-
 import numpy as np
 import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
-# Configure logging
 logger = setup_logger("stress_testing", logging.INFO)
 
 
 class StressTesting:
     """Stress testing"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize stress testing
 
         Args:
@@ -34,20 +29,16 @@ class StressTesting:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Initialize data service URL
         self.data_service_url = f"http://{config_manager.get('services.data_service.host')}:{config_manager.get('services.data_service.port')}"
-
-        # Initialize predefined scenarios
         self.predefined_scenarios = {
             "market_crash": {
                 "name": "Market Crash",
                 "description": "Simulates a severe market crash similar to 2008",
                 "shocks": {
-                    "equity": -0.40,
+                    "equity": -0.4,
                     "bond": 0.05,
-                    "commodity": -0.30,
-                    "crypto": -0.70,
+                    "commodity": -0.3,
+                    "crypto": -0.7,
                 },
             },
             "tech_bubble": {
@@ -55,8 +46,8 @@ class StressTesting:
                 "description": "Simulates a tech sector crash similar to 2000",
                 "shocks": {
                     "equity": -0.25,
-                    "tech": -0.60,
-                    "bond": 0.10,
+                    "tech": -0.6,
+                    "bond": 0.1,
                     "commodity": 0.05,
                 },
             },
@@ -65,36 +56,34 @@ class StressTesting:
                 "description": "Simulates a period of high inflation",
                 "shocks": {
                     "equity": -0.15,
-                    "bond": -0.20,
-                    "commodity": 0.30,
+                    "bond": -0.2,
+                    "commodity": 0.3,
                     "gold": 0.25,
-                    "real_estate": 0.10,
+                    "real_estate": 0.1,
                 },
             },
             "interest_rate_hike": {
                 "name": "Interest Rate Hike",
                 "description": "Simulates a sudden increase in interest rates",
                 "shocks": {
-                    "equity": -0.10,
+                    "equity": -0.1,
                     "bond": -0.15,
                     "bank": 0.05,
-                    "real_estate": -0.20,
+                    "real_estate": -0.2,
                 },
             },
             "pandemic": {
                 "name": "Pandemic",
                 "description": "Simulates a global pandemic scenario",
                 "shocks": {
-                    "equity": -0.30,
-                    "travel": -0.60,
-                    "healthcare": 0.20,
+                    "equity": -0.3,
+                    "travel": -0.6,
+                    "healthcare": 0.2,
                     "tech": 0.15,
                     "retail": -0.25,
                 },
             },
         }
-
-        # Initialize asset class mappings
         self.asset_class_mappings = {
             "AAPL": ["equity", "tech"],
             "MSFT": ["equity", "tech"],
@@ -131,7 +120,6 @@ class StressTesting:
             "ETH-USD": ["crypto"],
             "VNQ": ["real_estate"],
         }
-
         logger.info("Stress testing initialized")
 
     def run_stress_tests(
@@ -151,35 +139,23 @@ class StressTesting:
         """
         try:
             logger.info("Running stress tests")
-
-            # Validate parameters
             if not portfolio:
                 raise ValidationError("Portfolio is required")
-
             if not scenarios:
                 raise ValidationError("Scenarios are required")
-
-            # Calculate portfolio value
             portfolio_value = sum(
-                position["quantity"] * position["entry_price"] for position in portfolio
+                (
+                    position["quantity"] * position["entry_price"]
+                    for position in portfolio
+                )
             )
-
-            # Run stress tests for each scenario
             results = {}
-
             for scenario_name in scenarios:
-                # Check if scenario exists
                 if scenario_name not in self.predefined_scenarios:
                     logger.warning(f"Scenario not found: {scenario_name}")
                     continue
-
-                # Get scenario
                 scenario = self.predefined_scenarios[scenario_name]
-
-                # Run stress test
                 scenario_result = self._run_scenario(portfolio, scenario)
-
-                # Add to results
                 results[scenario_name] = {
                     "name": scenario["name"],
                     "description": scenario["description"],
@@ -189,19 +165,14 @@ class StressTesting:
                     "change_percent": scenario_result["change_percent"],
                     "position_impacts": scenario_result["position_impacts"],
                 }
-
-            # Create response
             response = {
                 "portfolio_value": portfolio_value,
                 "scenarios": results,
                 "calculated_at": datetime.utcnow().isoformat(),
             }
-
             return response
-
         except ValidationError:
             raise
-
         except Exception as e:
             logger.error(f"Error running stress tests: {e}")
             raise ServiceError(f"Error running stress tests: {str(e)}")
@@ -218,39 +189,24 @@ class StressTesting:
         Returns:
             Scenario result
         """
-        # Calculate portfolio value before
         portfolio_value_before = sum(
-            position["quantity"] * position["entry_price"] for position in portfolio
+            (position["quantity"] * position["entry_price"] for position in portfolio)
         )
-
-        # Calculate impact on each position
         position_impacts = []
         portfolio_value_after = 0
-
         for position in portfolio:
             symbol = position["symbol"]
             quantity = position["quantity"]
             entry_price = position["entry_price"]
             position_value = quantity * entry_price
-
-            # Get asset classes for symbol
             asset_classes = self.asset_class_mappings.get(symbol, ["equity"])
-
-            # Calculate shock
             shock = 0
-
             for asset_class in asset_classes:
                 if asset_class in scenario["shocks"]:
                     shock += scenario["shocks"][asset_class]
-
-            # Average shock if multiple asset classes
             shock /= len(asset_classes)
-
-            # Calculate new price
             new_price = entry_price * (1 + shock)
             new_value = quantity * new_price
-
-            # Calculate impact
             impact = {
                 "symbol": symbol,
                 "quantity": quantity,
@@ -261,14 +217,10 @@ class StressTesting:
                 "change_amount": new_value - position_value,
                 "change_percent": (new_value - position_value) / position_value,
             }
-
             position_impacts.append(impact)
             portfolio_value_after += new_value
-
-        # Calculate overall impact
         change_amount = portfolio_value_after - portfolio_value_before
         change_percent = change_amount / portfolio_value_before
-
         return {
             "portfolio_value_after": portfolio_value_after,
             "change_amount": change_amount,
@@ -283,7 +235,6 @@ class StressTesting:
             List of scenarios
         """
         scenarios = []
-
         for scenario_id, scenario in self.predefined_scenarios.items():
             scenarios.append(
                 {
@@ -292,7 +243,6 @@ class StressTesting:
                     "description": scenario["description"],
                 }
             )
-
         return scenarios
 
     def create_scenario(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -307,27 +257,17 @@ class StressTesting:
         Raises:
             ValidationError: If data is invalid
         """
-        # Validate required fields
         if "name" not in data:
             raise ValidationError("Scenario name is required")
-
         if "shocks" not in data:
             raise ValidationError("Scenario shocks are required")
-
-        # Generate scenario ID
         scenario_id = data["name"].lower().replace(" ", "_")
-
-        # Create scenario
         scenario = {
             "name": data["name"],
             "description": data.get("description", ""),
             "shocks": data["shocks"],
         }
-
-        # Add to predefined scenarios
         self.predefined_scenarios[scenario_id] = scenario
-
-        # Return scenario
         return {
             "id": scenario_id,
             "name": scenario["name"],
@@ -351,19 +291,15 @@ class StressTesting:
             ValidationError: If required parameters are missing or invalid.
         """
         logger.info("Generating custom extreme scenario.")
-
-        # Validate required fields
         if "name" not in scenario_params:
             raise ValidationError("Scenario name is required.")
         if "shocks" not in scenario_params or not isinstance(
             scenario_params["shocks"], dict
         ):
             raise ValidationError("Scenario shocks (dictionary) are required.")
-
         scenario_id = scenario_params["name"].lower().replace(" ", "_")
         if scenario_id in self.predefined_scenarios:
             logger.warning(f"Scenario ID '{scenario_id}' already exists. Overwriting.")
-
         new_scenario = {
             "name": scenario_params["name"],
             "description": scenario_params.get(
@@ -372,12 +308,10 @@ class StressTesting:
             "shocks": scenario_params["shocks"],
             "correlation_changes": scenario_params.get("correlation_changes", {}),
         }
-
         self.predefined_scenarios[scenario_id] = new_scenario
         logger.info(
             f"Custom extreme scenario '{new_scenario['name']}' generated and added."
         )
-
         return {
             "id": scenario_id,
             "name": new_scenario["name"],
@@ -401,23 +335,13 @@ class StressTesting:
         """
         if not correlation_changes or returns_df.empty:
             return returns_df
-
         logger.info("Applying correlation changes to returns.")
         adjusted_returns_df = returns_df.copy()
-
-        # This is a highly simplified example. In a real-world scenario,
-        # adjusting correlations while preserving marginal distributions is complex.
-        # A common approach involves using Cholesky decomposition on the covariance matrix
-        # or more advanced techniques like copulas.
-
-        # For demonstration, we'll just log the intended changes.
         for pair, change in correlation_changes.items():
-            asset1, asset2 = pair.split("_")  # Assumes format 'asset1_asset2'
+            asset1, asset2 = pair.split("_")
             logger.info(
                 f"Attempting to adjust correlation between {asset1} and {asset2} by {change}."
             )
-            # Actual implementation would go here, e.g., using a Gaussian copula or iterative adjustment
-
         return adjusted_returns_df
 
     def run_extreme_scenario(
@@ -438,57 +362,47 @@ class StressTesting:
         """
         try:
             logger.info(f"Running extreme scenario: {scenario_id}")
-
             scenario = self.predefined_scenarios.get(scenario_id)
             if not scenario:
                 raise NotFoundError(f"Extreme scenario not found: {scenario_id}")
-
-            # Get historical data for all assets in the portfolio
             symbols = [pos["symbol"] for pos in portfolio]
             all_historical_data = {}
             for symbol in symbols:
                 all_historical_data[symbol] = self._get_historical_data(
                     symbol, lookback_period=252
-                )  # Use a default lookback
-
-            # Calculate individual returns and combine into a DataFrame
+                )
             returns_data = {}
             for symbol, data in all_historical_data.items():
                 returns_data[symbol] = self._calculate_returns(data)
-
-            # Ensure all return series have the same length for correlation adjustment
-            min_len = min(len(r) for r in returns_data.values()) if returns_data else 0
+            min_len = (
+                min((len(r) for r in returns_data.values())) if returns_data else 0
+            )
             returns_df = pd.DataFrame({s: r[:min_len] for s, r in returns_data.items()})
-
-            # Apply correlation changes if specified in the scenario
             if "correlation_changes" in scenario and scenario["correlation_changes"]:
                 returns_df = self._apply_correlation_changes(
                     returns_df, scenario["correlation_changes"]
                 )
-
-            # Apply shocks to current prices and calculate new portfolio value
             portfolio_value_before = sum(
-                position["quantity"] * position["entry_price"] for position in portfolio
+                (
+                    position["quantity"] * position["entry_price"]
+                    for position in portfolio
+                )
             )
             portfolio_value_after = 0
             position_impacts = []
-
             for position in portfolio:
                 symbol = position["symbol"]
                 quantity = position["quantity"]
                 entry_price = position["entry_price"]
                 position_value = quantity * entry_price
-
                 asset_classes = self.asset_class_mappings.get(symbol, ["equity"])
                 shock = 0
                 for asset_class in asset_classes:
                     if asset_class in scenario["shocks"]:
                         shock += scenario["shocks"][asset_class]
-                shock /= len(asset_classes) if asset_classes else 1  # Average shock
-
+                shock /= len(asset_classes) if asset_classes else 1
                 new_price = entry_price * (1 + shock)
                 new_value = quantity * new_price
-
                 impact = {
                     "symbol": symbol,
                     "quantity": quantity,
@@ -505,14 +419,12 @@ class StressTesting:
                 }
                 position_impacts.append(impact)
                 portfolio_value_after += new_value
-
             change_amount = portfolio_value_after - portfolio_value_before
             change_percent = (
                 change_amount / portfolio_value_before
                 if portfolio_value_before != 0
                 else 0
             )
-
             return {
                 "scenario_id": scenario_id,
                 "scenario_name": scenario["name"],
@@ -523,22 +435,18 @@ class StressTesting:
                 "position_impacts": position_impacts,
                 "calculated_at": datetime.utcnow().isoformat(),
             }
-
         except NotFoundError:
             raise
         except Exception as e:
             logger.error(f"Error running extreme scenario: {e}")
             raise ServiceError(f"Error running extreme scenario: {str(e)}")
 
-    # Helper methods (copied from RiskCalculator for self-containment, ideally shared)
     def _get_historical_data(
         self, symbol: str, lookback_period: int
     ) -> List[Dict[str, Any]]:
         """Get historical data for a symbol (simplified for stress testing).
         In a real system, this would call the data service.
         """
-        # This is a placeholder. In a real system, this would call the data service.
-        # For now, generate dummy data similar to RiskCalculator's dummy data.
         logger.warning(f"Using dummy historical data for {symbol} in stress testing.")
         n_samples = lookback_period
         data = []

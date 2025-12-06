@@ -6,8 +6,6 @@ Handles comprehensive regulatory reporting and compliance monitoring.
 import json
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 import uuid
 from dataclasses import dataclass
@@ -16,10 +14,8 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
-# Configure logging
 logger = setup_logger("regulatory_reporting", logging.INFO)
 
 
@@ -60,8 +56,8 @@ class ReportingRequirement:
 
     report_type: ReportType
     jurisdiction: RegulatoryJurisdiction
-    frequency: str  # daily, weekly, monthly, quarterly, annually
-    deadline_days: int  # Days after period end
+    frequency: str
+    deadline_days: int
     mandatory_fields: List[str]
     optional_fields: List[str]
     validation_rules: Dict[str, Any]
@@ -71,7 +67,7 @@ class ReportingRequirement:
 class RegulatoryReportingEngine:
     """Comprehensive regulatory reporting engine"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize regulatory reporting engine
 
         Args:
@@ -80,20 +76,11 @@ class RegulatoryReportingEngine:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Initialize reporting requirements
         self.reporting_requirements = self._initialize_reporting_requirements()
-
-        # Report templates
         self.report_templates = self._initialize_report_templates()
-
-        # Validation rules
         self.validation_rules = self._initialize_validation_rules()
-
-        # Report storage
         self.report_storage_path = "/tmp/regulatory_reports"
         os.makedirs(self.report_storage_path, exist_ok=True)
-
         logger.info("Regulatory reporting engine initialized")
 
     def generate_report(
@@ -124,21 +111,13 @@ class RegulatoryReportingEngine:
         """
         try:
             logger.info(f"Generating {report_type} report for {jurisdiction}")
-
-            # Validate inputs
             self._validate_report_request(
                 report_type, jurisdiction, period_start, period_end
             )
-
-            # Get reporting requirement
             requirement = self._get_reporting_requirement(report_type, jurisdiction)
-
-            # Collect required data
             report_data = self._collect_report_data(
                 requirement, period_start, period_end, portfolio_data, additional_data
             )
-
-            # Generate report based on type
             if report_type == ReportType.FORM_PF.value:
                 report = self._generate_form_pf(report_data, requirement)
             elif report_type == ReportType.FORM_13F.value:
@@ -159,14 +138,8 @@ class RegulatoryReportingEngine:
                 )
             else:
                 report = self._generate_generic_report(report_data, requirement)
-
-            # Validate report
             validation_result = self._validate_report(report, requirement)
-
-            # Save report
             report_id = self._save_report(report, report_type, jurisdiction)
-
-            # Create response
             response = {
                 "report_id": report_id,
                 "report_type": report_type,
@@ -177,9 +150,7 @@ class RegulatoryReportingEngine:
                 "validation_result": validation_result,
                 "generated_at": datetime.utcnow().isoformat(),
             }
-
             return response
-
         except ValidationError:
             raise
         except Exception as e:
@@ -200,20 +171,16 @@ class RegulatoryReportingEngine:
         """
         portfolio_data = report_data.get("portfolio_data", {})
         risk_data = report_data.get("risk_data", {})
-
-        # Calculate required metrics
         total_aum = sum(
-            pos.get("market_value", 0) for pos in portfolio_data.get("positions", [])
+            (pos.get("market_value", 0) for pos in portfolio_data.get("positions", []))
         )
-
-        # Calculate leverage metrics
         gross_notional = sum(
-            abs(pos.get("notional_value", pos.get("market_value", 0)))
-            for pos in portfolio_data.get("positions", [])
+            (
+                abs(pos.get("notional_value", pos.get("market_value", 0)))
+                for pos in portfolio_data.get("positions", [])
+            )
         )
         leverage_ratio = gross_notional / total_aum if total_aum > 0 else 0
-
-        # Calculate concentration metrics
         positions = portfolio_data.get("positions", [])
         if positions:
             position_values = [pos.get("market_value", 0) for pos in positions]
@@ -223,15 +190,14 @@ class RegulatoryReportingEngine:
             )
         else:
             top_5_concentration = 0
-
-        # Calculate liquidity metrics
         liquid_assets = sum(
-            pos.get("market_value", 0)
-            for pos in positions
-            if pos.get("liquidity_category") in ["daily", "weekly"]
+            (
+                pos.get("market_value", 0)
+                for pos in positions
+                if pos.get("liquidity_category") in ["daily", "weekly"]
+            )
         )
         liquidity_ratio = liquid_assets / total_aum if total_aum > 0 else 0
-
         form_pf = {
             "fund_information": {
                 "fund_name": portfolio_data.get("fund_name", "QuantumAlpha Fund"),
@@ -245,9 +211,11 @@ class RegulatoryReportingEngine:
                 "leverage_ratio": leverage_ratio,
                 "borrowing_amount": portfolio_data.get("borrowing_amount", 0),
                 "derivative_exposure": sum(
-                    pos.get("notional_value", 0)
-                    for pos in positions
-                    if pos.get("asset_type") == "derivative"
+                    (
+                        pos.get("notional_value", 0)
+                        for pos in positions
+                        if pos.get("asset_type") == "derivative"
+                    )
                 ),
             },
             "liquidity_information": {
@@ -285,7 +253,6 @@ class RegulatoryReportingEngine:
                 "collateral_received": portfolio_data.get("collateral_received", 0),
             },
         }
-
         return form_pf
 
     def _generate_form_13f(
@@ -302,19 +269,13 @@ class RegulatoryReportingEngine:
         """
         portfolio_data = report_data.get("portfolio_data", {})
         positions = portfolio_data.get("positions", [])
-
-        # Filter for 13F securities (equity securities with voting power)
         eligible_positions = [
             pos
             for pos in positions
             if pos.get("asset_type") == "equity"
             and pos.get("market_value", 0) >= 200000
         ]
-
-        # Calculate total value
-        total_value = sum(pos.get("market_value", 0) for pos in eligible_positions)
-
-        # Prepare holdings table
+        total_value = sum((pos.get("market_value", 0) for pos in eligible_positions))
         holdings = []
         for pos in eligible_positions:
             holdings.append(
@@ -324,7 +285,7 @@ class RegulatoryReportingEngine:
                     "cusip": pos.get("cusip", ""),
                     "value": pos.get("market_value", 0),
                     "shares_or_principal_amount": pos.get("quantity", 0),
-                    "shares_or_principal": "SH",  # Shares
+                    "shares_or_principal": "SH",
                     "investment_discretion": pos.get("investment_discretion", "SOLE"),
                     "voting_authority": {
                         "sole": pos.get("voting_sole", 0),
@@ -333,7 +294,6 @@ class RegulatoryReportingEngine:
                     },
                 }
             )
-
         form_13f = {
             "cover_page": {
                 "institution_name": portfolio_data.get(
@@ -351,7 +311,6 @@ class RegulatoryReportingEngine:
             },
             "information_table": {"holdings": holdings},
         }
-
         return form_13f
 
     def _generate_basel_iii_capital_adequacy(
@@ -368,32 +327,23 @@ class RegulatoryReportingEngine:
         """
         portfolio_data = report_data.get("portfolio_data", {})
         capital_data = report_data.get("capital_data", {})
-
-        # Calculate risk-weighted assets
         positions = portfolio_data.get("positions", [])
         total_rwa = 0
-
         for pos in positions:
             market_value = pos.get("market_value", 0)
             risk_weight = self._get_basel_risk_weight(pos)
             total_rwa += market_value * risk_weight
-
-        # Calculate capital ratios
         cet1_capital = capital_data.get("cet1_capital", 0)
         tier1_capital = capital_data.get("tier1_capital", 0)
         total_capital = capital_data.get("total_capital", 0)
-
         cet1_ratio = cet1_capital / total_rwa if total_rwa > 0 else 0
         tier1_ratio = tier1_capital / total_rwa if total_rwa > 0 else 0
         total_capital_ratio = total_capital / total_rwa if total_rwa > 0 else 0
-
-        # Calculate leverage ratio
         tier1_leverage_ratio = (
             tier1_capital / portfolio_data.get("total_exposure", 1)
             if portfolio_data.get("total_exposure", 0) > 0
             else 0
         )
-
         basel_iii_report = {
             "capital_adequacy": {
                 "cet1_capital": cet1_capital,
@@ -403,18 +353,18 @@ class RegulatoryReportingEngine:
                 "cet1_ratio": cet1_ratio,
                 "tier1_ratio": tier1_ratio,
                 "total_capital_ratio": total_capital_ratio,
-                "minimum_cet1_ratio": 0.045,  # 4.5%
-                "minimum_tier1_ratio": 0.06,  # 6%
-                "minimum_total_capital_ratio": 0.08,  # 8%
+                "minimum_cet1_ratio": 0.045,
+                "minimum_tier1_ratio": 0.06,
+                "minimum_total_capital_ratio": 0.08,
             },
             "leverage_ratio": {
                 "tier1_capital": tier1_capital,
                 "total_exposure": portfolio_data.get("total_exposure", 0),
                 "leverage_ratio": tier1_leverage_ratio,
-                "minimum_leverage_ratio": 0.03,  # 3%
+                "minimum_leverage_ratio": 0.03,
             },
             "capital_buffers": {
-                "capital_conservation_buffer": 0.025,  # 2.5%
+                "capital_conservation_buffer": 0.025,
                 "countercyclical_buffer": capital_data.get("countercyclical_buffer", 0),
                 "systemic_risk_buffer": capital_data.get("systemic_risk_buffer", 0),
                 "total_buffer_requirement": 0.025
@@ -423,19 +373,22 @@ class RegulatoryReportingEngine:
             },
             "risk_weighted_assets_breakdown": {
                 "credit_risk_rwa": sum(
-                    pos.get("market_value", 0) * self._get_basel_risk_weight(pos)
-                    for pos in positions
-                    if pos.get("risk_type") == "credit"
+                    (
+                        pos.get("market_value", 0) * self._get_basel_risk_weight(pos)
+                        for pos in positions
+                        if pos.get("risk_type") == "credit"
+                    )
                 ),
                 "market_risk_rwa": sum(
-                    pos.get("market_value", 0) * self._get_basel_risk_weight(pos)
-                    for pos in positions
-                    if pos.get("risk_type") == "market"
+                    (
+                        pos.get("market_value", 0) * self._get_basel_risk_weight(pos)
+                        for pos in positions
+                        if pos.get("risk_type") == "market"
+                    )
                 ),
                 "operational_risk_rwa": capital_data.get("operational_risk_rwa", 0),
             },
         }
-
         return basel_iii_report
 
     def _generate_stress_test_results(
@@ -452,12 +405,9 @@ class RegulatoryReportingEngine:
         """
         stress_test_data = report_data.get("stress_test_data", {})
         portfolio_data = report_data.get("portfolio_data", {})
-
-        # Base portfolio metrics
         base_portfolio_value = sum(
-            pos.get("market_value", 0) for pos in portfolio_data.get("positions", [])
+            (pos.get("market_value", 0) for pos in portfolio_data.get("positions", []))
         )
-
         stress_test_report = {
             "base_case": {
                 "portfolio_value": base_portfolio_value,
@@ -521,7 +471,6 @@ class RegulatoryReportingEngine:
                 },
             },
         }
-
         return stress_test_report
 
     def _generate_risk_metrics_report(
@@ -538,7 +487,6 @@ class RegulatoryReportingEngine:
         """
         risk_data = report_data.get("risk_data", {})
         portfolio_data = report_data.get("portfolio_data", {})
-
         risk_metrics_report = {
             "market_risk": {
                 "var_95_1day": risk_data.get("var_95_1day", 0),
@@ -599,7 +547,6 @@ class RegulatoryReportingEngine:
                 "alpha": risk_data.get("alpha", 0),
             },
         }
-
         return risk_metrics_report
 
     def _generate_portfolio_composition(
@@ -616,10 +563,7 @@ class RegulatoryReportingEngine:
         """
         portfolio_data = report_data.get("portfolio_data", {})
         positions = portfolio_data.get("positions", [])
-
-        total_value = sum(pos.get("market_value", 0) for pos in positions)
-
-        # Asset class breakdown
+        total_value = sum((pos.get("market_value", 0) for pos in positions))
         asset_classes = {}
         for pos in positions:
             asset_class = pos.get("asset_class", "unknown")
@@ -627,21 +571,17 @@ class RegulatoryReportingEngine:
                 asset_classes[asset_class] = {"value": 0, "count": 0}
             asset_classes[asset_class]["value"] += pos.get("market_value", 0)
             asset_classes[asset_class]["count"] += 1
-
-        # Convert to percentages
         for asset_class in asset_classes:
             asset_classes[asset_class]["percentage"] = (
                 asset_classes[asset_class]["value"] / total_value
                 if total_value > 0
                 else 0
             )
-
-        # Top holdings
         sorted_positions = sorted(
             positions, key=lambda x: x.get("market_value", 0), reverse=True
         )
         top_holdings = []
-        for pos in sorted_positions[:20]:  # Top 20 holdings
+        for pos in sorted_positions[:20]:
             top_holdings.append(
                 {
                     "symbol": pos.get("symbol", ""),
@@ -657,7 +597,6 @@ class RegulatoryReportingEngine:
                     "country": pos.get("country", ""),
                 }
             )
-
         portfolio_composition_report = {
             "summary": {
                 "total_portfolio_value": total_value,
@@ -678,7 +617,6 @@ class RegulatoryReportingEngine:
                 "tracking_error": portfolio_data.get("tracking_error", 0),
             },
         }
-
         return portfolio_composition_report
 
     def _generate_liquidity_coverage_ratio(
@@ -695,52 +633,25 @@ class RegulatoryReportingEngine:
         """
         liquidity_data = report_data.get("liquidity_data", {})
         report_data.get("portfolio_data", {})
-
-        # High-Quality Liquid Assets (HQLA)
-        hqla_level_1 = liquidity_data.get(
-            "hqla_level_1", 0
-        )  # Cash, central bank reserves, government securities
-        hqla_level_2a = liquidity_data.get(
-            "hqla_level_2a", 0
-        )  # High-quality corporate bonds, covered bonds
-        hqla_level_2b = liquidity_data.get(
-            "hqla_level_2b", 0
-        )  # Lower-quality liquid assets
-
-        # Apply haircuts
-        adjusted_hqla_level_2a = hqla_level_2a * 0.85  # 15% haircut
-        adjusted_hqla_level_2b = hqla_level_2b * 0.50  # 50% haircut
-
-        # Total HQLA (with caps)
-        level_2_cap = (
-            hqla_level_1 * 0.67
-        )  # Level 2 assets cannot exceed 40% of total HQLA
-        level_2b_cap = (
-            hqla_level_1 + adjusted_hqla_level_2a
-        ) * 0.176  # Level 2B cannot exceed 15% of total HQLA
-
+        hqla_level_1 = liquidity_data.get("hqla_level_1", 0)
+        hqla_level_2a = liquidity_data.get("hqla_level_2a", 0)
+        hqla_level_2b = liquidity_data.get("hqla_level_2b", 0)
+        adjusted_hqla_level_2a = hqla_level_2a * 0.85
+        adjusted_hqla_level_2b = hqla_level_2b * 0.5
+        level_2_cap = hqla_level_1 * 0.67
+        level_2b_cap = (hqla_level_1 + adjusted_hqla_level_2a) * 0.176
         effective_level_2a = min(adjusted_hqla_level_2a, level_2_cap)
         effective_level_2b = min(adjusted_hqla_level_2b, level_2b_cap)
-
         total_hqla = hqla_level_1 + effective_level_2a + effective_level_2b
-
-        # Net Cash Outflows
         retail_deposits = liquidity_data.get("retail_deposits", 0)
         wholesale_deposits = liquidity_data.get("wholesale_deposits", 0)
         secured_funding = liquidity_data.get("secured_funding", 0)
         derivatives_outflows = liquidity_data.get("derivatives_outflows", 0)
         credit_facilities = liquidity_data.get("credit_facilities", 0)
         other_outflows = liquidity_data.get("other_outflows", 0)
-
-        # Apply run-off rates
-        retail_outflows = (
-            retail_deposits * 0.05
-        )  # 5% run-off rate for stable retail deposits
-        wholesale_outflows = (
-            wholesale_deposits * 0.25
-        )  # 25% run-off rate for wholesale deposits
-        secured_funding_outflows = secured_funding * 0.00  # Assume matched funding
-
+        retail_outflows = retail_deposits * 0.05
+        wholesale_outflows = wholesale_deposits * 0.25
+        secured_funding_outflows = secured_funding * 0.0
         total_outflows = (
             retail_outflows
             + wholesale_outflows
@@ -749,17 +660,10 @@ class RegulatoryReportingEngine:
             + credit_facilities
             + other_outflows
         )
-
-        # Cash Inflows (capped at 75% of outflows)
         contractual_inflows = liquidity_data.get("contractual_inflows", 0)
         capped_inflows = min(contractual_inflows, total_outflows * 0.75)
-
-        # Net Cash Outflows
         net_cash_outflows = max(total_outflows - capped_inflows, total_outflows * 0.25)
-
-        # LCR Calculation
         lcr = total_hqla / net_cash_outflows if net_cash_outflows > 0 else float("inf")
-
         lcr_report = {
             "high_quality_liquid_assets": {
                 "level_1_assets": hqla_level_1,
@@ -788,11 +692,10 @@ class RegulatoryReportingEngine:
             "lcr_calculation": {
                 "net_cash_outflows": net_cash_outflows,
                 "liquidity_coverage_ratio": lcr,
-                "minimum_requirement": 1.0,  # 100%
+                "minimum_requirement": 1.0,
                 "compliance_status": "compliant" if lcr >= 1.0 else "non_compliant",
             },
         }
-
         return lcr_report
 
     def _generate_generic_report(
@@ -821,8 +724,6 @@ class RegulatoryReportingEngine:
     def _initialize_reporting_requirements(self) -> Dict[str, ReportingRequirement]:
         """Initialize regulatory reporting requirements"""
         requirements = {}
-
-        # Form PF
         requirements["form_pf_us_sec"] = ReportingRequirement(
             report_type=ReportType.FORM_PF,
             jurisdiction=RegulatoryJurisdiction.US_SEC,
@@ -833,8 +734,6 @@ class RegulatoryReportingEngine:
             validation_rules={"aum": {"min": 0}, "leverage_ratio": {"min": 0}},
             format_requirements={"file_format": "xml", "schema_version": "2.0"},
         )
-
-        # Form 13F
         requirements["form_13f_us_sec"] = ReportingRequirement(
             report_type=ReportType.FORM_13F,
             jurisdiction=RegulatoryJurisdiction.US_SEC,
@@ -842,11 +741,9 @@ class RegulatoryReportingEngine:
             deadline_days=45,
             mandatory_fields=["institution_name", "holdings_value", "holdings_list"],
             optional_fields=["other_managers"],
-            validation_rules={"holdings_value": {"min": 100000000}},  # $100M threshold
+            validation_rules={"holdings_value": {"min": 100000000}},
             format_requirements={"file_format": "xml", "schema_version": "1.0"},
         )
-
-        # Basel III Capital Adequacy
         requirements["basel_iii_capital_adequacy"] = ReportingRequirement(
             report_type=ReportType.BASEL_III_CAPITAL_ADEQUACY,
             jurisdiction=RegulatoryJurisdiction.BASEL_COMMITTEE,
@@ -867,7 +764,6 @@ class RegulatoryReportingEngine:
             },
             format_requirements={"file_format": "csv", "decimal_places": 4},
         )
-
         return requirements
 
     def _initialize_report_templates(self) -> Dict[str, Dict[str, Any]]:
@@ -912,14 +808,10 @@ class RegulatoryReportingEngine:
         """Validate report generation request"""
         if not report_type:
             raise ValidationError("Report type is required")
-
         if not jurisdiction:
             raise ValidationError("Jurisdiction is required")
-
         if period_start >= period_end:
             raise ValidationError("Period start must be before period end")
-
-        # Check if report type and jurisdiction combination is supported
         requirement_key = f"{report_type}_{jurisdiction}"
         if requirement_key not in self.reporting_requirements:
             logger.warning(
@@ -931,11 +823,8 @@ class RegulatoryReportingEngine:
     ) -> ReportingRequirement:
         """Get reporting requirement for report type and jurisdiction"""
         requirement_key = f"{report_type}_{jurisdiction}"
-
         if requirement_key in self.reporting_requirements:
             return self.reporting_requirements[requirement_key]
-
-        # Return a generic requirement if specific one not found
         return ReportingRequirement(
             report_type=ReportType(report_type),
             jurisdiction=RegulatoryJurisdiction(jurisdiction),
@@ -962,26 +851,15 @@ class RegulatoryReportingEngine:
             "portfolio_data": portfolio_data or {},
             "additional_data": additional_data or {},
         }
-
-        # Add mock data for demonstration
         if not portfolio_data:
             report_data["portfolio_data"] = self._generate_mock_portfolio_data()
-
-        # Add risk data
         report_data["risk_data"] = self._generate_mock_risk_data()
-
-        # Add capital data for Basel III reports
         if requirement.report_type == ReportType.BASEL_III_CAPITAL_ADEQUACY:
             report_data["capital_data"] = self._generate_mock_capital_data()
-
-        # Add stress test data
         if requirement.report_type == ReportType.STRESS_TEST_RESULTS:
             report_data["stress_test_data"] = self._generate_mock_stress_test_data()
-
-        # Add liquidity data for LCR reports
         if requirement.report_type == ReportType.LIQUIDITY_COVERAGE_RATIO:
             report_data["liquidity_data"] = self._generate_mock_liquidity_data()
-
         return report_data
 
     def _generate_mock_portfolio_data(self) -> Dict[str, Any]:
@@ -1109,91 +987,74 @@ class RegulatoryReportingEngine:
         self, positions: List[Dict[str, Any]]
     ) -> Dict[str, float]:
         """Calculate sector concentrations"""
-        total_value = sum(pos.get("market_value", 0) for pos in positions)
+        total_value = sum((pos.get("market_value", 0) for pos in positions))
         sectors = {}
-
         for pos in positions:
             sector = pos.get("sector", "unknown")
             if sector not in sectors:
                 sectors[sector] = 0
             sectors[sector] += pos.get("market_value", 0)
-
-        # Convert to percentages
         for sector in sectors:
             sectors[sector] = sectors[sector] / total_value if total_value > 0 else 0
-
         return sectors
 
     def _calculate_geographic_concentrations(
         self, positions: List[Dict[str, Any]]
     ) -> Dict[str, float]:
         """Calculate geographic concentrations"""
-        total_value = sum(pos.get("market_value", 0) for pos in positions)
+        total_value = sum((pos.get("market_value", 0) for pos in positions))
         countries = {}
-
         for pos in positions:
             country = pos.get("country", "unknown")
             if country not in countries:
                 countries[country] = 0
             countries[country] += pos.get("market_value", 0)
-
-        # Convert to percentages
         for country in countries:
             countries[country] = (
                 countries[country] / total_value if total_value > 0 else 0
             )
-
         return countries
 
     def _calculate_currency_concentrations(
         self, positions: List[Dict[str, Any]]
     ) -> Dict[str, float]:
         """Calculate currency concentrations"""
-        total_value = sum(pos.get("market_value", 0) for pos in positions)
+        total_value = sum((pos.get("market_value", 0) for pos in positions))
         currencies = {}
-
         for pos in positions:
             currency = pos.get("currency", "USD")
             if currency not in currencies:
                 currencies[currency] = 0
             currencies[currency] += pos.get("market_value", 0)
-
-        # Convert to percentages
         for currency in currencies:
             currencies[currency] = (
                 currencies[currency] / total_value if total_value > 0 else 0
             )
-
         return currencies
 
     def _calculate_single_name_concentration(
         self, positions: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """Calculate single name concentration metrics"""
-        total_value = sum(pos.get("market_value", 0) for pos in positions)
-
+        total_value = sum((pos.get("market_value", 0) for pos in positions))
         if not positions or total_value == 0:
             return {
                 "largest_position": 0,
                 "top_5_concentration": 0,
                 "top_10_concentration": 0,
             }
-
-        # Sort positions by value
         sorted_positions = sorted(
             positions, key=lambda x: x.get("market_value", 0), reverse=True
         )
-
         largest_position = sorted_positions[0].get("market_value", 0) / total_value
         top_5_concentration = (
-            sum(pos.get("market_value", 0) for pos in sorted_positions[:5])
+            sum((pos.get("market_value", 0) for pos in sorted_positions[:5]))
             / total_value
         )
         top_10_concentration = (
-            sum(pos.get("market_value", 0) for pos in sorted_positions[:10])
+            sum((pos.get("market_value", 0) for pos in sorted_positions[:10]))
             / total_value
         )
-
         return {
             "largest_position": largest_position,
             "top_5_concentration": top_5_concentration,
@@ -1205,16 +1066,12 @@ class RegulatoryReportingEngine:
     ) -> List[Dict[str, Any]]:
         """Calculate counterparty exposures"""
         counterparties = {}
-
         for pos in positions:
             counterparty = pos.get("counterparty", "unknown")
             if counterparty not in counterparties:
                 counterparties[counterparty] = {"exposure": 0, "positions": 0}
-
             counterparties[counterparty]["exposure"] += pos.get("market_value", 0)
             counterparties[counterparty]["positions"] += 1
-
-        # Convert to list and sort by exposure
         exposures = []
         for counterparty, data in counterparties.items():
             exposures.append(
@@ -1224,15 +1081,12 @@ class RegulatoryReportingEngine:
                     "positions": data["positions"],
                 }
             )
-
         return sorted(exposures, key=lambda x: x["exposure"], reverse=True)
 
     def _get_basel_risk_weight(self, position: Dict[str, Any]) -> float:
         """Get Basel III risk weight for a position"""
         asset_type = position.get("asset_type", "equity")
         position.get("credit_rating", "unrated")
-
-        # Simplified risk weights
         risk_weights = {
             "government_bond": 0.0,
             "corporate_bond_aaa": 0.2,
@@ -1244,7 +1098,6 @@ class RegulatoryReportingEngine:
             "derivative": 1.0,
             "cash": 0.0,
         }
-
         return risk_weights.get(asset_type, 1.0)
 
     def _validate_report(
@@ -1252,14 +1105,10 @@ class RegulatoryReportingEngine:
     ) -> Dict[str, Any]:
         """Validate generated report"""
         validation_result = {"is_valid": True, "errors": [], "warnings": []}
-
-        # Check mandatory fields
         for field in requirement.mandatory_fields:
             if not self._check_field_exists(report, field):
                 validation_result["errors"].append(f"Missing mandatory field: {field}")
                 validation_result["is_valid"] = False
-
-        # Check validation rules
         for field, rules in requirement.validation_rules.items():
             value = self._get_field_value(report, field)
             if value is not None:
@@ -1268,13 +1117,11 @@ class RegulatoryReportingEngine:
                         f"Field {field} below minimum: {value} < {rules['min']}"
                     )
                     validation_result["is_valid"] = False
-
                 if "max" in rules and value > rules["max"]:
                     validation_result["errors"].append(
                         f"Field {field} above maximum: {value} > {rules['max']}"
                     )
                     validation_result["is_valid"] = False
-
         return validation_result
 
     def _check_field_exists(self, report: Dict[str, Any], field_path: str) -> bool:
@@ -1311,13 +1158,10 @@ class RegulatoryReportingEngine:
             timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
             filename = f"{report_type}_{jurisdiction}_{timestamp}_{report_id}.json"
             filepath = os.path.join(self.report_storage_path, filename)
-
             with open(filepath, "w") as f:
                 json.dump(report, f, indent=2, default=str)
-
             logger.info(f"Report saved: {filepath}")
             return report_id
-
         except Exception as e:
             logger.error(f"Error saving report: {e}")
             raise ServiceError(f"Error saving report: {str(e)}")
@@ -1335,15 +1179,12 @@ class RegulatoryReportingEngine:
             NotFoundError: If report is not found
         """
         try:
-            # Find report file
             for filename in os.listdir(self.report_storage_path):
                 if report_id in filename:
                     filepath = os.path.join(self.report_storage_path, filename)
                     with open(filepath, "r") as f:
                         return json.load(f)
-
             raise NotFoundError(f"Report not found: {report_id}")
-
         except NotFoundError:
             raise
         except Exception as e:
@@ -1370,25 +1211,18 @@ class RegulatoryReportingEngine:
         """
         try:
             reports = []
-
             for filename in os.listdir(self.report_storage_path):
                 if filename.endswith(".json"):
-                    # Parse filename
                     parts = filename.replace(".json", "").split("_")
                     if len(parts) >= 4:
                         file_report_type = parts[0]
                         file_jurisdiction = parts[1]
                         file_timestamp = parts[2]
                         file_report_id = "_".join(parts[3:])
-
-                        # Apply filters
                         if report_type and file_report_type != report_type:
                             continue
-
                         if jurisdiction and file_jurisdiction != jurisdiction:
                             continue
-
-                        # Parse timestamp for date filtering
                         try:
                             file_date = datetime.strptime(
                                 file_timestamp, "%Y%m%d_%H%M%S"
@@ -1399,7 +1233,6 @@ class RegulatoryReportingEngine:
                                 continue
                         except:
                             continue
-
                         reports.append(
                             {
                                 "report_id": file_report_id,
@@ -1409,12 +1242,8 @@ class RegulatoryReportingEngine:
                                 "filename": filename,
                             }
                         )
-
-            # Sort by generation date (newest first)
             reports.sort(key=lambda x: x["generated_at"], reverse=True)
-
             return reports
-
         except Exception as e:
             logger.error(f"Error listing reports: {e}")
             raise ServiceError(f"Error listing reports: {str(e)}")

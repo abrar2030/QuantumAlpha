@@ -8,7 +8,6 @@ import json
 import os
 import tempfile
 from typing import Any, Dict, Optional
-
 import pytest
 import yaml
 
@@ -16,7 +15,7 @@ import yaml
 class TestConfig:
     """Test configuration manager."""
 
-    def __init__(self, config_data: Optional[Dict[str, Any]] = None):
+    def __init__(self, config_data: Optional[Dict[str, Any]] = None) -> Any:
         """
         Initialize the test configuration manager.
 
@@ -124,16 +123,14 @@ class TestConfig:
         """
         keys = key.split(".")
         value = self.config_data
-
         for k in keys:
             if isinstance(value, dict) and k in value:
                 value = value[k]
             else:
                 return default
-
         return value
 
-    def set_value(self, key: str, value: Any):
+    def set_value(self, key: str, value: Any) -> Any:
         """
         Set a configuration value.
 
@@ -143,15 +140,13 @@ class TestConfig:
         """
         keys = key.split(".")
         config = self.config_data
-
         for i, k in enumerate(keys[:-1]):
             if k not in config:
                 config[k] = {}
             config = config[k]
-
         config[keys[-1]] = value
 
-    def save_to_file(self, file_path: str, format: str = "json"):
+    def save_to_file(self, file_path: str, format: str = "json") -> Any:
         """
         Save configuration to a file.
 
@@ -168,7 +163,7 @@ class TestConfig:
                 raise ValueError(f"Unsupported format: {format}")
 
     @classmethod
-    def load_from_file(cls, file_path: str, format: str = None):
+    def load_from_file(cls: Any, file_path: str, format: str = None) -> Any:
         """
         Load configuration from a file.
 
@@ -180,13 +175,11 @@ class TestConfig:
             TestConfig instance
         """
         if format is None:
-            # Auto-detect format from file extension
             _, ext = os.path.splitext(file_path)
             if ext.lower() in [".yml", ".yaml"]:
                 format = "yaml"
             else:
                 format = "json"
-
         with open(file_path, "r") as f:
             if format == "json":
                 config_data = json.load(f)
@@ -194,14 +187,13 @@ class TestConfig:
                 config_data = yaml.safe_load(f)
             else:
                 raise ValueError(f"Unsupported format: {format}")
-
         return cls(config_data)
 
 
 class MockConfigManager:
     """Mock configuration manager for testing."""
 
-    def __init__(self, test_config: TestConfig):
+    def __init__(self, test_config: TestConfig) -> Any:
         """
         Initialize the mock configuration manager.
 
@@ -290,13 +282,13 @@ class MockConfigManager:
 
 
 @pytest.fixture
-def test_config():
+def test_config() -> Any:
     """Pytest fixture for test configuration."""
     return TestConfig()
 
 
 @pytest.fixture
-def mock_config_manager(test_config):
+def mock_config_manager(test_config: Any) -> Any:
     """Pytest fixture for mock configuration manager."""
     return MockConfigManager(test_config)
 
@@ -304,23 +296,18 @@ def mock_config_manager(test_config):
 class TestEnvironment:
     """Test environment manager."""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         """Initialize the test environment manager."""
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root_dir = self.temp_dir.name
-
-        # Create directory structure
         self.data_dir = os.path.join(self.root_dir, "data")
         self.cache_dir = os.path.join(self.root_dir, "cache")
         self.model_dir = os.path.join(self.root_dir, "models")
         self.log_dir = os.path.join(self.root_dir, "logs")
-
         os.makedirs(self.data_dir, exist_ok=True)
         os.makedirs(self.cache_dir, exist_ok=True)
         os.makedirs(self.model_dir, exist_ok=True)
         os.makedirs(self.log_dir, exist_ok=True)
-
-        # Create test configuration
         self.config = TestConfig()
         self.config.set_value("data_service.data_dir", self.data_dir)
         self.config.set_value("data_service.cache_dir", self.cache_dir)
@@ -330,7 +317,7 @@ class TestEnvironment:
         )
         self.config.set_value("logging.file", os.path.join(self.log_dir, "test.log"))
 
-    def cleanup(self):
+    def cleanup(self) -> Any:
         """Clean up the test environment."""
         self.temp_dir.cleanup()
 
@@ -399,7 +386,7 @@ class TestEnvironment:
 
 
 @pytest.fixture
-def test_env():
+def test_env() -> Any:
     """Pytest fixture for test environment."""
     env = TestEnvironment()
     yield env

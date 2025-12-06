@@ -8,7 +8,6 @@ import os
 import sqlite3
 import tempfile
 from typing import Any, Dict, List, Optional, Tuple
-
 import pandas as pd
 import pytest
 
@@ -16,7 +15,7 @@ import pytest
 class TestDatabaseFixture:
     """SQLite database fixture for testing."""
 
-    def __init__(self, db_path: Optional[str] = None):
+    def __init__(self, db_path: Optional[str] = None) -> Any:
         """
         Initialize the test database fixture.
 
@@ -24,193 +23,59 @@ class TestDatabaseFixture:
             db_path: Path to the SQLite database file
         """
         if db_path is None:
-            # Create a temporary database file
             self.temp_dir = tempfile.TemporaryDirectory()
             self.db_path = os.path.join(self.temp_dir.name, "test_db.sqlite")
         else:
             self.temp_dir = None
             self.db_path = db_path
-
         self.conn = None
 
-    def setup(self):
+    def setup(self) -> Any:
         """Set up the test database."""
         self.conn = sqlite3.connect(self.db_path)
         self._create_tables()
 
-    def teardown(self):
+    def teardown(self) -> Any:
         """Tear down the test database."""
         if self.conn:
             self.conn.close()
             self.conn = None
-
         if self.temp_dir:
             self.temp_dir.cleanup()
 
-    def _create_tables(self):
+    def _create_tables(self) -> Any:
         """Create database tables."""
         cursor = self.conn.cursor()
-
-        # Create users table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS users (
-            id TEXT PRIMARY KEY,
-            username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            first_name TEXT,
-            last_name TEXT,
-            role TEXT NOT NULL,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
+            "\n        CREATE TABLE IF NOT EXISTS users (\n            id TEXT PRIMARY KEY,\n            username TEXT UNIQUE NOT NULL,\n            email TEXT UNIQUE NOT NULL,\n            password_hash TEXT NOT NULL,\n            first_name TEXT,\n            last_name TEXT,\n            role TEXT NOT NULL,\n            created_at TEXT NOT NULL,\n            updated_at TEXT NOT NULL\n        )\n        "
         )
-        """
-        )
-
-        # Create portfolios table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS portfolios (
-            id TEXT PRIMARY KEY,
-            user_id TEXT NOT NULL,
-            name TEXT NOT NULL,
-            description TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users (id)
+            "\n        CREATE TABLE IF NOT EXISTS portfolios (\n            id TEXT PRIMARY KEY,\n            user_id TEXT NOT NULL,\n            name TEXT NOT NULL,\n            description TEXT,\n            created_at TEXT NOT NULL,\n            updated_at TEXT NOT NULL,\n            FOREIGN KEY (user_id) REFERENCES users (id)\n        )\n        "
         )
-        """
-        )
-
-        # Create positions table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS positions (
-            id TEXT PRIMARY KEY,
-            portfolio_id TEXT NOT NULL,
-            symbol TEXT NOT NULL,
-            quantity REAL NOT NULL,
-            average_entry_price REAL NOT NULL,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL,
-            FOREIGN KEY (portfolio_id) REFERENCES portfolios (id)
+            "\n        CREATE TABLE IF NOT EXISTS positions (\n            id TEXT PRIMARY KEY,\n            portfolio_id TEXT NOT NULL,\n            symbol TEXT NOT NULL,\n            quantity REAL NOT NULL,\n            average_entry_price REAL NOT NULL,\n            created_at TEXT NOT NULL,\n            updated_at TEXT NOT NULL,\n            FOREIGN KEY (portfolio_id) REFERENCES portfolios (id)\n        )\n        "
         )
-        """
-        )
-
-        # Create orders table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS orders (
-            id TEXT PRIMARY KEY,
-            user_id TEXT NOT NULL,
-            portfolio_id TEXT NOT NULL,
-            symbol TEXT NOT NULL,
-            side TEXT NOT NULL,
-            type TEXT NOT NULL,
-            status TEXT NOT NULL,
-            quantity REAL NOT NULL,
-            price REAL,
-            filled_quantity REAL,
-            average_fill_price REAL,
-            broker_order_id TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users (id),
-            FOREIGN KEY (portfolio_id) REFERENCES portfolios (id)
+            "\n        CREATE TABLE IF NOT EXISTS orders (\n            id TEXT PRIMARY KEY,\n            user_id TEXT NOT NULL,\n            portfolio_id TEXT NOT NULL,\n            symbol TEXT NOT NULL,\n            side TEXT NOT NULL,\n            type TEXT NOT NULL,\n            status TEXT NOT NULL,\n            quantity REAL NOT NULL,\n            price REAL,\n            filled_quantity REAL,\n            average_fill_price REAL,\n            broker_order_id TEXT,\n            created_at TEXT NOT NULL,\n            updated_at TEXT NOT NULL,\n            FOREIGN KEY (user_id) REFERENCES users (id),\n            FOREIGN KEY (portfolio_id) REFERENCES portfolios (id)\n        )\n        "
         )
-        """
-        )
-
-        # Create executions table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS executions (
-            id TEXT PRIMARY KEY,
-            order_id TEXT NOT NULL,
-            price REAL NOT NULL,
-            quantity REAL NOT NULL,
-            timestamp TEXT NOT NULL,
-            broker_execution_id TEXT,
-            FOREIGN KEY (order_id) REFERENCES orders (id)
+            "\n        CREATE TABLE IF NOT EXISTS executions (\n            id TEXT PRIMARY KEY,\n            order_id TEXT NOT NULL,\n            price REAL NOT NULL,\n            quantity REAL NOT NULL,\n            timestamp TEXT NOT NULL,\n            broker_execution_id TEXT,\n            FOREIGN KEY (order_id) REFERENCES orders (id)\n        )\n        "
         )
-        """
-        )
-
-        # Create market_data table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS market_data (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            symbol TEXT NOT NULL,
-            timestamp TEXT NOT NULL,
-            timeframe TEXT NOT NULL,
-            open REAL NOT NULL,
-            high REAL NOT NULL,
-            low REAL NOT NULL,
-            close REAL NOT NULL,
-            volume INTEGER NOT NULL,
-            UNIQUE(symbol, timestamp, timeframe)
+            "\n        CREATE TABLE IF NOT EXISTS market_data (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            symbol TEXT NOT NULL,\n            timestamp TEXT NOT NULL,\n            timeframe TEXT NOT NULL,\n            open REAL NOT NULL,\n            high REAL NOT NULL,\n            low REAL NOT NULL,\n            close REAL NOT NULL,\n            volume INTEGER NOT NULL,\n            UNIQUE(symbol, timestamp, timeframe)\n        )\n        "
         )
-        """
-        )
-
-        # Create models table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS models (
-            id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            description TEXT,
-            model_type TEXT NOT NULL,
-            version TEXT NOT NULL,
-            status TEXT NOT NULL,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
+            "\n        CREATE TABLE IF NOT EXISTS models (\n            id TEXT PRIMARY KEY,\n            name TEXT NOT NULL,\n            description TEXT,\n            model_type TEXT NOT NULL,\n            version TEXT NOT NULL,\n            status TEXT NOT NULL,\n            created_at TEXT NOT NULL,\n            updated_at TEXT NOT NULL\n        )\n        "
         )
-        """
-        )
-
-        # Create predictions table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS predictions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            model_id TEXT NOT NULL,
-            symbol TEXT NOT NULL,
-            timestamp TEXT NOT NULL,
-            prediction_timestamp TEXT NOT NULL,
-            value REAL NOT NULL,
-            confidence REAL NOT NULL,
-            FOREIGN KEY (model_id) REFERENCES models (id)
+            "\n        CREATE TABLE IF NOT EXISTS predictions (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            model_id TEXT NOT NULL,\n            symbol TEXT NOT NULL,\n            timestamp TEXT NOT NULL,\n            prediction_timestamp TEXT NOT NULL,\n            value REAL NOT NULL,\n            confidence REAL NOT NULL,\n            FOREIGN KEY (model_id) REFERENCES models (id)\n        )\n        "
         )
-        """
-        )
-
-        # Create risk_metrics table
         cursor.execute(
-            """
-        CREATE TABLE IF NOT EXISTS risk_metrics (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            symbol TEXT,
-            portfolio_id TEXT,
-            timestamp TEXT NOT NULL,
-            var REAL NOT NULL,
-            cvar REAL NOT NULL,
-            sharpe_ratio REAL,
-            sortino_ratio REAL,
-            max_drawdown REAL,
-            risk_score INTEGER NOT NULL,
-            risk_level TEXT NOT NULL,
-            FOREIGN KEY (portfolio_id) REFERENCES portfolios (id)
+            "\n        CREATE TABLE IF NOT EXISTS risk_metrics (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            symbol TEXT,\n            portfolio_id TEXT,\n            timestamp TEXT NOT NULL,\n            var REAL NOT NULL,\n            cvar REAL NOT NULL,\n            sharpe_ratio REAL,\n            sortino_ratio REAL,\n            max_drawdown REAL,\n            risk_score INTEGER NOT NULL,\n            risk_level TEXT NOT NULL,\n            FOREIGN KEY (portfolio_id) REFERENCES portfolios (id)\n        )\n        "
         )
-        """
-        )
-
         self.conn.commit()
 
-    def insert_users(self, users: List[Dict[str, Any]]):
+    def insert_users(self, users: List[Dict[str, Any]]) -> Any:
         """
         Insert users into the database.
 
@@ -218,13 +83,9 @@ class TestDatabaseFixture:
             users: List of user data dictionaries
         """
         cursor = self.conn.cursor()
-
         for user in users:
             cursor.execute(
-                """
-            INSERT INTO users (id, username, email, password_hash, first_name, last_name, role, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO users (id, username, email, password_hash, first_name, last_name, role, created_at, updated_at)\n            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)\n            ",
                 (
                     user["id"],
                     user["username"],
@@ -237,10 +98,9 @@ class TestDatabaseFixture:
                     user["updated_at"],
                 ),
             )
-
         self.conn.commit()
 
-    def insert_portfolios(self, portfolios: List[Dict[str, Any]]):
+    def insert_portfolios(self, portfolios: List[Dict[str, Any]]) -> Any:
         """
         Insert portfolios into the database.
 
@@ -248,13 +108,9 @@ class TestDatabaseFixture:
             portfolios: List of portfolio data dictionaries
         """
         cursor = self.conn.cursor()
-
         for portfolio in portfolios:
             cursor.execute(
-                """
-            INSERT INTO portfolios (id, user_id, name, description, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO portfolios (id, user_id, name, description, created_at, updated_at)\n            VALUES (?, ?, ?, ?, ?, ?)\n            ",
                 (
                     portfolio["id"],
                     portfolio["user_id"],
@@ -264,10 +120,9 @@ class TestDatabaseFixture:
                     portfolio["updated_at"],
                 ),
             )
-
         self.conn.commit()
 
-    def insert_positions(self, positions: List[Dict[str, Any]]):
+    def insert_positions(self, positions: List[Dict[str, Any]]) -> Any:
         """
         Insert positions into the database.
 
@@ -275,13 +130,9 @@ class TestDatabaseFixture:
             positions: List of position data dictionaries
         """
         cursor = self.conn.cursor()
-
         for position in positions:
             cursor.execute(
-                """
-            INSERT INTO positions (id, portfolio_id, symbol, quantity, average_entry_price, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO positions (id, portfolio_id, symbol, quantity, average_entry_price, created_at, updated_at)\n            VALUES (?, ?, ?, ?, ?, ?, ?)\n            ",
                 (
                     position["id"],
                     position["portfolio_id"],
@@ -292,10 +143,9 @@ class TestDatabaseFixture:
                     position["updated_at"],
                 ),
             )
-
         self.conn.commit()
 
-    def insert_orders(self, orders: List[Dict[str, Any]]):
+    def insert_orders(self, orders: List[Dict[str, Any]]) -> Any:
         """
         Insert orders into the database.
 
@@ -303,13 +153,9 @@ class TestDatabaseFixture:
             orders: List of order data dictionaries
         """
         cursor = self.conn.cursor()
-
         for order in orders:
             cursor.execute(
-                """
-            INSERT INTO orders (id, user_id, portfolio_id, symbol, side, type, status, quantity, price, filled_quantity, average_fill_price, broker_order_id, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO orders (id, user_id, portfolio_id, symbol, side, type, status, quantity, price, filled_quantity, average_fill_price, broker_order_id, created_at, updated_at)\n            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n            ",
                 (
                     order["id"],
                     order["user_id"],
@@ -327,10 +173,9 @@ class TestDatabaseFixture:
                     order["updated_at"],
                 ),
             )
-
         self.conn.commit()
 
-    def insert_executions(self, executions: List[Dict[str, Any]]):
+    def insert_executions(self, executions: List[Dict[str, Any]]) -> Any:
         """
         Insert executions into the database.
 
@@ -338,13 +183,9 @@ class TestDatabaseFixture:
             executions: List of execution data dictionaries
         """
         cursor = self.conn.cursor()
-
         for execution in executions:
             cursor.execute(
-                """
-            INSERT INTO executions (id, order_id, price, quantity, timestamp, broker_execution_id)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO executions (id, order_id, price, quantity, timestamp, broker_execution_id)\n            VALUES (?, ?, ?, ?, ?, ?)\n            ",
                 (
                     execution["id"],
                     execution["order_id"],
@@ -354,10 +195,9 @@ class TestDatabaseFixture:
                     execution.get("broker_execution_id"),
                 ),
             )
-
         self.conn.commit()
 
-    def insert_market_data(self, market_data: pd.DataFrame):
+    def insert_market_data(self, market_data: pd.DataFrame) -> Any:
         """
         Insert market data into the database.
 
@@ -367,7 +207,7 @@ class TestDatabaseFixture:
         market_data.to_sql("market_data", self.conn, if_exists="append", index=False)
         self.conn.commit()
 
-    def insert_models(self, models: List[Dict[str, Any]]):
+    def insert_models(self, models: List[Dict[str, Any]]) -> Any:
         """
         Insert models into the database.
 
@@ -375,13 +215,9 @@ class TestDatabaseFixture:
             models: List of model data dictionaries
         """
         cursor = self.conn.cursor()
-
         for model in models:
             cursor.execute(
-                """
-            INSERT INTO models (id, name, description, model_type, version, status, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO models (id, name, description, model_type, version, status, created_at, updated_at)\n            VALUES (?, ?, ?, ?, ?, ?, ?, ?)\n            ",
                 (
                     model["id"],
                     model["name"],
@@ -393,10 +229,9 @@ class TestDatabaseFixture:
                     model["updated_at"],
                 ),
             )
-
         self.conn.commit()
 
-    def insert_predictions(self, predictions: List[Dict[str, Any]]):
+    def insert_predictions(self, predictions: List[Dict[str, Any]]) -> Any:
         """
         Insert predictions into the database.
 
@@ -404,13 +239,9 @@ class TestDatabaseFixture:
             predictions: List of prediction data dictionaries
         """
         cursor = self.conn.cursor()
-
         for prediction in predictions:
             cursor.execute(
-                """
-            INSERT INTO predictions (model_id, symbol, timestamp, prediction_timestamp, value, confidence)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO predictions (model_id, symbol, timestamp, prediction_timestamp, value, confidence)\n            VALUES (?, ?, ?, ?, ?, ?)\n            ",
                 (
                     prediction["model_id"],
                     prediction["symbol"],
@@ -420,10 +251,9 @@ class TestDatabaseFixture:
                     prediction["confidence"],
                 ),
             )
-
         self.conn.commit()
 
-    def insert_risk_metrics(self, risk_metrics: List[Dict[str, Any]]):
+    def insert_risk_metrics(self, risk_metrics: List[Dict[str, Any]]) -> Any:
         """
         Insert risk metrics into the database.
 
@@ -431,13 +261,9 @@ class TestDatabaseFixture:
             risk_metrics: List of risk metric data dictionaries
         """
         cursor = self.conn.cursor()
-
         for metric in risk_metrics:
             cursor.execute(
-                """
-            INSERT INTO risk_metrics (symbol, portfolio_id, timestamp, var, cvar, sharpe_ratio, sortino_ratio, max_drawdown, risk_score, risk_level)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
+                "\n            INSERT INTO risk_metrics (symbol, portfolio_id, timestamp, var, cvar, sharpe_ratio, sortino_ratio, max_drawdown, risk_score, risk_level)\n            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n            ",
                 (
                     metric.get("symbol"),
                     metric.get("portfolio_id"),
@@ -451,7 +277,6 @@ class TestDatabaseFixture:
                     metric["risk_level"],
                 ),
             )
-
         self.conn.commit()
 
     def query(self, sql: str, params: Optional[Tuple] = None) -> List[Tuple]:
@@ -466,12 +291,10 @@ class TestDatabaseFixture:
             Query results
         """
         cursor = self.conn.cursor()
-
         if params:
             cursor.execute(sql, params)
         else:
             cursor.execute(sql)
-
         return cursor.fetchall()
 
     def query_df(self, sql: str, params: Optional[Tuple] = None) -> pd.DataFrame:
@@ -492,7 +315,7 @@ class TestDatabaseFixture:
 
 
 @pytest.fixture
-def test_db():
+def test_db() -> Any:
     """Pytest fixture for test database."""
     db = TestDatabaseFixture()
     db.setup()
@@ -503,7 +326,7 @@ def test_db():
 class MockDatabaseManager:
     """Mock database manager for testing."""
 
-    def __init__(self, db_fixture: TestDatabaseFixture):
+    def __init__(self, db_fixture: TestDatabaseFixture) -> Any:
         """
         Initialize the mock database manager.
 
@@ -564,10 +387,8 @@ class MockDatabaseManager:
             User data dictionary
         """
         result = self.db.query("SELECT * FROM users WHERE id = ?", (user_id,))
-
         if not result:
             return None
-
         user = result[0]
         return {
             "id": user[0],
@@ -592,10 +413,8 @@ class MockDatabaseManager:
             User data dictionary
         """
         result = self.db.query("SELECT * FROM users WHERE username = ?", (username,))
-
         if not result:
             return None
-
         user = result[0]
         return {
             "id": user[0],
@@ -633,10 +452,8 @@ class MockDatabaseManager:
             Portfolio data dictionary
         """
         result = self.db.query("SELECT * FROM portfolios WHERE id = ?", (portfolio_id,))
-
         if not result:
             return None
-
         portfolio = result[0]
         return {
             "id": portfolio[0],
@@ -660,7 +477,6 @@ class MockDatabaseManager:
         results = self.db.query(
             "SELECT * FROM portfolios WHERE user_id = ?", (user_id,)
         )
-
         portfolios = []
         for result in results:
             portfolios.append(
@@ -673,7 +489,6 @@ class MockDatabaseManager:
                     "updated_at": result[5],
                 }
             )
-
         return portfolios
 
     def insert_position(self, position: Dict[str, Any]) -> str:
@@ -700,10 +515,8 @@ class MockDatabaseManager:
             Position data dictionary
         """
         result = self.db.query("SELECT * FROM positions WHERE id = ?", (position_id,))
-
         if not result:
             return None
-
         position = result[0]
         return {
             "id": position[0],
@@ -728,7 +541,6 @@ class MockDatabaseManager:
         results = self.db.query(
             "SELECT * FROM positions WHERE portfolio_id = ?", (portfolio_id,)
         )
-
         positions = []
         for result in results:
             positions.append(
@@ -742,7 +554,6 @@ class MockDatabaseManager:
                     "updated_at": result[6],
                 }
             )
-
         return positions
 
     def insert_order(self, order: Dict[str, Any]) -> str:
@@ -769,10 +580,8 @@ class MockDatabaseManager:
             Order data dictionary
         """
         result = self.db.query("SELECT * FROM orders WHERE id = ?", (order_id,))
-
         if not result:
             return None
-
         order = result[0]
         return {
             "id": order[0],
@@ -802,7 +611,6 @@ class MockDatabaseManager:
             List of order data dictionaries
         """
         results = self.db.query("SELECT * FROM orders WHERE user_id = ?", (user_id,))
-
         orders = []
         for result in results:
             orders.append(
@@ -823,7 +631,6 @@ class MockDatabaseManager:
                     "updated_at": result[13],
                 }
             )
-
         return orders
 
     def insert_execution(self, execution: Dict[str, Any]) -> str:
@@ -852,7 +659,6 @@ class MockDatabaseManager:
         results = self.db.query(
             "SELECT * FROM executions WHERE order_id = ?", (order_id,)
         )
-
         executions = []
         for result in results:
             executions.append(
@@ -865,7 +671,6 @@ class MockDatabaseManager:
                     "broker_execution_id": result[5],
                 }
             )
-
         return executions
 
     def insert_market_data(self, market_data: pd.DataFrame) -> bool:
@@ -899,12 +704,7 @@ class MockDatabaseManager:
         Returns:
             DataFrame with market data
         """
-        sql = """
-        SELECT * FROM market_data
-        WHERE symbol = ? AND timeframe = ? AND timestamp BETWEEN ? AND ?
-        ORDER BY timestamp
-        """
-
+        sql = "\n        SELECT * FROM market_data\n        WHERE symbol = ? AND timeframe = ? AND timestamp BETWEEN ? AND ?\n        ORDER BY timestamp\n        "
         return self.db.query_df(sql, (symbol, timeframe, start_date, end_date))
 
     def insert_model(self, model: Dict[str, Any]) -> str:
@@ -931,10 +731,8 @@ class MockDatabaseManager:
             Model data dictionary
         """
         result = self.db.query("SELECT * FROM models WHERE id = ?", (model_id,))
-
         if not result:
             return None
-
         model = result[0]
         return {
             "id": model[0],
@@ -975,14 +773,9 @@ class MockDatabaseManager:
             List of prediction data dictionaries
         """
         results = self.db.query(
-            """
-        SELECT * FROM predictions
-        WHERE model_id = ? AND symbol = ?
-        ORDER BY prediction_timestamp
-        """,
+            "\n        SELECT * FROM predictions\n        WHERE model_id = ? AND symbol = ?\n        ORDER BY prediction_timestamp\n        ",
             (model_id, symbol),
         )
-
         predictions = []
         for result in results:
             predictions.append(
@@ -996,7 +789,6 @@ class MockDatabaseManager:
                     "confidence": result[6],
                 }
             )
-
         return predictions
 
     def insert_risk_metrics(self, risk_metrics: List[Dict[str, Any]]) -> bool:
@@ -1026,14 +818,9 @@ class MockDatabaseManager:
             List of risk metric data dictionaries
         """
         results = self.db.query(
-            """
-        SELECT * FROM risk_metrics
-        WHERE symbol = ?
-        ORDER BY timestamp DESC
-        """,
+            "\n        SELECT * FROM risk_metrics\n        WHERE symbol = ?\n        ORDER BY timestamp DESC\n        ",
             (symbol,),
         )
-
         risk_metrics = []
         for result in results:
             risk_metrics.append(
@@ -1051,7 +838,6 @@ class MockDatabaseManager:
                     "risk_level": result[10],
                 }
             )
-
         return risk_metrics
 
     def get_risk_metrics_by_portfolio_id(
@@ -1067,14 +853,9 @@ class MockDatabaseManager:
             List of risk metric data dictionaries
         """
         results = self.db.query(
-            """
-        SELECT * FROM risk_metrics
-        WHERE portfolio_id = ?
-        ORDER BY timestamp DESC
-        """,
+            "\n        SELECT * FROM risk_metrics\n        WHERE portfolio_id = ?\n        ORDER BY timestamp DESC\n        ",
             (portfolio_id,),
         )
-
         risk_metrics = []
         for result in results:
             risk_metrics.append(
@@ -1092,11 +873,10 @@ class MockDatabaseManager:
                     "risk_level": result[10],
                 }
             )
-
         return risk_metrics
 
 
 @pytest.fixture
-def mock_db_manager(test_db):
+def mock_db_manager(test_db: Any) -> Any:
     """Pytest fixture for mock database manager."""
     return MockDatabaseManager(test_db)

@@ -7,9 +7,7 @@ import sys
 import unittest
 from unittest.mock import MagicMock, patch
 
-# Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from ai_engine.model_manager import ModelManager
 from ai_engine.prediction_service import PredictionService
 from common import NotFoundError, ValidationError
@@ -18,29 +16,19 @@ from common import NotFoundError, ValidationError
 class TestModelManager(unittest.TestCase):
     """Test cases for ModelManager"""
 
-    def setUp(self):
+    def setUp(self) -> Any:
         """Set up test environment"""
-        # Mock config manager
         self.config_manager = MagicMock()
         self.config_manager.get.return_value = "/tmp/test_models"
-
-        # Mock database manager
         self.db_manager = MagicMock()
-
-        # Create model manager
         with patch("os.makedirs"):
             with patch("os.path.exists", return_value=False):
                 self.model_manager = ModelManager(self.config_manager, self.db_manager)
-
-        # Mock registry
         self.model_manager.model_registry = {"models": {}}
-
-        # Mock save registry
         self.model_manager._save_registry = MagicMock()
 
-    def test_create_model(self):
+    def test_create_model(self) -> Any:
         """Test model creation"""
-        # Create model
         model_data = {
             "name": "Test Model",
             "description": "Test model description",
@@ -48,10 +36,7 @@ class TestModelManager(unittest.TestCase):
             "parameters": {"param1": "value1", "param2": "value2"},
             "features": ["feature1", "feature2"],
         }
-
         result = self.model_manager.create_model(model_data)
-
-        # Check result
         self.assertIsInstance(result, dict)
         self.assertTrue("id" in result)
         self.assertEqual(result["name"], "Test Model")
@@ -60,33 +45,26 @@ class TestModelManager(unittest.TestCase):
         self.assertEqual(result["status"], "created")
         self.assertEqual(result["parameters"], {"param1": "value1", "param2": "value2"})
         self.assertEqual(result["features"], ["feature1", "feature2"])
-
-        # Check registry
         model_id = result["id"]
         self.assertTrue(model_id in self.model_manager.model_registry["models"])
         self.assertEqual(
             self.model_manager.model_registry["models"][model_id]["name"], "Test Model"
         )
 
-    def test_create_model_missing_name(self):
+    def test_create_model_missing_name(self) -> Any:
         """Test model creation with missing name"""
-        # Try to create model without name
         model_data = {"type": "lstm"}
-
         with self.assertRaises(ValidationError):
             self.model_manager.create_model(model_data)
 
-    def test_create_model_missing_type(self):
+    def test_create_model_missing_type(self) -> Any:
         """Test model creation with missing type"""
-        # Try to create model without type
         model_data = {"name": "Test Model"}
-
         with self.assertRaises(ValidationError):
             self.model_manager.create_model(model_data)
 
-    def test_get_models(self):
+    def test_get_models(self) -> Any:
         """Test getting all models"""
-        # Add models to registry
         self.model_manager.model_registry["models"] = {
             "model1": {
                 "name": "Model 1",
@@ -106,11 +84,7 @@ class TestModelManager(unittest.TestCase):
                 "metrics": {"accuracy": 0.9},
             },
         }
-
-        # Get models
         models = self.model_manager.get_models()
-
-        # Check result
         self.assertIsInstance(models, list)
         self.assertEqual(len(models), 2)
         self.assertEqual(models[0]["id"], "model1")
@@ -119,9 +93,8 @@ class TestModelManager(unittest.TestCase):
         self.assertEqual(models[1]["name"], "Model 2")
         self.assertEqual(models[1]["metrics"], {"accuracy": 0.9})
 
-    def test_get_model(self):
+    def test_get_model(self) -> Any:
         """Test getting a specific model"""
-        # Add model to registry
         self.model_manager.model_registry["models"] = {
             "model1": {
                 "name": "Model 1",
@@ -134,11 +107,7 @@ class TestModelManager(unittest.TestCase):
                 "features": ["feature1"],
             }
         }
-
-        # Get model
         model = self.model_manager.get_model("model1")
-
-        # Check result
         self.assertIsInstance(model, dict)
         self.assertEqual(model["id"], "model1")
         self.assertEqual(model["name"], "Model 1")
@@ -148,15 +117,13 @@ class TestModelManager(unittest.TestCase):
         self.assertEqual(model["parameters"], {"param1": "value1"})
         self.assertEqual(model["features"], ["feature1"])
 
-    def test_get_model_not_found(self):
+    def test_get_model_not_found(self) -> Any:
         """Test getting a non-existent model"""
-        # Try to get non-existent model
         with self.assertRaises(NotFoundError):
             self.model_manager.get_model("non_existent_model")
 
-    def test_update_model(self):
+    def test_update_model(self) -> Any:
         """Test updating a model"""
-        # Add model to registry
         self.model_manager.model_registry["models"] = {
             "model1": {
                 "name": "Model 1",
@@ -169,18 +136,13 @@ class TestModelManager(unittest.TestCase):
                 "features": ["feature1"],
             }
         }
-
-        # Update model
         update_data = {
             "name": "Updated Model",
             "description": "Updated description",
             "parameters": {"param1": "new_value", "param2": "value2"},
             "features": ["feature1", "feature2"],
         }
-
         result = self.model_manager.update_model("model1", update_data)
-
-        # Check result
         self.assertIsInstance(result, dict)
         self.assertEqual(result["id"], "model1")
         self.assertEqual(result["name"], "Updated Model")
@@ -189,8 +151,6 @@ class TestModelManager(unittest.TestCase):
             result["parameters"], {"param1": "new_value", "param2": "value2"}
         )
         self.assertEqual(result["features"], ["feature1", "feature2"])
-
-        # Check registry
         self.assertEqual(
             self.model_manager.model_registry["models"]["model1"]["name"],
             "Updated Model",
@@ -200,17 +160,14 @@ class TestModelManager(unittest.TestCase):
             "Updated description",
         )
 
-    def test_update_model_not_found(self):
+    def test_update_model_not_found(self) -> Any:
         """Test updating a non-existent model"""
-        # Try to update non-existent model
         update_data = {"name": "Updated Model"}
-
         with self.assertRaises(NotFoundError):
             self.model_manager.update_model("non_existent_model", update_data)
 
-    def test_delete_model(self):
+    def test_delete_model(self) -> Any:
         """Test deleting a model"""
-        # Add model to registry
         self.model_manager.model_registry["models"] = {
             "model1": {
                 "name": "Model 1",
@@ -221,25 +178,17 @@ class TestModelManager(unittest.TestCase):
                 "updated_at": "2023-01-01T00:00:00Z",
             }
         }
-
-        # Mock os.path.exists and os.remove
         with patch("os.path.exists", return_value=True):
             with patch("os.remove"):
-                # Delete model
                 result = self.model_manager.delete_model("model1")
-
-        # Check result
         self.assertIsInstance(result, dict)
         self.assertEqual(result["id"], "model1")
         self.assertEqual(result["name"], "Model 1")
         self.assertTrue(result["deleted"])
-
-        # Check registry
         self.assertFalse("model1" in self.model_manager.model_registry["models"])
 
-    def test_delete_model_not_found(self):
+    def test_delete_model_not_found(self) -> Any:
         """Test deleting a non-existent model"""
-        # Try to delete non-existent model
         with self.assertRaises(NotFoundError):
             self.model_manager.delete_model("non_existent_model")
 
@@ -247,24 +196,15 @@ class TestModelManager(unittest.TestCase):
 class TestPredictionService(unittest.TestCase):
     """Test cases for PredictionService"""
 
-    def setUp(self):
+    def setUp(self) -> Any:
         """Set up test environment"""
-        # Mock config manager
         self.config_manager = MagicMock()
         self.config_manager.get.return_value = "http://localhost:8080"
-
-        # Mock database manager
         self.db_manager = MagicMock()
-
-        # Mock model manager
         self.model_manager = MagicMock()
-
-        # Create prediction service
         self.prediction_service = PredictionService(
             self.config_manager, self.db_manager, self.model_manager
         )
-
-        # Sample market data
         self.market_data = [
             {
                 "timestamp": "2023-01-01T00:00:00Z",
@@ -309,9 +249,8 @@ class TestPredictionService(unittest.TestCase):
         ]
 
     @patch("requests.get")
-    def test_generate_prediction(self, mock_get):
+    def test_generate_prediction(self, mock_get: Any) -> Any:
         """Test prediction generation"""
-        # Mock model manager predict
         self.model_manager.predict.return_value = {
             "symbol": "AAPL",
             "timeframe": "1d",
@@ -323,19 +262,13 @@ class TestPredictionService(unittest.TestCase):
                 {"timestamp": "2023-01-10T00:00:00Z", "value": 125.0},
             ],
         }
-
-        # Mock requests.get
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"data": [self.market_data[-1]]}
         mock_get.return_value = mock_response
-
-        # Generate prediction
         result = self.prediction_service.generate_prediction(
             model_id="model1", symbol="AAPL", timeframe="1d", period="1mo", horizon=5
         )
-
-        # Check result
         self.assertIsInstance(result, dict)
         self.assertEqual(result["symbol"], "AAPL")
         self.assertEqual(result["model_id"], "model1")
@@ -349,26 +282,23 @@ class TestPredictionService(unittest.TestCase):
         self.assertTrue("direction" in result["prediction"])
         self.assertEqual(len(result["predictions"]), 5)
 
-    def test_generate_prediction_missing_model_id(self):
+    def test_generate_prediction_missing_model_id(self) -> Any:
         """Test prediction generation with missing model ID"""
-        # Try to generate prediction without model ID
         with self.assertRaises(ValidationError):
             self.prediction_service.generate_prediction(
                 model_id="", symbol="AAPL", timeframe="1d", period="1mo", horizon=5
             )
 
-    def test_generate_prediction_missing_symbol(self):
+    def test_generate_prediction_missing_symbol(self) -> Any:
         """Test prediction generation with missing symbol"""
-        # Try to generate prediction without symbol
         with self.assertRaises(ValidationError):
             self.prediction_service.generate_prediction(
                 model_id="model1", symbol="", timeframe="1d", period="1mo", horizon=5
             )
 
     @patch("requests.get")
-    def test_generate_signals(self, mock_get):
+    def test_generate_signals(self, mock_get: Any) -> Any:
         """Test signal generation"""
-        # Mock model manager predict
         self.model_manager.predict.return_value = {
             "symbol": "AAPL",
             "timeframe": "1d",
@@ -380,14 +310,10 @@ class TestPredictionService(unittest.TestCase):
                 {"timestamp": "2023-01-10T00:00:00Z", "value": 125.0},
             ],
         }
-
-        # Mock requests.get
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"data": [self.market_data[-1]]}
         mock_get.return_value = mock_response
-
-        # Generate signals
         result = self.prediction_service.generate_signals(
             symbols=["AAPL", "MSFT"],
             model_id="model1",
@@ -395,16 +321,12 @@ class TestPredictionService(unittest.TestCase):
             period="1mo",
             strategy="prediction",
         )
-
-        # Check result
         self.assertIsInstance(result, dict)
         self.assertEqual(result["strategy"], "prediction")
         self.assertEqual(result["model_id"], "model1")
         self.assertTrue("signals" in result)
         self.assertTrue("count" in result)
         self.assertTrue("generated_at" in result)
-
-        # Check signals
         signals = result["signals"]
         self.assertIsInstance(signals, list)
         self.assertEqual(len(signals), 2)
@@ -414,9 +336,8 @@ class TestPredictionService(unittest.TestCase):
         self.assertTrue("price" in signals[0])
         self.assertTrue("prediction" in signals[0])
 
-    def test_generate_signals_missing_symbols(self):
+    def test_generate_signals_missing_symbols(self) -> Any:
         """Test signal generation with missing symbols"""
-        # Try to generate signals without symbols
         with self.assertRaises(ValidationError):
             self.prediction_service.generate_signals(
                 symbols=[],
@@ -426,9 +347,8 @@ class TestPredictionService(unittest.TestCase):
                 strategy="prediction",
             )
 
-    def test_generate_signals_missing_model_id(self):
+    def test_generate_signals_missing_model_id(self) -> Any:
         """Test signal generation with missing model ID"""
-        # Try to generate signals without model ID
         with self.assertRaises(ValidationError):
             self.prediction_service.generate_signals(
                 symbols=["AAPL", "MSFT"],
@@ -438,9 +358,8 @@ class TestPredictionService(unittest.TestCase):
                 strategy="prediction",
             )
 
-    def test_generate_signals_invalid_strategy(self):
+    def test_generate_signals_invalid_strategy(self) -> Any:
         """Test signal generation with invalid strategy"""
-        # Try to generate signals with invalid strategy
         with self.assertRaises(ValidationError):
             self.prediction_service.generate_signals(
                 symbols=["AAPL", "MSFT"],

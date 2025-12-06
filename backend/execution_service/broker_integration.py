@@ -5,26 +5,21 @@ Handles integration with various brokers.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 from datetime import datetime
 from typing import Any, Dict, List
-
 import alpaca_trade_api as tradeapi
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import NotFoundError, ServiceError, ValidationError, setup_logger
 
-# Configure logging
 logger = setup_logger("broker_integration", logging.INFO)
 
 
 class BrokerIntegration:
     """Broker integration"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize broker integration
 
         Args:
@@ -33,8 +28,6 @@ class BrokerIntegration:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Initialize brokers
         self.brokers = {
             "alpaca": {
                 "name": "Alpaca",
@@ -57,8 +50,6 @@ class BrokerIntegration:
                 "status": "inactive",
             },
         }
-
-        # Initialize Alpaca API
         if self.brokers["alpaca"]["api_key"] and self.brokers["alpaca"]["api_secret"]:
             self.alpaca_api = tradeapi.REST(
                 key_id=self.brokers["alpaca"]["api_key"],
@@ -68,7 +59,6 @@ class BrokerIntegration:
         else:
             self.alpaca_api = None
             self.brokers["alpaca"]["status"] = "inactive"
-
         logger.info("Broker integration initialized")
 
     def get_brokers(self) -> List[Dict[str, Any]]:
@@ -78,7 +68,6 @@ class BrokerIntegration:
             List of brokers
         """
         brokers = []
-
         for broker_id, broker in self.brokers.items():
             brokers.append(
                 {
@@ -88,7 +77,6 @@ class BrokerIntegration:
                     "status": broker["status"],
                 }
             )
-
         return brokers
 
     def get_broker(self, broker_id: str) -> Dict[str, Any]:
@@ -105,9 +93,7 @@ class BrokerIntegration:
         """
         if broker_id not in self.brokers:
             raise NotFoundError(f"Broker not found: {broker_id}")
-
         broker = self.brokers[broker_id]
-
         return {
             "id": broker_id,
             "name": broker["name"],
@@ -131,18 +117,14 @@ class BrokerIntegration:
         try:
             if broker_id not in self.brokers:
                 raise NotFoundError(f"Broker not found: {broker_id}")
-
             if self.brokers[broker_id]["status"] != "active":
                 raise ServiceError(f"Broker is not active: {broker_id}")
-
             if broker_id == "alpaca":
                 return self._get_alpaca_accounts()
             else:
                 raise ServiceError(f"Broker not implemented: {broker_id}")
-
         except NotFoundError:
             raise
-
         except Exception as e:
             logger.error(f"Error getting accounts: {e}")
             raise ServiceError(f"Error getting accounts: {str(e)}")
@@ -164,18 +146,14 @@ class BrokerIntegration:
         try:
             if broker_id not in self.brokers:
                 raise NotFoundError(f"Broker not found: {broker_id}")
-
             if self.brokers[broker_id]["status"] != "active":
                 raise ServiceError(f"Broker is not active: {broker_id}")
-
             if broker_id == "alpaca":
                 return self._get_alpaca_positions(account_id)
             else:
                 raise ServiceError(f"Broker not implemented: {broker_id}")
-
         except NotFoundError:
             raise
-
         except Exception as e:
             logger.error(f"Error getting positions: {e}")
             raise ServiceError(f"Error getting positions: {str(e)}")
@@ -198,31 +176,22 @@ class BrokerIntegration:
         try:
             if broker_id not in self.brokers:
                 raise NotFoundError(f"Broker not found: {broker_id}")
-
             if self.brokers[broker_id]["status"] != "active":
                 raise ServiceError(f"Broker is not active: {broker_id}")
-
-            # Validate order
             if "symbol" not in order:
                 raise ValidationError("Symbol is required")
-
             if "side" not in order:
                 raise ValidationError("Side is required")
-
             if "type" not in order:
                 raise ValidationError("Order type is required")
-
             if "quantity" not in order:
                 raise ValidationError("Quantity is required")
-
             if broker_id == "alpaca":
                 return self._submit_alpaca_order(order)
             else:
                 raise ServiceError(f"Broker not implemented: {broker_id}")
-
         except (NotFoundError, ValidationError):
             raise
-
         except Exception as e:
             logger.error(f"Error submitting order: {e}")
             raise ServiceError(f"Error submitting order: {str(e)}")
@@ -244,18 +213,14 @@ class BrokerIntegration:
         try:
             if broker_id not in self.brokers:
                 raise NotFoundError(f"Broker not found: {broker_id}")
-
             if self.brokers[broker_id]["status"] != "active":
                 raise ServiceError(f"Broker is not active: {broker_id}")
-
             if broker_id == "alpaca":
                 return self._cancel_alpaca_order(broker_order_id)
             else:
                 raise ServiceError(f"Broker not implemented: {broker_id}")
-
         except NotFoundError:
             raise
-
         except Exception as e:
             logger.error(f"Error canceling order: {e}")
             raise ServiceError(f"Error canceling order: {str(e)}")
@@ -277,18 +242,14 @@ class BrokerIntegration:
         try:
             if broker_id not in self.brokers:
                 raise NotFoundError(f"Broker not found: {broker_id}")
-
             if self.brokers[broker_id]["status"] != "active":
                 raise ServiceError(f"Broker is not active: {broker_id}")
-
             if broker_id == "alpaca":
                 return self._get_alpaca_order_status(broker_order_id)
             else:
                 raise ServiceError(f"Broker not implemented: {broker_id}")
-
         except NotFoundError:
             raise
-
         except Exception as e:
             logger.error(f"Error getting order status: {e}")
             raise ServiceError(f"Error getting order status: {str(e)}")
@@ -305,11 +266,7 @@ class BrokerIntegration:
         try:
             if not self.alpaca_api:
                 raise ServiceError("Alpaca API not initialized")
-
-            # Get account
             account = self.alpaca_api.get_account()
-
-            # Convert to dictionary
             account_dict = {
                 "id": account.id,
                 "status": account.status,
@@ -327,9 +284,7 @@ class BrokerIntegration:
                     else None
                 ),
             }
-
             return [account_dict]
-
         except Exception as e:
             logger.error(f"Error getting Alpaca accounts: {e}")
             raise ServiceError(f"Error getting Alpaca accounts: {str(e)}")
@@ -349,13 +304,8 @@ class BrokerIntegration:
         try:
             if not self.alpaca_api:
                 raise ServiceError("Alpaca API not initialized")
-
-            # Get positions
             positions = self.alpaca_api.list_positions()
-
-            # Convert to dictionaries
             position_dicts = []
-
             for position in positions:
                 position_dict = {
                     "symbol": position.symbol,
@@ -369,11 +319,8 @@ class BrokerIntegration:
                     "unrealized_plpc": float(position.unrealized_plpc),
                     "exchange": position.exchange,
                 }
-
                 position_dicts.append(position_dict)
-
             return position_dicts
-
         except Exception as e:
             logger.error(f"Error getting Alpaca positions: {e}")
             raise ServiceError(f"Error getting Alpaca positions: {str(e)}")
@@ -393,18 +340,13 @@ class BrokerIntegration:
         try:
             if not self.alpaca_api:
                 raise ServiceError("Alpaca API not initialized")
-
-            # Map order type
             order_type_map = {
                 "market": "market",
                 "limit": "limit",
                 "stop": "stop",
                 "stop_limit": "stop_limit",
             }
-
             alpaca_order_type = order_type_map.get(order["type"], "market")
-
-            # Map time in force
             time_in_force_map = {
                 "day": "day",
                 "gtc": "gtc",
@@ -413,12 +355,9 @@ class BrokerIntegration:
                 "ioc": "ioc",
                 "fok": "fok",
             }
-
             alpaca_time_in_force = time_in_force_map.get(
                 order.get("time_in_force", "day"), "day"
             )
-
-            # Submit order
             alpaca_order = self.alpaca_api.submit_order(
                 symbol=order["symbol"],
                 qty=order["quantity"],
@@ -428,8 +367,6 @@ class BrokerIntegration:
                 limit_price=order.get("price"),
                 stop_price=order.get("stop_price"),
             )
-
-            # Convert to dictionary
             order_dict = {
                 "broker_order_id": alpaca_order.id,
                 "status": alpaca_order.status,
@@ -480,9 +417,7 @@ class BrokerIntegration:
                     else None
                 ),
             }
-
             return order_dict
-
         except Exception as e:
             logger.error(f"Error submitting Alpaca order: {e}")
             raise ServiceError(f"Error submitting Alpaca order: {str(e)}")
@@ -502,16 +437,12 @@ class BrokerIntegration:
         try:
             if not self.alpaca_api:
                 raise ServiceError("Alpaca API not initialized")
-
-            # Cancel order
             self.alpaca_api.cancel_order(broker_order_id)
-
             return {
                 "broker_order_id": broker_order_id,
                 "status": "canceled",
                 "canceled_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error canceling Alpaca order: {e}")
             raise ServiceError(f"Error canceling Alpaca order: {str(e)}")
@@ -531,11 +462,7 @@ class BrokerIntegration:
         try:
             if not self.alpaca_api:
                 raise ServiceError("Alpaca API not initialized")
-
-            # Get order
             alpaca_order = self.alpaca_api.get_order(broker_order_id)
-
-            # Convert to dictionary
             order_dict = {
                 "broker_order_id": alpaca_order.id,
                 "status": alpaca_order.status,
@@ -586,9 +513,7 @@ class BrokerIntegration:
                     else None
                 ),
             }
-
             return order_dict
-
         except Exception as e:
             logger.error(f"Error getting Alpaca order status: {e}")
             raise ServiceError(f"Error getting Alpaca order status: {str(e)}")

@@ -3,7 +3,6 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from typing import Any, Dict, List, Optional
-
 import bcrypt
 import pyotp
 import redis
@@ -17,14 +16,11 @@ from flask_jwt_extended import (
     get_jwt_identity,
     jwt_required,
 )
-
 from .audit import log_security_event
 from .database import get_db_session
 from .models import User, UserSession
 
 logger = structlog.get_logger(__name__)
-
-# Redis client for token blacklisting and session management
 redis_client = redis.Redis(
     host=os.getenv("REDIS_HOST", "localhost"),
     port=int(os.getenv("REDIS_PORT", 6379)),
@@ -44,44 +40,33 @@ class AuthorizationError(Exception):
 class SecurityConfig:
     """Security configuration constants"""
 
-    # Password policy
     MIN_PASSWORD_LENGTH = 12
     REQUIRE_UPPERCASE = True
     REQUIRE_LOWERCASE = True
     REQUIRE_NUMBERS = True
     REQUIRE_SPECIAL_CHARS = True
-
-    # Account lockout
     MAX_LOGIN_ATTEMPTS = 5
-    LOCKOUT_DURATION = 30  # minutes
-
-    # Session management
+    LOCKOUT_DURATION = 30
     MAX_CONCURRENT_SESSIONS = 3
-    SESSION_TIMEOUT = 8  # hours
-
-    # Token settings
+    SESSION_TIMEOUT = 8
     ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     REFRESH_TOKEN_EXPIRES = timedelta(days=30)
-
-    # MFA settings
-    MFA_TOKEN_VALIDITY = 300  # seconds
+    MFA_TOKEN_VALIDITY = 300
     BACKUP_CODES_COUNT = 10
 
 
 class AuthManager:
 
-    def __init__(self, app=None):
+    def __init__(self, app: Any = None) -> Any:
         self.app = app
         self.jwt = JWTManager()
         if app:
             self.init_app(app)
 
-    def init_app(self, app):
+    def init_app(self, app: Any) -> Any:
         """Initialize authentication with Flask app"""
         self.app = app
         self.jwt.init_app(app)
-
-        # Configure JWT settings
         app.config["JWT_SECRET_KEY"] = os.getenv(
             "JWT_SECRET_KEY", secrets.token_urlsafe(32)
         )
@@ -90,11 +75,9 @@ class AuthManager:
         app.config["JWT_ALGORITHM"] = "HS256"
         app.config["JWT_BLACKLIST_ENABLED"] = True
         app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
-
-        # Register JWT callbacks
         self._register_jwt_callbacks()
 
-    def _register_jwt_callbacks(self):
+    def _register_jwt_callbacks(self) -> Any:
         """Register JWT event callbacks"""
 
         @self.jwt.token_in_blocklist_loader
@@ -110,18 +93,18 @@ class AuthManager:
                 "token_expired",
                 {"user_id": jwt_payload.get("sub"), "jti": jwt_payload.get("jti")},
             )
-            return jsonify({"error": "Token has expired"}), 401
+            return (jsonify({"error": "Token has expired"}), 401)
 
         @self.jwt.invalid_token_loader
         def invalid_token_callback(error):
             """Handle invalid token"""
             log_security_event("invalid_token", {"error": str(error)})
-            return jsonify({"error": "Invalid token"}), 401
+            return (jsonify({"error": "Invalid token"}), 401)
 
         @self.jwt.unauthorized_loader
         def missing_token_callback(error):
             """Handle missing token"""
-            return jsonify({"error": "Authorization token required"}), 401
+            return (jsonify({"error": "Authorization token required"}), 401)
 
     def hash_password(self, password: str) -> str:
         """Hash password using bcrypt with salt"""
@@ -156,19 +139,16 @@ class AuthManager:
             return True
         return False
 
-    def record_failed_attempt(self, user_id: int):
+    def record_failed_attempt(self, user_id: int) -> Any:
         """Record failed login attempt"""
         key = f"attempts:{user_id}"
         attempts = redis_client.incr(key)
         redis_client.expire(key, SecurityConfig.LOCKOUT_DURATION * 60)
-
         if attempts >= SecurityConfig.MAX_LOGIN_ATTEMPTS:
-            # Lock account
             lockout_key = f"lockout:{user_id}"
             redis_client.setex(
                 lockout_key, SecurityConfig.LOCKOUT_DURATION * 60, "locked"
             )
-
             log_security_event(
                 "account_locked",
                 {
@@ -178,7 +158,7 @@ class AuthManager:
                 },
             )
 
-    def clear_failed_attempts(self, user_id: int):
+    def clear_failed_attempts(self, user_id: int) -> Any:
         """Clear failed login attempts after successful login"""
         redis_client.delete(f"attempts:{user_id}")
 
@@ -186,10 +166,7 @@ class AuthManager:
         self, user: User, ip_address: str, user_agent: str
     ) -> Dict[str, Any]:
         """Create authenticated session with tokens"""
-        # Check concurrent sessions limit
         self._enforce_session_limit(user.id)
-
-        # Generate tokens
         additional_claims = {
             "user_id": user.id,
             "email": user.email,
@@ -198,13 +175,10 @@ class AuthManager:
             "mfa_verified": user.mfa_enabled and user.mfa_verified,
             "session_id": secrets.token_urlsafe(16),
         }
-
         access_token = create_access_token(
             identity=user.id, additional_claims=additional_claims
         )
         refresh_token = create_refresh_token(identity=user.id)
-
-        # Store session in database
         session = UserSession(
             user_id=user.id,
             session_id=additional_claims["session_id"],
@@ -215,12 +189,9 @@ class AuthManager:
             + SecurityConfig.SESSION_TIMEOUT * timedelta(hours=1),
             is_active=True,
         )
-
         db_session = get_db_session()
         db_session.add(session)
         db_session.commit()
-
-        # Log successful login
         log_security_event(
             "login_success",
             {
@@ -230,7 +201,6 @@ class AuthManager:
                 "session_id": additional_claims["session_id"],
             },
         )
-
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,
@@ -246,7 +216,7 @@ class AuthManager:
             },
         }
 
-    def _enforce_session_limit(self, user_id: int):
+    def _enforce_session_limit(self, user_id: int) -> Any:
         """Enforce maximum concurrent sessions"""
         db_session = get_db_session()
         active_sessions = (
@@ -259,45 +229,34 @@ class AuthManager:
             .order_by(UserSession.created_at.desc())
             .all()
         )
-
         if len(active_sessions) >= SecurityConfig.MAX_CONCURRENT_SESSIONS:
-            # Deactivate oldest sessions
             sessions_to_deactivate = active_sessions[
                 SecurityConfig.MAX_CONCURRENT_SESSIONS - 1 :
             ]
             for session in sessions_to_deactivate:
                 session.is_active = False
-                # Blacklist associated tokens
                 self._blacklist_session_tokens(session.session_id)
-
             db_session.commit()
 
-    def _blacklist_session_tokens(self, session_id: str):
+    def _blacklist_session_tokens(self, session_id: str) -> Any:
         """Blacklist all tokens for a session"""
-        # This would require storing token JTIs with session IDs
-        # For now, we'll implement a simpler approach
 
-    def logout(self, token_jti: str, user_id: int):
+    def logout(self, token_jti: str, user_id: int) -> Any:
         """Logout user and blacklist token"""
-        # Blacklist the token
         redis_client.setex(
             f"blacklist:{token_jti}",
             int(SecurityConfig.ACCESS_TOKEN_EXPIRES.total_seconds()),
             "blacklisted",
         )
-
-        # Deactivate session
         db_session = get_db_session()
         session = (
             db_session.query(UserSession)
             .filter(UserSession.user_id == user_id, UserSession.is_active == True)
             .first()
         )
-
         if session:
             session.is_active = False
             db_session.commit()
-
         log_security_event("logout", {"user_id": user_id, "token_jti": token_jti})
 
     def authenticate_user(
@@ -306,22 +265,17 @@ class AuthManager:
         """Authenticate user with email/password and optional MFA"""
         db_session = get_db_session()
         user = db_session.query(User).filter(User.email == email).first()
-
         if not user:
             log_security_event(
                 "login_failed", {"email": email, "reason": "user_not_found"}
             )
             return None
-
-        # Check account lockout
         if self.check_account_lockout(user.id):
             log_security_event(
                 "login_blocked",
                 {"user_id": user.id, "email": email, "reason": "account_locked"},
             )
             raise AuthenticationError("Account is temporarily locked")
-
-        # Verify password
         if not self.verify_password(password, user.password_hash):
             self.record_failed_attempt(user.id)
             log_security_event(
@@ -329,32 +283,22 @@ class AuthManager:
                 {"user_id": user.id, "email": email, "reason": "invalid_password"},
             )
             return None
-
-        # Check MFA if enabled
         if user.mfa_enabled:
             if not mfa_token:
                 log_security_event("mfa_required", {"user_id": user.id, "email": email})
                 raise AuthenticationError("MFA token required")
-
             if not self.verify_mfa_token(user.mfa_secret, mfa_token):
                 self.record_failed_attempt(user.id)
                 log_security_event("mfa_failed", {"user_id": user.id, "email": email})
                 return None
-
             user.mfa_verified = True
-
-        # Clear failed attempts on successful authentication
         self.clear_failed_attempts(user.id)
-
-        # Update last login
         user.last_login = datetime.now(timezone.utc)
         db_session.commit()
-
         return user
 
 
-# Authentication decorators
-def require_auth(f):
+def require_auth(f: Any) -> Any:
     """Decorator to require authentication"""
 
     @wraps(f)
@@ -365,16 +309,16 @@ def require_auth(f):
     return decorated_function
 
 
-def require_role(required_role: str):
+def require_role(required_role: str) -> Any:
     """Decorator to require specific role"""
 
     def decorator(f):
+
         @wraps(f)
         @jwt_required()
         def decorated_function(*args, **kwargs):
             claims = get_jwt()
             user_role = claims.get("role")
-
             if user_role != required_role:
                 log_security_event(
                     "authorization_failed",
@@ -385,7 +329,6 @@ def require_role(required_role: str):
                     },
                 )
                 raise AuthorizationError(f"Role '{required_role}' required")
-
             return f(*args, **kwargs)
 
         return decorated_function
@@ -393,16 +336,16 @@ def require_role(required_role: str):
     return decorator
 
 
-def require_permission(permission: str):
+def require_permission(permission: str) -> Any:
     """Decorator to require specific permission"""
 
     def decorator(f):
+
         @wraps(f)
         @jwt_required()
         def decorated_function(*args, **kwargs):
             claims = get_jwt()
             user_permissions = claims.get("permissions", [])
-
             if permission not in user_permissions:
                 log_security_event(
                     "authorization_failed",
@@ -413,7 +356,6 @@ def require_permission(permission: str):
                     },
                 )
                 raise AuthorizationError(f"Permission '{permission}' required")
-
             return f(*args, **kwargs)
 
         return decorated_function
@@ -421,7 +363,7 @@ def require_permission(permission: str):
     return decorator
 
 
-def require_mfa(f):
+def require_mfa(f: Any) -> Any:
     """Decorator to require MFA verification"""
 
     @wraps(f)
@@ -429,18 +371,15 @@ def require_mfa(f):
     def decorated_function(*args, **kwargs):
         claims = get_jwt()
         mfa_verified = claims.get("mfa_verified", False)
-
         if not mfa_verified:
             log_security_event(
                 "mfa_required",
                 {"user_id": get_jwt_identity(), "endpoint": request.endpoint},
             )
-            return jsonify({"error": "MFA verification required"}), 403
-
+            return (jsonify({"error": "MFA verification required"}), 403)
         return f(*args, **kwargs)
 
     return decorated_function
 
 
-# Initialize auth manager
 auth_manager = AuthManager()

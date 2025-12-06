@@ -6,23 +6,19 @@ import os
 import sys
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock
-
 import numpy as np
 import pandas as pd
 import pytest
 
-# Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Import project modules
 try:
     pass
 except ImportError:
-    pass  # Handle imports gracefully when modules are not available
+    pass
 
 
 @pytest.fixture
-def config_manager():
+def config_manager() -> Any:
     """Fixture for ConfigManager with test configuration."""
     config = {
         "database": {
@@ -47,45 +43,35 @@ def config_manager():
         },
         "security": {"jwt_secret": "test_secret", "jwt_expiration": 3600},
     }
-
     cm = MagicMock()
     cm.get_config.return_value = config
     cm.get_database_config.return_value = config["database"]
     cm.get_service_config.return_value = config["services"]
     cm.get_logging_config.return_value = config["logging"]
     cm.get_security_config.return_value = config["security"]
-
     return cm
 
 
 @pytest.fixture
-def db_manager(config_manager):
+def db_manager(config_manager: Any) -> Any:
     """Fixture for DatabaseManager with mocked connections."""
     db_manager = MagicMock()
-
-    # Mock PostgreSQL session
     postgres_session = MagicMock()
     db_manager.get_postgres_session.return_value = postgres_session
-
-    # Mock Redis connection
     redis_conn = MagicMock()
     db_manager.get_redis_connection.return_value = redis_conn
-
     return db_manager
 
 
 @pytest.fixture
-def sample_market_data():
+def sample_market_data() -> Any:
     """Fixture for sample market data."""
-    # Generate sample market data for testing
     dates = pd.date_range(start="2023-01-01", periods=30)
     data = []
-
     price = 100.0
     for date in dates:
-        price = price * (1 + np.random.normal(0, 0.01))  # Random price movement
-        volume = int(1000000 + np.random.normal(0, 100000))  # Random volume
-
+        price = price * (1 + np.random.normal(0, 0.01))
+        volume = int(1000000 + np.random.normal(0, 100000))
         data.append(
             {
                 "timestamp": date.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -97,12 +83,11 @@ def sample_market_data():
                 "symbol": "AAPL",
             }
         )
-
     return data
 
 
 @pytest.fixture
-def sample_user():
+def sample_user() -> Any:
     """Fixture for sample user data."""
     return {
         "id": "user_1234567890",
@@ -117,7 +102,7 @@ def sample_user():
 
 
 @pytest.fixture
-def sample_portfolio():
+def sample_portfolio() -> Any:
     """Fixture for sample portfolio data."""
     return {
         "id": "portfolio_1234567890",
@@ -147,7 +132,7 @@ def sample_portfolio():
 
 
 @pytest.fixture
-def sample_strategy():
+def sample_strategy() -> Any:
     """Fixture for sample strategy data."""
     return {
         "id": "strategy_1234567890",
@@ -173,7 +158,7 @@ def sample_strategy():
 
 
 @pytest.fixture
-def sample_model():
+def sample_model() -> Any:
     """Fixture for sample model data."""
     return {
         "id": "model_1234567890",
@@ -199,7 +184,7 @@ def sample_model():
 
 
 @pytest.fixture
-def sample_signal():
+def sample_signal() -> Any:
     """Fixture for sample signal data."""
     return {
         "id": "signal_1234567890",
@@ -217,7 +202,7 @@ def sample_signal():
 
 
 @pytest.fixture
-def sample_order():
+def sample_order() -> Any:
     """Fixture for sample order data."""
     return {
         "id": "order_1234567890",
@@ -240,7 +225,7 @@ def sample_order():
 
 
 @pytest.fixture
-def sample_execution():
+def sample_execution() -> Any:
     """Fixture for sample execution data."""
     return {
         "id": "execution_1234567890",
@@ -253,7 +238,7 @@ def sample_execution():
 
 
 @pytest.fixture
-def sample_returns():
+def sample_returns() -> Any:
     """Fixture for sample returns data."""
     return np.array(
         [0.01, -0.02, 0.005, 0.008, -0.01, 0.02, -0.015, 0.012, -0.005, 0.018]
@@ -261,7 +246,7 @@ def sample_returns():
 
 
 @pytest.fixture
-def sample_equity_curve():
+def sample_equity_curve() -> Any:
     """Fixture for sample equity curve data."""
     return np.array(
         [100000, 101000, 99000, 99500, 100300, 99200, 101000, 99500, 100500, 102000]

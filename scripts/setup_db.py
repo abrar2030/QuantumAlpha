@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 QuantumAlpha Database Setup Script
 
@@ -9,72 +8,56 @@ It supports different environments (dev, staging, prod) and handles both Postgre
 import argparse
 import os
 import sys
-
 import influxdb_client
 import psycopg2
 import yaml
 from dotenv import load_dotenv
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
 from core.logging import get_logger
 
 logger = get_logger(__name__)
-
-# Add project root to path
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, ".."))
 sys.path.insert(0, project_root)
-
-# ANSI color codes for output formatting
-RED = "\033[0;31m"
-GREEN = "\033[0;32m"
-YELLOW = "\033[0;33m"
-BLUE = "\033[0;34m"
-NC = "\033[0m"  # No Color
+RED = "\x1b[0;31m"
+GREEN = "\x1b[0;32m"
+YELLOW = "\x1b[0;33m"
+BLUE = "\x1b[0;34m"
+NC = "\x1b[0m"
 
 
-def print_colored(message, color=NC):
+def print_colored(message: Any, color: Any = NC) -> Any:
     """Print colored message to console."""
     logger.info(f"{color}{message}{NC}")
 
 
-def load_config(env):
+def load_config(env: Any) -> Any:
     """Load configuration for the specified environment."""
-    # Load environment variables
     env_file = os.path.join(project_root, "config", f".env.{env}")
     if not os.path.exists(env_file):
         print_colored(f"Error: Environment file not found: {env_file}", RED)
         sys.exit(1)
-
     load_dotenv(env_file)
-
-    # Load database configuration
     postgres_config_file = os.path.join(
         project_root, "config", "database", "postgres.yaml"
     )
     influxdb_config_file = os.path.join(
         project_root, "config", "database", "influxdb.yaml"
     )
-
     if not os.path.exists(postgres_config_file):
         print_colored(
             f"Error: PostgreSQL config file not found: {postgres_config_file}", RED
         )
         sys.exit(1)
-
     if not os.path.exists(influxdb_config_file):
         print_colored(
             f"Error: InfluxDB config file not found: {influxdb_config_file}", RED
         )
         sys.exit(1)
-
     with open(postgres_config_file, "r") as f:
         postgres_config = yaml.safe_load(f)
-
     with open(influxdb_config_file, "r") as f:
         influxdb_config = yaml.safe_load(f)
-
-    # Replace environment variables in configs
     postgres_config["connection"]["host"] = os.getenv(
         "DB_HOST", postgres_config["connection"].get("host", "localhost")
     )
@@ -90,7 +73,6 @@ def load_config(env):
     postgres_config["connection"]["database"] = os.getenv(
         "DB_NAME", postgres_config["connection"].get("database", "quantumalpha")
     )
-
     influxdb_config["connection"]["url"] = os.getenv(
         "INFLUXDB_URL",
         influxdb_config["connection"].get("url", "http://localhost:8086"),
@@ -101,17 +83,13 @@ def load_config(env):
     influxdb_config["connection"]["token"] = os.getenv(
         "INFLUXDB_TOKEN", influxdb_config["connection"].get("token", "")
     )
-
     return {"postgres": postgres_config, "influxdb": influxdb_config}
 
 
-def setup_postgres(config, args):
+def setup_postgres(config: Any, args: Any) -> Any:
     """Set up PostgreSQL database."""
     print_colored("\nSetting up PostgreSQL database...", BLUE)
-
     conn_params = config["postgres"]["connection"]
-
-    # Connect to PostgreSQL server to create database if it doesn't exist
     try:
         conn = psycopg2.connect(
             host=conn_params["host"],
@@ -121,27 +99,21 @@ def setup_postgres(config, args):
         )
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = conn.cursor()
-
-        # Check if database exists
         cursor.execute(
             f"SELECT 1 FROM pg_database WHERE datname = '{conn_params['database']}'"
         )
         exists = cursor.fetchone()
-
         if not exists:
             print_colored(f"Creating database: {conn_params['database']}", YELLOW)
             cursor.execute(f"CREATE DATABASE {conn_params['database']}")
             print_colored(f"Database created: {conn_params['database']}", GREEN)
         else:
             print_colored(f"Database already exists: {conn_params['database']}", GREEN)
-
         cursor.close()
         conn.close()
     except Exception as e:
         print_colored(f"Error connecting to PostgreSQL server: {e}", RED)
         return False
-
-    # Connect to the database and create schema
     try:
         conn = psycopg2.connect(
             host=conn_params["host"],
@@ -151,31 +123,23 @@ def setup_postgres(config, args):
             database=conn_params["database"],
         )
         cursor = conn.cursor()
-
-        # Execute schema creation scripts
         schema_dir = os.path.join(project_root, "backend", "scripts", "init-db")
-
         if not os.path.exists(schema_dir):
             print_colored(f"Error: Schema directory not found: {schema_dir}", RED)
             return False
-
         schema_files = sorted([f for f in os.listdir(schema_dir) if f.endswith(".sql")])
-
         if not schema_files:
             print_colored("No schema files found", RED)
             return False
-
         for schema_file in schema_files:
             print_colored(f"Executing schema file: {schema_file}", YELLOW)
             with open(os.path.join(schema_dir, schema_file), "r") as f:
                 sql = f.read()
                 cursor.execute(sql)
             print_colored(f"Schema file executed: {schema_file}", GREEN)
-
         conn.commit()
         cursor.close()
         conn.close()
-
         print_colored("PostgreSQL database setup completed successfully", GREEN)
         return True
     except Exception as e:
@@ -183,34 +147,23 @@ def setup_postgres(config, args):
         return False
 
 
-def setup_influxdb(config, args):
+def setup_influxdb(config: Any, args: Any) -> Any:
     """Set up InfluxDB database."""
     print_colored("\nSetting up InfluxDB...", BLUE)
-
     conn_params = config["influxdb"]["connection"]
-
     try:
-        # Create InfluxDB client
         client = influxdb_client.InfluxDBClient(
             url=conn_params["url"], token=conn_params["token"], org=conn_params["org"]
         )
-
-        # Check if client is connected
         health = client.health()
         if health.status != "pass":
             print_colored(f"Error: InfluxDB health check failed: {health.message}", RED)
             return False
-
         print_colored("Connected to InfluxDB", GREEN)
-
-        # Create buckets
         buckets_api = client.buckets_api()
-
         for bucket_config in config["influxdb"]["buckets"]:
             bucket_name = bucket_config["name"]
             retention = bucket_config["retention_period"]
-
-            # Convert retention period to seconds
             retention_seconds = 0
             if retention.endswith("d"):
                 retention_seconds = int(retention[:-1]) * 86400
@@ -220,11 +173,8 @@ def setup_influxdb(config, args):
                 retention_seconds = int(retention[:-1]) * 60
             elif retention.endswith("s"):
                 retention_seconds = int(retention[:-1])
-
-            # Check if bucket exists
             buckets = buckets_api.find_buckets().buckets
-            bucket_exists = any(bucket.name == bucket_name for bucket in buckets)
-
+            bucket_exists = any((bucket.name == bucket_name for bucket in buckets))
             if not bucket_exists:
                 print_colored(f"Creating bucket: {bucket_name}", YELLOW)
                 buckets_api.create_bucket(
@@ -239,7 +189,6 @@ def setup_influxdb(config, args):
                 print_colored(f"Bucket created: {bucket_name}", GREEN)
             else:
                 print_colored(f"Bucket already exists: {bucket_name}", GREEN)
-
         print_colored("InfluxDB setup completed successfully", GREEN)
         return True
     except Exception as e:
@@ -247,7 +196,7 @@ def setup_influxdb(config, args):
         return False
 
 
-def main():
+def main() -> Any:
     """Main function."""
     parser = argparse.ArgumentParser(description="QuantumAlpha Database Setup Script")
     parser.add_argument(
@@ -265,25 +214,16 @@ def main():
     parser.add_argument(
         "--no-seed", action="store_true", help="Skip seeding initial data"
     )
-
     args = parser.parse_args()
-
     print_colored(f"QuantumAlpha Database Setup - Environment: {args.env}", BLUE)
-
-    # Load configuration
     config = load_config(args.env)
-
-    # Set up databases
     success = True
-
     if not args.influxdb_only:
         postgres_success = setup_postgres(config, args)
         success = success and postgres_success
-
     if not args.postgres_only:
         influxdb_success = setup_influxdb(config, args)
         success = success and influxdb_success
-
     if success:
         print_colored("\nDatabase setup completed successfully!", GREEN)
         return 0

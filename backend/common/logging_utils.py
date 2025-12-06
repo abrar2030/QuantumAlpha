@@ -27,18 +27,12 @@ def setup_logger(
     """
     logger = logging.getLogger(name)
     logger.setLevel(log_level)
-
-    # Create formatter
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-
-    # Console handler
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
-
-    # File handler (if log_file is provided)
     if log_file:
         os.makedirs(os.path.dirname(log_file), exist_ok=True)
         file_handler = logging.handlers.RotatingFileHandler(
@@ -46,7 +40,6 @@ def setup_logger(
         )
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
-
     return logger
 
 
@@ -58,7 +51,7 @@ class ServiceError(Exception):
         message: str,
         status_code: int = 500,
         details: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> Any:
         """Initialize service error
 
         Args:
@@ -95,7 +88,7 @@ class ServiceError(Exception):
 class ValidationError(ServiceError):
     """Exception for validation errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
         """Initialize validation error
 
         Args:
@@ -108,7 +101,7 @@ class ValidationError(ServiceError):
 class NotFoundError(ServiceError):
     """Exception for resource not found errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
         """Initialize not found error
 
         Args:
@@ -121,7 +114,7 @@ class NotFoundError(ServiceError):
 class AuthenticationError(ServiceError):
     """Exception for authentication errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
         """Initialize authentication error
 
         Args:
@@ -134,7 +127,7 @@ class AuthenticationError(ServiceError):
 class AuthorizationError(ServiceError):
     """Exception for authorization errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
         """Initialize authorization error
 
         Args:
@@ -155,6 +148,7 @@ def log_exceptions(logger: logging.Logger) -> Callable:
     """
 
     def decorator(func: Callable) -> Callable:
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:

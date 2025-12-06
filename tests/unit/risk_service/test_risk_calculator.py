@@ -6,20 +6,16 @@ import os
 import sys
 import unittest
 from unittest.mock import MagicMock
-
 import numpy as np
 
-# Add project root to path
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
-
-# Import module to test
 try:
     from backend.common.exceptions import ServiceError, ValidationError
     from backend.risk_service.risk_calculator import RiskCalculator
 except ImportError:
-    # Mock the classes for testing when imports fail
+
     class RiskCalculator:
         pass
 
@@ -33,9 +29,8 @@ except ImportError:
 class TestRiskCalculator(unittest.TestCase):
     """Unit tests for RiskCalculator class."""
 
-    def setUp(self):
+    def setUp(self) -> Any:
         """Set up test fixtures."""
-        # Create mock config manager
         self.config_manager = MagicMock()
         self.config_manager.get_config.return_value = {
             "risk_service": {
@@ -45,21 +40,13 @@ class TestRiskCalculator(unittest.TestCase):
                 "max_portfolio_var": 0.05,
             }
         }
-
-        # Create mock database manager
         self.db_manager = MagicMock()
-
-        # Create sample returns
         self.sample_returns = np.array(
             [0.01, -0.02, 0.005, 0.008, -0.01, 0.02, -0.015, 0.012, -0.005, 0.018]
         )
-
-        # Create sample equity curve
         self.sample_equity_curve = np.array(
             [100000, 101000, 99000, 99500, 100300, 99200, 101000, 99500, 100500, 102000]
         )
-
-        # Create sample portfolio
         self.sample_portfolio = [
             {
                 "symbol": "AAPL",
@@ -74,21 +61,15 @@ class TestRiskCalculator(unittest.TestCase):
                 "current_price": 260.0,
             },
         ]
-
-        # Create sample position returns
         self.sample_position_returns = {
             "AAPL": np.array([0.01, -0.015, 0.008, 0.012, -0.005]),
             "MSFT": np.array([0.015, -0.01, 0.005, 0.02, -0.008]),
         }
-
-        # Create risk calculator
         self.risk_calculator = RiskCalculator(self.config_manager, self.db_manager)
 
-    def test_init(self):
+    def test_init(self) -> Any:
         """Test RiskCalculator initialization."""
         risk_calculator = RiskCalculator(self.config_manager, self.db_manager)
-
-        # Check attributes
         self.assertEqual(risk_calculator.config_manager, self.config_manager)
         self.assertEqual(risk_calculator.db_manager, self.db_manager)
         self.assertEqual(risk_calculator.default_risk_free_rate, 0.02)
@@ -96,14 +77,11 @@ class TestRiskCalculator(unittest.TestCase):
         self.assertEqual(risk_calculator.max_position_size, 0.1)
         self.assertEqual(risk_calculator.max_portfolio_var, 0.05)
 
-    def test_calculate_portfolio_risk(self):
+    def test_calculate_portfolio_risk(self) -> Any:
         """Test portfolio risk calculation."""
-        # Mock _get_historical_data
         self.risk_calculator._get_historical_data = MagicMock(
             return_value=self.sample_returns
         )
-
-        # Calculate portfolio risk
         risk = self.risk_calculator.calculate_portfolio_risk(
             portfolio_id="portfolio_1234567890",
             risk_metrics=[
@@ -114,8 +92,6 @@ class TestRiskCalculator(unittest.TestCase):
                 "max_drawdown",
             ],
         )
-
-        # Check result
         self.assertIsInstance(risk, dict)
         self.assertEqual(risk["portfolio_id"], "portfolio_1234567890")
         self.assertIn("var", risk)
@@ -125,22 +101,18 @@ class TestRiskCalculator(unittest.TestCase):
         self.assertIn("max_drawdown", risk)
         self.assertIn("timestamp", risk)
 
-    def test_calculate_portfolio_risk_invalid_metrics(self):
+    def test_calculate_portfolio_risk_invalid_metrics(self) -> Any:
         """Test portfolio risk calculation with invalid metrics."""
-        # Calculate portfolio risk with invalid metrics
         with self.assertRaises(ValidationError):
             self.risk_calculator.calculate_portfolio_risk(
                 portfolio_id="portfolio_1234567890", risk_metrics=["invalid_metric"]
             )
 
-    def test_calculate_position_risk(self):
+    def test_calculate_position_risk(self) -> Any:
         """Test position risk calculation."""
-        # Mock _get_historical_data
         self.risk_calculator._get_historical_data = MagicMock(
             return_value=self.sample_returns
         )
-
-        # Calculate position risk
         risk = self.risk_calculator.calculate_position_risk(
             symbol="AAPL",
             quantity=100,
@@ -154,8 +126,6 @@ class TestRiskCalculator(unittest.TestCase):
                 "max_drawdown",
             ],
         )
-
-        # Check result
         self.assertIsInstance(risk, dict)
         self.assertEqual(risk["symbol"], "AAPL")
         self.assertEqual(risk["quantity"], 100)
@@ -168,9 +138,8 @@ class TestRiskCalculator(unittest.TestCase):
         self.assertIn("max_drawdown", risk)
         self.assertIn("timestamp", risk)
 
-    def test_calculate_position_risk_invalid_metrics(self):
+    def test_calculate_position_risk_invalid_metrics(self) -> Any:
         """Test position risk calculation with invalid metrics."""
-        # Calculate position risk with invalid metrics
         with self.assertRaises(ValidationError):
             self.risk_calculator.calculate_position_risk(
                 symbol="AAPL",
@@ -180,134 +149,106 @@ class TestRiskCalculator(unittest.TestCase):
                 risk_metrics=["invalid_metric"],
             )
 
-    def test_calculate_position_size(self):
+    def test_calculate_position_size(self) -> Any:
         """Test position size calculation."""
-        # Calculate position size
         size = self.risk_calculator.calculate_position_size(
             symbol="AAPL",
             portfolio_value=100000.0,
             risk_per_trade=0.01,
             stop_loss_percent=0.05,
         )
-
-        # Check result
         self.assertIsInstance(size, dict)
         self.assertEqual(size["symbol"], "AAPL")
         self.assertIn("size", size)
         self.assertIn("value", size)
         self.assertIn("max_loss", size)
 
-    def test_calculate_position_size_invalid_risk(self):
+    def test_calculate_position_size_invalid_risk(self) -> Any:
         """Test position size calculation with invalid risk."""
-        # Calculate position size with invalid risk
         with self.assertRaises(ValidationError):
             self.risk_calculator.calculate_position_size(
                 symbol="AAPL",
                 portfolio_value=100000.0,
-                risk_per_trade=0.5,  # Too high
+                risk_per_trade=0.5,
                 stop_loss_percent=0.05,
             )
 
-    def test_calculate_position_size_invalid_stop_loss(self):
+    def test_calculate_position_size_invalid_stop_loss(self) -> Any:
         """Test position size calculation with invalid stop loss."""
-        # Calculate position size with invalid stop loss
         with self.assertRaises(ValidationError):
             self.risk_calculator.calculate_position_size(
                 symbol="AAPL",
                 portfolio_value=100000.0,
                 risk_per_trade=0.01,
-                stop_loss_percent=0.0,  # Too low
+                stop_loss_percent=0.0,
             )
 
-    def test_calculate_var(self):
+    def test_calculate_var(self) -> Any:
         """Test Value at Risk calculation."""
-        # Calculate VaR
         var_95 = self.risk_calculator._calculate_var(
             self.sample_returns, confidence_level=0.95
         )
         var_99 = self.risk_calculator._calculate_var(
             self.sample_returns, confidence_level=0.99
         )
-
-        # Check result
         self.assertIsInstance(var_95, float)
         self.assertIsInstance(var_99, float)
         self.assertGreater(var_95, 0)
         self.assertGreater(var_99, 0)
-        self.assertGreaterEqual(
-            var_99, var_95
-        )  # Higher confidence should give higher or equal VaR
+        self.assertGreaterEqual(var_99, var_95)
 
-    def test_calculate_cvar(self):
+    def test_calculate_cvar(self) -> Any:
         """Test Conditional Value at Risk calculation."""
-        # Calculate CVaR
         cvar_95 = self.risk_calculator._calculate_cvar(
             self.sample_returns, confidence_level=0.95
         )
-
-        # Check result
         self.assertIsInstance(cvar_95, float)
         self.assertGreater(cvar_95, 0)
-
-        # CVaR should be >= VaR
         var_95 = self.risk_calculator._calculate_var(
             self.sample_returns, confidence_level=0.95
         )
         self.assertGreaterEqual(cvar_95, var_95)
 
-    def test_calculate_sharpe_ratio(self):
+    def test_calculate_sharpe_ratio(self) -> Any:
         """Test Sharpe ratio calculation."""
-        # Calculate Sharpe ratio
         sharpe = self.risk_calculator._calculate_sharpe_ratio(
             self.sample_returns, risk_free_rate=0.0
         )
         sharpe_custom = self.risk_calculator._calculate_sharpe_ratio(
             self.sample_returns, risk_free_rate=0.02
         )
-
-        # Check result
         self.assertIsInstance(sharpe, float)
         self.assertIsInstance(sharpe_custom, float)
 
-    def test_calculate_sortino_ratio(self):
+    def test_calculate_sortino_ratio(self) -> Any:
         """Test Sortino ratio calculation."""
-        # Calculate Sortino ratio
         sortino = self.risk_calculator._calculate_sortino_ratio(
             self.sample_returns, risk_free_rate=0.0
         )
         sortino_custom = self.risk_calculator._calculate_sortino_ratio(
             self.sample_returns, risk_free_rate=0.02
         )
-
-        # Check result
         self.assertIsInstance(sortino, float)
         self.assertIsInstance(sortino_custom, float)
 
-    def test_calculate_max_drawdown(self):
+    def test_calculate_max_drawdown(self) -> Any:
         """Test maximum drawdown calculation."""
-        # Calculate max drawdown
         max_dd = self.risk_calculator._calculate_max_drawdown(self.sample_returns)
-
-        # Check result
         self.assertIsInstance(max_dd, float)
         self.assertGreaterEqual(max_dd, 0)
         self.assertLessEqual(max_dd, 1.0)
 
-    def test_calculate_portfolio_returns(self):
+    def test_calculate_portfolio_returns(self) -> Any:
         """Test portfolio returns calculation."""
-        # Calculate portfolio returns
         returns = self.risk_calculator._calculate_portfolio_returns(
             portfolio=self.sample_portfolio,
             position_returns=self.sample_position_returns,
         )
-
-        # Check result
         self.assertIsInstance(returns, np.ndarray)
-        self.assertEqual(len(returns), 5)  # Length of the shortest return series
+        self.assertEqual(len(returns), 5)
 
-    def test_calculate_returns(self):
+    def test_calculate_returns(self) -> Any:
         """Test returns calculation."""
-        # Create sample data
         data = [
             {"close": 100.0},
             {"close": 102.0},
@@ -315,24 +256,17 @@ class TestRiskCalculator(unittest.TestCase):
             {"close": 103.0},
             {"close": 105.0},
         ]
-
-        # Calculate returns
         returns = self.risk_calculator._calculate_returns(data)
-
-        # Check result
         self.assertIsInstance(returns, np.ndarray)
-        self.assertEqual(len(returns), 4)  # One less than the number of data points
+        self.assertEqual(len(returns), 4)
         np.testing.assert_almost_equal(
             returns, np.array([0.02, -0.0098, 0.0198, 0.0194]), decimal=4
         )
 
-    def test_get_historical_data(self):
+    def test_get_historical_data(self) -> Any:
         """Test historical data retrieval."""
-        # Mock database session
         mock_session = MagicMock()
         self.db_manager.get_postgres_session.return_value = mock_session
-
-        # Mock query result
         mock_result = MagicMock()
         mock_result.fetchall.return_value = [
             {"timestamp": "2023-01-01T00:00:00Z", "close": 100.0, "volume": 1000000},
@@ -342,37 +276,25 @@ class TestRiskCalculator(unittest.TestCase):
             {"timestamp": "2023-01-05T00:00:00Z", "close": 105.0, "volume": 1300000},
         ]
         mock_session.execute.return_value = mock_result
-
-        # Get historical data
         data = self.risk_calculator._get_historical_data(symbol="AAPL", days=30)
-
-        # Check result
         self.assertIsInstance(data, list)
         self.assertEqual(len(data), 5)
         self.assertEqual(data[0]["close"], 100.0)
         self.assertEqual(data[4]["close"], 105.0)
 
-    def test_get_historical_data_empty(self):
+    def test_get_historical_data_empty(self) -> Any:
         """Test historical data retrieval with empty result."""
-        # Mock database session
         mock_session = MagicMock()
         self.db_manager.get_postgres_session.return_value = mock_session
-
-        # Mock empty query result
         mock_result = MagicMock()
         mock_result.fetchall.return_value = []
         mock_session.execute.return_value = mock_result
-
-        # Get historical data and check exception
         with self.assertRaises(ValidationError):
             self.risk_calculator._get_historical_data(symbol="AAPL", days=30)
 
-    def test_generate_synthetic_data(self):
+    def test_generate_synthetic_data(self) -> Any:
         """Test synthetic data generation."""
-        # Generate synthetic data
         data = self.risk_calculator._generate_synthetic_data(symbol="AAPL", days=30)
-
-        # Check result
         self.assertIsInstance(data, list)
         self.assertEqual(len(data), 30)
         self.assertEqual(data[0]["symbol"], "AAPL")

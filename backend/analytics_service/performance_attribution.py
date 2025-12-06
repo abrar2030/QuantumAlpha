@@ -5,22 +5,17 @@ Provides detailed performance attribution and decomposition analysis.
 
 import logging
 import os
-
-# Add parent directory to path to import common modules
 import sys
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
-
 import numpy as np
 import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from common import ServiceError, ValidationError, setup_logger
 
-# Configure logging
 logger = setup_logger("performance_attribution", logging.INFO)
 
 
@@ -79,7 +74,7 @@ class SecurityAttribution:
 class PerformanceAttributionEngine:
     """Comprehensive performance attribution engine"""
 
-    def __init__(self, config_manager, db_manager):
+    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
         """Initialize performance attribution engine
 
         Args:
@@ -88,18 +83,11 @@ class PerformanceAttributionEngine:
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
-
-        # Attribution settings
         self.default_method = AttributionMethod.BRINSON_HOOD_BEEBOWER
         self.default_frequency = "daily"
-
-        # Risk-free rate for calculations
-        self.risk_free_rate = 0.02  # 2% annual
-
-        # Factor models
+        self.risk_free_rate = 0.02
         self.factor_models = {}
         self._initialize_factor_models()
-
         logger.info("Performance attribution engine initialized")
 
     def calculate_attribution(
@@ -132,16 +120,12 @@ class PerformanceAttributionEngine:
             logger.info(
                 f"Calculating attribution using {method} method at {level} level"
             )
-
-            # Validate inputs
             self._validate_attribution_inputs(
                 portfolio_returns,
                 benchmark_returns,
                 portfolio_weights,
                 benchmark_weights,
             )
-
-            # Filter by date range if specified
             if start_date or end_date:
                 (
                     portfolio_returns,
@@ -156,8 +140,6 @@ class PerformanceAttributionEngine:
                     start_date,
                     end_date,
                 )
-
-            # Calculate attribution based on method
             if method == AttributionMethod.BRINSON_HOOD_BEEBOWER.value:
                 result = self._calculate_brinson_hood_beebower(
                     portfolio_returns,
@@ -198,8 +180,6 @@ class PerformanceAttributionEngine:
                     benchmark_weights,
                     level,
                 )
-
-            # Add metadata
             result["method"] = method
             result["level"] = level
             result["period"] = {
@@ -215,9 +195,7 @@ class PerformanceAttributionEngine:
                 ),
             }
             result["calculated_at"] = datetime.utcnow().isoformat()
-
             return result
-
         except Exception as e:
             logger.error(f"Error calculating attribution: {e}")
             raise ServiceError(f"Error calculating attribution: {str(e)}")
@@ -250,9 +228,7 @@ class PerformanceAttributionEngine:
             logger.info(
                 f"Calculating multi-period attribution for {len(periods)} periods"
             )
-
             period_results = []
-
             for i, (start_date, end_date) in enumerate(periods):
                 try:
                     period_result = self.calculate_attribution(
@@ -269,7 +245,6 @@ class PerformanceAttributionEngine:
                     period_result["period_start"] = start_date.isoformat()
                     period_result["period_end"] = end_date.isoformat()
                     period_results.append(period_result)
-
                 except Exception as e:
                     logger.warning(f"Error calculating attribution for period {i}: {e}")
                     period_results.append(
@@ -280,17 +255,13 @@ class PerformanceAttributionEngine:
                             "error": str(e),
                         }
                     )
-
-            # Calculate aggregate statistics
             valid_results = [r for r in period_results if "error" not in r]
-
             if valid_results:
                 aggregate_stats = self._calculate_aggregate_attribution_stats(
                     valid_results
                 )
             else:
                 aggregate_stats = {}
-
             return {
                 "period_results": period_results,
                 "aggregate_statistics": aggregate_stats,
@@ -300,7 +271,6 @@ class PerformanceAttributionEngine:
                 "successful_periods": len(valid_results),
                 "calculated_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error calculating multi-period attribution: {e}")
             raise ServiceError(f"Error calculating multi-period attribution: {str(e)}")
@@ -327,19 +297,14 @@ class PerformanceAttributionEngine:
         """
         try:
             logger.info("Calculating security-level attribution")
-
             security_attributions = []
             total_allocation_effect = 0
             total_selection_effect = 0
-
-            # Get all securities in portfolio and benchmark
             portfolio_securities = set(portfolio_data.get("holdings", {}).keys())
             benchmark_securities = set(benchmark_data.get("holdings", {}).keys())
             all_securities = portfolio_securities.union(benchmark_securities)
-
             for security_id in all_securities:
                 try:
-                    # Get weights
                     portfolio_weight = (
                         portfolio_data.get("holdings", {})
                         .get(security_id, {})
@@ -350,12 +315,9 @@ class PerformanceAttributionEngine:
                         .get(security_id, {})
                         .get("weight", 0)
                     )
-
-                    # Get returns
                     if security_id in returns_data:
                         security_returns = returns_data[security_id]
                         period_returns = security_returns.loc[period_start:period_end]
-
                         if len(period_returns) > 0:
                             portfolio_return = period_returns.get("portfolio_return", 0)
                             benchmark_return = period_returns.get("benchmark_return", 0)
@@ -365,8 +327,6 @@ class PerformanceAttributionEngine:
                     else:
                         portfolio_return = 0
                         benchmark_return = 0
-
-                    # Calculate attribution effects
                     allocation_contribution = (
                         portfolio_weight - benchmark_weight
                     ) * benchmark_return
@@ -376,8 +336,6 @@ class PerformanceAttributionEngine:
                     total_contribution = (
                         allocation_contribution + selection_contribution
                     )
-
-                    # Create security attribution
                     security_attribution = SecurityAttribution(
                         security_id=security_id,
                         security_name=portfolio_data.get("holdings", {})
@@ -391,38 +349,35 @@ class PerformanceAttributionEngine:
                         selection_contribution=selection_contribution,
                         total_contribution=total_contribution,
                     )
-
                     security_attributions.append(security_attribution)
                     total_allocation_effect += allocation_contribution
                     total_selection_effect += selection_contribution
-
                 except Exception as e:
                     logger.warning(
                         f"Error calculating attribution for security {security_id}: {e}"
                     )
-
-            # Sort by total contribution
             security_attributions.sort(
                 key=lambda x: abs(x.total_contribution), reverse=True
             )
-
-            # Calculate portfolio and benchmark returns
             portfolio_return = sum(
-                attr.weight_portfolio * attr.return_portfolio
-                for attr in security_attributions
+                (
+                    attr.weight_portfolio * attr.return_portfolio
+                    for attr in security_attributions
+                )
             )
             benchmark_return = sum(
-                attr.weight_benchmark * attr.return_benchmark
-                for attr in security_attributions
+                (
+                    attr.weight_benchmark * attr.return_benchmark
+                    for attr in security_attributions
+                )
             )
-
             return {
                 "total_return": portfolio_return,
                 "benchmark_return": benchmark_return,
                 "active_return": portfolio_return - benchmark_return,
                 "allocation_effect": total_allocation_effect,
                 "selection_effect": total_selection_effect,
-                "interaction_effect": 0,  # Not calculated at security level
+                "interaction_effect": 0,
                 "security_attributions": [
                     {
                         "security_id": attr.security_id,
@@ -443,7 +398,7 @@ class PerformanceAttributionEngine:
                         "security_name": attr.security_name,
                         "contribution": attr.total_contribution,
                     }
-                    for attr in security_attributions[:10]  # Top 10 contributors
+                    for attr in security_attributions[:10]
                 ],
                 "top_detractors": [
                     {
@@ -453,12 +408,9 @@ class PerformanceAttributionEngine:
                     }
                     for attr in sorted(
                         security_attributions, key=lambda x: x.total_contribution
-                    )[
-                        :10
-                    ]  # Top 10 detractors
+                    )[:10]
                 ],
             }
-
         except Exception as e:
             logger.error(f"Error calculating security-level attribution: {e}")
             raise ServiceError(
@@ -486,16 +438,12 @@ class PerformanceAttributionEngine:
             BHB attribution results
         """
         try:
-            # Align data
             common_index = portfolio_returns.index.intersection(benchmark_returns.index)
             common_columns = portfolio_returns.columns.intersection(
                 benchmark_returns.columns
             )
-
             if len(common_index) == 0 or len(common_columns) == 0:
                 raise ValidationError("No common data between portfolio and benchmark")
-
-            # Get aligned data
             port_ret = portfolio_returns.loc[common_index, common_columns]
             bench_ret = benchmark_returns.loc[common_index, common_columns]
             port_wgt = (
@@ -508,16 +456,10 @@ class PerformanceAttributionEngine:
                 if len(benchmark_weights) > 0
                 else pd.DataFrame(0, index=common_index, columns=common_columns)
             )
-
-            # Calculate period returns (geometric)
             port_total_return = (1 + port_ret).prod() - 1
             bench_total_return = (1 + bench_ret).prod() - 1
-
-            # Calculate weighted returns
             portfolio_return = (port_wgt.iloc[-1] * port_total_return).sum()
             benchmark_return = (bench_wgt.iloc[-1] * bench_total_return).sum()
-
-            # Calculate attribution effects
             allocation_effect = (
                 (port_wgt.iloc[-1] - bench_wgt.iloc[-1]) * bench_total_return
             ).sum()
@@ -528,8 +470,6 @@ class PerformanceAttributionEngine:
                 (port_wgt.iloc[-1] - bench_wgt.iloc[-1])
                 * (port_total_return - bench_total_return)
             ).sum()
-
-            # Detailed breakdown by sector/level
             detailed_breakdown = {}
             for col in common_columns:
                 detailed_breakdown[col] = {
@@ -550,7 +490,6 @@ class PerformanceAttributionEngine:
                         * (port_total_return[col] - bench_total_return[col])
                     ),
                 }
-
             return AttributionResult(
                 total_return=float(portfolio_return),
                 benchmark_return=float(benchmark_return),
@@ -560,7 +499,6 @@ class PerformanceAttributionEngine:
                 interaction_effect=float(interaction_effect),
                 detailed_breakdown=detailed_breakdown,
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in BHB attribution: {e}")
             raise
@@ -586,7 +524,6 @@ class PerformanceAttributionEngine:
             Brinson-Fachler attribution results
         """
         try:
-            # Similar to BHB but with geometric linking
             bhb_result = self._calculate_brinson_hood_beebower(
                 portfolio_returns,
                 benchmark_returns,
@@ -594,16 +531,11 @@ class PerformanceAttributionEngine:
                 benchmark_weights,
                 level,
             )
-
-            # Adjust for geometric effects
             total_active = bhb_result["active_return"]
             allocation = bhb_result["allocation_effect"]
             selection = bhb_result["selection_effect"]
             interaction = bhb_result["interaction_effect"]
-
-            # Geometric adjustment
             geometric_adjustment = total_active - (allocation + selection + interaction)
-
             return AttributionResult(
                 total_return=bhb_result["total_return"],
                 benchmark_return=bhb_result["benchmark_return"],
@@ -613,7 +545,6 @@ class PerformanceAttributionEngine:
                 interaction_effect=interaction + geometric_adjustment,
                 detailed_breakdown=bhb_result["detailed_breakdown"],
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in Brinson-Fachler attribution: {e}")
             raise
@@ -639,23 +570,15 @@ class PerformanceAttributionEngine:
             Geometric attribution results
         """
         try:
-            # Calculate cumulative returns
             (1 + portfolio_returns).cumprod()
             (1 + benchmark_returns).cumprod()
-
-            # Calculate geometric attribution using log returns
             log_port_ret = np.log(1 + portfolio_returns)
             log_bench_ret = np.log(1 + benchmark_returns)
-
-            # Use BHB method on log returns
             bhb_result = self._calculate_brinson_hood_beebower(
                 log_port_ret, log_bench_ret, portfolio_weights, benchmark_weights, level
             )
-
-            # Convert back to arithmetic returns
             total_return = np.exp(bhb_result["total_return"]) - 1
             benchmark_return = np.exp(bhb_result["benchmark_return"]) - 1
-
             return AttributionResult(
                 total_return=float(total_return),
                 benchmark_return=float(benchmark_return),
@@ -665,7 +588,6 @@ class PerformanceAttributionEngine:
                 interaction_effect=bhb_result["interaction_effect"],
                 detailed_breakdown=bhb_result["detailed_breakdown"],
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in geometric attribution: {e}")
             raise
@@ -691,69 +613,53 @@ class PerformanceAttributionEngine:
             Factor-based attribution results
         """
         try:
-            # Use a simple factor model for demonstration
-            # In practice, this would use sophisticated factor models like Fama-French, Barra, etc.
-
-            # Calculate basic factor exposures
-            market_factor = portfolio_returns.mean(axis=1)  # Market factor proxy
-
-            # Calculate factor loadings (simplified)
+            market_factor = portfolio_returns.mean(axis=1)
             factor_loadings = {}
             factor_returns = {}
-
             for col in portfolio_returns.columns:
-                # Simple regression against market factor
                 y = portfolio_returns[col].dropna()
                 x = market_factor.loc[y.index]
-
                 if len(y) > 1 and len(x) > 1:
-                    # Calculate beta (factor loading)
                     covariance = np.cov(x, y)[0, 1]
                     variance = np.var(x)
                     beta = covariance / variance if variance > 0 else 0
-
-                    # Calculate alpha (specific return)
                     alpha = np.mean(y) - beta * np.mean(x)
-
                     factor_loadings[col] = {"market_beta": beta, "alpha": alpha}
                     factor_returns[col] = {
                         "market_return": np.mean(x),
                         "specific_return": alpha,
                     }
-
-            # Calculate factor attribution
             portfolio_factor_exposure = sum(
-                portfolio_weights.iloc[-1].get(col, 0)
-                * factor_loadings.get(col, {}).get("market_beta", 0)
-                for col in portfolio_returns.columns
+                (
+                    portfolio_weights.iloc[-1].get(col, 0)
+                    * factor_loadings.get(col, {}).get("market_beta", 0)
+                    for col in portfolio_returns.columns
+                )
             )
-
             benchmark_factor_exposure = sum(
-                benchmark_weights.iloc[-1].get(col, 0)
-                * factor_loadings.get(col, {}).get("market_beta", 0)
-                for col in benchmark_returns.columns
+                (
+                    benchmark_weights.iloc[-1].get(col, 0)
+                    * factor_loadings.get(col, {}).get("market_beta", 0)
+                    for col in benchmark_returns.columns
+                )
             )
-
             market_return = market_factor.mean()
             factor_allocation = (
                 portfolio_factor_exposure - benchmark_factor_exposure
             ) * market_return
-
-            # Calculate specific return attribution
             specific_selection = sum(
-                portfolio_weights.iloc[-1].get(col, 0)
-                * factor_loadings.get(col, {}).get("alpha", 0)
-                for col in portfolio_returns.columns
+                (
+                    portfolio_weights.iloc[-1].get(col, 0)
+                    * factor_loadings.get(col, {}).get("alpha", 0)
+                    for col in portfolio_returns.columns
+                )
             )
-
-            # Calculate total returns
             portfolio_return = (
                 portfolio_weights.iloc[-1] * portfolio_returns.mean()
             ).sum()
             benchmark_return = (
                 benchmark_weights.iloc[-1] * benchmark_returns.mean()
             ).sum()
-
             return AttributionResult(
                 total_return=float(portfolio_return),
                 benchmark_return=float(benchmark_return),
@@ -773,7 +679,6 @@ class PerformanceAttributionEngine:
                     "factor_loadings": factor_loadings,
                 },
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in factor-based attribution: {e}")
             raise
@@ -799,15 +704,12 @@ class PerformanceAttributionEngine:
             Arithmetic attribution results
         """
         try:
-            # Simple arithmetic attribution
             portfolio_return = (
                 portfolio_weights.iloc[-1] * portfolio_returns.mean()
             ).sum()
             benchmark_return = (
                 benchmark_weights.iloc[-1] * benchmark_returns.mean()
             ).sum()
-
-            # Simple allocation and selection effects
             allocation_effect = (
                 (portfolio_weights.iloc[-1] - benchmark_weights.iloc[-1])
                 * benchmark_returns.mean()
@@ -816,7 +718,6 @@ class PerformanceAttributionEngine:
                 benchmark_weights.iloc[-1]
                 * (portfolio_returns.mean() - benchmark_returns.mean())
             ).sum()
-
             return AttributionResult(
                 total_return=float(portfolio_return),
                 benchmark_return=float(benchmark_return),
@@ -826,7 +727,6 @@ class PerformanceAttributionEngine:
                 interaction_effect=0,
                 detailed_breakdown={},
             ).__dict__
-
         except Exception as e:
             logger.error(f"Error in arithmetic attribution: {e}")
             raise
@@ -841,18 +741,13 @@ class PerformanceAttributionEngine:
         """Validate attribution inputs"""
         if portfolio_returns.empty:
             raise ValidationError("Portfolio returns data is empty")
-
         if benchmark_returns.empty:
             raise ValidationError("Benchmark returns data is empty")
-
-        # Check for common time periods
         common_dates = portfolio_returns.index.intersection(benchmark_returns.index)
         if len(common_dates) == 0:
             raise ValidationError(
                 "No common dates between portfolio and benchmark returns"
             )
-
-        # Check for common securities/sectors
         common_securities = portfolio_returns.columns.intersection(
             benchmark_returns.columns
         )
@@ -871,37 +766,27 @@ class PerformanceAttributionEngine:
         end_date: Optional[datetime],
     ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """Filter data by date range"""
-
-        # Create date filter
         date_filter = pd.Series(True, index=portfolio_returns.index)
-
         if start_date:
             date_filter = date_filter & (portfolio_returns.index >= start_date)
-
         if end_date:
             date_filter = date_filter & (portfolio_returns.index <= end_date)
-
-        # Apply filter
         filtered_port_ret = portfolio_returns.loc[date_filter]
         filtered_bench_ret = benchmark_returns.loc[
             benchmark_returns.index.isin(filtered_port_ret.index)
         ]
-
-        # Filter weights if available
         if not portfolio_weights.empty:
             filtered_port_wgt = portfolio_weights.loc[
                 portfolio_weights.index.isin(filtered_port_ret.index)
             ]
         else:
             filtered_port_wgt = portfolio_weights
-
         if not benchmark_weights.empty:
             filtered_bench_wgt = benchmark_weights.loc[
                 benchmark_weights.index.isin(filtered_bench_ret.index)
             ]
         else:
             filtered_bench_wgt = benchmark_weights
-
         return (
             filtered_port_ret,
             filtered_bench_ret,
@@ -914,14 +799,11 @@ class PerformanceAttributionEngine:
     ) -> Dict[str, Any]:
         """Calculate aggregate statistics across periods"""
         try:
-            # Extract metrics
             total_returns = [r.get("total_return", 0) for r in period_results]
             benchmark_returns = [r.get("benchmark_return", 0) for r in period_results]
             active_returns = [r.get("active_return", 0) for r in period_results]
             allocation_effects = [r.get("allocation_effect", 0) for r in period_results]
             selection_effects = [r.get("selection_effect", 0) for r in period_results]
-
-            # Calculate statistics
             return {
                 "average_total_return": float(np.mean(total_returns)),
                 "average_benchmark_return": float(np.mean(benchmark_returns)),
@@ -935,7 +817,7 @@ class PerformanceAttributionEngine:
                     else 0
                 ),
                 "hit_rate": float(
-                    sum(1 for ar in active_returns if ar > 0) / len(active_returns)
+                    sum((1 for ar in active_returns if ar > 0)) / len(active_returns)
                 ),
                 "cumulative_total_return": float(
                     np.prod([1 + r for r in total_returns]) - 1
@@ -947,31 +829,24 @@ class PerformanceAttributionEngine:
                     np.prod([1 + r for r in active_returns]) - 1
                 ),
             }
-
         except Exception as e:
             logger.error(f"Error calculating aggregate stats: {e}")
             return {}
 
     def _initialize_factor_models(self) -> None:
         """Initialize factor models for attribution"""
-        # Fama-French 3-factor model
         self.factor_models["fama_french_3"] = {
             "factors": ["market", "size", "value"],
             "description": "Fama-French 3-factor model",
         }
-
-        # Fama-French 5-factor model
         self.factor_models["fama_french_5"] = {
             "factors": ["market", "size", "value", "profitability", "investment"],
             "description": "Fama-French 5-factor model",
         }
-
-        # Carhart 4-factor model
         self.factor_models["carhart_4"] = {
             "factors": ["market", "size", "value", "momentum"],
             "description": "Carhart 4-factor model",
         }
-
         logger.info(f"Initialized {len(self.factor_models)} factor models")
 
     def generate_attribution_report(
@@ -987,15 +862,12 @@ class PerformanceAttributionEngine:
             Attribution report
         """
         try:
-            # Extract key metrics
             total_return = attribution_results.get("total_return", 0)
             benchmark_return = attribution_results.get("benchmark_return", 0)
             active_return = attribution_results.get("active_return", 0)
             allocation_effect = attribution_results.get("allocation_effect", 0)
             selection_effect = attribution_results.get("selection_effect", 0)
             interaction_effect = attribution_results.get("interaction_effect", 0)
-
-            # Create summary
             summary = {
                 "performance_summary": {
                     "portfolio_return": f"{total_return:.2%}",
@@ -1010,11 +882,7 @@ class PerformanceAttributionEngine:
                     "total_effect": f"{allocation_effect + selection_effect + interaction_effect:.2%}",
                 },
             }
-
-            # Detailed breakdown
             detailed_breakdown = attribution_results.get("detailed_breakdown", {})
-
-            # Top contributors and detractors
             if detailed_breakdown:
                 contributions = []
                 for sector, data in detailed_breakdown.items():
@@ -1029,16 +897,12 @@ class PerformanceAttributionEngine:
                             "selection_effect": data.get("selection_effect", 0),
                         }
                     )
-
                 contributions.sort(key=lambda x: x["total_contribution"], reverse=True)
-
                 top_contributors = contributions[:5]
                 top_detractors = contributions[-5:]
             else:
                 top_contributors = []
                 top_detractors = []
-
-            # Chart data
             chart_data = {}
             if include_charts:
                 chart_data = {
@@ -1065,7 +929,6 @@ class PerformanceAttributionEngine:
                         ],
                     },
                 }
-
             return {
                 "summary": summary,
                 "detailed_breakdown": detailed_breakdown,
@@ -1077,7 +940,6 @@ class PerformanceAttributionEngine:
                 "period": attribution_results.get("period", {}),
                 "generated_at": datetime.utcnow().isoformat(),
             }
-
         except Exception as e:
             logger.error(f"Error generating attribution report: {e}")
             raise ServiceError(f"Error generating attribution report: {str(e)}")
@@ -1086,7 +948,7 @@ class PerformanceAttributionEngine:
 class RiskAdjustedAttribution:
     """Risk-adjusted performance attribution"""
 
-    def __init__(self, attribution_engine: PerformanceAttributionEngine):
+    def __init__(self, attribution_engine: PerformanceAttributionEngine) -> Any:
         """Initialize risk-adjusted attribution
 
         Args:
@@ -1117,21 +979,15 @@ class RiskAdjustedAttribution:
             Risk-adjusted attribution results
         """
         try:
-            # Calculate standard attribution first
             standard_attribution = self.attribution_engine.calculate_attribution(
                 portfolio_returns,
                 benchmark_returns,
                 portfolio_weights,
                 benchmark_weights,
             )
-
-            # Calculate risk metrics
-            portfolio_vol = portfolio_returns.std().mean() * np.sqrt(252)  # Annualized
+            portfolio_vol = portfolio_returns.std().mean() * np.sqrt(252)
             benchmark_vol = benchmark_returns.std().mean() * np.sqrt(252)
-
-            # Risk-adjusted returns
             risk_free_rate = self.attribution_engine.risk_free_rate
-
             portfolio_sharpe = (
                 (standard_attribution["total_return"] - risk_free_rate) / portfolio_vol
                 if portfolio_vol > 0
@@ -1143,10 +999,7 @@ class RiskAdjustedAttribution:
                 if benchmark_vol > 0
                 else 0
             )
-
-            # Risk-adjusted attribution
             risk_adjusted_active = portfolio_sharpe - benchmark_sharpe
-
             return {
                 "standard_attribution": standard_attribution,
                 "risk_metrics": {
@@ -1169,7 +1022,6 @@ class RiskAdjustedAttribution:
                     ),
                 },
             }
-
         except Exception as e:
             logger.error(f"Error calculating risk-adjusted attribution: {e}")
             raise ServiceError(f"Error calculating risk-adjusted attribution: {str(e)}")

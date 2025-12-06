@@ -3,10 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional
-
 import structlog
 from sqlalchemy import and_
-
 from .audit import audit_logger
 from .database import get_db_session, get_redis_client
 from .models import (
@@ -71,7 +69,7 @@ class ExecutionReport:
 class RiskManager:
     """Pre-trade and post-trade risk management"""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         self.redis_client = get_redis_client()
 
     async def validate_order_risk(
@@ -79,23 +77,12 @@ class RiskManager:
     ) -> bool:
         """Validate order against risk limits"""
         try:
-            # Check portfolio-level limits
             await self._check_portfolio_limits(order_request, portfolio)
-
-            # Check position limits
             await self._check_position_limits(order_request, portfolio)
-
-            # Check buying power
             await self._check_buying_power(order_request, portfolio)
-
-            # Check concentration limits
             await self._check_concentration_limits(order_request, portfolio)
-
-            # Check daily trading limits
             await self._check_daily_limits(order_request, portfolio)
-
             return True
-
         except (RiskViolationError, InsufficientFundsError) as e:
             logger.warning(f"Risk check failed for order: {e}")
             raise
@@ -108,15 +95,11 @@ class RiskManager:
     ):
         """Check portfolio-level risk limits"""
         if portfolio.max_leverage and portfolio.max_leverage > 0:
-            # Calculate current leverage
             self._calculate_leverage(portfolio)
-
-            # Estimate leverage after order
             order_value = await self._estimate_order_value(order_request)
             estimated_leverage = (
                 portfolio.invested_amount + order_value
             ) / portfolio.total_value
-
             if estimated_leverage > portfolio.max_leverage:
                 raise RiskViolationError(
                     f"Order would exceed maximum leverage of {portfolio.max_leverage}"
@@ -127,7 +110,6 @@ class RiskManager:
     ):
         """Check position size limits"""
         if portfolio.max_position_size and portfolio.max_position_size > 0:
-            # Get current position
             with get_db_session() as session:
                 position = (
                     session.query(Position)
@@ -139,19 +121,13 @@ class RiskManager:
                     )
                     .first()
                 )
-
                 current_quantity = position.quantity if position else Decimal("0")
-
-                # Calculate new position size
                 if order_request.side == OrderSide.BUY:
                     current_quantity + order_request.quantity
                 else:
                     current_quantity - order_request.quantity
-
-                # Check against limit
                 order_value = await self._estimate_order_value(order_request)
                 position_weight = order_value / portfolio.total_value
-
                 if position_weight > portfolio.max_position_size:
                     raise RiskViolationError(
                         f"Order would exceed maximum position size of {portfolio.max_position_size}"
@@ -163,10 +139,7 @@ class RiskManager:
         """Check if sufficient buying power exists"""
         if order_request.side == OrderSide.BUY:
             order_value = await self._estimate_order_value(order_request)
-
-            # Add margin for fees and slippage
-            required_cash = order_value * Decimal("1.01")  # 1% buffer
-
+            required_cash = order_value * Decimal("1.01")
             if portfolio.cash_balance < required_cash:
                 raise InsufficientFundsError(
                     f"Insufficient cash balance. Required: {required_cash}, Available: {portfolio.cash_balance}"
@@ -176,10 +149,7 @@ class RiskManager:
         self, order_request: OrderRequest, portfolio: Portfolio
     ):
         """Check sector/industry concentration limits"""
-        # This would check against sector exposure limits
-        # For now, implement basic check
         if portfolio.max_sector_exposure and portfolio.max_sector_exposure > 0:
-            # Would need to fetch sector information and calculate exposure
             pass
 
     async def _check_daily_limits(
@@ -190,17 +160,13 @@ class RiskManager:
             if self.redis_client:
                 today = datetime.now(timezone.utc).date().isoformat()
                 daily_volume_key = f"daily_volume:{portfolio.id}:{today}"
-
                 current_volume = self.redis_client.get(daily_volume_key)
                 current_volume = (
                     Decimal(current_volume) if current_volume else Decimal("0")
                 )
-
                 order_value = await self._estimate_order_value(order_request)
                 new_volume = current_volume + order_value
-
-                # Check against daily limit (configurable)
-                daily_limit = Decimal("1000000")  # $1M daily limit
+                daily_limit = Decimal("1000000")
                 if new_volume > daily_limit:
                     raise RiskViolationError(
                         f"Order would exceed daily trading limit of {daily_limit}"
@@ -217,7 +183,6 @@ class RiskManager:
     async def _estimate_order_value(self, order_request: OrderRequest) -> Decimal:
         """Estimate the value of an order"""
         if order_request.order_type == OrderType.MARKET:
-            # Use current market price
             market_data = MarketDataService()
             current_price = await market_data.get_current_price(order_request.symbol)
             if not current_price:
@@ -226,7 +191,6 @@ class RiskManager:
                 )
             return current_price * order_request.quantity
         else:
-            # Use limit price
             if not order_request.price:
                 raise OrderValidationError("Price required for limit orders")
             return order_request.price * order_request.quantity
@@ -235,7 +199,7 @@ class RiskManager:
 class OrderManager:
     """Order lifecycle management"""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         self.risk_manager = RiskManager()
         self.market_data = MarketDataService()
         self.redis_client = get_redis_client()
@@ -243,24 +207,16 @@ class OrderManager:
     async def submit_order(self, order_request: OrderRequest) -> Order:
         """Submit a new order with validation and risk checks"""
         try:
-            # Validate order request
             self._validate_order_request(order_request)
-
-            # Get portfolio
             with get_db_session() as session:
                 portfolio = (
                     session.query(Portfolio)
                     .filter(Portfolio.id == order_request.portfolio_id)
                     .first()
                 )
-
                 if not portfolio:
                     raise OrderValidationError("Portfolio not found")
-
-                # Perform risk checks
                 await self.risk_manager.validate_order_risk(order_request, portfolio)
-
-                # Create order
                 order = Order(
                     order_id=uuid.uuid4(),
                     user_id=order_request.user_id or portfolio.user_id,
@@ -273,15 +229,12 @@ class OrderManager:
                     stop_price=order_request.stop_price,
                     status=OrderStatus.PENDING,
                     pre_trade_risk_check=True,
-                    compliance_approved=True,  # Would integrate with compliance engine
+                    compliance_approved=True,
                     created_by=order_request.user_id,
                 )
-
                 session.add(order)
                 session.commit()
                 session.refresh(order)
-
-                # Log audit event
                 audit_logger.log_event(
                     action=AuditAction.CREATE,
                     resource_type="order",
@@ -295,42 +248,29 @@ class OrderManager:
                         "risk_approved": True,
                     },
                 )
-
-                # Submit to execution engine
                 await self._submit_to_broker(order)
-
                 logger.info(f"Order submitted: {order.order_id}")
                 return order
-
         except Exception as e:
             logger.error(f"Error submitting order: {e}")
             raise
 
-    def _validate_order_request(self, order_request: OrderRequest):
+    def _validate_order_request(self, order_request: OrderRequest) -> Any:
         """Validate order request parameters"""
-        # Validate symbol
         order_request.symbol = FinancialValidator.validate_symbol(order_request.symbol)
-
-        # Validate quantity
         order_request.quantity = FinancialValidator.validate_quantity(
             order_request.quantity
         )
-
-        # Validate price for limit orders
         if order_request.order_type in [OrderType.LIMIT, OrderType.STOP_LIMIT]:
             if not order_request.price:
                 raise OrderValidationError("Price required for limit orders")
             order_request.price = FinancialValidator.validate_price(order_request.price)
-
-        # Validate stop price for stop orders
         if order_request.order_type in [OrderType.STOP, OrderType.STOP_LIMIT]:
             if not order_request.stop_price:
                 raise OrderValidationError("Stop price required for stop orders")
             order_request.stop_price = FinancialValidator.validate_price(
                 order_request.stop_price
             )
-
-        # Validate time in force
         valid_tif = ["day", "gtc", "ioc", "fok"]
         if order_request.time_in_force not in valid_tif:
             raise OrderValidationError(
@@ -340,25 +280,17 @@ class OrderManager:
     async def _submit_to_broker(self, order: Order):
         """Submit order to broker for execution"""
         try:
-            # This would integrate with actual broker APIs
-            # For now, simulate broker submission
-
             with get_db_session() as session:
                 order = session.merge(order)
                 order.status = OrderStatus.SUBMITTED
                 order.submitted_at = datetime.now(timezone.utc)
                 order.broker_order_id = f"BROKER_{order.order_id}"
                 order.broker_name = "Mock Broker"
-
                 session.commit()
-
-                # Simulate execution for market orders
                 if order.order_type == OrderType.MARKET:
                     await self._simulate_execution(order)
-
         except Exception as e:
             logger.error(f"Error submitting to broker: {e}")
-            # Update order status to rejected
             with get_db_session() as session:
                 order = session.merge(order)
                 order.status = OrderStatus.REJECTED
@@ -367,26 +299,17 @@ class OrderManager:
     async def _simulate_execution(self, order: Order):
         """Simulate order execution (for demo purposes)"""
         try:
-            # Get current market price
             current_price = await self.market_data.get_current_price(order.symbol)
             if not current_price:
                 return
-
-            # Simulate partial or full execution
             import random
 
             execution_quantity = order.quantity
             execution_price = current_price
-
-            # Add some realistic slippage
             if order.side == OrderSide.BUY:
-                execution_price *= Decimal(
-                    str(1 + random.uniform(0, 0.001))
-                )  # 0-0.1% slippage
+                execution_price *= Decimal(str(1 + random.uniform(0, 0.001)))
             else:
                 execution_price *= Decimal(str(1 - random.uniform(0, 0.001)))
-
-            # Create execution
             await self.execute_order(
                 order.id,
                 execution_quantity,
@@ -394,7 +317,6 @@ class OrderManager:
                 f"EXEC_{uuid.uuid4().hex[:8]}",
                 "Mock Exchange",
             )
-
         except Exception as e:
             logger.error(f"Error simulating execution: {e}")
 
@@ -412,12 +334,8 @@ class OrderManager:
                 order = session.query(Order).filter(Order.id == order_id).first()
                 if not order:
                     raise OrderValidationError("Order not found")
-
-                # Calculate commission and fees
                 commission = self._calculate_commission(quantity, price)
                 fees = self._calculate_fees(quantity, price)
-
-                # Create execution record
                 execution = OrderExecution(
                     order_id=order.id,
                     execution_id=execution_id,
@@ -429,40 +347,27 @@ class OrderManager:
                     fees=fees,
                     created_by=order.user_id,
                 )
-
                 session.add(execution)
-
-                # Update order status
                 order.filled_quantity += quantity
-
                 if order.filled_quantity >= order.quantity:
                     order.status = OrderStatus.FILLED
                     order.filled_at = datetime.now(timezone.utc)
                 else:
                     order.status = OrderStatus.PARTIALLY_FILLED
-
-                # Calculate average fill price
                 total_executions = (
                     session.query(OrderExecution)
                     .filter(OrderExecution.order_id == order.id)
                     .all()
                 )
-
                 total_value = sum(
-                    exec.quantity * exec.price for exec in total_executions
+                    (exec.quantity * exec.price for exec in total_executions)
                 )
-                total_quantity = sum(exec.quantity for exec in total_executions)
-
+                total_quantity = sum((exec.quantity for exec in total_executions))
                 if total_quantity > 0:
                     order.avg_fill_price = total_value / total_quantity
-
                 session.commit()
                 session.refresh(execution)
-
-                # Update portfolio positions
                 await self._update_portfolio_position(order, execution)
-
-                # Log execution
                 audit_logger.log_event(
                     action=AuditAction.TRADE,
                     resource_type="order_execution",
@@ -476,32 +381,27 @@ class OrderManager:
                         "fees": float(fees),
                     },
                 )
-
                 logger.info(
                     f"Order executed: {order.order_id}, Quantity: {quantity}, Price: {price}"
                 )
                 return execution
-
         except Exception as e:
             logger.error(f"Error executing order: {e}")
             raise
 
     def _calculate_commission(self, quantity: Decimal, price: Decimal) -> Decimal:
         """Calculate trading commission"""
-        # Simple commission structure: $0.005 per share, min $1
         commission = quantity * Decimal("0.005")
         return max(commission, Decimal("1.00"))
 
     def _calculate_fees(self, quantity: Decimal, price: Decimal) -> Decimal:
         """Calculate regulatory and exchange fees"""
-        # Simple fee structure: 0.01% of trade value
         trade_value = quantity * price
         return trade_value * Decimal("0.0001")
 
     async def _update_portfolio_position(self, order: Order, execution: OrderExecution):
         """Update portfolio position after execution"""
         try:
-            # Update position
             await portfolio_service.add_position(
                 portfolio_id=order.portfolio_id,
                 symbol=order.symbol,
@@ -513,30 +413,22 @@ class OrderManager:
                 avg_cost=execution.price,
                 user_id=order.user_id,
             )
-
-            # Update portfolio cash balance
             with get_db_session() as session:
                 portfolio = (
                     session.query(Portfolio)
                     .filter(Portfolio.id == order.portfolio_id)
                     .first()
                 )
-
                 if portfolio:
                     trade_value = execution.quantity * execution.price
                     total_cost = trade_value + execution.commission + execution.fees
-
                     if order.side == OrderSide.BUY:
                         portfolio.cash_balance -= total_cost
                     else:
                         portfolio.cash_balance += (
                             trade_value - execution.commission - execution.fees
                         )
-                        # Update realized P&L for sells
-                        # This would require more complex cost basis tracking
-
                     session.commit()
-
         except Exception as e:
             logger.error(f"Error updating portfolio position: {e}")
 
@@ -561,18 +453,12 @@ class OrderManager:
                     )
                     .first()
                 )
-
                 if not order:
                     return False
-
-                # Update order status
                 old_status = order.status
                 order.status = OrderStatus.CANCELLED
                 order.cancelled_at = datetime.now(timezone.utc)
-
                 session.commit()
-
-                # Log cancellation
                 audit_logger.log_event(
                     action=AuditAction.UPDATE,
                     resource_type="order",
@@ -581,10 +467,8 @@ class OrderManager:
                     new_values={"status": order.status.value},
                     user_id=user_id,
                 )
-
                 logger.info(f"Order cancelled: {order.order_id}")
                 return True
-
         except Exception as e:
             logger.error(f"Error cancelling order: {e}")
             return False
@@ -598,9 +482,7 @@ class OrderManager:
                     .filter(and_(Order.id == order_id, Order.user_id == user_id))
                     .first()
                 )
-
                 return order
-
         except Exception as e:
             logger.error(f"Error getting order: {e}")
             return None
@@ -612,13 +494,10 @@ class OrderManager:
         try:
             with get_db_session() as session:
                 query = session.query(Order).filter(Order.user_id == user_id)
-
                 if status:
                     query = query.filter(Order.status == status)
-
                 orders = query.order_by(Order.created_at.desc()).limit(limit).all()
                 return orders
-
         except Exception as e:
             logger.error(f"Error getting user orders: {e}")
             return []
@@ -632,13 +511,10 @@ class OrderManager:
                 query = session.query(Order).filter(
                     and_(Order.portfolio_id == portfolio_id, Order.user_id == user_id)
                 )
-
                 if status:
                     query = query.filter(Order.status == status)
-
                 orders = query.order_by(Order.created_at.desc()).all()
                 return orders
-
         except Exception as e:
             logger.error(f"Error getting portfolio orders: {e}")
             return []
@@ -647,7 +523,7 @@ class OrderManager:
 class TradingEngine:
     """Main trading engine orchestrator"""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         self.order_manager = OrderManager()
         self.risk_manager = RiskManager()
 
@@ -673,10 +549,7 @@ class TradingEngine:
             return self.order_manager.get_user_orders(user_id)
 
 
-# Global trading engine instance
 trading_engine = TradingEngine()
-
-# Export main components
 __all__ = [
     "TradingEngine",
     "OrderManager",

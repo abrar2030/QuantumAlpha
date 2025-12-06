@@ -8,18 +8,15 @@ import unittest
 from datetime import datetime
 from unittest.mock import MagicMock, patch
 
-# Add project root to path
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
-
-# Import module to test
 try:
     from backend.common.exceptions import NotFoundError, ServiceError, ValidationError
     from backend.common.models import Execution, Order
     from backend.execution_service.order_manager import OrderManager
 except ImportError:
-    # Mock the classes for testing when imports fail
+
     class OrderManager:
         pass
 
@@ -42,45 +39,33 @@ except ImportError:
 class TestOrderManager(unittest.TestCase):
     """Unit tests for OrderManager class."""
 
-    def setUp(self):
+    def setUp(self) -> Any:
         """Set up test fixtures."""
-        # Create mock config manager
         self.config_manager = MagicMock()
         self.config_manager.get_config.return_value = {
             "execution_service": {"default_broker": "test_broker", "order_timeout": 60}
         }
-
-        # Create mock database manager
         self.db_manager = MagicMock()
-
-        # Create mock session
         self.session = MagicMock()
         self.db_manager.get_postgres_session.return_value = self.session
-
-        # Create mock broker integration
         self.broker_integration = MagicMock()
-
-        # Create order manager
         self.order_manager = OrderManager(
             self.config_manager, self.db_manager, self.broker_integration
         )
 
-    def test_init(self):
+    def test_init(self) -> Any:
         """Test OrderManager initialization."""
         order_manager = OrderManager(
             self.config_manager, self.db_manager, self.broker_integration
         )
-
-        # Check attributes
         self.assertEqual(order_manager.config_manager, self.config_manager)
         self.assertEqual(order_manager.db_manager, self.db_manager)
         self.assertEqual(order_manager.broker_integration, self.broker_integration)
         self.assertEqual(order_manager.default_broker, "test_broker")
         self.assertEqual(order_manager.order_timeout, 60)
 
-    def test_create_order(self):
+    def test_create_order(self) -> Any:
         """Test order creation."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.id = "order_1234567890"
         mock_order.to_dict.return_value = {
@@ -96,12 +81,8 @@ class TestOrderManager(unittest.TestCase):
             "created_at": datetime.utcnow().isoformat(),
             "updated_at": datetime.utcnow().isoformat(),
         }
-
-        # Mock Order class
         with patch("backend.common.models.Order") as MockOrder:
             MockOrder.return_value = mock_order
-
-            # Create order
             order = self.order_manager.create_order(
                 user_id="user_1234567890",
                 portfolio_id="portfolio_1234567890",
@@ -110,8 +91,6 @@ class TestOrderManager(unittest.TestCase):
                 order_type="market",
                 quantity=100,
             )
-
-            # Check result
             self.assertEqual(order["id"], "order_1234567890")
             self.assertEqual(order["user_id"], "user_1234567890")
             self.assertEqual(order["portfolio_id"], "portfolio_1234567890")
@@ -120,14 +99,11 @@ class TestOrderManager(unittest.TestCase):
             self.assertEqual(order["type"], "market")
             self.assertEqual(order["status"], "created")
             self.assertEqual(order["quantity"], 100)
-
-            # Check if order was added and committed
             self.session.add.assert_called_once()
             self.session.commit.assert_called_once()
 
-    def test_create_order_invalid_side(self):
+    def test_create_order_invalid_side(self) -> Any:
         """Test order creation with invalid side."""
-        # Create order with invalid side
         with self.assertRaises(ValidationError):
             self.order_manager.create_order(
                 user_id="user_1234567890",
@@ -138,9 +114,8 @@ class TestOrderManager(unittest.TestCase):
                 quantity=100,
             )
 
-    def test_create_order_invalid_type(self):
+    def test_create_order_invalid_type(self) -> Any:
         """Test order creation with invalid type."""
-        # Create order with invalid type
         with self.assertRaises(ValidationError):
             self.order_manager.create_order(
                 user_id="user_1234567890",
@@ -151,9 +126,8 @@ class TestOrderManager(unittest.TestCase):
                 quantity=100,
             )
 
-    def test_create_order_invalid_quantity(self):
+    def test_create_order_invalid_quantity(self) -> Any:
         """Test order creation with invalid quantity."""
-        # Create order with invalid quantity
         with self.assertRaises(ValidationError):
             self.order_manager.create_order(
                 user_id="user_1234567890",
@@ -164,9 +138,8 @@ class TestOrderManager(unittest.TestCase):
                 quantity=0,
             )
 
-    def test_create_order_missing_price(self):
+    def test_create_order_missing_price(self) -> Any:
         """Test order creation with missing price for limit order."""
-        # Create limit order without price
         with self.assertRaises(ValidationError):
             self.order_manager.create_order(
                 user_id="user_1234567890",
@@ -177,9 +150,8 @@ class TestOrderManager(unittest.TestCase):
                 quantity=100,
             )
 
-    def test_get_order(self):
+    def test_get_order(self) -> Any:
         """Test getting order by ID."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.to_dict.return_value = {
             "id": "order_1234567890",
@@ -197,11 +169,7 @@ class TestOrderManager(unittest.TestCase):
             "updated_at": datetime.utcnow().isoformat(),
         }
         self.session.query().filter().first.return_value = mock_order
-
-        # Get order
         order = self.order_manager.get_order("order_1234567890")
-
-        # Check result
         self.assertEqual(order["id"], "order_1234567890")
         self.assertEqual(order["user_id"], "user_1234567890")
         self.assertEqual(order["portfolio_id"], "portfolio_1234567890")
@@ -213,18 +181,14 @@ class TestOrderManager(unittest.TestCase):
         self.assertEqual(order["filled_quantity"], 100)
         self.assertEqual(order["average_fill_price"], 150.0)
 
-    def test_get_order_not_found(self):
+    def test_get_order_not_found(self) -> Any:
         """Test getting non-existent order."""
-        # Set up mock order query
         self.session.query().filter().first.return_value = None
-
-        # Get non-existent order
         with self.assertRaises(NotFoundError):
             self.order_manager.get_order("nonexistent")
 
-    def test_get_orders(self):
+    def test_get_orders(self) -> Any:
         """Test getting orders with filters."""
-        # Set up mock orders
         mock_order1 = MagicMock()
         mock_order1.to_dict.return_value = {
             "id": "order_1",
@@ -241,7 +205,6 @@ class TestOrderManager(unittest.TestCase):
             "created_at": datetime.utcnow().isoformat(),
             "updated_at": datetime.utcnow().isoformat(),
         }
-
         mock_order2 = MagicMock()
         mock_order2.to_dict.return_value = {
             "id": "order_2",
@@ -258,15 +221,10 @@ class TestOrderManager(unittest.TestCase):
             "created_at": datetime.utcnow().isoformat(),
             "updated_at": datetime.utcnow().isoformat(),
         }
-
         self.session.query().filter().all.return_value = [mock_order1, mock_order2]
-
-        # Get orders
         orders = self.order_manager.get_orders(
             user_id="user_1234567890", portfolio_id="portfolio_1234567890"
         )
-
-        # Check result
         self.assertEqual(len(orders), 2)
         self.assertEqual(orders[0]["id"], "order_1")
         self.assertEqual(orders[0]["symbol"], "AAPL")
@@ -277,9 +235,8 @@ class TestOrderManager(unittest.TestCase):
         self.assertEqual(orders[1]["side"], "sell")
         self.assertEqual(orders[1]["status"], "created")
 
-    def test_submit_order(self):
+    def test_submit_order(self) -> Any:
         """Test order submission."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.id = "order_1234567890"
         mock_order.user_id = "user_1234567890"
@@ -311,52 +268,35 @@ class TestOrderManager(unittest.TestCase):
             "broker_order_id": "broker_1234567890",
         }
         self.session.query().filter().first.return_value = mock_order
-
-        # Mock broker integration
         self.broker_integration.submit_order.return_value = {
             "broker_order_id": "broker_1234567890",
             "status": "submitted",
         }
-
-        # Submit order
         order = self.order_manager.submit_order("order_1234567890")
-
-        # Check result
         self.assertEqual(order["id"], "order_1234567890")
         self.assertEqual(order["status"], "submitted")
         self.assertEqual(order["broker_order_id"], "broker_1234567890")
-
-        # Check if broker integration was called
         self.broker_integration.submit_order.assert_called_once()
-
-        # Check if order was updated and committed
         self.assertEqual(mock_order.status, "submitted")
         self.assertEqual(mock_order.broker_order_id, "broker_1234567890")
         self.session.commit.assert_called_once()
 
-    def test_submit_order_not_found(self):
+    def test_submit_order_not_found(self) -> Any:
         """Test submitting non-existent order."""
-        # Set up mock order query
         self.session.query().filter().first.return_value = None
-
-        # Submit non-existent order
         with self.assertRaises(NotFoundError):
             self.order_manager.submit_order("nonexistent")
 
-    def test_submit_order_already_submitted(self):
+    def test_submit_order_already_submitted(self) -> Any:
         """Test submitting already submitted order."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.status = "submitted"
         self.session.query().filter().first.return_value = mock_order
-
-        # Submit already submitted order
         with self.assertRaises(ValidationError):
             self.order_manager.submit_order("order_1234567890")
 
-    def test_cancel_order(self):
+    def test_cancel_order(self) -> Any:
         """Test order cancellation."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.id = "order_1234567890"
         mock_order.status = "submitted"
@@ -367,50 +307,33 @@ class TestOrderManager(unittest.TestCase):
             "broker_order_id": "broker_1234567890",
         }
         self.session.query().filter().first.return_value = mock_order
-
-        # Mock broker integration
         self.broker_integration.cancel_order.return_value = {
             "broker_order_id": "broker_1234567890",
             "status": "cancelled",
         }
-
-        # Cancel order
         order = self.order_manager.cancel_order("order_1234567890")
-
-        # Check result
         self.assertEqual(order["id"], "order_1234567890")
         self.assertEqual(order["status"], "cancelled")
-
-        # Check if broker integration was called
         self.broker_integration.cancel_order.assert_called_once()
-
-        # Check if order was updated and committed
         self.assertEqual(mock_order.status, "cancelled")
         self.session.commit.assert_called_once()
 
-    def test_cancel_order_not_found(self):
+    def test_cancel_order_not_found(self) -> Any:
         """Test cancelling non-existent order."""
-        # Set up mock order query
         self.session.query().filter().first.return_value = None
-
-        # Cancel non-existent order
         with self.assertRaises(NotFoundError):
             self.order_manager.cancel_order("nonexistent")
 
-    def test_cancel_order_not_cancellable(self):
+    def test_cancel_order_not_cancellable(self) -> Any:
         """Test cancelling non-cancellable order."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.status = "filled"
         self.session.query().filter().first.return_value = mock_order
-
-        # Cancel non-cancellable order
         with self.assertRaises(ValidationError):
             self.order_manager.cancel_order("order_1234567890")
 
-    def test_update_order_status(self):
+    def test_update_order_status(self) -> Any:
         """Test order status update."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.id = "order_1234567890"
         mock_order.status = "submitted"
@@ -420,61 +343,44 @@ class TestOrderManager(unittest.TestCase):
             "broker_order_id": "broker_1234567890",
         }
         self.session.query().filter().first.return_value = mock_order
-
-        # Update order status
         order = self.order_manager.update_order_status(
             order_id="order_1234567890",
             status="filled",
             broker_order_id="broker_1234567890",
         )
-
-        # Check result
         self.assertEqual(order["id"], "order_1234567890")
         self.assertEqual(order["status"], "filled")
         self.assertEqual(order["broker_order_id"], "broker_1234567890")
-
-        # Check if order was updated and committed
         self.assertEqual(mock_order.status, "filled")
         self.assertEqual(mock_order.broker_order_id, "broker_1234567890")
         self.session.commit.assert_called_once()
 
-    def test_update_order_status_not_found(self):
+    def test_update_order_status_not_found(self) -> Any:
         """Test updating status of non-existent order."""
-        # Set up mock order query
         self.session.query().filter().first.return_value = None
-
-        # Update status of non-existent order
         with self.assertRaises(NotFoundError):
             self.order_manager.update_order_status(
                 order_id="nonexistent", status="filled"
             )
 
-    def test_update_order_status_invalid_status(self):
+    def test_update_order_status_invalid_status(self) -> Any:
         """Test updating order with invalid status."""
-        # Set up mock order
         mock_order = MagicMock()
         self.session.query().filter().first.return_value = mock_order
-
-        # Update order with invalid status
         with self.assertRaises(ValidationError):
             self.order_manager.update_order_status(
                 order_id="order_1234567890", status="invalid"
             )
 
-    def test_add_execution(self):
+    def test_add_execution(self) -> Any:
         """Test adding execution to order."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.id = "order_1234567890"
         mock_order.status = "submitted"
         mock_order.quantity = 100
         mock_order.filled_quantity = 0
         self.session.query(Order).filter().first.return_value = mock_order
-
-        # Set up mock execution query
         self.session.query(Execution).filter().all.return_value = []
-
-        # Set up mock execution
         mock_execution = MagicMock()
         mock_execution.id = "execution_1234567890"
         mock_execution.order_id = "order_1234567890"
@@ -490,12 +396,8 @@ class TestOrderManager(unittest.TestCase):
             "timestamp": mock_execution.timestamp.isoformat(),
             "broker_execution_id": "broker_execution_1234567890",
         }
-
-        # Mock Execution class
         with patch("backend.common.models.Execution") as MockExecution:
             MockExecution.return_value = mock_execution
-
-            # Add execution
             execution = self.order_manager.add_execution(
                 order_id="order_1234567890",
                 price=150.0,
@@ -503,8 +405,6 @@ class TestOrderManager(unittest.TestCase):
                 timestamp=datetime.utcnow(),
                 broker_execution_id="broker_execution_1234567890",
             )
-
-            # Check result
             self.assertEqual(execution["id"], "execution_1234567890")
             self.assertEqual(execution["order_id"], "order_1234567890")
             self.assertEqual(execution["price"], 150.0)
@@ -512,21 +412,14 @@ class TestOrderManager(unittest.TestCase):
             self.assertEqual(
                 execution["broker_execution_id"], "broker_execution_1234567890"
             )
-
-            # Check if execution was added and committed
             self.session.add.assert_called_once()
             self.session.commit.assert_called_once()
-
-            # Check if order was updated
             self.assertEqual(mock_order.status, "filled")
             self.assertEqual(mock_order.filled_quantity, 100)
 
-    def test_add_execution_order_not_found(self):
+    def test_add_execution_order_not_found(self) -> Any:
         """Test adding execution to non-existent order."""
-        # Set up mock order query
         self.session.query().filter().first.return_value = None
-
-        # Add execution to non-existent order
         with self.assertRaises(NotFoundError):
             self.order_manager.add_execution(
                 order_id="nonexistent",
@@ -535,25 +428,20 @@ class TestOrderManager(unittest.TestCase):
                 timestamp=datetime.utcnow(),
             )
 
-    def test_add_execution_partial_fill(self):
+    def test_add_execution_partial_fill(self) -> Any:
         """Test adding partial execution to order."""
-        # Set up mock order
         mock_order = MagicMock()
         mock_order.id = "order_1234567890"
         mock_order.status = "submitted"
         mock_order.quantity = 100
         mock_order.filled_quantity = 0
         self.session.query(Order).filter().first.return_value = mock_order
-
-        # Set up mock execution query
         self.session.query(Execution).filter().all.return_value = []
-
-        # Set up mock execution
         mock_execution = MagicMock()
         mock_execution.id = "execution_1234567890"
         mock_execution.order_id = "order_1234567890"
         mock_execution.price = 150.0
-        mock_execution.quantity = 50  # Partial fill
+        mock_execution.quantity = 50
         mock_execution.timestamp = datetime.utcnow()
         mock_execution.broker_execution_id = "broker_execution_1234567890"
         mock_execution.to_dict.return_value = {
@@ -564,12 +452,8 @@ class TestOrderManager(unittest.TestCase):
             "timestamp": mock_execution.timestamp.isoformat(),
             "broker_execution_id": "broker_execution_1234567890",
         }
-
-        # Mock Execution class
         with patch("backend.common.models.Execution") as MockExecution:
             MockExecution.return_value = mock_execution
-
-            # Add execution
             execution = self.order_manager.add_execution(
                 order_id="order_1234567890",
                 price=150.0,
@@ -577,20 +461,15 @@ class TestOrderManager(unittest.TestCase):
                 timestamp=datetime.utcnow(),
                 broker_execution_id="broker_execution_1234567890",
             )
-
-            # Check result
             self.assertEqual(execution["id"], "execution_1234567890")
             self.assertEqual(execution["order_id"], "order_1234567890")
             self.assertEqual(execution["price"], 150.0)
             self.assertEqual(execution["quantity"], 50)
-
-            # Check if order was updated
             self.assertEqual(mock_order.status, "partially_filled")
             self.assertEqual(mock_order.filled_quantity, 50)
 
-    def test_get_executions(self):
+    def test_get_executions(self) -> Any:
         """Test getting executions with filters."""
-        # Set up mock executions
         mock_execution1 = MagicMock()
         mock_execution1.to_dict.return_value = {
             "id": "execution_1",
@@ -600,7 +479,6 @@ class TestOrderManager(unittest.TestCase):
             "timestamp": datetime.utcnow().isoformat(),
             "broker_execution_id": "broker_execution_1",
         }
-
         mock_execution2 = MagicMock()
         mock_execution2.to_dict.return_value = {
             "id": "execution_2",
@@ -610,13 +488,8 @@ class TestOrderManager(unittest.TestCase):
             "timestamp": datetime.utcnow().isoformat(),
             "broker_execution_id": "broker_execution_2",
         }
-
         self.session.query().all.return_value = [mock_execution1, mock_execution2]
-
-        # Get executions
         executions = self.order_manager.get_executions(order_id="order_1234567890")
-
-        # Check result
         self.assertEqual(len(executions), 2)
         self.assertEqual(executions[0]["id"], "execution_1")
         self.assertEqual(executions[0]["order_id"], "order_1234567890")

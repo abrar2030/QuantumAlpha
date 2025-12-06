@@ -5,14 +5,13 @@ Mock objects for QuantumAlpha tests.
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 from unittest.mock import MagicMock
-
 import numpy as np
 
 
 class MockConfigManager:
     """Mock ConfigManager for testing."""
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: Optional[Dict[str, Any]] = None) -> Any:
         """
         Initialize MockConfigManager.
 
@@ -92,12 +91,12 @@ class MockConfigManager:
 class MockDatabaseManager:
     """Mock DatabaseManager for testing."""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         """Initialize MockDatabaseManager."""
         self.postgres_session = MagicMock()
         self.redis_connection = MagicMock()
 
-    def get_postgres_session(self):
+    def get_postgres_session(self) -> Any:
         """
         Get PostgreSQL session.
 
@@ -106,7 +105,7 @@ class MockDatabaseManager:
         """
         return self.postgres_session
 
-    def get_redis_connection(self):
+    def get_redis_connection(self) -> Any:
         """
         Get Redis connection.
 
@@ -119,7 +118,7 @@ class MockDatabaseManager:
 class MockMarketDataAPI:
     """Mock Market Data API for testing."""
 
-    def __init__(self, data: Optional[List[Dict[str, Any]]] = None):
+    def __init__(self, data: Optional[List[Dict[str, Any]]] = None) -> Any:
         """
         Initialize MockMarketDataAPI.
 
@@ -150,7 +149,6 @@ class MockMarketDataAPI:
             Market data
         """
         if not self.data:
-            # Generate synthetic data if none provided
             from ..helpers.test_helpers import generate_market_data
 
             self.data = generate_market_data(
@@ -159,14 +157,13 @@ class MockMarketDataAPI:
                 end_date=end_date,
                 periods=limit or 30,
             )
-
         return self.data
 
 
 class MockModelManager:
     """Mock Model Manager for testing."""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         """Initialize MockModelManager."""
         self.models = {
             "model1": {
@@ -202,7 +199,6 @@ class MockModelManager:
         """
         if model_id not in self.models:
             raise KeyError(f"Model not found: {model_id}")
-
         return self.models[model_id]
 
     def list_models(self) -> List[Dict[str, Any]]:
@@ -233,38 +229,31 @@ class MockModelManager:
         """
         if model_id not in self.models:
             raise KeyError(f"Model not found: {model_id}")
-
-        # Generate synthetic predictions
         symbol = data.get("symbol", "AAPL")
         latest_price = data.get("latest_price", 100.0)
-
         predictions = []
         current_price = latest_price
-
         for i in range(horizon):
-            # Generate random price movement
             current_price = current_price * (1 + np.random.normal(0, 0.01))
-
             predictions.append(
                 {
                     "timestamp": (datetime.utcnow() + timedelta(days=i + 1)).strftime(
                         "%Y-%m-%dT%H:%M:%SZ"
                     ),
                     "value": round(current_price, 2),
-                    "confidence": round(0.9 - (i * 0.05), 2),
+                    "confidence": round(0.9 - i * 0.05, 2),
                 }
             )
-
         return {
             "symbol": symbol,
             "model_id": model_id,
             "latest_price": latest_price,
             "prediction": {
                 "average": round(
-                    sum(p["value"] for p in predictions) / len(predictions), 2
+                    sum((p["value"] for p in predictions)) / len(predictions), 2
                 ),
-                "minimum": round(min(p["value"] for p in predictions), 2),
-                "maximum": round(max(p["value"] for p in predictions), 2),
+                "minimum": round(min((p["value"] for p in predictions)), 2),
+                "maximum": round(max((p["value"] for p in predictions)), 2),
                 "change": round(predictions[-1]["value"] - latest_price, 2),
                 "change_percent": round(
                     (predictions[-1]["value"] - latest_price) / latest_price * 100, 2
@@ -280,7 +269,7 @@ class MockModelManager:
 class MockBrokerAPI:
     """Mock Broker API for testing."""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         """Initialize MockBrokerAPI."""
         self.orders = {}
         self.executions = {}
@@ -310,7 +299,6 @@ class MockBrokerAPI:
             Order data
         """
         order_id = f"broker_order_{len(self.orders) + 1}"
-
         order = {
             "id": order_id,
             "symbol": symbol,
@@ -325,12 +313,8 @@ class MockBrokerAPI:
             "created_at": datetime.utcnow().isoformat(),
             "updated_at": datetime.utcnow().isoformat(),
         }
-
         self.orders[order_id] = order
-
-        # Create execution
         execution_id = f"broker_execution_{len(self.executions) + 1}"
-
         execution = {
             "id": execution_id,
             "order_id": order_id,
@@ -340,19 +324,14 @@ class MockBrokerAPI:
             "price": price or 100.0,
             "timestamp": datetime.utcnow().isoformat(),
         }
-
         self.executions[execution_id] = execution
-
-        # Update position
         if symbol not in self.positions:
             self.positions[symbol] = {
                 "symbol": symbol,
                 "quantity": 0,
                 "average_price": 0.0,
             }
-
         position = self.positions[symbol]
-
         if side == "buy":
             position["quantity"] += quantity
             position["average_price"] = (
@@ -361,7 +340,6 @@ class MockBrokerAPI:
             ) / position["quantity"]
         else:
             position["quantity"] -= quantity
-
         return order
 
     def get_order(self, order_id: str) -> Dict[str, Any]:
@@ -379,7 +357,6 @@ class MockBrokerAPI:
         """
         if order_id not in self.orders:
             raise KeyError(f"Order not found: {order_id}")
-
         return self.orders[order_id]
 
     def get_executions(self, order_id: str) -> List[Dict[str, Any]]:

@@ -7,17 +7,13 @@ import sys
 import unittest
 from datetime import datetime
 from unittest.mock import MagicMock, patch
-
 import numpy as np
 import pandas as pd
 import requests
 
-# Add project root to path
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
-
-# Import modules to test
 try:
     from backend.ai_engine.model_manager import ModelManager
     from backend.ai_engine.prediction_service import PredictionService
@@ -26,7 +22,7 @@ try:
     from backend.execution_service.order_manager import OrderManager
     from backend.risk_service.risk_calculator import RiskCalculator
 except ImportError:
-    # Mock the classes for testing when imports fail
+
     class DataProcessor:
         pass
 
@@ -52,9 +48,8 @@ except ImportError:
 class TestEndToEndTradingWorkflow(unittest.TestCase):
     """System tests for end-to-end trading workflow."""
 
-    def setUp(self):
+    def setUp(self) -> Any:
         """Set up test fixtures."""
-        # Create mock config manager
         self.config_manager = MagicMock()
         self.config_manager.get_config.return_value = {
             "data_service": {"cache_dir": "/tmp/cache", "data_dir": "/tmp/data"},
@@ -76,14 +71,8 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "execution_service": {"host": "localhost", "port": 8084},
             },
         }
-
-        # Create mock database manager
         self.db_manager = MagicMock()
-
-        # Create mock broker integration
         self.broker_integration = MagicMock()
-
-        # Create sample market data
         self.market_data = pd.DataFrame(
             {
                 "timestamp": pd.date_range(start="2023-01-01", periods=100),
@@ -95,8 +84,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "symbol": "AAPL",
             }
         )
-
-        # Create service instances
         self.data_processor = DataProcessor(self.config_manager, self.db_manager)
         self.model_manager = ModelManager(self.config_manager, self.db_manager)
         self.prediction_service = PredictionService(
@@ -109,17 +96,14 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
 
     @patch("requests.get")
     @patch("requests.post")
-    def test_complete_trading_workflow(self, mock_post, mock_get):
+    def test_complete_trading_workflow(self, mock_post: Any, mock_get: Any) -> Any:
         """Test complete trading workflow from data to execution."""
-        # Mock data service API response
         mock_get_response = MagicMock()
         mock_get_response.status_code = 200
         mock_get_response.json.return_value = {
             "data": self.market_data.to_dict(orient="records")
         }
         mock_get.return_value = mock_get_response
-
-        # Mock AI engine API response
         mock_post_response = MagicMock()
         mock_post_response.status_code = 200
         mock_post_response.json.return_value = {
@@ -162,18 +146,13 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
             ],
         }
         mock_post.return_value = mock_post_response
-
-        # Step 1: Get market data from data service
         data_service_url = (
             "http://localhost:8081/api/market-data/AAPL?timeframe=1d&period=1mo"
         )
         response = requests.get(data_service_url)
         self.assertEqual(response.status_code, 200)
-
         market_data = response.json()["data"]
         self.assertIsInstance(market_data, list)
-
-        # Step 2: Send data to AI engine for prediction
         ai_engine_url = "http://localhost:8082/api/predict"
         response = requests.post(
             ai_engine_url,
@@ -184,14 +163,11 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-
         prediction = response.json()
         self.assertEqual(prediction["model_id"], "model_1234567890")
         self.assertEqual(prediction["symbol"], "AAPL")
         self.assertIn("prediction", prediction)
         self.assertIn("predictions", prediction)
-
-        # Step 3: Calculate position size based on risk
         with patch.object(self.risk_calculator, "calculate_position_size") as mock_size:
             mock_size.return_value = {
                 "symbol": "AAPL",
@@ -199,20 +175,16 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "value": 15000.0,
                 "max_loss": 750.0,
             }
-
             size = self.risk_calculator.calculate_position_size(
                 symbol="AAPL",
                 portfolio_value=100000.0,
                 risk_per_trade=0.01,
                 stop_loss_percent=0.05,
             )
-
             self.assertEqual(size["symbol"], "AAPL")
             self.assertEqual(size["size"], 100)
             self.assertEqual(size["value"], 15000.0)
             self.assertEqual(size["max_loss"], 750.0)
-
-        # Step 4: Create order based on prediction and risk calculation
         with patch.object(self.order_manager, "create_order") as mock_create_order:
             mock_create_order.return_value = {
                 "id": "order_1234567890",
@@ -227,7 +199,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "created_at": datetime.utcnow().isoformat(),
                 "updated_at": datetime.utcnow().isoformat(),
             }
-
             order = self.order_manager.create_order(
                 user_id="user_1234567890",
                 portfolio_id="portfolio_1234567890",
@@ -236,14 +207,11 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 order_type="market",
                 quantity=size["size"],
             )
-
             self.assertEqual(order["id"], "order_1234567890")
             self.assertEqual(order["symbol"], "AAPL")
             self.assertEqual(order["side"], "buy")
             self.assertEqual(order["quantity"], 100)
             self.assertEqual(order["status"], "created")
-
-        # Step 5: Submit order for execution
         with patch.object(self.order_manager, "submit_order") as mock_submit_order:
             mock_submit_order.return_value = {
                 "id": "order_1234567890",
@@ -259,14 +227,10 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "created_at": datetime.utcnow().isoformat(),
                 "updated_at": datetime.utcnow().isoformat(),
             }
-
             submitted_order = self.order_manager.submit_order("order_1234567890")
-
             self.assertEqual(submitted_order["id"], "order_1234567890")
             self.assertEqual(submitted_order["status"], "submitted")
             self.assertEqual(submitted_order["broker_order_id"], "broker_1234567890")
-
-        # Step 6: Simulate order execution
         with patch.object(self.order_manager, "add_execution") as mock_add_execution:
             mock_add_execution.return_value = {
                 "id": "execution_1234567890",
@@ -276,7 +240,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "timestamp": datetime.utcnow().isoformat(),
                 "broker_execution_id": "broker_execution_1234567890",
             }
-
             execution = self.order_manager.add_execution(
                 order_id="order_1234567890",
                 price=150.0,
@@ -284,13 +247,10 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 timestamp=datetime.utcnow(),
                 broker_execution_id="broker_execution_1234567890",
             )
-
             self.assertEqual(execution["id"], "execution_1234567890")
             self.assertEqual(execution["order_id"], "order_1234567890")
             self.assertEqual(execution["price"], 150.0)
             self.assertEqual(execution["quantity"], 100)
-
-        # Step 7: Calculate position risk after execution
         with patch.object(self.risk_calculator, "calculate_position_risk") as mock_risk:
             mock_risk.return_value = {
                 "symbol": "AAPL",
@@ -306,7 +266,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "risk_level": "medium",
                 "timestamp": datetime.utcnow().isoformat(),
             }
-
             risk = self.risk_calculator.calculate_position_risk(
                 symbol="AAPL",
                 quantity=100,
@@ -320,7 +279,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                     "max_drawdown",
                 ],
             )
-
             self.assertEqual(risk["symbol"], "AAPL")
             self.assertEqual(risk["quantity"], 100)
             self.assertEqual(risk["entry_price"], 150.0)
@@ -335,9 +293,8 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
 
     @patch("requests.get")
     @patch("requests.post")
-    def test_portfolio_rebalancing_workflow(self, mock_post, mock_get):
+    def test_portfolio_rebalancing_workflow(self, mock_post: Any, mock_get: Any) -> Any:
         """Test portfolio rebalancing workflow."""
-        # Mock portfolio positions
         portfolio_positions = [
             {
                 "symbol": "AAPL",
@@ -356,14 +313,8 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "weight": 0.4,
             },
         ]
-
-        # Mock target allocation
         target_allocation = {"AAPL": 0.5, "MSFT": 0.3, "GOOGL": 0.2}
-
-        # Mock portfolio value
         portfolio_value = 28500.0
-
-        # Step 1: Calculate current portfolio risk
         with patch.object(
             self.risk_calculator, "calculate_portfolio_risk"
         ) as mock_portfolio_risk:
@@ -379,7 +330,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "risk_level": "high",
                 "timestamp": datetime.utcnow().isoformat(),
             }
-
             current_risk = self.risk_calculator.calculate_portfolio_risk(
                 portfolio_id="portfolio_1234567890",
                 portfolio=portfolio_positions,
@@ -391,27 +341,20 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                     "max_drawdown",
                 ],
             )
-
             self.assertEqual(current_risk["portfolio_id"], "portfolio_1234567890")
             self.assertEqual(current_risk["total_value"], 28500.0)
             self.assertEqual(current_risk["risk_level"], "high")
-
-        # Step 2: Calculate rebalancing orders
         rebalancing_orders = []
-
         for symbol, target_weight in target_allocation.items():
             target_value = portfolio_value * target_weight
             current_position = next(
                 (p for p in portfolio_positions if p["symbol"] == symbol), None
             )
-
             if current_position:
                 current_value = current_position["market_value"]
                 difference = target_value - current_value
-
-                if abs(difference) > 100:  # Minimum rebalancing threshold
+                if abs(difference) > 100:
                     if difference > 0:
-                        # Need to buy more
                         quantity = int(difference / current_position["current_price"])
                         if quantity > 0:
                             rebalancing_orders.append(
@@ -423,7 +366,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                                 }
                             )
                     else:
-                        # Need to sell
                         quantity = int(
                             abs(difference) / current_position["current_price"]
                         )
@@ -437,8 +379,7 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                                 }
                             )
             else:
-                # New position
-                current_price = 300.0  # Mock current price for GOOGL
+                current_price = 300.0
                 quantity = int(target_value / current_price)
                 if quantity > 0:
                     rebalancing_orders.append(
@@ -449,13 +390,8 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                             "type": "market",
                         }
                     )
-
-        # Check rebalancing orders
         self.assertGreater(len(rebalancing_orders), 0)
-
-        # Step 3: Execute rebalancing orders
         executed_orders = []
-
         for order_data in rebalancing_orders:
             with patch.object(self.order_manager, "create_order") as mock_create_order:
                 mock_create_order.return_value = {
@@ -471,7 +407,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                     "created_at": datetime.utcnow().isoformat(),
                     "updated_at": datetime.utcnow().isoformat(),
                 }
-
                 order = self.order_manager.create_order(
                     user_id="user_1234567890",
                     portfolio_id="portfolio_1234567890",
@@ -480,13 +415,8 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                     order_type=order_data["type"],
                     quantity=order_data["quantity"],
                 )
-
                 executed_orders.append(order)
-
-        # Check executed orders
         self.assertEqual(len(executed_orders), len(rebalancing_orders))
-
-        # Step 4: Calculate portfolio risk after rebalancing
         with patch.object(
             self.risk_calculator, "calculate_portfolio_risk"
         ) as mock_new_risk:
@@ -502,10 +432,9 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "risk_level": "medium",
                 "timestamp": datetime.utcnow().isoformat(),
             }
-
             new_risk = self.risk_calculator.calculate_portfolio_risk(
                 portfolio_id="portfolio_1234567890",
-                portfolio=portfolio_positions,  # Updated positions after rebalancing
+                portfolio=portfolio_positions,
                 risk_metrics=[
                     "var",
                     "cvar",
@@ -514,7 +443,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                     "max_drawdown",
                 ],
             )
-
             self.assertEqual(new_risk["portfolio_id"], "portfolio_1234567890")
             self.assertEqual(new_risk["risk_level"], "medium")
             self.assertLess(new_risk["var"], current_risk["var"])
@@ -522,27 +450,20 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
 
     @patch("requests.get")
     @patch("requests.post")
-    def test_stop_loss_workflow(self, mock_post, mock_get):
+    def test_stop_loss_workflow(self, mock_post: Any, mock_get: Any) -> Any:
         """Test stop loss workflow."""
-        # Mock current position
         position = {
             "symbol": "AAPL",
             "quantity": 100,
             "entry_price": 150.0,
-            "current_price": 140.0,  # Price has dropped
+            "current_price": 140.0,
             "market_value": 14000.0,
             "unrealized_pl": -1000.0,
             "unrealized_pl_percent": -6.67,
         }
-
-        # Mock stop loss threshold
-        stop_loss_percent = 0.05  # 5% stop loss
+        stop_loss_percent = 0.05
         stop_loss_price = position["entry_price"] * (1 - stop_loss_percent)
-
-        # Check if stop loss should be triggered
         self.assertLess(position["current_price"], stop_loss_price)
-
-        # Step 1: Calculate position risk
         with patch.object(self.risk_calculator, "calculate_position_risk") as mock_risk:
             mock_risk.return_value = {
                 "symbol": "AAPL",
@@ -558,7 +479,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "risk_level": "high",
                 "timestamp": datetime.utcnow().isoformat(),
             }
-
             risk = self.risk_calculator.calculate_position_risk(
                 symbol=position["symbol"],
                 quantity=position["quantity"],
@@ -572,12 +492,9 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                     "max_drawdown",
                 ],
             )
-
             self.assertEqual(risk["symbol"], "AAPL")
             self.assertEqual(risk["risk_level"], "high")
             self.assertGreater(risk["risk_score"], 80)
-
-        # Step 2: Create stop loss order
         with patch.object(self.order_manager, "create_order") as mock_create_order:
             mock_create_order.return_value = {
                 "id": "order_stop_loss_1234567890",
@@ -592,7 +509,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "created_at": datetime.utcnow().isoformat(),
                 "updated_at": datetime.utcnow().isoformat(),
             }
-
             stop_loss_order = self.order_manager.create_order(
                 user_id="user_1234567890",
                 portfolio_id="portfolio_1234567890",
@@ -601,14 +517,11 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 order_type="market",
                 quantity=position["quantity"],
             )
-
             self.assertEqual(stop_loss_order["id"], "order_stop_loss_1234567890")
             self.assertEqual(stop_loss_order["symbol"], "AAPL")
             self.assertEqual(stop_loss_order["side"], "sell")
             self.assertEqual(stop_loss_order["quantity"], 100)
             self.assertEqual(stop_loss_order["status"], "created")
-
-        # Step 3: Submit stop loss order
         with patch.object(self.order_manager, "submit_order") as mock_submit_order:
             mock_submit_order.return_value = {
                 "id": "order_stop_loss_1234567890",
@@ -624,18 +537,14 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "created_at": datetime.utcnow().isoformat(),
                 "updated_at": datetime.utcnow().isoformat(),
             }
-
             submitted_order = self.order_manager.submit_order(
                 "order_stop_loss_1234567890"
             )
-
             self.assertEqual(submitted_order["id"], "order_stop_loss_1234567890")
             self.assertEqual(submitted_order["status"], "submitted")
             self.assertEqual(
                 submitted_order["broker_order_id"], "broker_stop_loss_1234567890"
             )
-
-        # Step 4: Simulate order execution
         with patch.object(self.order_manager, "add_execution") as mock_add_execution:
             mock_add_execution.return_value = {
                 "id": "execution_stop_loss_1234567890",
@@ -645,7 +554,6 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 "timestamp": datetime.utcnow().isoformat(),
                 "broker_execution_id": "broker_execution_stop_loss_1234567890",
             }
-
             execution = self.order_manager.add_execution(
                 order_id="order_stop_loss_1234567890",
                 price=140.0,
@@ -653,19 +561,14 @@ class TestEndToEndTradingWorkflow(unittest.TestCase):
                 timestamp=datetime.utcnow(),
                 broker_execution_id="broker_execution_stop_loss_1234567890",
             )
-
             self.assertEqual(execution["id"], "execution_stop_loss_1234567890")
             self.assertEqual(execution["order_id"], "order_stop_loss_1234567890")
             self.assertEqual(execution["price"], 140.0)
             self.assertEqual(execution["quantity"], 100)
-
-        # Step 5: Calculate realized loss
         realized_loss = (position["entry_price"] - execution["price"]) * execution[
             "quantity"
         ]
         self.assertEqual(realized_loss, 1000.0)
-
-        # Verify stop loss was effective in limiting losses
         self.assertLessEqual(
             realized_loss,
             position["entry_price"] * position["quantity"] * stop_loss_percent,
