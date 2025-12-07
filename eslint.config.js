@@ -15,18 +15,18 @@ export default [
       parser: tsParser,
       parserOptions: {
         ecmaVersion: "latest",
-        sourceType: "module"
-      }
+        sourceType: "module",
+      },
     },
 
     plugins: {
       "@typescript-eslint": ts,
-      prettier: prettier
+      prettier: prettier,
     },
 
     rules: {
       ...ts.configs.recommended.rules,
-      "prettier/prettier": "error"
-    }
-  }
+      "prettier/prettier": "error",
+    },
+  },
 ];
