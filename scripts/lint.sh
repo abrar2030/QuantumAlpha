@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status.
+set -e
+# Treat unset variables as an error.
+set -u
+# If any command in a pipeline fails, that return code is used as the result of the whole pipeline.
+set -o pipefail
+
 # QuantumAlpha Comprehensive Lint Script
 # This script runs linting tools for Python backend, React web frontend, and React Native mobile frontend
 
@@ -139,7 +146,11 @@ run_python_linters() {
 
     # Install required Python packages if not already installed
     echo -e "${YELLOW}Checking Python linting dependencies...${NC}"
-    python3 -m pip install --quiet flake8 pylint black isort
+    # Check if dependencies are installed in a virtual environment or globally
+    if ! python3 -m pip show flake8 > /dev/null 2>&1; then
+        echo -e "${YELLOW}Installing Python linting dependencies...${NC}"
+        python3 -m pip install --quiet flake8 pylint black isort
+    fi
 
     # Run flake8
     echo -e "${YELLOW}Running flake8...${NC}"
@@ -238,7 +249,12 @@ run_web_frontend_linters() {
 
     # Install required npm packages if not already installed
     echo -e "${YELLOW}Checking web frontend linting dependencies...${NC}"
-    npm install --no-save eslint prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y eslint-plugin-import eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
+    # Check if node_modules exists and install if not
+    if [ ! -d "node_modules" ]; then
+        echo -e "${YELLOW}Installing web frontend linting dependencies...${NC}"
+        # Using pnpm for faster and more reliable dependency management
+        npm install --no-save eslint prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y eslint-plugin-import eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
+    fi
 
     # Copy config files to the project directory if they don't exist
     cp -n "$WEB_FRONTEND_CONFIG_DIR/.eslintrc.js" ./ 2>/dev/null || true
@@ -318,7 +334,12 @@ run_mobile_frontend_linters() {
 
     # Install required npm packages if not already installed
     echo -e "${YELLOW}Checking mobile frontend linting dependencies...${NC}"
-    npm install --no-save eslint prettier @react-native/eslint-config eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-native @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-prettier eslint-plugin-prettier
+    # Check if node_modules exists and install if not
+    if [ ! -d "node_modules" ]; then
+        echo -e "${YELLOW}Installing mobile frontend linting dependencies...${NC}"
+        # Using pnpm for faster and more reliable dependency management
+        npm install --no-save eslint prettier @react-native/eslint-config eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-native @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-prettier eslint-plugin-prettier
+    fi
 
     # Copy config files to the project directory if they don't exist
     cp -n "$MOBILE_FRONTEND_CONFIG_DIR/.eslintrc.js" ./ 2>/dev/null || true
