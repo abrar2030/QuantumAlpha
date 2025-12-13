@@ -15,78 +15,140 @@ jobs:
       BACKEND_DIR: backend
       WEB_FRONTEND_DIR: web-frontend
       MOBILE_FRONTEND_DIR: mobile-frontend
+      INFRASTRUCTURE_DIR: infrastructure
 
     steps:
       # -------------------------------
-      # Checkout
+      # Checkout repository
       # -------------------------------
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # -------------------------------
-      # Python Setup + Formatting
+      # Python Setup + Caching
       # -------------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Install Python Formatters
-        run: |
-          pip install autoflake black
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-      - name: Run Python Formatting Checks
-        working-directory: ${{ env.BACKEND_DIR }}
-        run: |
-          echo "=== Running autoflake (diff mode) ==="
-          cp -r . /tmp/python_copy
+      - name: Install Python formatters
+        run: pip install --upgrade pip && pip install autoflake black
 
+      # -------------------------------
+      # Run Python formatting checks (backend only)
+      # -------------------------------
+      - name: Run Python formatting checks (backend)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d "${{ env.BACKEND_DIR }}" ]; then
+            echo "Backend directory '${{ env.BACKEND_DIR }}' not found — skipping Python formatting."
+            exit 0
+          fi
+
+          echo "=== Preparing temporary copy of backend for autoflake ==="
+          TMP_COPY="$(mktemp -d)"
+          cp -a "${{ env.BACKEND_DIR }}/." "$TMP_COPY/"
+
+          echo "=== Running autoflake (will modify temp copy) ==="
           autoflake \
             --remove-all-unused-imports \
             --remove-unused-variables \
             --recursive \
             --ignore-init-module-imports \
             --in-place \
-            /tmp/python_copy
+            "$TMP_COPY"
 
-          echo "Comparing files..."
-          diff -r . /tmp/python_copy > /dev/null || {
-            echo "autoflake found issues."
+          echo "=== Comparing backend with autoflake-modified copy ==="
+          if ! diff -r "${{ env.BACKEND_DIR }}" "$TMP_COPY" > /dev/null; then
+            echo "autoflake found formatting/unused-imports issues in backend."
+            echo "Run: autoflake --remove-all-unused-imports --remove-unused-variables --recursive --ignore-init-module-imports --in-place ${BACKEND_DIR}"
+            rm -rf "$TMP_COPY"
             exit 1
-          }
+          fi
 
-          echo "=== Running black ==="
-          black . --check
+          rm -rf "$TMP_COPY"
+
+          echo "=== Running black (check mode) ==="
+          black "${{ env.BACKEND_DIR }}" --check
 
       # -------------------------------
-      # Node + Prettier Setup
+      # Node + npm caching
       # -------------------------------
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "18"
+          cache: "npm"
 
-      # Install Node dependencies (root)
-      - name: Install Node Dependencies
+      - name: Install Node dependencies (root)
         working-directory: .
-        run: npm ci
+        run: |
+          npm ci
 
-      # Prettier: web-frontend
+      # -------------------------------
+      # Prettier checks
+      # -------------------------------
+
+      # 1) Web frontend (existing)
       - name: Run Prettier Checks (web-frontend)
+        if: ${{ env.WEB_FRONTEND_DIR != '' }}
         working-directory: .
         run: |
           echo "=== Running Prettier (web-frontend) ==="
-          ./node_modules/.bin/prettier --check "web-frontend/**/*.{js,jsx,ts,tsx,json,html,css,md}"
+          npx --no-install prettier --check "${{ env.WEB_FRONTEND_DIR }}/**/*.{js,jsx,ts,tsx,json,html,css,md}" --ignore-path .prettierignore || {
+            echo "Prettier issues found in ${WEB_FRONTEND_DIR}."
+            exit 1
+          }
 
-      # Prettier: mobile-frontend
+      # 2) Mobile frontend (existing)
       - name: Run Prettier Checks (mobile-frontend)
+        if: ${{ env.MOBILE_FRONTEND_DIR != '' }}
         working-directory: .
         run: |
           echo "=== Running Prettier (mobile-frontend) ==="
-          ./node_modules/.bin/prettier --check "mobile-frontend/**/*.{js,jsx,ts,tsx,json,html,css,md}"
+          npx --no-install prettier --check "${{ env.MOBILE_FRONTEND_DIR }}/**/*.{js,jsx,ts,tsx,json,html,css,md}" --ignore-path .prettierignore || {
+            echo "Prettier issues found in ${MOBILE_FRONTEND_DIR}."
+            exit 1
+          }
+
+      # 3) Repository-wide Markdown check (ALL .md files)
+      - name: Run Prettier Checks (all .md files in repo)
+        working-directory: .
+        run: |
+          echo "=== Running Prettier (all .md files) ==="
+          npx --no-install prettier --check "**/*.md" --ignore-path .prettierignore || {
+            echo "Prettier formatting issues detected in markdown files across the repo."
+            exit 1
+          }
+
+      # 4) Infrastructure YAML/YML files only (uses env.INFRASTRUCTURE_DIR)
+      - name: Run Prettier Checks (infrastructure YAML)
+        working-directory: .
+        run: |
+          if [ -n "${{ env.INFRASTRUCTURE_DIR }}" ] && [ -d "${{ env.INFRASTRUCTURE_DIR }}" ]; then
+            echo "=== Running Prettier (infrastructure YAML/YML files) in ${INFRASTRUCTURE_DIR} ==="
+            npx --no-install prettier --check "${{ env.INFRASTRUCTURE_DIR }}/**/*.{yml,yaml}" --ignore-path .prettierignore || {
+              echo "Prettier formatting issues detected in ${INFRASTRUCTURE_DIR} YAML/YML files."
+              exit 1
+            }
+          else
+            echo "No infrastructure directory '${{ env.INFRASTRUCTURE_DIR }}' found or INFRASTRUCTURE_DIR unset — skipping infra YAML checks."
+          fi
 
       # -------------------------------
-      # Done
+      # Finalize
       # -------------------------------
       - name: Finalize Check
         run: echo "All formatting checks completed successfully."
