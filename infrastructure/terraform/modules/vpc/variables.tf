@@ -101,7 +101,7 @@ variable "flow_log_destination_type" {
 variable "log_retention_days" {
   description = "Number of days to retain VPC Flow Logs"
   type        = number
-  default     = 2555  # 7 years for SOX compliance
+  default     = 2555 # 7 years for SOX compliance
   validation {
     condition     = var.log_retention_days >= 365
     error_message = "Log retention must be at least 365 days for compliance."
@@ -148,11 +148,11 @@ variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
   default = {
-    Terraform   = "true"
-    Project     = "quantumalpha"
-    Owner       = "platform-team"
-    CostCenter  = "engineering"
-    Compliance  = "sox,pci-dss,glba"
+    Terraform  = "true"
+    Project    = "quantumalpha"
+    Owner      = "platform-team"
+    CostCenter = "engineering"
+    Compliance = "sox,pci-dss,glba"
   }
 }
 
@@ -160,14 +160,14 @@ variable "security_tags" {
   description = "Security-specific tags for compliance"
   type        = map(string)
   default = {
-    "compliance.sox"       = "true"
-    "compliance.pci-dss"   = "true"
-    "compliance.glba"      = "true"
-    "security.level"       = "high"
-    "backup.required"      = "true"
-    "monitoring.required"  = "true"
-    "encryption.required"  = "true"
-    "audit.required"       = "true"
+    "compliance.sox"      = "true"
+    "compliance.pci-dss"  = "true"
+    "compliance.glba"     = "true"
+    "security.level"      = "high"
+    "backup.required"     = "true"
+    "monitoring.required" = "true"
+    "encryption.required" = "true"
+    "audit.required"      = "true"
   }
 }
 
@@ -276,7 +276,7 @@ variable "assign_ipv6_address_on_creation" {
 variable "map_public_ip_on_launch" {
   description = "Map public IP on instance launch in public subnets"
   type        = bool
-  default     = false  # Security: Disabled by default
+  default     = false # Security: Disabled by default
 }
 
 variable "enable_nat_instance" {

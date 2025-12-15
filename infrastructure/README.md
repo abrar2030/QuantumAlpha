@@ -264,19 +264,8 @@ kubectl top pods -n quantumalpha
 
 # View security scan results
 kubectl get vulnerabilityreports -A
-```
-
-## 📚 Additional Resources
-
-- [Kubernetes Security Best Practices](https://kubernetes.io/docs/concepts/security/)
-- [SOX Compliance Guide](https://www.sec.gov/about/laws/soa2002.pdf)
-- [PCI DSS Requirements](https://www.pcisecuritystandards.org/)
-- [GLBA Safeguards Rule](https://www.ftc.gov/business-guidance/resources/financial-institutions-customer-information-complying-safeguards-rule)
-
-## 🤝 Support
-
-For technical support or compliance questions, please contact the platform engineering team.
 
 ---
 
 **Note**: This infrastructure is designed for production use in financial environments. Ensure all security configurations are properly reviewed and tested before deployment.
+```

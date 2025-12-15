@@ -1,0 +1,30 @@
+=== YAML Lint ===
+./logging.yaml
+  13:121    warning  line too long (137 > 120 characters)  (line-length)
+  104:121   warning  line too long (137 > 120 characters)  (line-length)
+  152:121   warning  line too long (137 > 120 characters)  (line-length)
+
+  257:121   warning  line too long (228 > 120 characters)  (line-length)
+  258:121   warning  line too long (243 > 120 characters)  (line-length)
+
+  18:121    warning  line too long (205 > 120 characters)  (line-length)
+  19:121    warning  line too long (209 > 120 characters)  (line-length)
+
+./kubernetes/base/configmap.yaml
+  118:121   warning  line too long (242 > 120 characters)  (line-length)
+  147:121   warning  line too long (159 > 120 characters)  (line-length)
+  155:121   warning  line too long (128 > 120 characters)  (line-length)
+  219:121   warning  line too long (225 > 120 characters)  (line-length)
+
+./kubernetes/base/monitoring.yaml
+  101:121   warning  line too long (122 > 120 characters)  (line-length)
+
+./kubernetes/base/postgres.yaml
+  306:121   warning  line too long (123 > 120 characters)  (line-length)
+
+./kubernetes/base/security-scanning.yaml
+  282:121   warning  line too long (126 > 120 characters)  (line-length)
+
+./monitoring/prometheus-config.yaml
+  30:121    warning  line too long (124 > 120 characters)  (line-length)
+

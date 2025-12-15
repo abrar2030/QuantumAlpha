@@ -239,7 +239,7 @@ variable "enabled_cloudwatch_logs_exports" {
 variable "log_retention_days" {
   description = "Number of days to retain CloudWatch logs"
   type        = number
-  default     = 2555  # 7 years for SOX compliance
+  default     = 2555 # 7 years for SOX compliance
   validation {
     condition     = var.log_retention_days >= 365
     error_message = "Log retention must be at least 365 days for compliance."
@@ -255,7 +255,7 @@ variable "performance_insights_enabled" {
 variable "performance_insights_retention_period" {
   description = "Performance Insights retention period in days"
   type        = number
-  default     = 731  # 2 years
+  default     = 731 # 2 years
   validation {
     condition     = contains([7, 731], var.performance_insights_retention_period)
     error_message = "Performance Insights retention period must be 7 or 731 days."
@@ -326,11 +326,11 @@ variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
   default = {
-    Terraform   = "true"
-    Project     = "quantumalpha"
-    Owner       = "platform-team"
-    CostCenter  = "engineering"
-    Compliance  = "sox,pci-dss,glba"
+    Terraform  = "true"
+    Project    = "quantumalpha"
+    Owner      = "platform-team"
+    CostCenter = "engineering"
+    Compliance = "sox,pci-dss,glba"
   }
 }
 
@@ -338,14 +338,14 @@ variable "security_tags" {
   description = "Security-specific tags for compliance"
   type        = map(string)
   default = {
-    "compliance.sox"       = "true"
-    "compliance.pci-dss"   = "true"
-    "compliance.glba"      = "true"
-    "security.level"       = "high"
-    "backup.required"      = "true"
-    "monitoring.required"  = "true"
-    "encryption.required"  = "true"
-    "audit.required"       = "true"
+    "compliance.sox"      = "true"
+    "compliance.pci-dss"  = "true"
+    "compliance.glba"     = "true"
+    "security.level"      = "high"
+    "backup.required"     = "true"
+    "monitoring.required" = "true"
+    "encryption.required" = "true"
+    "audit.required"      = "true"
   }
 }
 

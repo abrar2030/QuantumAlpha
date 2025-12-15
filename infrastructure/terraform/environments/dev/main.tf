@@ -3,17 +3,18 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "../modules/vpc"
+  source = "../../modules/vpc"
 
-  environment         = var.environment
-  vpc_cidr           = var.vpc_cidr
-  availability_zones = var.availability_zones
-  public_subnets     = var.public_subnets
-  private_subnets    = var.private_subnets
+  project_name         = "quantumalpha"
+  environment          = var.environment
+  vpc_cidr             = var.vpc_cidr
+  public_subnet_cidrs  = var.public_subnets
+  private_subnet_cidrs = var.private_subnets
+  common_tags          = var.common_tags
 }
 
 module "eks" {
-  source = "../modules/eks"
+  source = "../../modules/eks"
 
   environment         = var.environment
   cluster_name        = "quantumalpha-${var.environment}"
@@ -27,41 +28,42 @@ module "eks" {
 }
 
 module "rds" {
-  source = "../modules/rds"
+  source = "../../modules/rds"
 
-  environment         = var.environment
-  vpc_id              = module.vpc.vpc_id
-  private_subnet_ids  = module.vpc.private_subnet_ids
-  instance_class      = var.rds_instance_class
-  allocated_storage   = var.rds_allocated_storage
-  engine_version      = var.rds_engine_version
-  database_name       = "quantumalpha"
-  master_username     = var.rds_master_username
-  master_password     = var.rds_master_password
+  environment        = var.environment
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+  instance_class     = var.rds_instance_class
+  allocated_storage  = var.rds_allocated_storage
+  engine_version     = var.rds_engine_version
+  database_name      = "quantumalpha"
+  master_username    = var.rds_master_username
+  master_password    = var.rds_master_password
 }
 
 module "elasticache" {
-  source = "../modules/elasticache"
+  source = "../../modules/elasticache"
 
-  environment         = var.environment
-  vpc_id              = module.vpc.vpc_id
-  private_subnet_ids  = module.vpc.private_subnet_ids
-  node_type           = var.elasticache_node_type
-  engine_version      = var.elasticache_engine_version
-  num_cache_nodes     = var.elasticache_num_cache_nodes
+  environment        = var.environment
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+  node_type          = var.elasticache_node_type
+  engine_version     = var.elasticache_engine_version
+  num_cache_nodes    = var.elasticache_num_cache_nodes
 }
 
-module "msk" {
-  source = "../modules/msk"
-
-  environment         = var.environment
-  vpc_id              = module.vpc.vpc_id
-  private_subnet_ids  = module.vpc.private_subnet_ids
-  kafka_version       = var.msk_kafka_version
-  broker_instance_type = var.msk_broker_instance_type
-  broker_count        = var.msk_broker_count
-  ebs_volume_size     = var.msk_ebs_volume_size
-}
+# MSK module commented out - create modules/msk if needed
+# module "msk" {
+#   source = "../modules/msk"
+#
+#   environment         = var.environment
+#   vpc_id              = module.vpc.vpc_id
+#   private_subnet_ids  = module.vpc.private_subnet_ids
+#   kafka_version       = var.msk_kafka_version
+#   broker_instance_type = var.msk_broker_instance_type
+#   broker_count        = var.msk_broker_count
+#   ebs_volume_size     = var.msk_ebs_volume_size
+# }
 
 # Output the EKS cluster endpoint and certificate authority data
 output "eks_cluster_endpoint" {
@@ -69,7 +71,7 @@ output "eks_cluster_endpoint" {
 }
 
 output "eks_cluster_certificate_authority_data" {
-  value = module.eks.cluster_certificate_authority_data
+  value     = module.eks.cluster_certificate_authority_data
   sensitive = true
 }
 
@@ -84,6 +86,6 @@ output "elasticache_endpoint" {
 }
 
 # Output the MSK bootstrap brokers
-output "msk_bootstrap_brokers" {
-  value = module.msk.bootstrap_brokers
-}
+# output "msk_bootstrap_brokers" {
+#   value = module.msk.bootstrap_brokers
+# }

@@ -1,6 +1,4 @@
-provider "aws" {
-  region = var.aws_region
-}
+# Provider configuration inherited from root module
 
 resource "aws_elasticache_subnet_group" "main" {
   name       = "quantumalpha-${var.environment}-redis-subnet-group"
@@ -21,7 +19,7 @@ resource "aws_security_group" "redis" {
     from_port   = 6379
     to_port     = 6379
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]  # Allow access from within the VPC
+    cidr_blocks = ["10.0.0.0/16"] # Allow access from within the VPC
     description = "Allow Redis traffic from within VPC"
   }
 
@@ -74,11 +72,4 @@ resource "aws_elasticache_replication_group" "redis" {
   }
 }
 
-# Outputs
-output "endpoint" {
-  value = aws_elasticache_replication_group.redis.primary_endpoint_address
-}
 
-output "port" {
-  value = 6379
-}

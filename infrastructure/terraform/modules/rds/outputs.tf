@@ -256,15 +256,15 @@ output "connection_info" {
 output "compliance_info" {
   description = "Compliance and security information"
   value = {
-    sox_compliant          = true
-    pci_dss_compliant     = true
-    glba_compliant        = true
-    encryption_enabled    = aws_db_instance.main.storage_encrypted
-    backup_enabled        = aws_db_instance.main.backup_retention_period > 0
-    monitoring_enabled    = var.monitoring_interval > 0
-    multi_az_enabled      = aws_db_instance.main.multi_az
-    deletion_protection   = aws_db_instance.main.deletion_protection
-    performance_insights  = var.performance_insights_enabled
+    sox_compliant        = true
+    pci_dss_compliant    = true
+    glba_compliant       = true
+    encryption_enabled   = aws_db_instance.main.storage_encrypted
+    backup_enabled       = aws_db_instance.main.backup_retention_period > 0
+    monitoring_enabled   = var.monitoring_interval > 0
+    multi_az_enabled     = aws_db_instance.main.multi_az
+    deletion_protection  = aws_db_instance.main.deletion_protection
+    performance_insights = var.performance_insights_enabled
   }
 }
 
@@ -287,8 +287,8 @@ output "storage_info" {
     max_allocated_storage = aws_db_instance.main.max_allocated_storage
     storage_type          = aws_db_instance.main.storage_type
     storage_encrypted     = aws_db_instance.main.storage_encrypted
-    kms_key_id           = aws_db_instance.main.kms_key_id
-    iops                 = aws_db_instance.main.iops
+    kms_key_id            = aws_db_instance.main.kms_key_id
+    iops                  = aws_db_instance.main.iops
   }
 }
 
@@ -296,10 +296,10 @@ output "storage_info" {
 output "backup_info" {
   description = "Backup configuration information"
   value = {
-    backup_retention_period = aws_db_instance.main.backup_retention_period
-    backup_window          = aws_db_instance.main.backup_window
-    copy_tags_to_snapshot  = aws_db_instance.main.copy_tags_to_snapshot
-    delete_automated_backups = aws_db_instance.main.delete_automated_backups
+    backup_retention_period   = aws_db_instance.main.backup_retention_period
+    backup_window             = aws_db_instance.main.backup_window
+    copy_tags_to_snapshot     = aws_db_instance.main.copy_tags_to_snapshot
+    delete_automated_backups  = aws_db_instance.main.delete_automated_backups
     final_snapshot_identifier = aws_db_instance.main.final_snapshot_identifier
   }
 }
@@ -308,11 +308,11 @@ output "backup_info" {
 output "monitoring_info" {
   description = "Monitoring configuration information"
   value = {
-    monitoring_interval                    = aws_db_instance.main.monitoring_interval
+    monitoring_interval                   = aws_db_instance.main.monitoring_interval
     monitoring_role_arn                   = aws_db_instance.main.monitoring_role_arn
     enabled_cloudwatch_logs_exports       = aws_db_instance.main.enabled_cloudwatch_logs_exports
     performance_insights_enabled          = aws_db_instance.main.performance_insights_enabled
-    performance_insights_kms_key_id      = aws_db_instance.main.performance_insights_kms_key_id
+    performance_insights_kms_key_id       = aws_db_instance.main.performance_insights_kms_key_id
     performance_insights_retention_period = aws_db_instance.main.performance_insights_retention_period
   }
 }

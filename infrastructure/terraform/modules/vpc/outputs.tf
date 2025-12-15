@@ -250,13 +250,13 @@ output "common_tags" {
 output "compliance_info" {
   description = "Compliance and security information"
   value = {
-    sox_compliant     = true
-    pci_dss_compliant = true
-    glba_compliant    = true
-    encryption_enabled = true
-    flow_logs_enabled = true
+    sox_compliant         = true
+    pci_dss_compliant     = true
+    glba_compliant        = true
+    encryption_enabled    = true
+    flow_logs_enabled     = true
     vpc_endpoints_enabled = true
-    network_acls_enabled = true
+    network_acls_enabled  = true
   }
 }
 
@@ -264,7 +264,7 @@ output "compliance_info" {
 output "network_summary" {
   description = "Summary of network configuration"
   value = {
-    vpc_id                    = aws_vpc.main.id
+    vpc_id                   = aws_vpc.main.id
     vpc_cidr                 = aws_vpc.main.cidr_block
     public_subnets_count     = length(aws_subnet.public)
     private_subnets_count    = length(aws_subnet.private)

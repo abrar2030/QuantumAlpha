@@ -36,14 +36,14 @@ resource "aws_vpc" "main" {
   enable_network_address_usage_metrics = true
 
   tags = merge(var.common_tags, {
-    Name                    = "${var.project_name}-vpc"
-    Environment            = var.environment
-    "compliance.sox"       = "true"
-    "compliance.pci-dss"   = "true"
-    "compliance.glba"      = "true"
-    "security.level"       = "high"
-    "backup.required"      = "true"
-    "monitoring.required"  = "true"
+    Name                  = "${var.project_name}-vpc"
+    Environment           = var.environment
+    "compliance.sox"      = "true"
+    "compliance.pci-dss"  = "true"
+    "compliance.glba"     = "true"
+    "security.level"      = "high"
+    "backup.required"     = "true"
+    "monitoring.required" = "true"
   })
 }
 
@@ -52,7 +52,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-igw"
+    Name        = "${var.project_name}-igw"
     Environment = var.environment
   })
 }
@@ -64,12 +64,12 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_cidrs[count.index]
   availability_zone       = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = false  # Security: Disable auto-assign public IP
+  map_public_ip_on_launch = false # Security: Disable auto-assign public IP
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-public-subnet-${count.index + 1}"
-    Type = "public"
-    Environment = var.environment
+    Name                     = "${var.project_name}-public-subnet-${count.index + 1}"
+    Type                     = "public"
+    Environment              = var.environment
     "kubernetes.io/role/elb" = "1"
   })
 }
@@ -83,9 +83,9 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-private-subnet-${count.index + 1}"
-    Type = "private"
-    Environment = var.environment
+    Name                              = "${var.project_name}-private-subnet-${count.index + 1}"
+    Type                              = "private"
+    Environment                       = var.environment
     "kubernetes.io/role/internal-elb" = "1"
   })
 }
@@ -99,9 +99,9 @@ resource "aws_subnet" "database" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-database-subnet-${count.index + 1}"
-    Type = "database"
-    Environment = var.environment
+    Name                 = "${var.project_name}-database-subnet-${count.index + 1}"
+    Type                 = "database"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
   })
 }
@@ -110,11 +110,11 @@ resource "aws_subnet" "database" {
 resource "aws_eip" "nat" {
   count = length(var.public_subnet_cidrs)
 
-  domain = "vpc"
+  domain     = "vpc"
   depends_on = [aws_internet_gateway.main]
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-nat-eip-${count.index + 1}"
+    Name        = "${var.project_name}-nat-eip-${count.index + 1}"
     Environment = var.environment
   })
 }
@@ -127,7 +127,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[count.index].id
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-nat-gateway-${count.index + 1}"
+    Name        = "${var.project_name}-nat-gateway-${count.index + 1}"
     Environment = var.environment
   })
 
@@ -144,7 +144,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-public-rt"
+    Name        = "${var.project_name}-public-rt"
     Environment = var.environment
   })
 }
@@ -160,7 +160,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-private-rt-${count.index + 1}"
+    Name        = "${var.project_name}-private-rt-${count.index + 1}"
     Environment = var.environment
   })
 }
@@ -169,8 +169,8 @@ resource "aws_route_table" "database" {
   vpc_id = aws_vpc.main.id
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-database-rt"
-    Environment = var.environment
+    Name                 = "${var.project_name}-database-rt"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
   })
 }
@@ -205,8 +205,8 @@ resource "aws_flow_log" "vpc_flow_log" {
   vpc_id          = aws_vpc.main.id
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-vpc-flow-log"
-    Environment = var.environment
+    Name             = "${var.project_name}-vpc-flow-log"
+    Environment      = var.environment
     "compliance.sox" = "true"
   })
 }
@@ -218,8 +218,8 @@ resource "aws_cloudwatch_log_group" "vpc_flow_log" {
   kms_key_id        = aws_kms_key.vpc_logs.arn
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-vpc-flow-log-group"
-    Environment = var.environment
+    Name             = "${var.project_name}-vpc-flow-log-group"
+    Environment      = var.environment
     "compliance.sox" = "true"
   })
 }
@@ -261,8 +261,8 @@ resource "aws_kms_key" "vpc_logs" {
   })
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-vpc-logs-kms"
-    Environment = var.environment
+    Name                 = "${var.project_name}-vpc-logs-kms"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
   })
 }
@@ -290,7 +290,7 @@ resource "aws_iam_role" "flow_log" {
   })
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-vpc-flow-log-role"
+    Name        = "${var.project_name}-vpc-flow-log-role"
     Environment = var.environment
   })
 }
@@ -379,7 +379,7 @@ resource "aws_network_acl" "public" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-public-nacl"
+    Name        = "${var.project_name}-public-nacl"
     Environment = var.environment
   })
 }
@@ -427,7 +427,7 @@ resource "aws_network_acl" "private" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-private-nacl"
+    Name        = "${var.project_name}-private-nacl"
     Environment = var.environment
   })
 }
@@ -493,8 +493,8 @@ resource "aws_network_acl" "database" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-database-nacl"
-    Environment = var.environment
+    Name                 = "${var.project_name}-database-nacl"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
   })
 }
@@ -514,7 +514,7 @@ resource "aws_vpc_endpoint" "s3" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
+        Effect    = "Allow"
         Principal = "*"
         Action = [
           "s3:GetObject",
@@ -531,38 +531,38 @@ resource "aws_vpc_endpoint" "s3" {
   })
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-s3-endpoint"
+    Name        = "${var.project_name}-s3-endpoint"
     Environment = var.environment
   })
 }
 
 # VPC Endpoint for ECR
 resource "aws_vpc_endpoint" "ecr_dkr" {
-  vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
-  vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private[*].id
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  vpc_id             = aws_vpc.main.id
+  service_name       = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = aws_subnet.private[*].id
+  security_group_ids = [aws_security_group.vpc_endpoints.id]
 
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-ecr-dkr-endpoint"
+    Name        = "${var.project_name}-ecr-dkr-endpoint"
     Environment = var.environment
   })
 }
 
 resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
-  vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private[*].id
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  vpc_id             = aws_vpc.main.id
+  service_name       = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = aws_subnet.private[*].id
+  security_group_ids = [aws_security_group.vpc_endpoints.id]
 
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-ecr-api-endpoint"
+    Name        = "${var.project_name}-ecr-api-endpoint"
     Environment = var.environment
   })
 }
@@ -587,7 +587,7 @@ resource "aws_security_group" "vpc_endpoints" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-vpc-endpoints-sg"
+    Name        = "${var.project_name}-vpc-endpoints-sg"
     Environment = var.environment
   })
 }
@@ -598,8 +598,8 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids = aws_subnet.database[*].id
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-db-subnet-group"
-    Environment = var.environment
+    Name                 = "${var.project_name}-db-subnet-group"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
   })
 }
@@ -610,7 +610,7 @@ resource "aws_elasticache_subnet_group" "main" {
   subnet_ids = aws_subnet.database[*].id
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-cache-subnet-group"
+    Name        = "${var.project_name}-cache-subnet-group"
     Environment = var.environment
   })
 }

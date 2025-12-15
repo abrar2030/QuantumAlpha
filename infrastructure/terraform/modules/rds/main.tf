@@ -51,10 +51,10 @@ resource "aws_kms_key" "rds" {
   })
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-rds-kms"
-    Environment = var.environment
+    Name                 = "${var.project_name}-rds-kms"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
-    "compliance.sox" = "true"
+    "compliance.sox"     = "true"
   })
 }
 
@@ -87,8 +87,8 @@ resource "aws_security_group" "rds" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-rds-sg"
-    Environment = var.environment
+    Name                 = "${var.project_name}-rds-sg"
+    Environment          = var.environment
     "compliance.pci-dss" = "true"
   })
 
@@ -175,8 +175,8 @@ resource "aws_db_parameter_group" "main" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-pg"
-    Environment = var.environment
+    Name             = "${var.project_name}-${var.environment}-pg"
+    Environment      = var.environment
     "compliance.sox" = "true"
   })
 }
@@ -189,7 +189,7 @@ resource "aws_db_option_group" "main" {
   major_engine_version     = var.major_engine_version
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-og"
+    Name        = "${var.project_name}-${var.environment}-og"
     Environment = var.environment
   })
 }
@@ -208,7 +208,7 @@ resource "aws_db_instance" "main" {
   max_allocated_storage = var.max_allocated_storage
   storage_type          = var.storage_type
   storage_encrypted     = true
-  kms_key_id           = aws_kms_key.rds.arn
+  kms_key_id            = aws_kms_key.rds.arn
 
   # Database configuration
   db_name  = var.database_name
@@ -226,29 +226,29 @@ resource "aws_db_instance" "main" {
   option_group_name    = aws_db_option_group.main.name
 
   # Backup configuration
-  backup_retention_period = var.backup_retention_period
-  backup_window          = var.backup_window
-  copy_tags_to_snapshot  = true
+  backup_retention_period  = var.backup_retention_period
+  backup_window            = var.backup_window
+  copy_tags_to_snapshot    = true
   delete_automated_backups = false
 
   # Maintenance configuration
-  maintenance_window         = var.maintenance_window
-  auto_minor_version_upgrade = var.auto_minor_version_upgrade
+  maintenance_window          = var.maintenance_window
+  auto_minor_version_upgrade  = var.auto_minor_version_upgrade
   allow_major_version_upgrade = false
 
   # Security configuration
-  deletion_protection = var.deletion_protection
-  skip_final_snapshot = false
+  deletion_protection       = var.deletion_protection
+  skip_final_snapshot       = false
   final_snapshot_identifier = "${var.project_name}-${var.environment}-final-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
 
   # Monitoring configuration
-  monitoring_interval = var.monitoring_interval
-  monitoring_role_arn = var.monitoring_interval > 0 ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
+  monitoring_interval             = var.monitoring_interval
+  monitoring_role_arn             = var.monitoring_interval > 0 ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
 
   # Performance Insights
   performance_insights_enabled          = var.performance_insights_enabled
-  performance_insights_kms_key_id      = var.performance_insights_enabled ? aws_kms_key.rds.arn : null
+  performance_insights_kms_key_id       = var.performance_insights_enabled ? aws_kms_key.rds.arn : null
   performance_insights_retention_period = var.performance_insights_retention_period
 
   # Multi-AZ for high availability
@@ -258,14 +258,14 @@ resource "aws_db_instance" "main" {
   apply_immediately = var.environment != "prod"
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-db"
-    Environment = var.environment
-    "compliance.sox" = "true"
-    "compliance.pci-dss" = "true"
-    "compliance.glba" = "true"
-    "backup.required" = "true"
+    Name                  = "${var.project_name}-${var.environment}-db"
+    Environment           = var.environment
+    "compliance.sox"      = "true"
+    "compliance.pci-dss"  = "true"
+    "compliance.glba"     = "true"
+    "backup.required"     = "true"
     "monitoring.required" = "true"
-    "encryption.enabled" = "true"
+    "encryption.enabled"  = "true"
   })
 
   depends_on = [
@@ -286,7 +286,7 @@ resource "aws_db_instance" "read_replica" {
 
   # Storage configuration
   storage_encrypted = true
-  kms_key_id       = aws_kms_key.rds.arn
+  kms_key_id        = aws_kms_key.rds.arn
 
   # Network configuration
   vpc_security_group_ids = [aws_security_group.rds.id]
@@ -298,17 +298,17 @@ resource "aws_db_instance" "read_replica" {
 
   # Performance Insights
   performance_insights_enabled          = var.performance_insights_enabled
-  performance_insights_kms_key_id      = var.performance_insights_enabled ? aws_kms_key.rds.arn : null
+  performance_insights_kms_key_id       = var.performance_insights_enabled ? aws_kms_key.rds.arn : null
   performance_insights_retention_period = var.performance_insights_retention_period
 
   # Maintenance configuration
   auto_minor_version_upgrade = var.auto_minor_version_upgrade
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-db-replica"
-    Environment = var.environment
-    Type = "read-replica"
-    "compliance.sox" = "true"
+    Name                 = "${var.project_name}-${var.environment}-db-replica"
+    Environment          = var.environment
+    Type                 = "read-replica"
+    "compliance.sox"     = "true"
     "compliance.pci-dss" = "true"
   })
 }
@@ -332,7 +332,7 @@ resource "aws_iam_role" "rds_enhanced_monitoring" {
   })
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-rds-monitoring-role"
+    Name        = "${var.project_name}-${var.environment}-rds-monitoring-role"
     Environment = var.environment
   })
 }
@@ -353,8 +353,8 @@ resource "aws_cloudwatch_log_group" "postgresql" {
   kms_key_id        = aws_kms_key.rds.arn
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-rds-${each.value}-logs"
-    Environment = var.environment
+    Name             = "${var.project_name}-${var.environment}-rds-${each.value}-logs"
+    Environment      = var.environment
     "compliance.sox" = "true"
   })
 }
@@ -377,7 +377,7 @@ resource "aws_cloudwatch_metric_alarm" "database_cpu" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-rds-cpu-alarm"
+    Name        = "${var.project_name}-${var.environment}-rds-cpu-alarm"
     Environment = var.environment
   })
 }
@@ -399,7 +399,7 @@ resource "aws_cloudwatch_metric_alarm" "database_connections" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-rds-connections-alarm"
+    Name        = "${var.project_name}-${var.environment}-rds-connections-alarm"
     Environment = var.environment
   })
 }
@@ -421,7 +421,7 @@ resource "aws_cloudwatch_metric_alarm" "database_free_storage" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-rds-storage-alarm"
+    Name        = "${var.project_name}-${var.environment}-rds-storage-alarm"
     Environment = var.environment
   })
 }
@@ -434,9 +434,9 @@ resource "aws_db_snapshot" "compliance_snapshot" {
   db_snapshot_identifier = "${var.project_name}-${var.environment}-compliance-snapshot-${formatdate("YYYY-MM-DD", timestamp())}"
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-compliance-snapshot"
-    Environment = var.environment
-    Purpose = "compliance"
+    Name             = "${var.project_name}-${var.environment}-compliance-snapshot"
+    Environment      = var.environment
+    Purpose          = "compliance"
     "compliance.sox" = "true"
   })
 }
@@ -445,12 +445,12 @@ resource "aws_db_snapshot" "compliance_snapshot" {
 resource "aws_secretsmanager_secret" "db_credentials" {
   name                    = "${var.project_name}/${var.environment}/rds/credentials"
   description             = "Database credentials for ${var.project_name} ${var.environment}"
-  kms_key_id             = aws_kms_key.rds.arn
+  kms_key_id              = aws_kms_key.rds.arn
   recovery_window_in_days = var.secrets_recovery_window
 
   tags = merge(var.common_tags, {
-    Name = "${var.project_name}-${var.environment}-db-credentials"
-    Environment = var.environment
+    Name              = "${var.project_name}-${var.environment}-db-credentials"
+    Environment       = var.environment
     "compliance.glba" = "true"
   })
 }
