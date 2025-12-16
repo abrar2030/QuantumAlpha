@@ -2,7 +2,7 @@ import enum
 import os
 import uuid
 from datetime import datetime, timezone
-from typing import List
+from typing import List, Any
 import structlog
 from cryptography.fernet import Fernet
 from sqlalchemy import JSON, Boolean, CheckConstraint, Column, DateTime
@@ -258,7 +258,7 @@ class AuditLog(BaseModel):
     method = Column(String(10), nullable=True)
     old_values = Column(JSONB, nullable=True)
     new_values = Column(JSONB, nullable=True)
-    metadata = Column(JSONB, nullable=True)
+    extra_metadata = Column(JSONB, nullable=True)
     risk_score = Column(Float, nullable=True)
     compliance_flags = Column(JSON, nullable=True)
     hash_value = Column(String(64), nullable=False)

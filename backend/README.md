@@ -15,18 +15,18 @@ These services communicate through RESTful APIs and message queues, ensuring hig
 
 ## Key Features
 
-| Feature                              | Description                                                                 |
-| :----------------------------------- | :-------------------------------------------------------------------------- |
-| **Real-time Market Data Processing** | Ingest, normalize, and store market data from multiple sources              |
-| **Alternative Data Integration**     | Process and analyze alternative data sources for enhanced signals           |
-| **AI-Driven Predictions**            | Train and deploy machine learning models for market prediction              |
-| **Reinforcement Learning**           | Apply reinforcement learning for adaptive trading strategies                |
-| **Risk Management**                  | Calculate VaR, expected shortfall, and other risk metrics                   |
-| **Stress Testing**                   | Perform historical and Monte Carlo simulations for portfolio stress testing |
-| **Position Sizing**                  | Implement various position sizing strategies based on risk parameters       |
-| **Smart Order Routing**              | Route orders to optimal execution venues                                    |
-| **Execution Algorithms**             | Implement VWAP, TWAP, and other execution algorithms                        |
-| **Performance Analytics**            | Track and analyze trading performance and strategy metrics                  |
+| Feature                              | Description                                                               |
+| :----------------------------------- | :------------------------------------------------------------------------ |
+| **Real-time Market Data Processing** | Ingest, normalize, and store market data from multiple sources            |
+| **Alternative Data Integration**     | Process and analyze alternative data sources for enhanced signals         |
+| **AI-Driven Predictions**            | Train and deploy machine learning models for market prediction            |
+| **Reinforcement Learning**           | Apply reinforcement learning for adaptive trading strategies              |
+| **Risk Management**                  | Calculate VaR, expected shortfall, and other risk metrics                 |
+| **Stress Testing**                   | Perform historical and Monte Carlo simulations for portfolio stress tests |
+| **Position Sizing**                  | Implement various position sizing strategies based on risk parameters     |
+| **Smart Order Routing**              | Route orders to optimal execution venues                                  |
+| **Execution Algorithms**             | Implement VWAP, TWAP, and other execution algorithms                      |
+| **Performance Analytics**            | Track and analyze trading performance and strategy metrics                |
 
 ## Technology Stack
 
@@ -34,7 +34,7 @@ These services communicate through RESTful APIs and message queues, ensuring hig
 | :------------------- | :-------------------------------- | :------------------------------------------- |
 | **Language**         | Python                            | 3.11+                                        |
 | **Web Framework**    | Flask                             | With Flask-RESTful                           |
-| **Database**         | PostgreSQL, TimescaleDB           | Primary, and for time-series data            |
+| **Database**         | PostgreSQL, TimescaleDB           | Primary DB and time-series storage           |
 | **Cache**            | Redis                             | High-speed data caching                      |
 | **Messaging**        | Apache Kafka                      | For asynchronous inter-service communication |
 | **Machine Learning** | TensorFlow, PyTorch, scikit-learn | Libraries for model training and deployment  |
@@ -50,12 +50,13 @@ These services communicate through RESTful APIs and message queues, ensuring hig
 The Data Service is responsible for collecting, processing, and storing market data from various sources. It provides APIs for retrieving historical and real-time data, as well as derived features for analysis and model training.
 
 **Key Components:**
-| Component | Function |
-| :--- | :--- |
-| Market Data Collector | Collects and normalizes market data |
+
+| Component                  | Function                                            |
+| :------------------------- | :-------------------------------------------------- |
+| Market Data Collector      | Collects and normalizes market data                 |
 | Alternative Data Processor | Processes and analyzes non-traditional data sources |
-| Feature Engineering Engine | Creates derived features for models |
-| Data Storage Manager | Manages data persistence in PostgreSQL/TimescaleDB |
+| Feature Engineering Engine | Creates derived features for models                 |
+| Data Storage Manager       | Manages data persistence in PostgreSQL/TimescaleDB  |
 
 **API Endpoints:**
 
@@ -68,12 +69,13 @@ The Data Service is responsible for collecting, processing, and storing market d
 The AI Engine manages machine learning models for market prediction and signal generation. It supports various model types, including time series forecasting, classification, and reinforcement learning.
 
 **Key Components:**
-| Component | Function |
-| :--- | :--- |
-| Model Manager | Manages the lifecycle of all ML models |
-| Prediction Service | Generates market predictions from trained models |
-| Reinforcement Learning Engine | Runs and trains adaptive RL-based strategies |
-| Signal Generator | Converts predictions into actionable trading signals |
+
+| Component                     | Function                                             |
+| :---------------------------- | :--------------------------------------------------- |
+| Model Manager                 | Manages the lifecycle of all ML models               |
+| Prediction Service            | Generates market predictions from trained models     |
+| Reinforcement Learning Engine | Runs and trains adaptive RL-based strategies         |
+| Signal Generator              | Converts predictions into actionable trading signals |
 
 **API Endpoints:**
 
@@ -87,12 +89,13 @@ The AI Engine manages machine learning models for market prediction and signal g
 The Risk Service performs risk assessment, portfolio analysis, and position sizing. It calculates various risk metrics and provides recommendations for risk management.
 
 **Key Components:**
-| Component | Function |
-| :--- | :--- |
-| Risk Calculator | Computes risk metrics (VaR, Expected Shortfall) |
-| Position Sizing Engine | Determines optimal trade size based on risk |
-| Stress Testing Engine | Runs historical and Monte Carlo simulations |
-| Portfolio Analyzer | Provides comprehensive portfolio performance and risk reports |
+
+| Component              | Function                                                      |
+| :--------------------- | :------------------------------------------------------------ |
+| Risk Calculator        | Computes risk metrics (VaR, Expected Shortfall)               |
+| Position Sizing Engine | Determines optimal trade size based on risk                   |
+| Stress Testing Engine  | Runs historical and Monte Carlo simulations                   |
+| Portfolio Analyzer     | Provides comprehensive portfolio performance and risk reports |
 
 **API Endpoints:**
 
@@ -106,12 +109,13 @@ The Risk Service performs risk assessment, portfolio analysis, and position sizi
 The Execution Service manages order execution, broker integration, and trade lifecycle. It supports various order types and execution algorithms.
 
 **Key Components:**
-| Component | Function |
-| :--- | :--- |
-| Order Manager | Handles order creation, modification, and cancellation |
-| Broker Integration | Connects to external broker APIs for order submission |
-| Execution Strategy Engine | Implements VWAP, TWAP, and Smart Order Routing |
-| Trade Lifecycle Manager | Tracks trades from execution to settlement |
+
+| Component                 | Function                                               |
+| :------------------------ | :----------------------------------------------------- |
+| Order Manager             | Handles order creation, modification, and cancellation |
+| Broker Integration        | Connects to external broker APIs for order submission  |
+| Execution Strategy Engine | Implements VWAP, TWAP, and Smart Order Routing         |
+| Trade Lifecycle Manager   | Tracks trades from execution to settlement             |
 
 **API Endpoints:**
 
@@ -136,72 +140,61 @@ The Execution Service manages order execution, broker integration, and trade lif
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/abrar2030/quantumalpha.git
-cd backend
-```
+   git clone https://github.com/abrar2030/quantumalpha.git
+   cd backend
 
 2. Create and activate a virtual environment:
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+   python -m venv venv
+   source venv/bin/activate # On Windows: venv\Scripts\activate
 
 3. Install dependencies:
 
-```bash
-pip install -r requirements.txt
-```
+   pip install -r requirements.txt
 
 4. Set up environment variables:
 
-```bash
-cp config/.env.example config/.env
-# Edit .env file with your configuration
-```
+   cp config/.env.example config/.env
+
+   # Edit .env file with your configuration
 
 5. Initialize the database:
 
-```bash
-python scripts/init_db.py
-```
+   python scripts/init_db.py
 
 ### Running with Docker
 
 1. Build and start the services:
 
-```bash
-docker-compose up -d
-```
+   docker-compose up -d
 
 2. Check service status:
 
-```bash
-docker-compose ps
-```
+   docker-compose ps
 
 ### Running Locally
 
 1. Start each service in a separate terminal:
 
-```bash
-# Terminal 1
-cd data_service
-python app.py
+   # Terminal 1
 
-# Terminal 2
-cd ai_engine
-python app.py
+   cd data_service
+   python app.py
 
-# Terminal 3
-cd risk_service
-python app.py
+   # Terminal 2
 
-# Terminal 4
-cd execution_service
-python app.py
-```
+   cd ai_engine
+   python app.py
+
+   # Terminal 3
+
+   cd risk_service
+   python app.py
+
+   # Terminal 4
+
+   cd execution_service
+   python app.py
 
 ## Configuration
 
@@ -210,7 +203,7 @@ Configuration is managed through environment variables and configuration files. 
 ### Environment Variables
 
 | Variable                  | Service           | Description                                 |
-| :------------------------ | :---------------- | :------------------------------------------ | --- |
+| :------------------------ | :---------------- | :------------------------------------------ |
 | `DB_HOST`                 | Database          | PostgreSQL host                             |
 | `DB_PORT`                 | Database          | PostgreSQL port                             |
 | `DB_NAME`                 | Database          | PostgreSQL database name                    |
@@ -228,7 +221,7 @@ Configuration is managed through environment variables and configuration files. 
 | `EXECUTION_SERVICE_HOST`  | Execution Service | Execution Service host                      |
 | `EXECUTION_SERVICE_PORT`  | Execution Service | Execution Service port                      |
 | `LOG_LEVEL`               | All Services      | Logging level (DEBUG, INFO, WARNING, ERROR) |
-| `JWT_SECRET_KEY`          | Authentication    | Secret key for JWT authentication           | n   |
+| `JWT_SECRET_KEY`          | Authentication    | Secret key for JWT authentication           |
 
 ## API Documentation
 
@@ -238,9 +231,7 @@ The API documentation is available at `/api/docs` for each service when running 
 
 API endpoints are protected by JWT authentication. To access protected endpoints, include the JWT token in the `Authorization` header:
 
-```
-Authorization: Bearer <token>
-```
+    Authorization: Bearer <token>
 
 To obtain a token, use the `/api/auth/login` endpoint with valid credentials.
 
@@ -299,37 +290,35 @@ To obtain a token, use the `/api/auth/login` endpoint with valid credentials.
 ### Adding a New Feature
 
 | Step | Action                                                 |
-| :--- | :----------------------------------------------------- | --- |
+| :--- | :----------------------------------------------------- |
 | 1    | Identify the service that should implement the feature |
 | 2    | Create or modify the necessary modules                 |
 | 3    | Add API endpoints if needed                            |
 | 4    | Write tests for the new feature                        |
-| 5    | Update documentation                                   | n   |
+| 5    | Update documentation                                   |
 
 ### Running Tests
 
-```bash
-# Run all tests
-pytest
+    # Run all tests
+    pytest
 
-# Run tests for a specific service
-pytest tests/test_data_service.py
+    # Run tests for a specific service
+    pytest tests/test_data_service.py
 
-# Run tests with coverage
-pytest --cov=.
-```
+    # Run tests with coverage
+    pytest --cov=.
 
 ## Performance Considerations
 
 | Consideration           | Implementation Detail                                     |
-| :---------------------- | :-------------------------------------------------------- | --- |
+| :---------------------- | :-------------------------------------------------------- |
 | Asynchronous Processing | Use for long-running tasks to prevent blocking            |
 | Caching                 | Implement for frequently accessed data (Redis)            |
 | Connection Pooling      | Use for database connections to reduce overhead           |
 | Query Optimization      | Optimize database queries with proper indexing            |
 | Message Queues          | Use for inter-service communication (Kafka)               |
 | Circuit Breakers        | Implement for external service calls to ensure resilience |
-| Batch Processing        | Use for processing large datasets efficiently             | s   |
+| Batch Processing        | Use for processing large datasets efficiently             |
 
 ### Security Considerations
 
@@ -346,12 +335,12 @@ pytest --cov=.
 ## Monitoring and Logging
 
 | Component            | Detail                                                     |
-| :------------------- | :--------------------------------------------------------- | --- |
+| :------------------- | :--------------------------------------------------------- |
 | Structured Logging   | Use for better searchability and analysis                  |
 | Centralized Logging  | Implement with ELK stack (Elasticsearch, Logstash, Kibana) |
 | Service Health       | Monitor with Prometheus and Grafana                        |
 | Alerting             | Set up alerts for critical errors and performance issues   |
-| Performance Tracking | Track key performance indicators (KPIs) for each service   | e   |
+| Performance Tracking | Track key performance indicators (KPIs) for each service   |
 
 ## Deployment
 
@@ -359,21 +348,15 @@ pytest --cov=.
 
 1. Build the Docker images:
 
-```bash
-docker-compose build
-```
+   docker-compose build
 
 2. Deploy the services:
 
-```bash
-docker-compose up -d
-```
+   docker-compose up -d
 
 ### Kubernetes Deployment
 
 1. Create Kubernetes configuration files
 2. Deploy to Kubernetes cluster:
 
-```bash
-kubectl apply -f k8s/
-```
+   kubectl apply -f k8s/

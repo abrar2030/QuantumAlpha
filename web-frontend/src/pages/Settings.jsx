@@ -37,7 +37,7 @@ import {
   Fade,
 } from "@mui/material";
 import {
-  Settings,
+  Settings as SettingsIcon,
   User,
   Shield,
   Bell,

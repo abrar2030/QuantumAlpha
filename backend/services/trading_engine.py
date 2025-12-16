@@ -2,12 +2,12 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional
+from typing import List, Optional, Any
 import structlog
 from sqlalchemy import and_
-from .audit import audit_logger
-from .database import get_db_session, get_redis_client
-from .models import (
+from common.audit import audit_logger
+from common.database import get_db_session, get_redis_client
+from common.models import (
     AuditAction,
     Order,
     OrderExecution,
@@ -17,8 +17,8 @@ from .models import (
     Portfolio,
     Position,
 )
-from .portfolio_service import MarketDataService, portfolio_service
-from .validation import FinancialValidator
+from services.portfolio_service import MarketDataService, portfolio_service
+from common.validation import FinancialValidator
 
 logger = structlog.get_logger(__name__)
 

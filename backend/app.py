@@ -12,6 +12,7 @@ from common.logging_config import setup_logging
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from config import Config
+from typing import Any
 
 setup_logging(level=logging.INFO)
 logger = logging.getLogger(__name__)

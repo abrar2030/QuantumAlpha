@@ -1,5 +1,6 @@
 import logging
 import sys
+from typing import Any
 
 
 def setup_logging(level: Any = logging.INFO) -> Any:

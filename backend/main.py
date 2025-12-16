@@ -4,6 +4,7 @@ import os
 import signal
 from datetime import datetime, timezone
 from decimal import Decimal
+from typing import Any
 from common.audit import audit_logger, log_security_event
 from common.auth import auth_manager, require_auth, require_role
 from common.database import cleanup_database, db_manager, initialize_database
@@ -11,7 +12,7 @@ from common.logging_config import setup_logging
 from common.monitoring import (
     create_monitoring_blueprint,
     create_request_monitoring_middleware,
-    monitoring_service,
+    get_monitoring_service,
 )
 from common.validation import (
     OrderSchema,
@@ -577,7 +578,7 @@ class QuantumAlphaApp:
                 status = {
                     "database": db_manager.check_health(),
                     "trading_engine": trading_engine.check_health(),
-                    "monitoring": monitoring_service.check_health(),
+                    "monitoring": get_monitoring_service().check_health(),
                     "version": app.config.get("VERSION", "unknown"),
                     "debug_mode": app.config.get("DEBUG", False),
                 }

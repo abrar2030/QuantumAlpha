@@ -495,7 +495,19 @@ class MonitoringService:
         return generate_latest()
 
 
-monitoring_service = MonitoringService()
+_monitoring_service = None
+
+
+def get_monitoring_service():
+    """Get or create monitoring service instance"""
+    global _monitoring_service
+    if _monitoring_service is None:
+        _monitoring_service = MonitoringService()
+    return _monitoring_service
+
+
+# For backward compatibility
+monitoring_service = None
 
 
 def create_monitoring_blueprint() -> Any:

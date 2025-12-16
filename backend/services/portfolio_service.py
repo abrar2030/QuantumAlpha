@@ -5,10 +5,10 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import structlog
 from sqlalchemy import and_
-from .audit import audit_logger
-from .database import get_db_session, get_redis_client
-from .models import AuditAction, Portfolio, Position
-from .validation import FinancialValidator
+from common.audit import audit_logger
+from common.database import get_db_session, get_redis_client
+from common.models import AuditAction, Portfolio, Position
+from common.validation import FinancialValidator
 
 logger = structlog.get_logger(__name__)
 

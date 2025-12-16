@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://8080-i7kscfnrcqq64pgef857g-ea3b3cda.manusvm.computer/api",
+    baseUrl: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
     prepareHeaders: (headers, { getState }) => {
       // Get the token from auth state
       const token = getState().auth.token;

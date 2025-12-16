@@ -100,7 +100,7 @@ class AuditLogger:
                 method=method,
                 old_values=old_values,
                 new_values=new_values,
-                metadata=metadata or {},
+                extra_metadata=metadata or {},
                 risk_score=risk_score,
                 compliance_flags=compliance_flags,
             )
@@ -137,7 +137,7 @@ class AuditLogger:
             ),
             "old_values": audit_log.old_values,
             "new_values": audit_log.new_values,
-            "metadata": audit_log.metadata,
+            "metadata": audit_log.extra_metadata,
         }
         hash_string = json.dumps(hash_data, sort_keys=True, default=str)
         return hashlib.sha256(hash_string.encode()).hexdigest()

@@ -7,7 +7,7 @@ import html
 import re
 from decimal import Decimal, InvalidOperation
 from functools import wraps
-from typing import Union
+from typing import Union, Any
 import bleach
 import structlog
 from flask import jsonify, request
@@ -301,7 +301,7 @@ class UserLoginSchema(BaseSchema):
     email = fields.Email(required=True)
     password = fields.Str(required=True)
     mfa_token = fields.Str(required=False, validate=validate.Length(equal=6))
-    remember_me = fields.Bool(required=False, default=False)
+    remember_me = fields.Bool(required=False, load_default=False)
 
     @validates("email")
     def validate_email_format(self, value: Any) -> Any:
@@ -323,7 +323,7 @@ class OrderSchema(BaseSchema):
     time_in_force = fields.Str(
         required=False,
         validate=validate.OneOf(["day", "gtc", "ioc", "fok"]),
-        default="day",
+        load_default="day",
     )
 
     @validates("symbol")

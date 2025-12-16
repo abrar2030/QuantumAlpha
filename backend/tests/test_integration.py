@@ -7,6 +7,7 @@ import sys
 import unittest
 from unittest.mock import MagicMock, patch
 import requests
+from typing import Any
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.config import ConfigManager
