@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class KafkaProducer:
     """Kafka producer for publishing messages"""
 
-    def __init__(self, bootstrap_servers: str, client_id: str) -> Any:
+    def __init__(self, bootstrap_servers: str, client_id: str) -> None:
         """Initialize Kafka producer
 
         Args:
@@ -86,7 +86,7 @@ class KafkaConsumer:
         group_id: str,
         topics: List[str],
         auto_offset_reset: str = "earliest",
-    ) -> Any:
+    ) -> None:
         """Initialize Kafka consumer
 
         Args:
@@ -173,7 +173,7 @@ class KafkaConsumer:
 class MessageBus:
     """Message bus for inter-service communication"""
 
-    def __init__(self, bootstrap_servers: str, service_name: str) -> Any:
+    def __init__(self, bootstrap_servers: str, service_name: str) -> None:
         """Initialize message bus
 
         Args:

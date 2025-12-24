@@ -74,7 +74,7 @@ class SecurityAttribution:
 class PerformanceAttributionEngine:
     """Comprehensive performance attribution engine"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize performance attribution engine
 
         Args:
@@ -948,7 +948,7 @@ class PerformanceAttributionEngine:
 class RiskAdjustedAttribution:
     """Risk-adjusted performance attribution"""
 
-    def __init__(self, attribution_engine: PerformanceAttributionEngine) -> Any:
+    def __init__(self, attribution_engine: PerformanceAttributionEngine) -> None:
         """Initialize risk-adjusted attribution
 
         Args:

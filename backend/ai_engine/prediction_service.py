@@ -20,7 +20,9 @@ logger = setup_logger("prediction_service", logging.INFO)
 class PredictionService:
     """Prediction service"""
 
-    def __init__(self, config_manager: Any, db_manager: Any, model_manager: Any) -> Any:
+    def __init__(
+        self, config_manager: Any, db_manager: Any, model_manager: Any
+    ) -> None:
         """Initialize prediction service
 
         Args:

@@ -20,7 +20,7 @@ logger = setup_logger("stress_testing", logging.INFO)
 class StressTesting:
     """Stress testing"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize stress testing
 
         Args:

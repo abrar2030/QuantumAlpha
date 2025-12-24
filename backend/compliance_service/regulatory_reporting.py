@@ -67,7 +67,7 @@ class ReportingRequirement:
 class RegulatoryReportingEngine:
     """Comprehensive regulatory reporting engine"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize regulatory reporting engine
 
         Args:

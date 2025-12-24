@@ -24,7 +24,7 @@ logger = setup_logger("real_time_updater", logging.INFO)
 class RealTimeUpdater:
     """Real-time data updater and model adapter"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize real-time updater
 
         Args:
@@ -369,7 +369,7 @@ class RealTimeUpdater:
 class StreamingDataProcessor:
     """Handles streaming data processing for high-frequency updates"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize streaming data processor
 
         Args:

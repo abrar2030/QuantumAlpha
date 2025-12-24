@@ -26,7 +26,7 @@ class OrderManager:
         db_manager: Any,
         broker_integration: Any,
         execution_strategy: Any,
-    ) -> Any:
+    ) -> None:
         """Initialize order manager
 
         Args:

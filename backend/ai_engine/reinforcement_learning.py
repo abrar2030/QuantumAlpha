@@ -31,7 +31,7 @@ class TradingEnvironment(gym.Env):
 
     def __init__(
         self, df: Any, initial_balance: Any = 10000, transaction_fee: Any = 0.001
-    ) -> Any:
+    ) -> None:
         """Initialize trading environment
 
         Args:
@@ -163,7 +163,7 @@ class TradingEnvironment(gym.Env):
 class ReinforcementLearning:
     """Reinforcement learning service"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize reinforcement learning service
 
         Args:

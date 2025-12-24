@@ -2,7 +2,7 @@ import os
 import secrets
 from datetime import datetime, timedelta, timezone
 from functools import wraps
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 import bcrypt
 import pyotp
 import redis
@@ -57,13 +57,13 @@ class SecurityConfig:
 
 class AuthManager:
 
-    def __init__(self, app: Any = None) -> Any:
+    def __init__(self, app: Optional[Any] = None) -> None:
         self.app = app
         self.jwt = JWTManager()
         if app:
             self.init_app(app)
 
-    def init_app(self, app: Any) -> Any:
+    def init_app(self, app: Any) -> None:
         """Initialize authentication with Flask app"""
         self.app = app
         self.jwt.init_app(app)
@@ -77,7 +77,7 @@ class AuthManager:
         app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
         self._register_jwt_callbacks()
 
-    def _register_jwt_callbacks(self) -> Any:
+    def _register_jwt_callbacks(self) -> None:
         """Register JWT event callbacks"""
 
         @self.jwt.token_in_blocklist_loader
@@ -139,7 +139,7 @@ class AuthManager:
             return True
         return False
 
-    def record_failed_attempt(self, user_id: int) -> Any:
+    def record_failed_attempt(self, user_id: int) -> None:
         """Record failed login attempt"""
         key = f"attempts:{user_id}"
         attempts = redis_client.incr(key)
@@ -158,7 +158,7 @@ class AuthManager:
                 },
             )
 
-    def clear_failed_attempts(self, user_id: int) -> Any:
+    def clear_failed_attempts(self, user_id: int) -> None:
         """Clear failed login attempts after successful login"""
         redis_client.delete(f"attempts:{user_id}")
 
@@ -216,7 +216,7 @@ class AuthManager:
             },
         }
 
-    def _enforce_session_limit(self, user_id: int) -> Any:
+    def _enforce_session_limit(self, user_id: int) -> None:
         """Enforce maximum concurrent sessions"""
         db_session = get_db_session()
         active_sessions = (
@@ -238,10 +238,20 @@ class AuthManager:
                 self._blacklist_session_tokens(session.session_id)
             db_session.commit()
 
-    def _blacklist_session_tokens(self, session_id: str) -> Any:
+    def _blacklist_session_tokens(self, session_id: str) -> None:
         """Blacklist all tokens for a session"""
+        # Implementation: Store session_id in Redis blacklist with expiration
+        try:
+            redis_client.setex(
+                f"blacklist:session:{session_id}",
+                int(SecurityConfig.SESSION_TIMEOUT * 3600),
+                "blacklisted",
+            )
+            logger.info(f"Blacklisted tokens for session {session_id}")
+        except Exception as e:
+            logger.error(f"Failed to blacklist session tokens: {e}")
 
-    def logout(self, token_jti: str, user_id: int) -> Any:
+    def logout(self, token_jti: str, user_id: int) -> None:
         """Logout user and blacklist token"""
         redis_client.setex(
             f"blacklist:{token_jti}",
@@ -260,7 +270,7 @@ class AuthManager:
         log_security_event("logout", {"user_id": user_id, "token_jti": token_jti})
 
     def authenticate_user(
-        self, email: str, password: str, mfa_token: str = None
+        self, email: str, password: str, mfa_token: Optional[str] = None
     ) -> Optional[User]:
         """Authenticate user with email/password and optional MFA"""
         db_session = get_db_session()
@@ -298,25 +308,27 @@ class AuthManager:
         return user
 
 
-def require_auth(f: Any) -> Any:
+def require_auth(f: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to require authentication"""
 
     @wraps(f)
     @jwt_required()
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args: Any, **kwargs: Any) -> Any:
         return f(*args, **kwargs)
 
     return decorated_function
 
 
-def require_role(required_role: str) -> Any:
+def require_role(
+    required_role: str,
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """Decorator to require specific role"""
 
-    def decorator(f):
+    def decorator(f: Callable[..., Any]) -> Callable[..., Any]:
 
         @wraps(f)
         @jwt_required()
-        def decorated_function(*args, **kwargs):
+        def decorated_function(*args: Any, **kwargs: Any) -> Any:
             claims = get_jwt()
             user_role = claims.get("role")
             if user_role != required_role:
@@ -336,14 +348,16 @@ def require_role(required_role: str) -> Any:
     return decorator
 
 
-def require_permission(permission: str) -> Any:
+def require_permission(
+    permission: str,
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """Decorator to require specific permission"""
 
-    def decorator(f):
+    def decorator(f: Callable[..., Any]) -> Callable[..., Any]:
 
         @wraps(f)
         @jwt_required()
-        def decorated_function(*args, **kwargs):
+        def decorated_function(*args: Any, **kwargs: Any) -> Any:
             claims = get_jwt()
             user_permissions = claims.get("permissions", [])
             if permission not in user_permissions:
@@ -363,12 +377,12 @@ def require_permission(permission: str) -> Any:
     return decorator
 
 
-def require_mfa(f: Any) -> Any:
+def require_mfa(f: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to require MFA verification"""
 
     @wraps(f)
     @jwt_required()
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args: Any, **kwargs: Any) -> Any:
         claims = get_jwt()
         mfa_verified = claims.get("mfa_verified", False)
         if not mfa_verified:

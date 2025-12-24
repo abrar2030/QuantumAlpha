@@ -142,7 +142,7 @@ class User(BaseModel):
     )
 
     @validates("email")
-    def validate_email(self, key: Any, email: Any) -> Any:
+    def validate_email(self, key: Any, email: Any) -> None:
         """Validate email format"""
         import re
 

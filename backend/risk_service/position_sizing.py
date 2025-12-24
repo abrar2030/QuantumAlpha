@@ -20,7 +20,7 @@ logger = setup_logger("position_sizing", logging.INFO)
 class PositionSizing:
     """Position sizing"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize position sizing
 
         Args:

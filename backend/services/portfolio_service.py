@@ -62,7 +62,7 @@ class PositionMetrics:
 class RiskCalculator:
     """Portfolio risk calculation engine"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.redis_client = get_redis_client()
 
     def calculate_var(
@@ -124,7 +124,7 @@ class RiskCalculator:
 class MarketDataService:
     """Market data service for real-time pricing"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.redis_client = get_redis_client()
         self.cache_ttl = 60
 
@@ -191,7 +191,7 @@ class MarketDataService:
 
 class PortfolioService:
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.market_data = MarketDataService()
         self.risk_calculator = RiskCalculator()
         self.redis_client = get_redis_client()

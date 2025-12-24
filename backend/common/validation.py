@@ -48,7 +48,7 @@ class ValidationConfig:
 class ValidationError(Exception):
     """Custom validation exception"""
 
-    def __init__(self, message: str, field: str = None, code: str = None) -> Any:
+    def __init__(self, message: str, field: str = None, code: str = None) -> None:
         self.message = message
         self.field = field
         self.code = code
@@ -250,7 +250,7 @@ class BaseSchema(Schema):
     """Base schema with common validation"""
 
     @pre_load
-    def strip_strings(self, data: Any, **kwargs) -> Any:
+    def strip_strings(self, data: Any, **kwargs) -> None:
         """Strip whitespace from string fields"""
         if isinstance(data, dict):
             for key, value in data.items():
@@ -259,7 +259,7 @@ class BaseSchema(Schema):
         return data
 
     @validates_schema
-    def validate_security(self, data: Any, **kwargs) -> Any:
+    def validate_security(self, data: Any, **kwargs) -> None:
         """Validate data for security threats"""
         for field, value in data.items():
             if isinstance(value, str):
@@ -278,19 +278,19 @@ class UserRegistrationSchema(BaseSchema):
     terms_accepted = fields.Bool(required=True)
 
     @validates("email")
-    def validate_email_security(self, value: Any) -> Any:
+    def validate_email_security(self, value: Any) -> None:
         return UserValidator.validate_email(value)
 
     @validates("password")
-    def validate_password_strength(self, value: Any) -> Any:
+    def validate_password_strength(self, value: Any) -> None:
         return UserValidator.validate_password(value)
 
     @validates("name")
-    def validate_name_format(self, value: Any) -> Any:
+    def validate_name_format(self, value: Any) -> None:
         return UserValidator.validate_name(value)
 
     @validates("terms_accepted")
-    def validate_terms(self, value: Any) -> Any:
+    def validate_terms(self, value: Any) -> None:
         if not value:
             raise ValidationError("Terms and conditions must be accepted")
 
@@ -304,7 +304,7 @@ class UserLoginSchema(BaseSchema):
     remember_me = fields.Bool(required=False, load_default=False)
 
     @validates("email")
-    def validate_email_format(self, value: Any) -> Any:
+    def validate_email_format(self, value: Any) -> None:
         return UserValidator.validate_email(value)
 
 
@@ -327,25 +327,25 @@ class OrderSchema(BaseSchema):
     )
 
     @validates("symbol")
-    def validate_symbol_format(self, value: Any) -> Any:
+    def validate_symbol_format(self, value: Any) -> None:
         return FinancialValidator.validate_symbol(value)
 
     @validates("quantity")
-    def validate_quantity_value(self, value: Any) -> Any:
+    def validate_quantity_value(self, value: Any) -> None:
         return FinancialValidator.validate_quantity(value)
 
     @validates("price")
-    def validate_price_value(self, value: Any) -> Any:
+    def validate_price_value(self, value: Any) -> None:
         if value is not None:
             return FinancialValidator.validate_price(value)
 
     @validates("stop_price")
-    def validate_stop_price_value(self, value: Any) -> Any:
+    def validate_stop_price_value(self, value: Any) -> None:
         if value is not None:
             return FinancialValidator.validate_price(value)
 
     @validates_schema
-    def validate_order_logic(self, data: Any, **kwargs) -> Any:
+    def validate_order_logic(self, data: Any, **kwargs) -> None:
         """Validate order business logic"""
         order_type = data.get("order_type")
         price = data.get("price")
@@ -372,16 +372,16 @@ class PortfolioSchema(BaseSchema):
     max_leverage = fields.Decimal(required=False, places=2, allow_none=True)
 
     @validates("name")
-    def validate_name_security(self, value: Any) -> Any:
+    def validate_name_security(self, value: Any) -> None:
         return SecurityValidator.validate_safe_string(value, "name")
 
     @validates("description")
-    def validate_description_security(self, value: Any) -> Any:
+    def validate_description_security(self, value: Any) -> None:
         if value:
             return SecurityValidator.validate_safe_string(value, "description")
 
     @validates("initial_cash")
-    def validate_initial_cash_value(self, value: Any) -> Any:
+    def validate_initial_cash_value(self, value: Any) -> None:
         if value <= 0:
             raise ValidationError("Initial cash must be positive")
         if value > 1000000000:
@@ -389,7 +389,7 @@ class PortfolioSchema(BaseSchema):
         return value
 
 
-def validate_json(schema_class: Schema) -> Any:
+def validate_json(schema_class: Schema) -> None:
     """Decorator to validate JSON request data"""
 
     def decorator(func):
@@ -424,7 +424,7 @@ def validate_json(schema_class: Schema) -> Any:
     return decorator
 
 
-def validate_query_params(**param_validators) -> Any:
+def validate_query_params(**param_validators) -> None:
     """Decorator to validate query parameters"""
 
     def decorator(func):
@@ -464,7 +464,7 @@ def validate_query_params(**param_validators) -> Any:
 class RateLimitValidator:
     """Rate limiting for API endpoints"""
 
-    def __init__(self, redis_client: Any) -> Any:
+    def __init__(self, redis_client: Any) -> None:
         self.redis = redis_client
 
     def check_rate_limit(self, key: str, limit: int, window: int) -> bool:

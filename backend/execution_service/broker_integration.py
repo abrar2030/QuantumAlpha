@@ -19,7 +19,7 @@ logger = setup_logger("broker_integration", logging.INFO)
 class BrokerIntegration:
     """Broker integration"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize broker integration
 
         Args:

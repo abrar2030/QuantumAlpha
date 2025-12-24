@@ -89,7 +89,7 @@ class FactorAnalysisResult:
 class FactorAnalysisEngine:
     """Comprehensive factor analysis engine"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize factor analysis engine
 
         Args:

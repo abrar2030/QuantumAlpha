@@ -2,7 +2,7 @@ import os
 import threading
 import time
 from contextlib import contextmanager
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Generator, Optional
 import redis
 import structlog
 from influxdb_client import InfluxDBClient
@@ -18,7 +18,7 @@ logger = structlog.get_logger(__name__)
 class DatabaseConfig:
     """Database configuration management"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.postgres_url = self._build_postgres_url()
         self.redis_host = os.getenv("REDIS_HOST", "localhost")
         self.redis_port = int(os.getenv("REDIS_PORT", 6379))
@@ -46,7 +46,7 @@ class DatabaseConfig:
 
 class DatabaseManager:
 
-    def __init__(self, config: DatabaseConfig) -> Any:
+    def __init__(self, config: DatabaseConfig) -> None:
         self.config = config
         self._engine = None
         self._session_factory = None
@@ -62,7 +62,7 @@ class DatabaseManager:
         }
         self._lock = threading.Lock()
 
-    def initialize(self) -> Any:
+    def initialize(self) -> None:
         """Initialize all database connections"""
         try:
             self._setup_postgresql()
@@ -74,7 +74,7 @@ class DatabaseManager:
             logger.error(f"Failed to initialize database connections: {e}")
             raise
 
-    def _setup_postgresql(self) -> Any:
+    def _setup_postgresql(self) -> None:
         """Setup PostgreSQL connection with optimizations"""
         try:
             self._engine = create_engine(
@@ -102,28 +102,28 @@ class DatabaseManager:
             logger.error(f"Failed to setup PostgreSQL: {e}")
             raise
 
-    def _register_postgresql_events(self) -> Any:
+    def _register_postgresql_events(self) -> None:
         """Register SQLAlchemy event listeners for monitoring"""
 
         @event.listens_for(self._engine, "connect")
-        def receive_connect(dbapi_connection, connection_record):
+        def receive_connect(dbapi_connection: Any, connection_record: Any) -> None:
             with self._lock:
                 self._connection_stats["total_connections"] += 1
                 self._connection_stats["active_connections"] += 1
                 self._connection_stats["last_connection_time"] = time.time()
 
         @event.listens_for(self._engine, "close")
-        def receive_close(dbapi_connection, connection_record):
+        def receive_close(dbapi_connection: Any, connection_record: Any) -> None:
             with self._lock:
                 self._connection_stats["active_connections"] -= 1
 
         @event.listens_for(self._engine, "handle_error")
-        def receive_error(exception_context):
+        def receive_error(exception_context: Any) -> None:
             with self._lock:
                 self._connection_stats["failed_connections"] += 1
             logger.error(f"Database error: {exception_context.original_exception}")
 
-    def _setup_redis(self) -> Any:
+    def _setup_redis(self) -> None:
         """Setup Redis connection with retry logic"""
         try:
             self._redis_client = redis.Redis(
@@ -141,7 +141,7 @@ class DatabaseManager:
         except Exception as e:
             logger.error(f"Failed to setup Redis: {e}")
 
-    def _setup_influxdb(self) -> Any:
+    def _setup_influxdb(self) -> None:
         """Setup InfluxDB connection for time-series data"""
         try:
             if self.config.influx_token:
@@ -161,7 +161,7 @@ class DatabaseManager:
         except Exception as e:
             logger.error(f"Failed to setup InfluxDB: {e}")
 
-    def _setup_mongodb(self) -> Any:
+    def _setup_mongodb(self) -> None:
         """Setup MongoDB connection for document storage"""
         try:
             self._mongo_client = MongoClient(
@@ -183,7 +183,7 @@ class DatabaseManager:
         return self._engine
 
     @property
-    def session_factory(self) -> Any:
+    def session_factory(self) -> sessionmaker:
         """Get session factory"""
         if not self._session_factory:
             raise RuntimeError("Database not initialized")
@@ -211,7 +211,7 @@ class DatabaseManager:
         return self._scoped_session()
 
     @contextmanager
-    def session_scope(self) -> Any:
+    def session_scope(self) -> Generator[Any, None, None]:
         """Provide a transactional scope around a series of operations"""
         session = self.get_session()
         try:
@@ -285,7 +285,7 @@ class DatabaseManager:
             health_status["mongodb"]["status"] = "not_configured"
         return health_status
 
-    def close_all_connections(self) -> Any:
+    def close_all_connections(self) -> None:
         """Close all database connections"""
         try:
             if self._scoped_session:
@@ -306,7 +306,7 @@ class DatabaseManager:
 class DatabaseMigrationManager:
     """Database migration management"""
 
-    def __init__(self, db_manager: DatabaseManager) -> Any:
+    def __init__(self, db_manager: DatabaseManager) -> None:
         self.db_manager = db_manager
 
     def create_tables(self) -> Any:
@@ -364,29 +364,29 @@ def get_db_session() -> Any:
     return db_manager.get_session()
 
 
-def get_redis_client() -> Any:
+def get_redis_client() -> Optional[redis.Redis]:
     """Get Redis client"""
     return db_manager.redis
 
 
-def get_influx_client() -> Any:
+def get_influx_client() -> Optional[InfluxDBClient]:
     """Get InfluxDB client"""
     return db_manager.influx
 
 
-def get_mongo_client() -> Any:
+def get_mongo_client() -> Optional[MongoClient]:
     """Get MongoDB client"""
     return db_manager.mongo
 
 
 @contextmanager
-def db_session_scope() -> Any:
+def db_session_scope() -> Generator[Any, None, None]:
     """Database session context manager"""
     with db_manager.session_scope() as session:
         yield session
 
 
-def initialize_database() -> Any:
+def initialize_database() -> None:
     """Initialize all database connections"""
     try:
         db_manager.initialize()
@@ -400,7 +400,7 @@ def initialize_database() -> Any:
         raise
 
 
-def cleanup_database() -> Any:
+def cleanup_database() -> None:
     """Cleanup database connections"""
     db_manager.close_all_connections()
 

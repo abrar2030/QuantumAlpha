@@ -69,7 +69,7 @@ class ExecutionReport:
 class RiskManager:
     """Pre-trade and post-trade risk management"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.redis_client = get_redis_client()
 
     async def validate_order_risk(
@@ -199,7 +199,7 @@ class RiskManager:
 class OrderManager:
     """Order lifecycle management"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.risk_manager = RiskManager()
         self.market_data = MarketDataService()
         self.redis_client = get_redis_client()
@@ -523,7 +523,7 @@ class OrderManager:
 class TradingEngine:
     """Main trading engine orchestrator"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.order_manager = OrderManager()
         self.risk_manager = RiskManager()
 

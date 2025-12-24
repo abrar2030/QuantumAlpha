@@ -21,7 +21,7 @@ class ConfigManager:
 
     def __init__(
         self, env_file: Optional[str] = None, config_file: Optional[str] = None
-    ) -> Any:
+    ) -> None:
         """Initialize configuration manager
 
         Args:

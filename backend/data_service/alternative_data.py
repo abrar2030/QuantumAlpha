@@ -19,7 +19,7 @@ logger = setup_logger("alternative_data_service", logging.INFO)
 class AlternativeDataService:
     """Alternative data service"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize alternative data service
 
         Args:

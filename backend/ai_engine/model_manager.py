@@ -30,7 +30,7 @@ logger = setup_logger("model_manager", logging.INFO)
 class ModelManager:
     """Model manager"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize model manager
 
         Args:

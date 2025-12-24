@@ -4,7 +4,7 @@ import os
 import signal
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Any
+from typing import Callable, Optional, List
 from common.audit import audit_logger, log_security_event
 from common.auth import auth_manager, require_auth, require_role
 from common.database import cleanup_database, db_manager, initialize_database
@@ -34,10 +34,10 @@ logger = logging.getLogger(__name__)
 
 class QuantumAlphaApp:
 
-    def __init__(self) -> Any:
-        self.app = None
-        self.jwt = None
-        self.shutdown_handlers = []
+    def __init__(self) -> None:
+        self.app: Optional[Flask] = None
+        self.jwt: Optional[JWTManager] = None
+        self.shutdown_handlers: List[Callable[[], None]] = []
 
     def create_app(self) -> Flask:
         """Create and configure Flask application"""
@@ -51,19 +51,19 @@ class QuantumAlphaApp:
         self.app = app
         return app
 
-    def _load_config(self, app: Flask) -> Any:
+    def _load_config(self, app: Flask) -> None:
         """Load application configuration"""
         app.config.from_object(Config)
         logger.info("Application configuration loaded")
 
-    def _init_extensions(self, app: Flask) -> Any:
+    def _init_extensions(self, app: Flask) -> None:
         """Initialize Flask extensions"""
         CORS(app, origins=app.config["CORS_ORIGINS"])
         self.jwt = JWTManager(app)
         auth_manager.init_app(app)
         logger.info("Flask extensions initialized")
 
-    def _register_error_handlers(self, app: Flask) -> Any:
+    def _register_error_handlers(self, app: Flask) -> None:
         """Register global error handlers"""
 
         @app.errorhandler(ValidationError)
@@ -168,7 +168,7 @@ class QuantumAlphaApp:
                 500,
             )
 
-    def _register_request_handlers(self, app: Flask) -> Any:
+    def _register_request_handlers(self, app: Flask) -> None:
         """Register request handlers for monitoring and security"""
         before_request, after_request = create_request_monitoring_middleware()
 
@@ -190,13 +190,13 @@ class QuantumAlphaApp:
             """After request handler"""
             return after_request(response)
 
-    def _register_blueprints(self, app: Flask) -> Any:
+    def _register_blueprints(self, app: Flask) -> None:
         """Register Flask blueprints"""
         monitoring_bp = create_monitoring_blueprint()
         app.register_blueprint(monitoring_bp)
         logger.info("Blueprints registered")
 
-    def _register_routes(self, app: Flask) -> Any:
+    def _register_routes(self, app: Flask) -> None:
         """Register API routes"""
 
         @app.route("/health", methods=["GET"])
@@ -596,7 +596,7 @@ class QuantumAlphaApp:
                     500,
                 )
 
-    def run(self, host: Any = "0.0.0.0", port: Any = 5000, debug: Any = False) -> Any:
+    def run(self, host: str = "0.0.0.0", port: int = 5000, debug: bool = False) -> None:
         """Run the Flask application"""
         app = self.create_app()
         app.run(host=host, port=port, debug=debug)

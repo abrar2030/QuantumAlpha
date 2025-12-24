@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class DataProcessor:
     """Data processor"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """
         Initializes the DataProcessor with configuration and database managers.
 

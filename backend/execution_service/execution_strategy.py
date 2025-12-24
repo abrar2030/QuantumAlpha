@@ -17,7 +17,7 @@ logger = setup_logger("execution_strategy", logging.INFO)
 class ExecutionStrategy:
     """Execution strategy"""
 
-    def __init__(self, config_manager: Any, db_manager: Any) -> Any:
+    def __init__(self, config_manager: Any, db_manager: Any) -> None:
         """Initialize execution strategy
 
         Args:

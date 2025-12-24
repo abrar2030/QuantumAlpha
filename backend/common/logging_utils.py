@@ -51,7 +51,7 @@ class ServiceError(Exception):
         message: str,
         status_code: int = 500,
         details: Optional[Dict[str, Any]] = None,
-    ) -> Any:
+    ) -> None:
         """Initialize service error
 
         Args:
@@ -88,7 +88,7 @@ class ServiceError(Exception):
 class ValidationError(ServiceError):
     """Exception for validation errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         """Initialize validation error
 
         Args:
@@ -101,7 +101,7 @@ class ValidationError(ServiceError):
 class NotFoundError(ServiceError):
     """Exception for resource not found errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         """Initialize not found error
 
         Args:
@@ -114,7 +114,7 @@ class NotFoundError(ServiceError):
 class AuthenticationError(ServiceError):
     """Exception for authentication errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         """Initialize authentication error
 
         Args:
@@ -127,7 +127,7 @@ class AuthenticationError(ServiceError):
 class AuthorizationError(ServiceError):
     """Exception for authorization errors"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> Any:
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         """Initialize authorization error
 
         Args:

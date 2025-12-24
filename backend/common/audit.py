@@ -21,7 +21,7 @@ logger = structlog.get_logger(__name__)
 class AuditLogger:
     """Centralized audit logging system"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self._local = threading.local()
         self.risk_calculator = RiskCalculator()
 
@@ -173,7 +173,7 @@ class AuditLogger:
                 flags.append("large_position")
         return flags
 
-    def _log_to_external_systems(self, audit_log: AuditLog) -> Any:
+    def _log_to_external_systems(self, audit_log: AuditLog) -> None:
         """Send audit log to external monitoring systems"""
         try:
             log_data = {
@@ -191,7 +191,7 @@ class AuditLogger:
         except Exception as e:
             logger.error(f"Failed to log to external systems: {e}")
 
-    def _handle_high_risk_event(self, audit_log: AuditLog) -> Any:
+    def _handle_high_risk_event(self, audit_log: AuditLog) -> None:
         """Handle high-risk audit events"""
         try:
             logger.warning(
@@ -371,7 +371,7 @@ def _extract_resource_id(result: Any, kwargs: Any) -> Optional[str]:
     return None
 
 
-def log_security_event(event_type: str, details: Dict[str, Any]) -> Any:
+def log_security_event(event_type: str, details: Dict[str, Any]) -> None:
     """Log security-related events"""
     audit_logger.log_event(
         action=AuditAction.READ,
@@ -380,7 +380,7 @@ def log_security_event(event_type: str, details: Dict[str, Any]) -> Any:
     )
 
 
-def log_compliance_event(event_type: str, details: Dict[str, Any]) -> Any:
+def log_compliance_event(event_type: str, details: Dict[str, Any]) -> None:
     """Log compliance-related events"""
     audit_logger.log_event(
         action=AuditAction.READ,

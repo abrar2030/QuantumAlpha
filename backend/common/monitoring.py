@@ -87,7 +87,7 @@ class Alert:
 class MetricsCollector:
     """Prometheus metrics collector"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.request_count = Counter(
             "http_requests_total",
             "Total HTTP requests",
@@ -120,31 +120,31 @@ class MetricsCollector:
 
     def record_request(
         self, method: str, endpoint: str, status: int, duration: float
-    ) -> Any:
+    ) -> None:
         """Record HTTP request metrics"""
         self.request_count.labels(method=method, endpoint=endpoint, status=status).inc()
         self.request_duration.labels(method=method, endpoint=endpoint).observe(duration)
 
-    def record_order(self, status: str, symbol: str) -> Any:
+    def record_order(self, status: str, symbol: str) -> None:
         """Record order metrics"""
         self.orders_total.labels(status=status, symbol=symbol).inc()
 
-    def update_portfolio_value(self, portfolio_id: str, value: float) -> Any:
+    def update_portfolio_value(self, portfolio_id: str, value: float) -> None:
         """Update portfolio value metric"""
         self.portfolio_value.labels(portfolio_id=portfolio_id).set(value)
 
-    def update_system_metrics(self, metrics: SystemMetrics) -> Any:
+    def update_system_metrics(self, metrics: SystemMetrics) -> None:
         """Update system performance metrics"""
         self.cpu_usage.set(metrics.cpu_usage)
         self.memory_usage.set(metrics.memory_usage)
         self.disk_usage.set(metrics.disk_usage)
         self.db_connections.set(metrics.active_connections)
 
-    def record_error(self, error_type: str, severity: str) -> Any:
+    def record_error(self, error_type: str, severity: str) -> None:
         """Record error metrics"""
         self.error_count.labels(error_type=error_type, severity=severity).inc()
 
-    def record_security_event(self, event_type: str) -> Any:
+    def record_security_event(self, event_type: str) -> None:
         """Record security event metrics"""
         self.security_events.labels(event_type=event_type).inc()
 
@@ -152,7 +152,7 @@ class MetricsCollector:
 class HealthChecker:
     """System health monitoring"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.checks = {}
         self.last_check_time = {}
         self.check_interval = 30
@@ -215,7 +215,7 @@ class HealthChecker:
 class SystemMonitor:
     """System performance monitoring"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.metrics_collector = MetricsCollector()
         self.monitoring_active = False
         self.monitor_thread = None
@@ -457,7 +457,7 @@ class HealthCheckRegistry:
 class MonitoringService:
     """Main monitoring service orchestrator"""
 
-    def __init__(self) -> Any:
+    def __init__(self) -> None:
         self.health_checker = HealthChecker()
         self.system_monitor = SystemMonitor()
         self.metrics_collector = MetricsCollector()

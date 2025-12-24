@@ -203,7 +203,7 @@ def generate_api_key() -> Tuple[str, str]:
 class RateLimiter:
     """Rate limiter for API calls"""
 
-    def __init__(self, calls_per_second: float) -> Any:
+    def __init__(self, calls_per_second: float) -> None:
         """Initialize rate limiter
 
         Args:
@@ -226,7 +226,7 @@ class RateLimiter:
 class SimpleCache:
     """Simple in-memory cache"""
 
-    def __init__(self, max_size: int = 1000, ttl: int = 300) -> Any:
+    def __init__(self, max_size: int = 1000, ttl: int = 300) -> None:
         """Initialize cache
 
         Args:
