@@ -12,7 +12,7 @@ import {
   ApiError,
 } from "../types";
 
-class EnhancedAuthService {
+class AuthService {
   private biometrics: ReactNativeBiometrics;
   private deviceId: string | null = null;
 
@@ -491,5 +491,5 @@ class EnhancedAuthService {
   }
 }
 
-export const enhancedAuthService = new EnhancedAuthService();
-export default enhancedAuthService;
+export const AuthService = new AuthService();
+export default AuthService;

@@ -34,7 +34,7 @@ interface PieChartData {
   legendFontSize: number;
 }
 
-interface EnhancedChartProps {
+interface ChartProps {
   type: "line" | "bar" | "pie" | "area" | "contribution";
   data: ChartData | PieChartData[] | any;
   title?: string;
@@ -47,7 +47,7 @@ interface EnhancedChartProps {
   style?: any;
 }
 
-const EnhancedChart: React.FC<EnhancedChartProps> = ({
+const Chart: React.FC<ChartProps> = ({
   type,
   data,
   title,
@@ -345,4 +345,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnhancedChart;
+export default Chart;

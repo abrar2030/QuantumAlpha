@@ -91,7 +91,7 @@ We follow a Git Flow-inspired branching strategy:
 
 - `main`: Production-ready code
 - `develop`: Integration branch for features
-- `feature/*`: New features or enhancements
+- `feature/*`: New features
 - `bugfix/*`: Bug fixes
 - `hotfix/*`: Urgent fixes for production
 - `release/*`: Release preparation

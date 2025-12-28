@@ -28,7 +28,7 @@ import {
   LoadingSpinner,
   SkeletonLoader,
 } from "../../components/ui/LoadingSpinner";
-import EnhancedChart from "../../components/charts/EnhancedChart";
+import Chart from "../../components/charts/Chart";
 import PerformanceCard from "../../components/dashboard/PerformanceCard";
 import StrategyCard from "../../components/dashboard/StrategyCard";
 import AlertItem from "../../components/alerts/AlertItem";
@@ -260,7 +260,7 @@ const DashboardScreen = () => {
 
     return (
       <Animatable.View animation="fadeInUp" delay={200}>
-        <EnhancedChart
+        <Chart
           type="area"
           data={performanceData}
           title="Portfolio Performance"
