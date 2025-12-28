@@ -40,9 +40,7 @@ class ModelManager:
         self.config_manager = config_manager
         self.db_manager = db_manager
         self.data_service_url = f"http://{config_manager.get('services.data_service.host')}:{config_manager.get('services.data_service.port')}"
-        self.model_dir = config_manager.get(
-            "ai_engine.model_dir", "backend/models"
-        )
+        self.model_dir = config_manager.get("ai_engine.model_dir", "backend/models")
         os.makedirs(self.model_dir, exist_ok=True)
         self.registry_file = os.path.join(self.model_dir, "registry.json")
         self.model_registry = self._load_registry()
