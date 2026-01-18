@@ -465,7 +465,7 @@ python scripts/setup_db.py
 If you can't resolve the issue:
 
 1. **Check logs**: `docker-compose logs -f`
-2. **Search issues**: https://github.com/abrar2030/QuantumAlpha/issues
+2. **Search issues**: https://github.com/quantsingularity/QuantumAlpha/issues
 3. **Ask for help**: Create a new issue with:
    - Error message
    - Steps to reproduce

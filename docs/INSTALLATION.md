@@ -83,7 +83,7 @@ Docker installation is the fastest way to get QuantumAlpha running.
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/abrar2030/QuantumAlpha.git
+git clone https://github.com/quantsingularity/QuantumAlpha.git
 cd QuantumAlpha
 
 # 2. Set up environment (creates .env file and checks dependencies)
@@ -115,7 +115,7 @@ For active development and debugging:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/abrar2030/QuantumAlpha.git
+git clone https://github.com/quantsingularity/QuantumAlpha.git
 cd QuantumAlpha
 
 # 2. Run setup script (creates virtual environment)

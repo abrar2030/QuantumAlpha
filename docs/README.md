@@ -45,7 +45,7 @@ QuantumAlpha is a cutting-edge AI-driven hedge fund platform that combines machi
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/abrar2030/QuantumAlpha.git && cd QuantumAlpha
+git clone https://github.com/quantsingularity/QuantumAlpha.git && cd QuantumAlpha
 
 # 2. Setup environment
 ./scripts/setup_env.sh
@@ -96,8 +96,8 @@ QuantumAlpha consists of five primary microservices:
 
 ## Support & Resources
 
-- **GitHub Repository**: https://github.com/abrar2030/QuantumAlpha
-- **Issue Tracker**: https://github.com/abrar2030/QuantumAlpha/issues
+- **GitHub Repository**: https://github.com/quantsingularity/QuantumAlpha
+- **Issue Tracker**: https://github.com/quantsingularity/QuantumAlpha/issues
 - **License**: MIT
 
 ---

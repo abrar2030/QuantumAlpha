@@ -4,9 +4,9 @@
 
 ![QuantumAlpha Logo](https://via.placeholder.com/200x200.png?text=QuantumAlpha)
 
-[![CI/CD Pipeline](https://github.com/abrar2030/QuantumAlpha/actions/workflows/ci.yml/badge.svg)](https://github.com/abrar2030/QuantumAlpha/actions/workflows/ci.yml)
-[![Security Scanning](https://github.com/abrar2030/QuantumAlpha/actions/workflows/security.yml/badge.svg)](https://github.com/abrar2030/QuantumAlpha/actions/workflows/security.yml)
-[![Documentation](https://github.com/abrar2030/QuantumAlpha/actions/workflows/docs.yml/badge.svg)](https://github.com/abrar2030/QuantumAlpha/actions/workflows/docs.yml)
+[![CI/CD Pipeline](https://github.com/quantsingularity/QuantumAlpha/actions/workflows/ci.yml/badge.svg)](https://github.com/quantsingularity/QuantumAlpha/actions/workflows/ci.yml)
+[![Security Scanning](https://github.com/quantsingularity/QuantumAlpha/actions/workflows/security.yml/badge.svg)](https://github.com/quantsingularity/QuantumAlpha/actions/workflows/security.yml)
+[![Documentation](https://github.com/quantsingularity/QuantumAlpha/actions/workflows/docs.yml/badge.svg)](https://github.com/quantsingularity/QuantumAlpha/actions/workflows/docs.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -186,7 +186,7 @@ The easiest way to set up the development environment is to use the provided set
 
 ```bash
 # Clone the repository
-git clone https://github.com/abrar2030/QuantumAlpha.git
+git clone https://github.com/quantsingularity/QuantumAlpha.git
 cd QuantumAlpha
 
 # Run the setup script
@@ -398,7 +398,7 @@ tests/
 - **Model Documentation**: Detailed descriptions of ML/RL models
 - **Jupyter Notebooks**: Interactive examples and tutorials
 
-Our documentation is available at: [https://abrar2030.github.io/QuantumAlpha/](https://abrar2030.github.io/QuantumAlpha/)
+Our documentation is available at: [https://quantsingularity.github.io/QuantumAlpha/](https://quantsingularity.github.io/QuantumAlpha/)
 
 ## 🤝 Contributing
 

@@ -1,8 +1,8 @@
 # 🚀 QuantumAlpha - Advanced AI Hedge Fund Platform
 
-![CI/CD Pipeline](https://github.com/abrar2030/quantumalpha/actions/workflows/cicd.yml/badge.svg)
-[![Test Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/abrar2030/QuantumAlpha/tests)
-[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/abrar2030/QuantumAlpha/LICENSE)
+![CI/CD Pipeline](https://github.com/quantsingularity/quantumalpha/actions/workflows/cicd.yml/badge.svg)
+[![Test Coverage](https://img.shields.io/badge/coverage-78%25-yellow)](https://github.com/quantsingularity/QuantumAlpha/tests)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/quantsingularity/QuantumAlpha/LICENSE)
 
 ![QuantumAlpha Dashboard](docs/images/dashboard.bmp)
 
@@ -171,11 +171,11 @@ To set up the platform, ensure you have the following installed:
 
 The fastest way to get the development environment running is using the provided script:
 
-| Step                     | Command                                                                      | Description                                                     |
-| :----------------------- | :--------------------------------------------------------------------------- | :-------------------------------------------------------------- |
-| **1. Clone Repository**  | `git clone https://github.com/abrar2030/QuantumAlpha.git && cd QuantumAlpha` | Download the source code and navigate to the project directory. |
-| **2. Run Setup Script**  | `./setup_env.sh`                                                             | Installs dependencies and configures the local environment.     |
-| **3. Start Application** | `docker-compose up`                                                          | Starts all core services, databases, and the API Gateway.       |
+| Step                     | Command                                                                             | Description                                                     |
+| :----------------------- | :---------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
+| **1. Clone Repository**  | `git clone https://github.com/quantsingularity/QuantumAlpha.git && cd QuantumAlpha` | Download the source code and navigate to the project directory. |
+| **2. Run Setup Script**  | `./setup_env.sh`                                                                    | Installs dependencies and configures the local environment.     |
+| **3. Start Application** | `docker-compose up`                                                                 | Starts all core services, databases, and the API Gateway.       |
 
 **Access Points:**
 

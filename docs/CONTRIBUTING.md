@@ -35,11 +35,11 @@ Thank you for considering contributing to QuantumAlpha! This document provides g
 ```bash
 # Fork the repository on GitHub
 # Then clone your fork
-git clone https://github.com/abrar2030/QuantumAlpha.git
+git clone https://github.com/quantsingularity/QuantumAlpha.git
 cd QuantumAlpha
 
 # Add upstream remote
-git remote add upstream https://github.com/abrar2030/QuantumAlpha.git
+git remote add upstream https://github.com/quantsingularity/QuantumAlpha.git
 ```
 
 ### 2. Set Up Development Environment

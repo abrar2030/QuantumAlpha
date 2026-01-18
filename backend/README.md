@@ -140,7 +140,7 @@ The Execution Service manages order execution, broker integration, and trade lif
 
 1. Clone the repository:
 
-   git clone https://github.com/abrar2030/quantumalpha.git
+   git clone https://github.com/quantsingularity/quantumalpha.git
    cd backend
 
 2. Create and activate a virtual environment:

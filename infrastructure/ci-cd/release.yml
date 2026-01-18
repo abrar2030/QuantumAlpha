@@ -49,12 +49,12 @@ jobs:
 
             ### Docker Images
             ```bash
-            docker pull ghcr.io/abrar2030/quantumalpha/backend:${{ github.ref_name }}
-            docker pull ghcr.io/abrar2030/quantumalpha/web-frontend:${{ github.ref_name }}
+            docker pull ghcr.io/quantsingularity/quantumalpha/backend:${{ github.ref_name }}
+            docker pull ghcr.io/quantsingularity/quantumalpha/web-frontend:${{ github.ref_name }}
             ```
 
             ### Documentation
-            Full documentation is available at: https://abrar2030.github.io/QuantumAlpha/
+            Full documentation is available at: https://quantsingularity.github.io/QuantumAlpha/
           draft: false
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
 
