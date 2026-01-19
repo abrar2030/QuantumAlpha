@@ -38,7 +38,6 @@ The system is built on a resilient microservices architecture, designed for low-
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
-- [References](#references)
 
 ---
 
@@ -230,24 +229,44 @@ Tests are executed using `pytest` for the backend and `Jest`/`Cypress` for the f
 
 ## CI/CD Pipeline
 
-The platform uses **GitHub Actions** for a robust Continuous Integration and Continuous Deployment (CI/CD) pipeline.
+QuantumAlpha uses GitHub Actions for continuous integration and deployment:
 
-| CI/CD Phase                | Activities                                                                                                                                                                    |
-| :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Continuous Integration** | Automated testing on every pull request, code quality checks (flake8, black, ESLint), test coverage reporting, security scanning, and performance benchmarking.               |
-| **Continuous Deployment**  | Automated deployment to staging environment on merge to main, manual promotion to production, Docker image building/publishing, and infrastructure updates via **Terraform**. |
+| Stage                | Control Area                    | Institutional-Grade Detail                                                              |
+| :------------------- | :------------------------------ | :-------------------------------------------------------------------------------------- |
+| **Formatting Check** | Change Triggers                 | Enforced on all `push` and `pull_request` events to `main` and `develop`                |
+|                      | Manual Oversight                | On-demand execution via controlled `workflow_dispatch`                                  |
+|                      | Source Integrity                | Full repository checkout with complete Git history for auditability                     |
+|                      | Python Runtime Standardization  | Python 3.10 with deterministic dependency caching                                       |
+|                      | Backend Code Hygiene            | `autoflake` to detect unused imports/variables using non-mutating diff-based validation |
+|                      | Backend Style Compliance        | `black --check` to enforce institutional formatting standards                           |
+|                      | Non-Intrusive Validation        | Temporary workspace comparison to prevent unauthorized source modification              |
+|                      | Node.js Runtime Control         | Node.js 18 with locked dependency installation via `npm ci`                             |
+|                      | Web Frontend Formatting Control | Prettier checks for web-facing assets                                                   |
+|                      | Mobile Frontend Formatting      | Prettier enforcement for mobile application codebases                                   |
+|                      | Documentation Governance        | Repository-wide Markdown formatting enforcement                                         |
+|                      | Infrastructure Configuration    | Prettier validation for YAML/YML infrastructure definitions                             |
+|                      | Compliance Gate                 | Any formatting deviation fails the pipeline and blocks merge                            |
 
 ---
 
 ## Documentation
 
-For detailed information on the platform, refer to the following resources:
-
-- **API Reference**: Comprehensive documentation of all service APIs.
-- **User Guides**: Step-by-step instructions for common tasks and strategy configuration.
-- **Architecture Diagrams**: Visual representations of system components and data flow.
-- **Model Documentation**: Detailed descriptions of ML/RL models, including inputs, outputs, and performance metrics.
-- **Jupyter Notebooks**: Interactive examples and tutorials for data exploration and model development.
+| Document                    | Path                 | Description                                                            |
+| :-------------------------- | :------------------- | :--------------------------------------------------------------------- |
+| **README**                  | `README.md`          | High-level overview, project scope, and repository entry point         |
+| **Quickstart Guide**        | `QUICKSTART.md`      | Fast-track guide to get the system running with minimal setup          |
+| **Installation Guide**      | `INSTALLATION.md`    | Step-by-step installation and environment setup                        |
+| **Deployment Guide**        | `DEPLOYMENT.md`      | Deployment procedures, environments, and operational considerations    |
+| **API Reference**           | `API.md`             | Detailed documentation for all API endpoints                           |
+| **CLI Reference**           | `CLI.md`             | Command-line interface usage, commands, and examples                   |
+| **User Guide**              | `USAGE.md`           | Comprehensive end-user guide, workflows, and examples                  |
+| **Architecture Overview**   | `ARCHITECTURE.md`    | System architecture, components, and design rationale                  |
+| **Configuration Guide**     | `CONFIGURATION.md`   | Configuration options, environment variables, and tuning               |
+| **Feature Matrix**          | `FEATURE_MATRIX.md`  | Feature coverage, capabilities, and roadmap alignment                  |
+| **Smart Contracts**         | `SMART_CONTRACTS.md` | Smart contract architecture, interfaces, and security considerations   |
+| **Security Guide**          | `SECURITY.md`        | Security model, threat assumptions, and responsible disclosure process |
+| **Contributing Guidelines** | `CONTRIBUTING.md`    | Contribution workflow, coding standards, and PR requirements           |
+| **Troubleshooting**         | `TROUBLESHOOTING.md` | Common issues, diagnostics, and remediation steps                      |
 
 ---
 
