@@ -8,26 +8,12 @@
 
 > **Note**: This project is under active development. Features and functionalities are continuously being enhanced to improve trading performance, risk management, and user experience.
 
-# Executive Summary
-
-QuantumAlpha is a cutting-edge **AI-driven hedge fund platform** that combines machine learning, deep learning, and reinforcement learning techniques with alternative data sources to generate alpha in financial markets. The platform provides a comprehensive suite of tools for data ingestion, model training, backtesting, robust risk management, and real-time trading execution across multiple asset classes.
-
-The system is built on a resilient microservices architecture, designed for low-latency operations and high scalability, ensuring it can adapt to changing market conditions and continuously improve its performance through automated learning and optimization.
-
-**Key Highlights:**
-
-- **Advanced AI Models**: Utilizes Temporal Fusion Transformers, Deep Reinforcement Learning, and ensemble techniques for market prediction.
-- **Multi-source Data Pipeline**: Integrates market data, alternative data (sentiment, satellite imagery), and web-scraped indicators.
-- **Robust Risk Management**: Features Bayesian Value at Risk, stress testing, and dynamic position sizing optimization.
-- **High-performance Execution**: Implements smart order routing and adaptive execution algorithms for sub-millisecond order management.
-- **Microservices Architecture**: Ensures a scalable, resilient system design with containerized components.
-- **Comprehensive Dashboard**: Provides real-time monitoring of P&L, risk metrics, and model performance.
-
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Project Structure](#project-structure)
 - [Key Features](#key-features)
 - [Architecture](#architecture)
 - [Technology Stack](#technology-stack)
@@ -43,11 +29,7 @@ The system is built on a resilient microservices architecture, designed for low-
 
 ## Overview
 
-QuantumAlpha represents the cutting edge of quantitative trading technology, designed to process vast amounts of market and alternative data through sophisticated machine learning models to generate alpha. The system combines traditional financial operations with advanced AI techniques and high-performance execution strategies to capitalize on market inefficiencies across multiple asset classes and timeframes.
-
-The platform is built on a **microservices architecture** that ensures scalability, resilience, and maintainability. Each component—from data ingestion to model training to execution—is containerized and can be deployed independently, allowing for flexible scaling and easier updates. The system is designed to handle both real-time and batch processing, with a focus on low-latency operations for time-sensitive trading decisions.
-
-QuantumAlpha's core philosophy is to combine the best of quantitative finance with modern AI techniques, creating a system that can adapt to changing market conditions and continuously improve its performance through automated learning and optimization.
+QuantumAlpha is a high-performance, AI-driven quantitative trading platform that ingests market and alternative data, trains advanced ML models, and executes strategies with low-latency execution. Built on microservices and an event-driven architecture, it provides model lifecycle management, robust risk controls, smart order routing, and real-time monitoring to generate and protect alpha.
 
 ---
 
