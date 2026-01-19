@@ -51,6 +51,24 @@ QuantumAlpha's core philosophy is to combine the best of quantitative finance wi
 
 ---
 
+## Project Structure
+
+The project is organized into several main components:
+
+```
+QuantumAlpha/
+├── code/                   # Core backend logic, services, and shared utilities
+├── docs/                   # Project documentation
+├── infrastructure/         # DevOps, deployment, and infra-related code
+├── mobile-frontend/        # Mobile application
+├── web-frontend/           # Web dashboard
+├── scripts/                # Automation, setup, and utility scripts
+├── LICENSE                 # License information
+├── README.md               # Project overview and instructions
+├── eslint.config.js        # ESLint configuration
+└── package.json            # Node.js project metadata and dependencies
+```
+
 ## Key Features
 
 QuantumAlpha's functionality is structured around five core pillars of a modern quantitative trading system.
