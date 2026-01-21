@@ -7,7 +7,8 @@ import html
 import re
 from decimal import Decimal, InvalidOperation
 from functools import wraps
-from typing import Union, Any
+from typing import Any, Union
+
 import bleach
 import structlog
 from flask import jsonify, request

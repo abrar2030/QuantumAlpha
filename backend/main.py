@@ -4,7 +4,8 @@ import os
 import signal
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Callable, Optional, List
+from typing import Callable, List, Optional
+
 from common.audit import audit_logger, log_security_event
 from common.auth import auth_manager, require_auth, require_role
 from common.database import cleanup_database, db_manager, initialize_database
@@ -21,12 +22,12 @@ from common.validation import (
     ValidationError,
     validate_json,
 )
+from config import Config
 from flask import Flask, g, jsonify, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, get_jwt_identity, verify_jwt_in_request
 from services.portfolio_service import portfolio_service
 from services.trading_engine import OrderRequest, OrderSide, OrderType, trading_engine
-from config import Config
 
 setup_logging(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -8,11 +8,12 @@ import os
 import random
 import traceback
 from datetime import datetime, timedelta
+from typing import Any
+
 from common.logging_config import setup_logging
+from config import Config
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from config import Config
-from typing import Any
 
 setup_logging(level=logging.INFO)
 logger = logging.getLogger(__name__)

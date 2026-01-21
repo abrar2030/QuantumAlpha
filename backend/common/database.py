@@ -3,6 +3,7 @@ import threading
 import time
 from contextlib import contextmanager
 from typing import Any, Dict, Generator, Optional
+
 import redis
 import structlog
 from influxdb_client import InfluxDBClient

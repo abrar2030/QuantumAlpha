@@ -5,9 +5,10 @@ Integration tests for QuantumAlpha backend services.
 import os
 import sys
 import unittest
-from unittest.mock import MagicMock, patch
-import requests
 from typing import Any
+from unittest.mock import MagicMock, patch
+
+import requests
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.config import ConfigManager

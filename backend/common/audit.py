@@ -9,9 +9,11 @@ import threading
 from datetime import datetime, timezone
 from functools import wraps
 from typing import Any, Dict, List, Optional
+
 import structlog
 from flask import g, request
 from flask_jwt_extended import get_jwt, get_jwt_identity
+
 from .database import get_db_session
 from .models import AuditAction, AuditLog, User
 

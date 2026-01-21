@@ -2,13 +2,14 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from typing import Any, Dict, List, Optional
+
 import numpy as np
 import structlog
-from sqlalchemy import and_
 from common.audit import audit_logger
 from common.database import get_db_session, get_redis_client
 from common.models import AuditAction, Portfolio, Position
 from common.validation import FinancialValidator
+from sqlalchemy import and_
 
 logger = structlog.get_logger(__name__)
 

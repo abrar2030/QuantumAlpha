@@ -9,6 +9,7 @@ import sys
 import uuid
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Union
+
 import requests
 from influxdb_client import Point
 from influxdb_client.client.write_api import SYNCHRONOUS

@@ -2,7 +2,8 @@ import enum
 import os
 import uuid
 from datetime import datetime, timezone
-from typing import List, Any
+from typing import Any, List
+
 import structlog
 from cryptography.fernet import Fernet
 from sqlalchemy import JSON, Boolean, CheckConstraint, Column, DateTime

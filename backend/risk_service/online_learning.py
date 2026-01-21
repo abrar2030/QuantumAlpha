@@ -10,6 +10,7 @@ import pickle
 import sys
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest

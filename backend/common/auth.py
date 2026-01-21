@@ -3,6 +3,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from typing import Any, Callable, Dict, List, Optional
+
 import bcrypt
 import pyotp
 import redis
@@ -16,6 +17,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
     jwt_required,
 )
+
 from .audit import log_security_event
 from .database import get_db_session
 from .models import User, UserSession
