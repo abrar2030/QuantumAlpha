@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
 """
 Simple test runner to verify backend starts
 """
+
 import os
 import sys
 
