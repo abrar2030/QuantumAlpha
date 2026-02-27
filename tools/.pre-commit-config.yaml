@@ -33,4 +33,4 @@ repos:
       - id: bandit
         name: Security checks with Bandit
         language_version: python3
-        args: ["-r", "."]
+        args: ['-r', '.']
